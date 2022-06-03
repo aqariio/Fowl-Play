@@ -1,32 +1,31 @@
 {
   "schemaVersion": 1,
-  "id": "oubliette",
+  "id": "pengu",
   "version": "1.0",
 
-  "name": "Oubliette",
-  "description": "Dungeons and catacombs",
+  "name": "Foul Play",
+  "description": "Just smile and wave, boys. Smile and wave.",
   "authors": [
-    "aqario"
+    "aqario and Dean, aka the Pengu Gang"
   ],
   "contact": {
-    "homepage": "https://github.com/aqariio/oubliette",
-    "sources": "https://github.com/aqariio/oubliette"
+    "sources": "https://github.com/aqariio/foulplay"
   },
 
   "license": "MIT",
-  "icon": "assets/oubliette/icon.png",
+  "icon": "assets/foulplay/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "aqario.oubliette.Oubliette"
+      "pengugang.foulplay.FoulPlay"
     ],
     "client": [
-      "aqario.oubliette.OublietteClient"
+      "pengugang.foulplay.FoulPlayClient"
     ]
   },
   "mixins": [
-    "oubliette.mixins.json"
+    "foulplay.mixins.json"
   ],
 
   "depends": {

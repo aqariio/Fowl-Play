@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "pengu",
+  "version": "1.0",
+
+  "name": "Foul Play",
+  "description": "Just smile and wave, boys. Smile and wave.",
+  "authors": [
+    "aqario and Dean, aka the Pengu Gang"
+  ],
+  "contact": {
+    "sources": "https://github.com/aqariio/foulplay"
+  },
+
+  "license": "MIT",
+  "icon": "assets/foulplay/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "pengugang.foulplay.FoulPlay"
+    ],
+    "client": [
+      "pengugang.foulplay.FoulPlayClient"
+    ]
+  },
+  "mixins": [
+    "foulplay.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.13.3",
+    "fabric": "*",
+    "minecraft": "1.18.x",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

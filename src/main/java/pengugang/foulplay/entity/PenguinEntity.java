@@ -1,12 +1,11 @@
 package pengugang.foulplay.entity;
 
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -15,19 +14,18 @@ import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.PolarBearEntity;
 import net.minecraft.entity.passive.TurtleEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import pengugang.foulplay.entity.ai.PenguinWanderAroundGoal;
+import pengugang.foulplay.FoulPlay;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -36,7 +34,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class PenguinEntity extends AnimalEntity implements IAnimatable {
+public class PenguinEntity extends AnimalEntity implements IAnimatable, ItemSteerable, Saddleable {
     private AnimationFactory factory = new AnimationFactory(this);
     private static final TrackedData<Boolean> HAS_EGG = DataTracker.registerData(TurtleEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final Ingredient BREEDING_INGREDIENT = Ingredient.ofItems(Items.COD, Items.SALMON, Items.TROPICAL_FISH);
@@ -114,6 +112,36 @@ public class PenguinEntity extends AnimalEntity implements IAnimatable {
         return this.isBaby() ? 0.6f : 1.2f;
     }
 
+    @Override
+    public boolean consumeOnAStickItem() {
+        return false;
+    }
+
+    @Override
+    public void setMovementInput(Vec3d movementInput) {
+
+    }
+
+    @Override
+    public float getSaddledSpeed() {
+        return 0;
+    }
+
+    @Override
+    public boolean canBeSaddled() {
+        return false;
+    }
+
+    @Override
+    public void saddle(@Nullable SoundCategory sound) {
+
+    }
+
+    @Override
+    public boolean isSaddled() {
+        return false;
+    }
+
     private class ExtinguishFire extends EscapeDangerGoal {
         ExtinguishFire() {
             super(PenguinEntity.this, 2.0D);
@@ -123,6 +151,27 @@ public class PenguinEntity extends AnimalEntity implements IAnimatable {
             return (PenguinEntity.this.isBaby() || PenguinEntity.this.isOnFire());
         }
     }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return this.isBaby() ? FoulPlay.ENTITY_PENGUIN_BABY_AMBIENT : FoulPlay.ENTITY_PENGUIN_AMBIENT;
+    }
+
+    @Override
+    protected SoundEvent getSwimSound() {
+        return FoulPlay.ENTITY_PENGUIN_SWIM_AMBIENT;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return FoulPlay.ENTITY_PENGUIN_HURT;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return FoulPlay.ENTITY_PENGUIN_DEATH;
+    }
+
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (event.isMoving()) {

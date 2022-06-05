@@ -13,7 +13,7 @@ import pengugang.foulplay.entity.InitEntity;
 public class EntitySpawn {
     public static void addEntitySpawn() {
         BiomeModifications.addSpawn(BiomeSelectors.categories(Biome.Category.ICY),
-                SpawnGroup.CREATURE, InitEntity.PENGUIN, 1, 20, 40);
+                SpawnGroup.CREATURE, InitEntity.PENGUIN, 7, 20, 40);
 
         SpawnRestrictionAccessor.callRegister(InitEntity.PENGUIN, SpawnRestriction.Location.ON_GROUND,
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::isValidNaturalSpawn);

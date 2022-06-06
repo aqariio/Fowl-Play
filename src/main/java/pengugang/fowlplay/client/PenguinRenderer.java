@@ -1,4 +1,4 @@
-package pengugang.foulplay.client;
+package pengugang.fowlplay.client;
 
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -6,9 +6,8 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import pengugang.foulplay.FoulPlay;
-import pengugang.foulplay.entity.PenguinEntity;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import pengugang.fowlplay.FowlPlay;
+import pengugang.fowlplay.entity.PenguinEntity;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 public class PenguinRenderer extends GeoEntityRenderer<PenguinEntity> {
@@ -18,7 +17,7 @@ public class PenguinRenderer extends GeoEntityRenderer<PenguinEntity> {
 
     @Override
     public Identifier getTextureLocation(PenguinEntity instance) {
-        return instance.isBaby() ? new Identifier(FoulPlay.MODID, "textures/entity/penguin/penguin_baby.png") : new Identifier(FoulPlay.MODID, "textures/entity/penguin/penguin.png");
+        return instance.isBaby() ? new Identifier(FowlPlay.MODID, "textures/entity/penguin/penguin_baby.png") : new Identifier(FowlPlay.MODID, "textures/entity/penguin/penguin.png");
     }
 
     @Override

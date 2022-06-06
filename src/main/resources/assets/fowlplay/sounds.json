@@ -1,0 +1,36 @@
+{
+  "entity.penguin.ambient": {
+    "sounds": [
+      "fowlplay:mob/penguin/ambient"
+    ],
+    "subtitle": "fowlplay.subtitles.entity.penguin.ambient"
+  },
+  "entity.penguin_baby.ambient": {
+    "sounds": [
+      "fowlplay:mob/penguin/baby_ambient"
+    ],
+    "subtitle": "fowlplay.subtitles.entity.penguin_baby.ambient"
+  },
+  "entity.penguin.swim": {
+    "sounds": [
+      "fowlplay:mob/penguin/swim/swim1",
+      "fowlplay:mob/penguin/swim/swim2",
+      "fowlplay:mob/penguin/swim/swim3",
+      "fowlplay:mob/penguin/swim/swim4",
+      "fowlplay:mob/penguin/swim/swim5"
+    ],
+    "subtitle": "fowlplay.subtitles.entity.penguin.swim"
+  },
+  "entity.penguin.hurt": {
+    "sounds": [
+      "fowlplay:mob/penguin/hurt"
+    ],
+    "subtitle": "fowlplay.subtitles.entity.penguin.hurt"
+  },
+  "entity.penguin.death": {
+    "sounds": [
+      "fowlplay:mob/penguin/death"
+    ],
+    "subtitle": "fowlplay.subtitles.entity.penguin.death"
+  }
+}

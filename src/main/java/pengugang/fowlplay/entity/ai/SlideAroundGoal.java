@@ -1,9 +1,9 @@
-package pengugang.foulplay.entity.ai;
+package pengugang.fowlplay.entity.ai;
 
 import net.minecraft.entity.ai.NoPenaltyTargeting;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.Vec3d;
-import pengugang.foulplay.entity.PenguinEntity;
+import pengugang.fowlplay.entity.PenguinEntity;
 
 import javax.annotation.Nullable;
 

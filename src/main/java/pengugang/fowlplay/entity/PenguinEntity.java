@@ -1,9 +1,8 @@
-package pengugang.foulplay.entity;
+package pengugang.fowlplay.entity;
 
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -21,11 +20,11 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import pengugang.foulplay.FoulPlay;
+import pengugang.fowlplay.FowlPlay;
+import pengugang.fowlplay.entity.ai.WanderInWaterGoal;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -89,22 +88,53 @@ public class PenguinEntity extends AnimalEntity implements IAnimatable, ItemStee
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2f);
     }
 
+    public boolean canBreatheInWater() {
+        return false;
+    }
+
+    public boolean isPushedByFluids() {
+        return false;
+    }
+
+    public EntityGroup getGroup() {
+        return EntityGroup.AQUATIC;
+    }
+
+    public void travel(Vec3d movementInput) {
+        if (this.canMoveVoluntarily() && this.isTouchingWater()) {
+            this.updateVelocity(this.getMovementSpeed(), movementInput);
+            this.move(MovementType.SELF, this.getVelocity());
+            this.setVelocity(this.getVelocity().multiply(1));
+        } else {
+            super.travel(movementInput);
+        }
+
+    }
+
     protected void initGoals() {
-        this.goalSelector.add(0, new SwimGoal(this));
+
+        this.goalSelector.add(0, new BreatheAirGoal(this));
         this.goalSelector.add(1, new ExtinguishFire());
         this.goalSelector.add(1, new EscapeDangerGoal(this, 1.4));
         this.goalSelector.add(2, new AnimalMateGoal(this, 1.0));
-        this.goalSelector.add(3, new FleeEntityGoal<>(this, PolarBearEntity.class, 10.0f, 1.0, 1.4));
+        this.goalSelector.add(3, new FleeEntityGoal<>(this, PolarBearEntity.class, 10.0f, 1.4, 1.4));
         this.goalSelector.add(4, new TemptGoal(this, 1.0, BREEDING_INGREDIENT, false));
         this.goalSelector.add(5, new FollowParentGoal(this, 1.1));
         this.goalSelector.add(6, new WanderAroundFarGoal(this, 0.8));
-        this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0f));
-        this.goalSelector.add(8, new LookAroundGoal(this));
+        this.goalSelector.add(7, new MoveIntoWaterGoal(this));
+        this.goalSelector.add(8, new SwimAroundGoal(this, 1.0, 10));
+        this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 6.0f));
+        this.goalSelector.add(10, new LookAroundGoal(this));
     }
 
     @Override
     public int getMaxAir() {
         return 2400;
+    }
+
+    @Override
+    protected int getNextAirOnLand(int air) {
+        return this.getMaxAir();
     }
 
     @Override
@@ -154,22 +184,22 @@ public class PenguinEntity extends AnimalEntity implements IAnimatable, ItemStee
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return this.isBaby() ? FoulPlay.ENTITY_PENGUIN_BABY_AMBIENT : FoulPlay.ENTITY_PENGUIN_AMBIENT;
+        return this.isBaby() ? FowlPlay.ENTITY_PENGUIN_BABY_AMBIENT : FowlPlay.ENTITY_PENGUIN_AMBIENT;
     }
 
     @Override
     protected SoundEvent getSwimSound() {
-        return FoulPlay.ENTITY_PENGUIN_SWIM_AMBIENT;
+        return FowlPlay.ENTITY_PENGUIN_SWIM;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FoulPlay.ENTITY_PENGUIN_HURT;
+        return FowlPlay.ENTITY_PENGUIN_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return FoulPlay.ENTITY_PENGUIN_DEATH;
+        return FowlPlay.ENTITY_PENGUIN_DEATH;
     }
 
 

@@ -1,4 +1,4 @@
-package pengugang.foulplay.world.gen;
+package pengugang.fowlplay.world.gen;
 
 public class WorldGen {
     public static void generateWorldGen() {

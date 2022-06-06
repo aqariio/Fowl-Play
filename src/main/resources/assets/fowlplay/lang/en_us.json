@@ -1,0 +1,9 @@
+{
+  "entity.fowlplay.penguin": "Penguin",
+  "item.fowlplay.penguin_spawn_egg": "Penguin Spawn Egg",
+  "fowlplay.subtitles.entity.penguin.ambient": "Penguin squawks",
+  "fowlplay.subtitles.entity.penguin_baby.ambient": "Baby Penguin chirps",
+  "fowlplay.subtitles.entity.penguin.swim": "Penguin swims",
+  "fowlplay.subtitles.entity.penguin.hurt": "Penguin hurts",
+  "fowlplay.subtitles.entity.penguin.death": "Penguin dies"
+}

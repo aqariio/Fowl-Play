@@ -1,4 +1,4 @@
-package pengugang.foulplay.world.gen;
+package pengugang.fowlplay.world.gen;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -8,7 +8,7 @@ import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
-import pengugang.foulplay.entity.InitEntity;
+import pengugang.fowlplay.entity.InitEntity;
 
 public class EntitySpawn {
     public static void addEntitySpawn() {

@@ -1,31 +1,31 @@
 {
   "schemaVersion": 1,
-  "id": "pengu",
+  "id": "fowlplay",
   "version": "1.0",
 
-  "name": "Foul Play",
+  "name": "Fowl Play",
   "description": "Just smile and wave, boys. Smile and wave.",
   "authors": [
     "aqario and Dean, aka the Pengu Gang"
   ],
   "contact": {
-    "sources": "https://github.com/aqariio/foulplay"
+    "sources": "https://github.com/aqariio/fowlplay"
   },
 
   "license": "MIT",
-  "icon": "assets/foulplay/icon.png",
+  "icon": "assets/fowlplay/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "pengugang.foulplay.FoulPlay"
+      "pengugang.fowlplay.FowlPlay"
     ],
     "client": [
-      "pengugang.foulplay.FoulPlayClient"
+      "pengugang.fowlplay.FowlPlayClient"
     ]
   },
   "mixins": [
-    "foulplay.mixins.json"
+    "fowlplay.mixins.json"
   ],
 
   "depends": {

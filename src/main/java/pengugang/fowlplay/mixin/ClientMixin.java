@@ -1,4 +1,4 @@
-package pengugang.foulplay.mixin;
+package pengugang.fowlplay.mixin;
 
 import net.minecraft.client.gui.screen.TitleScreen;
 import org.spongepowered.asm.mixin.Mixin;

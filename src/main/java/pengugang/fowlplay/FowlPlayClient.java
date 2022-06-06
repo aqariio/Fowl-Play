@@ -1,11 +1,11 @@
-package pengugang.foulplay;
+package pengugang.fowlplay;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import pengugang.foulplay.client.PenguinRenderer;
-import pengugang.foulplay.entity.InitEntity;
+import pengugang.fowlplay.client.PenguinRenderer;
+import pengugang.fowlplay.entity.InitEntity;
 
-public class FoulPlayClient implements ClientModInitializer {
+public class FowlPlayClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         EntityRendererRegistry.register(InitEntity.PENGUIN, PenguinRenderer::new);

@@ -1,8 +1,8 @@
-package pengugang.foulplay.util;
+package pengugang.fowlplay.util;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import pengugang.foulplay.entity.InitEntity;
-import pengugang.foulplay.entity.PenguinEntity;
+import pengugang.fowlplay.entity.InitEntity;
+import pengugang.fowlplay.entity.PenguinEntity;
 
 public class ModRegistries {
     public static void registerModRegistries() {

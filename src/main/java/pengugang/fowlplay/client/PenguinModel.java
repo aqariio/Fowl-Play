@@ -1,8 +1,8 @@
-package pengugang.foulplay.client;
+package pengugang.fowlplay.client;
 
 import net.minecraft.util.Identifier;
-import pengugang.foulplay.FoulPlay;
-import pengugang.foulplay.entity.PenguinEntity;
+import pengugang.fowlplay.FowlPlay;
+import pengugang.fowlplay.entity.PenguinEntity;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -11,17 +11,17 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 public class PenguinModel extends AnimatedGeoModel<PenguinEntity> {
     @Override
     public Identifier getModelLocation(PenguinEntity object) {
-        return object.isBaby() ? new Identifier(FoulPlay.MODID, "geo/penguin_baby.geo.json") : new Identifier(FoulPlay.MODID, "geo/penguin.geo.json");
+        return object.isBaby() ? new Identifier(FowlPlay.MODID, "geo/penguin_baby.geo.json") : new Identifier(FowlPlay.MODID, "geo/penguin.geo.json");
     }
 
     @Override
     public Identifier getTextureLocation(PenguinEntity object) {
-        return new Identifier(FoulPlay.MODID, "textures/entity/penguin/penguin.png");
+        return new Identifier(FowlPlay.MODID, "textures/entity/penguin/penguin.png");
     }
 
     @Override
     public Identifier getAnimationFileLocation(PenguinEntity animatable) {
-        return new Identifier(FoulPlay.MODID, "animations/penguin.animation.json");
+        return new Identifier(FowlPlay.MODID, "animations/penguin.animation.json");
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

@@ -24,7 +24,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import pengugang.fowlplay.FowlPlay;
-import pengugang.fowlplay.entity.ai.WanderInWaterGoal;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -35,38 +34,11 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class PenguinEntity extends AnimalEntity implements IAnimatable, ItemSteerable, Saddleable {
     private AnimationFactory factory = new AnimationFactory(this);
-    private static final TrackedData<Boolean> HAS_EGG = DataTracker.registerData(TurtleEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final Ingredient BREEDING_INGREDIENT = Ingredient.ofItems(Items.COD, Items.SALMON, Items.TROPICAL_FISH);
     public int fleeTime = 0;
 
     public PenguinEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
-    }
-
-    public boolean hasEgg() {
-        return this.dataTracker.get(HAS_EGG);
-    }
-
-    void setHasEgg(boolean hasEgg) {
-        this.dataTracker.set(HAS_EGG, hasEgg);
-    }
-
-    @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(HAS_EGG, false);
-    }
-
-    @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
-        nbt.putBoolean("HasEgg", this.hasEgg());
-    }
-
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        this.setHasEgg(nbt.getBoolean("HasEgg"));
     }
 
     @Nullable
@@ -115,7 +87,7 @@ public class PenguinEntity extends AnimalEntity implements IAnimatable, ItemStee
 
         this.goalSelector.add(0, new BreatheAirGoal(this));
         this.goalSelector.add(1, new ExtinguishFire());
-        this.goalSelector.add(1, new EscapeDangerGoal(this, 1.4));
+        this.goalSelector.add(1, new EscapeDangerGoal(this, 1.2));
         this.goalSelector.add(2, new AnimalMateGoal(this, 1.0));
         this.goalSelector.add(3, new FleeEntityGoal<>(this, PolarBearEntity.class, 10.0f, 1.4, 1.4));
         this.goalSelector.add(4, new TemptGoal(this, 1.0, BREEDING_INGREDIENT, false));
@@ -123,7 +95,7 @@ public class PenguinEntity extends AnimalEntity implements IAnimatable, ItemStee
         this.goalSelector.add(6, new WanderAroundFarGoal(this, 0.8));
         this.goalSelector.add(7, new MoveIntoWaterGoal(this));
         this.goalSelector.add(8, new SwimAroundGoal(this, 1.0, 10));
-        this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 6.0f));
+        this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 15.0f));
         this.goalSelector.add(10, new LookAroundGoal(this));
     }
 
@@ -139,7 +111,7 @@ public class PenguinEntity extends AnimalEntity implements IAnimatable, ItemStee
 
     @Override
     protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
-        return this.isBaby() ? 0.6f : 1.2f;
+        return this.isBaby() ? 0.6f : 1.3f;
     }
 
     @Override

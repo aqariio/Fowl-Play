@@ -25,7 +25,7 @@ public class PenguinRenderer extends GeoEntityRenderer<PenguinEntity> {
         if (animatable.isBaby()) {
             stack.scale(0.8f, 0.8f, 0.8f);
         } else {
-            stack.scale(1f, 1f, 1f);
+            stack.scale(1.1f, 1.1f, 1.1f);
         }
 
         return super.getRenderType(animatable, partialTicks, stack, renderTypeBuffer, vertexBuilder, packedLightIn, textureLocation);

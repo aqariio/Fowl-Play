@@ -12,5 +12,10 @@ public class InitEntity {
     public static final EntityType<PenguinEntity> PENGUIN = Registry.register(
             Registry.ENTITY_TYPE, new Identifier(FowlPlay.MODID, "penguin"),
             FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, PenguinEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.4f, 1.3f)).build());
+                    .dimensions(EntityDimensions.changing(0.6f, 1.4f)).build());
+
+    public static final EntityType<SeagullEntity> SEAGULL = Registry.register(
+            Registry.ENTITY_TYPE, new Identifier(FowlPlay.MODID, "seagull"),
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, SeagullEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.6f, 0.8f)).build());
 }

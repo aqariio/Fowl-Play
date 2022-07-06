@@ -8,11 +8,12 @@ import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeKeys;
 import pengugang.fowlplay.entity.InitEntity;
 
 public class EntitySpawn {
     public static void addEntitySpawn() {
-        BiomeModifications.addSpawn(BiomeSelectors.categories(Biome.Category.ICY),
+        BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.SNOWY_PLAINS, BiomeKeys.SNOWY_BEACH),
                 SpawnGroup.CREATURE, InitEntity.PENGUIN, 7, 20, 40);
 
         SpawnRestrictionAccessor.callRegister(InitEntity.PENGUIN, SpawnRestriction.Location.ON_GROUND,

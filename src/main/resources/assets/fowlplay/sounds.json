@@ -1,15 +1,15 @@
 {
-  "entity.penguin.ambient": {
+  "entity.penguin.idle": {
     "sounds": [
-      "fowlplay:mob/penguin/ambient"
+      "fowlplay:mob/penguin/idle"
     ],
-    "subtitle": "fowlplay.subtitles.entity.penguin.ambient"
+    "subtitle": "fowlplay.subtitles.entity.penguin.idle"
   },
-  "entity.penguin_baby.ambient": {
+  "entity.penguin_baby.idle": {
     "sounds": [
-      "fowlplay:mob/penguin/baby_ambient"
+      "fowlplay:mob/penguin/baby_idle"
     ],
-    "subtitle": "fowlplay.subtitles.entity.penguin_baby.ambient"
+    "subtitle": "fowlplay.subtitles.entity.penguin_baby.idle"
   },
   "entity.penguin.swim": {
     "sounds": [
@@ -32,5 +32,15 @@
       "fowlplay:mob/penguin/death"
     ],
     "subtitle": "fowlplay.subtitles.entity.penguin.death"
+  },
+  "entity.seagull.idle": {
+    "sounds": [
+      "fowlplay:mob/seagull/idle1",
+      "fowlplay:mob/seagull/idle2",
+      "fowlplay:mob/seagull/idle3",
+      "fowlplay:mob/seagull/idle4",
+      "fowlplay:mob/seagull/idle5"
+    ],
+    "subtitle": "fowlplay.subtitles.entity.seagull.idle"
   }
 }

@@ -11,17 +11,17 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 public class SeagullModel extends AnimatedGeoModel<SeagullEntity> {
     @Override
-    public Identifier getModelLocation(SeagullEntity object) {
+    public Identifier getModelResource(SeagullEntity object) {
         return object.isFlying() ? new Identifier(FowlPlay.MODID, "geo/seagull_flying.geo.json") : new Identifier(FowlPlay.MODID, "geo/seagull.geo.json");
     }
 
     @Override
-    public Identifier getTextureLocation(SeagullEntity object) {
+    public Identifier getTextureResource(SeagullEntity object) {
         return new Identifier(FowlPlay.MODID, "textures/entity/seagull/seagull.png");
     }
 
     @Override
-    public Identifier getAnimationFileLocation(SeagullEntity animatable) {
+    public Identifier getAnimationResource(SeagullEntity animatable) {
         return new Identifier(FowlPlay.MODID, "animations/seagull.animation.json");
     }
 

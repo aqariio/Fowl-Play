@@ -16,7 +16,7 @@ public class PenguinRenderer extends GeoEntityRenderer<PenguinEntity> {
     }
 
     @Override
-    public Identifier getTextureLocation(PenguinEntity instance) {
+    public Identifier getTextureResource(PenguinEntity instance) {
         return instance.isBaby() ? new Identifier(FowlPlay.MODID, "textures/entity/penguin/penguin_baby.png") : new Identifier(FowlPlay.MODID, "textures/entity/penguin/penguin.png");
     }
 

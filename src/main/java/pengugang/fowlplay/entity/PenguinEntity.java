@@ -156,7 +156,7 @@ public class PenguinEntity extends AnimalEntity implements IAnimatable, ItemStee
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return this.isBaby() ? FowlPlay.ENTITY_PENGUIN_BABY_AMBIENT : FowlPlay.ENTITY_PENGUIN_AMBIENT;
+        return this.isBaby() ? FowlPlay.ENTITY_PENGUIN_BABY_IDLE : FowlPlay.ENTITY_PENGUIN_IDLE;
     }
 
     @Override

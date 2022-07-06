@@ -23,7 +23,7 @@ public class FowlPlay  implements ModInitializer {
             new SpawnEggItem(InitEntity.PENGUIN, 0x151419, 0xfafafa,
                     new Item.Settings().group(ItemGroup.MISC)));
     public static final Item SEAGULL_SPAWN_EGG = registerItem("seagull_spawn_egg",
-            new SpawnEggItem(InitEntity.SEAGULL, 0xEAEDF0, 0x414547,
+            new SpawnEggItem(InitEntity.SEAGULL, 0xEAEDF0, 0xFFD850,
                     new Item.Settings().group(ItemGroup.MISC)));
 
     // Registering Item
@@ -33,11 +33,13 @@ public class FowlPlay  implements ModInitializer {
 
 
     // Sounds
-    public static SoundEvent ENTITY_PENGUIN_AMBIENT = new SoundEvent(new Identifier(MODID, "entity.penguin.ambient"));
-    public static SoundEvent ENTITY_PENGUIN_BABY_AMBIENT = new SoundEvent(new Identifier(MODID, "entity.penguin_baby.ambient"));
+    public static SoundEvent ENTITY_PENGUIN_IDLE = new SoundEvent(new Identifier(MODID, "entity.penguin.idle"));
+    public static SoundEvent ENTITY_PENGUIN_BABY_IDLE = new SoundEvent(new Identifier(MODID, "entity.penguin_baby.idle"));
     public static SoundEvent ENTITY_PENGUIN_SWIM = new SoundEvent(new Identifier(MODID, "entity.penguin.swim"));
     public static SoundEvent ENTITY_PENGUIN_HURT = new SoundEvent(new Identifier(MODID, "entity.penguin.hurt"));
     public static SoundEvent ENTITY_PENGUIN_DEATH = new SoundEvent(new Identifier(MODID, "entity.penguin.death"));
+
+    public static SoundEvent ENTITY_SEAGULL_IDLE = new SoundEvent(new Identifier(MODID, "entity.seagull.idle"));
 
     @Override
     public void onInitialize() {

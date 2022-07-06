@@ -17,7 +17,7 @@ public class SeagullRenderer extends GeoEntityRenderer<SeagullEntity> {
     }
 
     @Override
-    public Identifier getTextureLocation(SeagullEntity instance) {
+    public Identifier getTextureResource(SeagullEntity instance) {
         return new Identifier(FowlPlay.MODID, "textures/entity/seagull/seagull.png");
     }
 

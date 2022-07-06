@@ -10,17 +10,17 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 public class PenguinModel extends AnimatedGeoModel<PenguinEntity> {
     @Override
-    public Identifier getModelLocation(PenguinEntity object) {
+    public Identifier getModelResource(PenguinEntity object) {
         return object.isBaby() ? new Identifier(FowlPlay.MODID, "geo/penguin_baby.geo.json") : new Identifier(FowlPlay.MODID, "geo/penguin.geo.json");
     }
 
     @Override
-    public Identifier getTextureLocation(PenguinEntity object) {
+    public Identifier getTextureResource(PenguinEntity object) {
         return new Identifier(FowlPlay.MODID, "textures/entity/penguin/penguin.png");
     }
 
     @Override
-    public Identifier getAnimationFileLocation(PenguinEntity animatable) {
+    public Identifier getAnimationResource(PenguinEntity animatable) {
         return new Identifier(FowlPlay.MODID, "animations/penguin.animation.json");
     }
 

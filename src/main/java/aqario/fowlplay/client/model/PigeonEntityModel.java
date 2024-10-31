@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 public class PigeonEntityModel extends BirdEntityModel<PigeonEntity> {
-    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of(FowlPlay.ID, "pigeon"), "main");
+    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(new Identifier(FowlPlay.ID, "pigeon"), "main");
     public final ModelPart root;
     public final ModelPart body;
     public final ModelPart neck;
@@ -100,7 +100,7 @@ public class PigeonEntityModel extends BirdEntityModel<PigeonEntity> {
             this.root.roll = pigeon.getRoll(tickDelta) * (float) (Math.PI / 180.0);
         }
         if (!pigeon.isFlying() && !pigeon.isInsideWaterOrBubbleColumn()) {
-            this.animateWalk(PigeonEntityAnimations.PIGEON_WALK, limbAngle, limbDistance, 5F, 5F);
+            this.animateMovement(PigeonEntityAnimations.PIGEON_WALK, limbAngle, limbDistance, 5F, 5F);
         }
         if (pigeon.isFlying()) {
             this.leftWingOpen.visible = true;
@@ -114,10 +114,10 @@ public class PigeonEntityModel extends BirdEntityModel<PigeonEntity> {
             this.leftWing.visible = true;
             this.rightWing.visible = true;
         }
-        this.animate(pigeon.idleState, PigeonEntityAnimations.PIGEON_IDLE, ageInTicks);
-        this.animate(pigeon.floatState, PigeonEntityAnimations.PIGEON_FLOAT, ageInTicks);
-        this.animate(pigeon.glideState, PigeonEntityAnimations.PIGEON_GLIDE, ageInTicks);
-        this.animate(pigeon.flapState, PigeonEntityAnimations.PIGEON_FLAP, ageInTicks);
+        this.updateAnimation(pigeon.idleState, PigeonEntityAnimations.PIGEON_IDLE, ageInTicks);
+        this.updateAnimation(pigeon.floatState, PigeonEntityAnimations.PIGEON_FLOAT, ageInTicks);
+        this.updateAnimation(pigeon.glideState, PigeonEntityAnimations.PIGEON_GLIDE, ageInTicks);
+        this.updateAnimation(pigeon.flapState, PigeonEntityAnimations.PIGEON_FLAP, ageInTicks);
     }
 
     private void updateHeadRotation(float headYaw, float headPitch) {

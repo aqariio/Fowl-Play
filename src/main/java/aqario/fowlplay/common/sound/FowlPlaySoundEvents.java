@@ -32,8 +32,8 @@ public final class FowlPlaySoundEvents {
     public static final SoundEvent ENTITY_ROBIN_HURT = register("entity.robin.hurt");
 
     private static SoundEvent register(String id) {
-        Identifier identifier = Identifier.of(FowlPlay.ID, id);
-        return Registry.register(Registries.SOUND_EVENT, identifier, SoundEvent.createVariableRangeEvent(identifier));
+        Identifier identifier = new Identifier(FowlPlay.ID, id);
+        return Registry.register(Registries.SOUND_EVENT, identifier, SoundEvent.of(identifier));
     }
 
     public static void init() {

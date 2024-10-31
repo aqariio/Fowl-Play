@@ -24,7 +24,7 @@ public class PenguinEntityRenderer extends MobEntityRenderer<PenguinEntity, Peng
 
     @Override
     public Identifier getTexture(PenguinEntity entity) {
-        return entity.isBaby() ? Identifier.of(FowlPlay.ID, "textures/entity/penguin/penguin_baby.png") : Identifier.of(FowlPlay.ID, "textures/entity/penguin/penguin.png");
+        return entity.isBaby() ? new Identifier(FowlPlay.ID, "textures/entity/penguin/penguin_baby.png") : new Identifier(FowlPlay.ID, "textures/entity/penguin/penguin.png");
     }
 
     @Override

@@ -15,6 +15,6 @@ public final class FowlPlayItemTags {
     public static final TagKey<Item> ROBIN_FOOD = create("robin_food");
 
     private static TagKey<Item> create(String id) {
-        return TagKey.of(RegistryKeys.ITEM, Identifier.of(FowlPlay.ID, id));
+        return TagKey.of(RegistryKeys.ITEM, new Identifier(FowlPlay.ID, id));
     }
 }

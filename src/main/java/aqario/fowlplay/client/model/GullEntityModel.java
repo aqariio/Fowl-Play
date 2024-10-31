@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 public class GullEntityModel extends BirdEntityModel<GullEntity> {
-    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of(FowlPlay.ID, "gull"), "main");
+    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(new Identifier(FowlPlay.ID, "gull"), "main");
     public final ModelPart root;
     public final ModelPart body;
     public final ModelPart neck;
@@ -101,7 +101,7 @@ public class GullEntityModel extends BirdEntityModel<GullEntity> {
             this.root.roll = gull.getRoll(tickDelta) * (float) (Math.PI / 180.0);
         }
         if (!gull.isFlying() && !gull.isInsideWaterOrBubbleColumn()) {
-            this.animateWalk(GullEntityAnimations.GULL_WALK, limbAngle, limbDistance, 4F, 4F);
+            this.animateMovement(GullEntityAnimations.GULL_WALK, limbAngle, limbDistance, 4F, 4F);
         }
         if (gull.isFlying()) {
             this.leftWingOpen.visible = true;
@@ -115,10 +115,10 @@ public class GullEntityModel extends BirdEntityModel<GullEntity> {
             this.leftWing.visible = true;
             this.rightWing.visible = true;
         }
-        this.animate(gull.idleState, GullEntityAnimations.GULL_IDLE, ageInTicks);
-        this.animate(gull.floatState, GullEntityAnimations.GULL_FLOAT, ageInTicks);
-        this.animate(gull.glideState, GullEntityAnimations.GULL_GLIDE, ageInTicks);
-        this.animate(gull.flapState, GullEntityAnimations.GULL_FLAP, ageInTicks);
+        this.updateAnimation(gull.idleState, GullEntityAnimations.GULL_IDLE, ageInTicks);
+        this.updateAnimation(gull.floatState, GullEntityAnimations.GULL_FLOAT, ageInTicks);
+        this.updateAnimation(gull.glideState, GullEntityAnimations.GULL_GLIDE, ageInTicks);
+        this.updateAnimation(gull.flapState, GullEntityAnimations.GULL_FLAP, ageInTicks);
     }
 
     private void updateHeadRotation(float headYaw, float headPitch) {

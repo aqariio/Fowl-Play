@@ -22,6 +22,6 @@ public class BlueJayEntityRenderer extends MobEntityRenderer<BlueJayEntity, Blue
 
     @Override
     public Identifier getTexture(BlueJayEntity entity) {
-        return Identifier.of(FowlPlay.ID, "textures/entity/blue_jay/blue_jay.png");
+        return new Identifier(FowlPlay.ID, "textures/entity/blue_jay/blue_jay.png");
     }
 }

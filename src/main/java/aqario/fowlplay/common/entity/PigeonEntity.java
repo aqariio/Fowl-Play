@@ -5,7 +5,6 @@ import aqario.fowlplay.common.tags.FowlPlayBiomeTags;
 import aqario.fowlplay.common.tags.FowlPlayBlockTags;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
@@ -34,7 +33,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.random.RandomGenerator;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -46,7 +45,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class PigeonEntity extends TameableBirdEntity implements VariantProvider<PigeonEntity.Variant> {
+public class PigeonEntity extends TameableBirdEntity implements VariantHolder<PigeonEntity.Variant> {
     private static final TrackedData<Optional<UUID>> RECIPIENT = DataTracker.registerData(PigeonEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     private static final TrackedData<String> VARIANT = DataTracker.registerData(PigeonEntity.class, TrackedDataHandlerRegistry.STRING);
     public final AnimationState idleState = new AnimationState();
@@ -56,46 +55,51 @@ public class PigeonEntity extends TameableBirdEntity implements VariantProvider<
 
     public PigeonEntity(EntityType<? extends PigeonEntity> entityType, World world) {
         super(entityType, world);
-        this.addPathfindingPenalty(PathNodeType.DANGER_FIRE, -1.0f);
-        this.addPathfindingPenalty(PathNodeType.WATER, -3.0f);
-        this.addPathfindingPenalty(PathNodeType.WATER_BORDER, 12.0f);
-        this.addPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, -1.0f);
-        this.addPathfindingPenalty(PathNodeType.COCOA, -1.0f);
-        this.addPathfindingPenalty(PathNodeType.FENCE, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.DANGER_FIRE, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.WATER, -3.0f);
+        this.setPathfindingPenalty(PathNodeType.WATER_BORDER, 12.0f);
+        this.setPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.COCOA, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.FENCE, -1.0f);
+    }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 0.5f;
     }
 
     @SuppressWarnings("unused")
-    public static boolean canSpawn(EntityType<? extends BirdEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, RandomGenerator random) {
+    public static boolean canSpawn(EntityType<? extends BirdEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
         return world.getBiome(pos).isIn(FowlPlayBiomeTags.SPAWNS_PIGEONS) && world.getBlockState(pos.down()).isIn(FowlPlayBlockTags.SHOREBIRDS_SPAWNABLE_ON);
     }
 
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         PigeonBrain.init();
         this.setVariant(Util.getRandom(Variant.VARIANTS, world.getRandom()));
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
     @Override
-    protected void initEquipment(RandomGenerator random, LocalDifficulty difficulty) {
-        this.setDropChance(EquipmentSlot.MAINHAND, 1.0f);
-        this.setDropChance(EquipmentSlot.OFFHAND, 1.0f);
+    protected void initEquipment(Random random, LocalDifficulty difficulty) {
+        this.setEquipmentDropChance(EquipmentSlot.MAINHAND, 1.0f);
+        this.setEquipmentDropChance(EquipmentSlot.OFFHAND, 1.0f);
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(RECIPIENT, Optional.empty());
-        builder.add(VARIANT, Variant.BANDED.toString());
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(RECIPIENT, Optional.empty());
+        this.dataTracker.startTracking(VARIANT, Variant.BANDED.toString());
     }
 
     @Override
-    public PigeonEntity.Variant getVariant() {
-        return PigeonEntity.Variant.valueOf(this.dataTracker.get(VARIANT));
+    public Variant getVariant() {
+        return Variant.valueOf(this.dataTracker.get(VARIANT));
     }
 
     @Override
-    public void setVariant(PigeonEntity.Variant variant) {
+    public void setVariant(Variant variant) {
         this.dataTracker.set(VARIANT, variant.toString());
     }
 
@@ -117,7 +121,7 @@ public class PigeonEntity extends TameableBirdEntity implements VariantProvider<
         }
         this.setRecipientUuid(nbt.getUuid("recipient"));
         if (nbt.contains("variant")) {
-            this.setVariant(PigeonEntity.Variant.valueOf(nbt.getString("variant")));
+            this.setVariant(Variant.valueOf(nbt.getString("variant")));
         }
     }
 
@@ -150,8 +154,8 @@ public class PigeonEntity extends TameableBirdEntity implements VariantProvider<
         return false;
     }
 
-    public static DefaultAttributeContainer.Builder createAttributes() {
-        return FlyingBirdEntity.createAttributes()
+    public static DefaultAttributeContainer.Builder createMobAttributes() {
+        return FlyingBirdEntity.createMobAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 8.0)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2f)
             .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.25f);
@@ -171,7 +175,7 @@ public class PigeonEntity extends TameableBirdEntity implements VariantProvider<
         ItemStack playerStack = player.getStackInHand(hand);
         ItemStack bundleStack = this.getStackInHand(Hand.OFF_HAND);
 
-        if (bundleStack.isEmpty() && playerStack.getItem() instanceof BundleItem && playerStack.getComponents().contains(DataComponentTypes.CUSTOM_NAME) && this.isTamed()) {
+        if (bundleStack.isEmpty() && playerStack.getItem() instanceof BundleItem && playerStack.hasCustomName() && this.isTamed()) {
             if (!this.getWorld().isClient) {
                 this.setStackInHand(Hand.OFF_HAND, playerStack);
                 player.setStackInHand(hand, ItemStack.EMPTY);
@@ -225,7 +229,7 @@ public class PigeonEntity extends TameableBirdEntity implements VariantProvider<
 
     @Override
     public Ingredient getFood() {
-        return Ingredient.ofTag(FowlPlayItemTags.PIGEON_FOOD);
+        return Ingredient.fromTag(FowlPlayItemTags.PIGEON_FOOD);
     }
 
     @Override
@@ -241,9 +245,9 @@ public class PigeonEntity extends TameableBirdEntity implements VariantProvider<
     @Override
     public void tick() {
         if (this.getWorld().isClient()) {
-            this.idleState.animateIf(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
-            this.flapState.animateIf(this.isFlying(), this.age);
-            this.floatState.animateIf(this.isInsideWaterOrBubbleColumn(), this.age);
+            this.idleState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
+            this.flapState.setRunning(this.isFlying(), this.age);
+            this.floatState.setRunning(this.isInsideWaterOrBubbleColumn(), this.age);
         }
 
         super.tick();
@@ -270,7 +274,7 @@ public class PigeonEntity extends TameableBirdEntity implements VariantProvider<
         ItemStack stack = this.getEquippedStack(EquipmentSlot.OFFHAND);
         ServerPlayerEntity recipient = this.getServer().getPlayerManager().getPlayer(stack.getName().getString());
 
-        if (!(stack.getItem() instanceof BundleItem) || !stack.getComponents().contains(DataComponentTypes.CUSTOM_NAME) || recipient == null || recipient.getUuid() == null) {
+        if (!(stack.getItem() instanceof BundleItem) || !stack.hasCustomName() || recipient == null || recipient.getUuid() == null) {
             this.setRecipientUuid(null);
             return;
         }

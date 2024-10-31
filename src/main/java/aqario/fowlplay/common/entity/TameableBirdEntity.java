@@ -10,7 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.scoreboard.Team;
+import net.minecraft.scoreboard.AbstractTeam;
 import net.minecraft.server.ServerConfigHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.EntityView;
@@ -31,10 +31,10 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements T
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(TAMEABLE_FLAGS, (byte) 0);
-        builder.add(OWNER, Optional.empty());
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(TAMEABLE_FLAGS, (byte) 0);
+        this.dataTracker.startTracking(OWNER, Optional.empty());
     }
 
     @Override
@@ -172,7 +172,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements T
     }
 
     @Override
-    public Team getScoreboardTeam() {
+    public AbstractTeam getScoreboardTeam() {
         if (this.isTamed()) {
             LivingEntity livingEntity = this.getOwner();
             if (livingEntity != null) {
@@ -201,8 +201,8 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements T
 
     @Override
     public void onDeath(DamageSource source) {
-        if (!this.getWorld().isClient && this.getWorld().getGameRules().getBooleanValue(GameRules.SHOW_DEATH_MESSAGES) && this.getOwner() instanceof ServerPlayerEntity) {
-            this.getOwner().sendSystemMessage(this.getDamageTracker().getDeathMessage());
+        if (!this.getWorld().isClient && this.getWorld().getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES) && this.getOwner() instanceof ServerPlayerEntity) {
+            this.getOwner().sendMessage(this.getDamageTracker().getDeathMessage());
         }
 
         super.onDeath(source);
@@ -217,7 +217,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements T
     }
 
     @Override
-    public EntityView getEntityView() {
+    public EntityView method_48926() {
         return null;
     }
 }

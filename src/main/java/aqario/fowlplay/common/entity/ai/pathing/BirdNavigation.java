@@ -44,12 +44,12 @@ public class BirdNavigation extends MobNavigation {
 
     @Override
     protected boolean canPathDirectlyThrough(Vec3d origin, Vec3d target) {
-        return canPathDirectlyThrough(this.entity, origin, target, true);
+        return doesNotCollide(this.entity, origin, target, true);
     }
 
     @Override
     protected boolean isAtValidPosition() {
-        return this.canSwim() && this.entity.isInFluid() || !this.entity.hasVehicle();
+        return this.canSwim() && this.entity.isInsideWaterOrBubbleColumn() || !this.entity.hasVehicle();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class BirdNavigation extends MobNavigation {
     @Override
     public void tick() {
         this.tickCount++;
-        if (this.shouldRecalculate) {
+        if (this.inRecalculationCooldown) {
             this.recalculatePath();
         }
 
@@ -117,7 +117,7 @@ public class BirdNavigation extends MobNavigation {
         }
         else {
             Vec3d vec3d = Vec3d.ofCenter(this.currentPath.getCurrentNodePos());
-            if (!currentPos.withinRange(vec3d, 4)) {
+            if (!currentPos.isInRange(vec3d, 4)) {
                 return false;
             }
             else {

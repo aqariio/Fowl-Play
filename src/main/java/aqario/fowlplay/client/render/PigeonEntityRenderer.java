@@ -24,6 +24,6 @@ public class PigeonEntityRenderer extends MobEntityRenderer<PigeonEntity, Pigeon
 
     @Override
     public Identifier getTexture(PigeonEntity entity) {
-        return Identifier.of(FowlPlay.ID, "textures/entity/pigeon/pigeon.png");
+        return new Identifier(FowlPlay.ID, "textures/entity/pigeon/pigeon.png");
     }
 }

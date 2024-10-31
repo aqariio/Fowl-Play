@@ -3,9 +3,7 @@ package aqario.fowlplay.common.entity;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
-import net.minecraft.entity.AnimationState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.damage.DamageSource;
@@ -28,17 +26,22 @@ public class BlueJayEntity extends FlyingBirdEntity {
 
     protected BlueJayEntity(EntityType<? extends BirdEntity> entityType, World world) {
         super(entityType, world);
-        this.addPathfindingPenalty(PathNodeType.DANGER_FIRE, -1.0f);
-        this.addPathfindingPenalty(PathNodeType.WATER, -1.0f);
-        this.addPathfindingPenalty(PathNodeType.WATER_BORDER, -1.0f);
-        this.addPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, -1.0f);
-        this.addPathfindingPenalty(PathNodeType.COCOA, -1.0f);
-        this.addPathfindingPenalty(PathNodeType.FENCE, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.DANGER_FIRE, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.WATER, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.WATER_BORDER, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.COCOA, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.FENCE, -1.0f);
+    }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 0.475f;
     }
 
     @Override
     public Ingredient getFood() {
-        return Ingredient.ofTag(FowlPlayItemTags.BLUE_JAY_FOOD);
+        return Ingredient.fromTag(FowlPlayItemTags.BLUE_JAY_FOOD);
     }
 
     @Nullable
@@ -71,9 +74,9 @@ public class BlueJayEntity extends FlyingBirdEntity {
 //                --this.flapAnimationTimeout;
 //            }
 
-            this.idleState.animateIf(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
-            this.flapState.animateIf(this.isFlying(), this.age);
-            this.floatState.animateIf(this.isInsideWaterOrBubbleColumn(), this.age);
+            this.idleState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
+            this.flapState.setRunning(this.isFlying(), this.age);
+            this.floatState.setRunning(this.isInsideWaterOrBubbleColumn(), this.age);
         }
 
         super.tick();

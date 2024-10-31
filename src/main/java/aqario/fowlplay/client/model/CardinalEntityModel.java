@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 public class CardinalEntityModel extends BirdEntityModel<CardinalEntity> {
-    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of(FowlPlay.ID, "cardinal"), "main");
+    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(new Identifier(FowlPlay.ID, "cardinal"), "main");
     public final ModelPart root;
     public final ModelPart body;
     public final ModelPart neck;
@@ -101,7 +101,7 @@ public class CardinalEntityModel extends BirdEntityModel<CardinalEntity> {
             this.root.roll = cardinal.getRoll(tickDelta) * (float) (Math.PI / 180.0);
         }
         if (!cardinal.isFlying() && !cardinal.isInsideWaterOrBubbleColumn()) {
-            this.animateWalk(CardinalEntityAnimations.CARDINAL_WALK, limbAngle, limbDistance, 6F, 6F);
+            this.animateMovement(CardinalEntityAnimations.CARDINAL_WALK, limbAngle, limbDistance, 6F, 6F);
         }
         if (cardinal.isFlying()) {
             this.leftWingOpen.visible = true;
@@ -115,10 +115,10 @@ public class CardinalEntityModel extends BirdEntityModel<CardinalEntity> {
             this.leftWing.visible = true;
             this.rightWing.visible = true;
         }
-        this.animate(cardinal.idleState, CardinalEntityAnimations.CARDINAL_IDLE, ageInTicks);
-        this.animate(cardinal.floatState, CardinalEntityAnimations.CARDINAL_FLOAT, ageInTicks);
-        this.animate(cardinal.glideState, CardinalEntityAnimations.CARDINAL_GLIDE, ageInTicks);
-        this.animate(cardinal.flapState, CardinalEntityAnimations.CARDINAL_FLAP, ageInTicks);
+        this.updateAnimation(cardinal.idleState, CardinalEntityAnimations.CARDINAL_IDLE, ageInTicks);
+        this.updateAnimation(cardinal.floatState, CardinalEntityAnimations.CARDINAL_FLOAT, ageInTicks);
+        this.updateAnimation(cardinal.glideState, CardinalEntityAnimations.CARDINAL_GLIDE, ageInTicks);
+        this.updateAnimation(cardinal.flapState, CardinalEntityAnimations.CARDINAL_FLAP, ageInTicks);
     }
 
     private void updateHeadRotation(float headYaw, float headPitch) {

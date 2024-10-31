@@ -3,10 +3,7 @@ package aqario.fowlplay.common.entity;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
-import net.minecraft.entity.AnimationState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.VariantProvider;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.damage.DamageSource;
@@ -25,7 +22,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class RobinEntity extends FlyingBirdEntity implements VariantProvider<RobinEntity.Variant> {
+public class RobinEntity extends FlyingBirdEntity implements VariantHolder<RobinEntity.Variant> {
     private static final TrackedData<String> VARIANT = DataTracker.registerData(RobinEntity.class, TrackedDataHandlerRegistry.STRING);
     public final AnimationState idleState = new AnimationState();
     public final AnimationState glideState = new AnimationState();
@@ -35,18 +32,23 @@ public class RobinEntity extends FlyingBirdEntity implements VariantProvider<Rob
 
     public RobinEntity(EntityType<? extends RobinEntity> entityType, World world) {
         super(entityType, world);
-        this.addPathfindingPenalty(PathNodeType.DANGER_FIRE, -1.0f);
-        this.addPathfindingPenalty(PathNodeType.WATER, -1.0f);
-        this.addPathfindingPenalty(PathNodeType.WATER_BORDER, -1.0f);
-        this.addPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, -1.0f);
-        this.addPathfindingPenalty(PathNodeType.COCOA, -1.0f);
-        this.addPathfindingPenalty(PathNodeType.FENCE, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.DANGER_FIRE, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.WATER, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.WATER_BORDER, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.COCOA, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.FENCE, -1.0f);
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(VARIANT, /*Util.getRandom(Variant.VARIANTS, random).toString()*/ Variant.AMERICAN.toString());
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 0.475f;
+    }
+
+    @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(VARIANT, /*Util.getRandom(Variant.VARIANTS, random).toString()*/ Variant.AMERICAN.toString());
     }
 
     @Override
@@ -86,7 +88,7 @@ public class RobinEntity extends FlyingBirdEntity implements VariantProvider<Rob
 
     @Override
     public Ingredient getFood() {
-        return Ingredient.ofTag(FowlPlayItemTags.ROBIN_FOOD);
+        return Ingredient.fromTag(FowlPlayItemTags.ROBIN_FOOD);
     }
 
     @Override
@@ -102,9 +104,9 @@ public class RobinEntity extends FlyingBirdEntity implements VariantProvider<Rob
     @Override
     public void tick() {
         if (this.getWorld().isClient()) {
-            this.idleState.animateIf(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
-            this.flapState.animateIf(this.isFlying(), this.age);
-            this.floatState.animateIf(this.isInsideWaterOrBubbleColumn(), this.age);
+            this.idleState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
+            this.flapState.setRunning(this.isFlying(), this.age);
+            this.floatState.setRunning(this.isInsideWaterOrBubbleColumn(), this.age);
         }
 
         super.tick();

@@ -1,178 +1,178 @@
 package aqario.fowlplay.client.render.animation;
 
-import net.minecraft.client.render.animation.Animation;
-import net.minecraft.client.render.animation.AnimationKeyframe;
-import net.minecraft.client.render.animation.Animator;
-import net.minecraft.client.render.animation.PartAnimation;
+import net.minecraft.client.render.entity.animation.Animation;
+import net.minecraft.client.render.entity.animation.AnimationHelper;
+import net.minecraft.client.render.entity.animation.Keyframe;
+import net.minecraft.client.render.entity.animation.Transformation;
 
 public class ChickenEntityAnimations {
-    public static final Animation CHICKEN_IDLE = Animation.Builder.withLength(1f).looping()
-        .addPartAnimation(
+    public static final Animation CHICKEN_IDLE = Animation.Builder.create(1f).looping()
+        .addBoneAnimation(
             "head",
-            new PartAnimation(
-                PartAnimation.AnimationTargets.ROTATE,
-                new AnimationKeyframe(0f, Animator.rotate(1f, 0f, 0f), PartAnimation.Interpolations.LINEAR)
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(1f, 0f, 0f), Transformation.Interpolations.LINEAR)
             )
         )
-        .addPartAnimation(
+        .addBoneAnimation(
             "left_wing",
-            new PartAnimation(
-                PartAnimation.AnimationTargets.TRANSLATE,
-                new AnimationKeyframe(0f, Animator.translate(-0.2f, -0.2f, 0f), PartAnimation.Interpolations.LINEAR)
+            new Transformation(
+                Transformation.Targets.TRANSLATE,
+                new Keyframe(0f, AnimationHelper.createTranslationalVector(-0.2f, -0.2f, 0f), Transformation.Interpolations.LINEAR)
             )
         )
-        .addPartAnimation(
+        .addBoneAnimation(
             "left_wing",
-            new PartAnimation(
-                PartAnimation.AnimationTargets.ROTATE,
-                new AnimationKeyframe(0f, Animator.rotate(-2.22f, -4.2f, -4.71f), PartAnimation.Interpolations.LINEAR)
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(-2.22f, -4.2f, -4.71f), Transformation.Interpolations.LINEAR)
             )
         )
-        .addPartAnimation(
+        .addBoneAnimation(
             "right_wing",
-            new PartAnimation(
-                PartAnimation.AnimationTargets.TRANSLATE,
-                new AnimationKeyframe(0f, Animator.translate(0.2f, -0.2f, 0f), PartAnimation.Interpolations.LINEAR)
+            new Transformation(
+                Transformation.Targets.TRANSLATE,
+                new Keyframe(0f, AnimationHelper.createTranslationalVector(0.2f, -0.2f, 0f), Transformation.Interpolations.LINEAR)
             )
         )
-        .addPartAnimation(
+        .addBoneAnimation(
             "right_wing",
-            new PartAnimation(
-                PartAnimation.AnimationTargets.ROTATE,
-                new AnimationKeyframe(0f, Animator.rotate(-2.22f, 4.2f, 4.71f), PartAnimation.Interpolations.LINEAR)
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(-2.22f, 4.2f, 4.71f), Transformation.Interpolations.LINEAR)
             )
         )
-        .addPartAnimation(
+        .addBoneAnimation(
             "tail",
-            new PartAnimation(
-                PartAnimation.AnimationTargets.ROTATE,
-                new AnimationKeyframe(0f, Animator.rotate(2.5f, 0f, 0f), PartAnimation.Interpolations.LINEAR)
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(2.5f, 0f, 0f), Transformation.Interpolations.LINEAR)
             )
         )
-        .addPartAnimation(
+        .addBoneAnimation(
             "left_leg",
-            new PartAnimation(
-                PartAnimation.AnimationTargets.ROTATE,
-                new AnimationKeyframe(0f, Animator.rotate(0f, -10f, 0f), PartAnimation.Interpolations.LINEAR)
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(0f, -10f, 0f), Transformation.Interpolations.LINEAR)
             )
         )
-        .addPartAnimation(
+        .addBoneAnimation(
             "right_leg",
-            new PartAnimation(
-                PartAnimation.AnimationTargets.ROTATE,
-                new AnimationKeyframe(0f, Animator.rotate(0f, 10f, 0f), PartAnimation.Interpolations.LINEAR)
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 10f, 0f), Transformation.Interpolations.LINEAR)
             )
         )
         .build();
 
-    public static final Animation CHICKEN_WALK = Animation.Builder.withLength(1f).looping()
-        .addPartAnimation(
+    public static final Animation CHICKEN_WALK = Animation.Builder.create(1f).looping()
+        .addBoneAnimation(
             "head",
-            new PartAnimation(
-                PartAnimation.AnimationTargets.TRANSLATE,
-                new AnimationKeyframe(0f, Animator.translate(0f, 0f, -0.5f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.2916767f, Animator.translate(-0.25f, 0f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.4167667f, Animator.translate(-0.12f, 0f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.5f, Animator.translate(0f, 0f, -0.5f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.7916766f, Animator.translate(0.25f, 0f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.9167666f, Animator.translate(0.12f, 0f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(1f, Animator.translate(0f, 0f, -0.5f), PartAnimation.Interpolations.SPLINE)
+            new Transformation(
+                Transformation.Targets.TRANSLATE,
+                new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, 0f, -0.5f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.2916767f, AnimationHelper.createTranslationalVector(-0.25f, 0f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.4167667f, AnimationHelper.createTranslationalVector(-0.12f, 0f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.5f, AnimationHelper.createTranslationalVector(0f, 0f, -0.5f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.7916766f, AnimationHelper.createTranslationalVector(0.25f, 0f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.9167666f, AnimationHelper.createTranslationalVector(0.12f, 0f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(1f, AnimationHelper.createTranslationalVector(0f, 0f, -0.5f), Transformation.Interpolations.CUBIC)
             )
         )
-        .addPartAnimation(
+        .addBoneAnimation(
             "head",
-            new PartAnimation(
-                PartAnimation.AnimationTargets.ROTATE,
-                new AnimationKeyframe(0f, Animator.rotate(5f, -1f, -0.5f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.2916767f, Animator.rotate(0f, 2.5f, -5f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.4167667f, Animator.rotate(0f, 1.5f, -1f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.5f, Animator.rotate(5f, 1f, 0.5f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.7916766f, Animator.rotate(0f, -2.5f, 5f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.9167666f, Animator.rotate(0f, -1.5f, 1f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(1f, Animator.rotate(5f, -1f, -0.5f), PartAnimation.Interpolations.SPLINE)
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(5f, -1f, -0.5f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.2916767f, AnimationHelper.createRotationalVector(0f, 2.5f, -5f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.4167667f, AnimationHelper.createRotationalVector(0f, 1.5f, -1f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.5f, AnimationHelper.createRotationalVector(5f, 1f, 0.5f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.7916766f, AnimationHelper.createRotationalVector(0f, -2.5f, 5f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.9167666f, AnimationHelper.createRotationalVector(0f, -1.5f, 1f), Transformation.Interpolations.CUBIC),
+                new Keyframe(1f, AnimationHelper.createRotationalVector(5f, -1f, -0.5f), Transformation.Interpolations.CUBIC)
             )
         )
-        .addPartAnimation(
+        .addBoneAnimation(
             "left_leg",
-            new PartAnimation(
-                PartAnimation.AnimationTargets.TRANSLATE,
-                new AnimationKeyframe(0f, Animator.translate(0f, 0f, -1f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.08343333f, Animator.translate(0f, 0.25f, -0.07f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.25f, Animator.translate(0f, 0f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.4167667f, Animator.translate(0f, 1.5f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.5f, Animator.translate(0f, 1.37f, -0.22f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.75f, Animator.translate(0f, 0.25f, -1f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.8343334f, Animator.translate(0f, -0.7f, -0.23f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(1f, Animator.translate(0f, 0.1f, -1f), PartAnimation.Interpolations.SPLINE)
+            new Transformation(
+                Transformation.Targets.TRANSLATE,
+                new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, 0f, -1f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.08343333f, AnimationHelper.createTranslationalVector(0f, 0.25f, -0.07f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.25f, AnimationHelper.createTranslationalVector(0f, 0f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.4167667f, AnimationHelper.createTranslationalVector(0f, 1.5f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.5f, AnimationHelper.createTranslationalVector(0f, 1.37f, -0.22f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.75f, AnimationHelper.createTranslationalVector(0f, 0.25f, -1f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.8343334f, AnimationHelper.createTranslationalVector(0f, -0.7f, -0.23f), Transformation.Interpolations.CUBIC),
+                new Keyframe(1f, AnimationHelper.createTranslationalVector(0f, 0.1f, -1f), Transformation.Interpolations.CUBIC)
             )
         )
-        .addPartAnimation(
+        .addBoneAnimation(
             "left_leg",
-            new PartAnimation(
-                PartAnimation.AnimationTargets.ROTATE,
-                new AnimationKeyframe(0f, Animator.rotate(4.38f, -10f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.25f, Animator.rotate(42.5f, -10f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.5f, Animator.rotate(10f, -10f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.75f, Animator.rotate(-32.5f, -10f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(1f, Animator.rotate(4.38f, -10f, 0f), PartAnimation.Interpolations.SPLINE)
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(4.38f, -10f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.25f, AnimationHelper.createRotationalVector(42.5f, -10f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.5f, AnimationHelper.createRotationalVector(10f, -10f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.75f, AnimationHelper.createRotationalVector(-32.5f, -10f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(1f, AnimationHelper.createRotationalVector(4.38f, -10f, 0f), Transformation.Interpolations.CUBIC)
             )
         )
-        .addPartAnimation(
+        .addBoneAnimation(
             "right_leg",
-            new PartAnimation(
-                PartAnimation.AnimationTargets.TRANSLATE,
-                new AnimationKeyframe(0f, Animator.translate(0f, 1.37f, -0.22f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.25f, Animator.translate(0f, 0.25f, -1f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.3433333f, Animator.translate(0f, -0.7f, -0.23f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.5f, Animator.translate(0f, 0.1f, -1f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.5834334f, Animator.translate(0f, 0.25f, -0.07f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.75f, Animator.translate(0f, 0f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.9167666f, Animator.translate(0f, 1.5f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(1f, Animator.translate(0f, 1.37f, -0.22f), PartAnimation.Interpolations.SPLINE)
+            new Transformation(
+                Transformation.Targets.TRANSLATE,
+                new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, 1.37f, -0.22f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.25f, AnimationHelper.createTranslationalVector(0f, 0.25f, -1f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.3433333f, AnimationHelper.createTranslationalVector(0f, -0.7f, -0.23f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.5f, AnimationHelper.createTranslationalVector(0f, 0.1f, -1f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.5834334f, AnimationHelper.createTranslationalVector(0f, 0.25f, -0.07f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.75f, AnimationHelper.createTranslationalVector(0f, 0f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.9167666f, AnimationHelper.createTranslationalVector(0f, 1.5f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(1f, AnimationHelper.createTranslationalVector(0f, 1.37f, -0.22f), Transformation.Interpolations.CUBIC)
             )
         )
-        .addPartAnimation(
+        .addBoneAnimation(
             "right_leg",
-            new PartAnimation(
-                PartAnimation.AnimationTargets.ROTATE,
-                new AnimationKeyframe(0f, Animator.rotate(10f, 10f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.25f, Animator.rotate(-32.5f, 10f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.5f, Animator.rotate(4.37f, 10f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.75f, Animator.rotate(42.5f, 10f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(1f, Animator.rotate(10f, 10f, 0f), PartAnimation.Interpolations.SPLINE)
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(10f, 10f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.25f, AnimationHelper.createRotationalVector(-32.5f, 10f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.5f, AnimationHelper.createRotationalVector(4.37f, 10f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.75f, AnimationHelper.createRotationalVector(42.5f, 10f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(1f, AnimationHelper.createRotationalVector(10f, 10f, 0f), Transformation.Interpolations.CUBIC)
             )
         )
-        .addPartAnimation(
+        .addBoneAnimation(
             "body",
-            new PartAnimation(
-                PartAnimation.AnimationTargets.TRANSLATE,
-                new AnimationKeyframe(0f, Animator.translate(0f, 0.2f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.08343333f, Animator.translate(0f, 0.25f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.2916767f, Animator.translate(0f, 0f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.5f, Animator.translate(0f, 0.2f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.5834334f, Animator.translate(0f, 0.25f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.7916766f, Animator.translate(0f, 0f, 0f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(1f, Animator.translate(0f, 0.2f, 0f), PartAnimation.Interpolations.SPLINE)
+            new Transformation(
+                Transformation.Targets.TRANSLATE,
+                new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, 0.2f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.08343333f, AnimationHelper.createTranslationalVector(0f, 0.25f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.2916767f, AnimationHelper.createTranslationalVector(0f, 0f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.5f, AnimationHelper.createTranslationalVector(0f, 0.2f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.5834334f, AnimationHelper.createTranslationalVector(0f, 0.25f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.7916766f, AnimationHelper.createTranslationalVector(0f, 0f, 0f), Transformation.Interpolations.CUBIC),
+                new Keyframe(1f, AnimationHelper.createTranslationalVector(0f, 0.2f, 0f), Transformation.Interpolations.CUBIC)
             )
         )
-        .addPartAnimation(
+        .addBoneAnimation(
             "body",
-            new PartAnimation(
-                PartAnimation.AnimationTargets.ROTATE,
-                new AnimationKeyframe(0f, Animator.rotate(0f, 1f, 0.5f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.2916767f, Animator.rotate(0f, -2.5f, 5f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.4167667f, Animator.rotate(0f, -1.5f, 1f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.5f, Animator.rotate(0f, -1f, -0.5f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.7916766f, Animator.rotate(0f, 2.5f, -5f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(0.9167666f, Animator.rotate(0f, 1.5f, -1f), PartAnimation.Interpolations.SPLINE),
-                new AnimationKeyframe(1f, Animator.rotate(0f, 1f, 0.5f), PartAnimation.Interpolations.SPLINE)
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 1f, 0.5f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.2916767f, AnimationHelper.createRotationalVector(0f, -2.5f, 5f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.4167667f, AnimationHelper.createRotationalVector(0f, -1.5f, 1f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.5f, AnimationHelper.createRotationalVector(0f, -1f, -0.5f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.7916766f, AnimationHelper.createRotationalVector(0f, 2.5f, -5f), Transformation.Interpolations.CUBIC),
+                new Keyframe(0.9167666f, AnimationHelper.createRotationalVector(0f, 1.5f, -1f), Transformation.Interpolations.CUBIC),
+                new Keyframe(1f, AnimationHelper.createRotationalVector(0f, 1f, 0.5f), Transformation.Interpolations.CUBIC)
             )
         )
         .build();
 
-    public static final Animation CHICKEN_FLY = Animation.Builder.withLength(0f)
+    public static final Animation CHICKEN_FLY = Animation.Builder.create(0f)
         .build();
 
-    public static final Animation CHICKEN_FLOAT = Animation.Builder.withLength(0f).looping()
+    public static final Animation CHICKEN_FLOAT = Animation.Builder.create(0f).looping()
         .build();
 }

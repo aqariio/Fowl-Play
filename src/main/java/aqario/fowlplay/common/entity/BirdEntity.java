@@ -2,7 +2,6 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.entity.ai.control.BirdBodyControl;
 import aqario.fowlplay.common.entity.ai.control.BirdLookControl;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.control.BodyControl;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -15,8 +14,6 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,13 +30,8 @@ public abstract class BirdEntity extends AnimalEntity {
         this.songChance = this.random.nextInt(this.getSongDelay()) - this.getSongDelay();
     }
 
-    @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
-        return super.initialize(world, difficulty, spawnReason, entityData);
-    }
-
-    public static DefaultAttributeContainer.Builder createAttributes() {
-        return MobEntity.createAttributes()
+    public static DefaultAttributeContainer.Builder createMobAttributes() {
+        return MobEntity.createMobAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 6.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2f);
     }
@@ -69,7 +61,7 @@ public abstract class BirdEntity extends AnimalEntity {
     private void dropWithoutDelay(ItemStack stack, Entity thrower) {
         ItemEntity item = new ItemEntity(this.getWorld(), this.getX(), this.getY(), this.getZ(), stack);
         if (thrower != null) {
-            item.setThrower(thrower);
+            item.setThrower(thrower.getUuid());
         }
         this.getWorld().spawnEntity(item);
     }
@@ -105,8 +97,8 @@ public abstract class BirdEntity extends AnimalEntity {
             ItemStack stack = this.getEquippedStack(EquipmentSlot.MAINHAND);
             if (this.canEat(stack)) {
                 if ((this.eatingTime > 40 && this.random.nextFloat() < 0.05f) || this.eatingTime > 200) {
-                    if (stack.getItem().getComponents().contains(DataComponentTypes.FOOD)) {
-                        this.heal(stack.getItem().getComponents().get(DataComponentTypes.FOOD).nutrition());
+                    if (stack.isFood()) {
+                        this.heal(stack.getItem().getFoodComponent().getHunger());
                     }
                     else {
                         stack.decrement(1);
@@ -237,17 +229,17 @@ public abstract class BirdEntity extends AnimalEntity {
     }
 
     @Override
-    public int getLookYawSpeed() {
+    public int getMaxLookYawChange() {
         return 100;
     }
 
     @Override
-    public int getLookPitchSpeed() {
+    public int getMaxLookPitchChange() {
         return 100;
     }
 
     @Override
-    public int getBodyYawSpeed() {
+    public int getMaxHeadRotation() {
         return 270;
     }
 

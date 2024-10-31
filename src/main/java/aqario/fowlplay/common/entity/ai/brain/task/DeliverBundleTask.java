@@ -7,11 +7,11 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.entity.ai.brain.EntityLookTarget;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.WalkTarget;
-import net.minecraft.entity.ai.brain.task.Task;
+import net.minecraft.entity.ai.brain.task.MultiTickTask;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 
-public class DeliverBundleTask extends Task<PigeonEntity> {
+public class DeliverBundleTask extends MultiTickTask<PigeonEntity> {
     private final float speed;
     private int updateCountdownTicks;
     private final float maxDistance;

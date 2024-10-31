@@ -31,10 +31,10 @@ public abstract class LivingEntityMixin extends Entity {
         return block.getSlipperiness();
     }
 
-    @Inject(method = "getAirSpeed", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getOffGroundSpeed", at = @At("RETURN"), cancellable = true)
     private void fowlplay$increaseAirSpeed(CallbackInfoReturnable<Float> cir) {
         LivingEntity entity = (LivingEntity) (Object) this;
-        if (entity instanceof PenguinEntity penguin && penguin.getPrimaryPassenger() instanceof PlayerEntity) {
+        if (entity instanceof PenguinEntity penguin && penguin.getControllingPassenger() instanceof PlayerEntity) {
             cir.setReturnValue(entity.getMovementSpeed() * 0.216f);
         }
     }
@@ -42,8 +42,8 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "travelControlled", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;travel(Lnet/minecraft/util/math/Vec3d;)V"))
     private void fowlplay$stepDownwards(PlayerEntity player, Vec3d input, CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
-        if (entity instanceof PenguinEntity penguin && penguin.getPrimaryPassenger() instanceof PlayerEntity && penguin.shouldStepDown()) {
-            entity.addVelocityInternal(new Vec3d(0, -0.5, 0));
+        if (entity instanceof PenguinEntity penguin && penguin.getControllingPassenger() instanceof PlayerEntity && penguin.shouldStepDown()) {
+            entity.addVelocity(new Vec3d(0, -0.5, 0));
         }
     }
 }

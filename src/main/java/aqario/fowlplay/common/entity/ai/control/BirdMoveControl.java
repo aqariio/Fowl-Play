@@ -3,9 +3,6 @@ package aqario.fowlplay.common.entity.ai.control;
 import aqario.fowlplay.common.entity.BirdEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.control.MoveControl;
-import net.minecraft.entity.ai.pathing.EntityNavigation;
-import net.minecraft.entity.ai.pathing.PathNodeMaker;
-import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
@@ -44,7 +41,7 @@ public class BirdMoveControl extends MoveControl {
                 && !blockState.isIn(BlockTags.DOORS)
                 && !blockState.isIn(BlockTags.FENCES)) {
                 this.bird.getJumpControl().setActive();
-                this.state = MoveControl.State.JUMPING;
+                this.state = State.JUMPING;
             }
             if (distance.y < (double) this.bird.getStepHeight() && distance.x * distance.x + distance.z * distance.z < (double) Math.max(1.0F, this.bird.getWidth())
                 || !voxelShape.isEmpty()
@@ -54,30 +51,17 @@ public class BirdMoveControl extends MoveControl {
                 this.bird.setSneaking(true);
             }
         }
-        else if (this.state == MoveControl.State.JUMPING) {
+        else if (this.state == State.JUMPING) {
             this.bird.setMovementSpeed((float) (this.speed * this.bird.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED)));
             if (this.bird.isOnGround()) {
-                this.state = MoveControl.State.WAIT;
+                this.state = State.WAIT;
             }
         }
-        else if (this.state == MoveControl.State.STRAFE) {
+        else if (this.state == State.STRAFE) {
             this.state = State.WAIT;
         }
         else {
             this.bird.setForwardSpeed(0.0F);
         }
-    }
-
-    private boolean isWalkable(float x, float z) {
-        EntityNavigation entityNavigation = this.bird.getNavigation();
-        if (entityNavigation != null) {
-            PathNodeMaker pathNodeMaker = entityNavigation.getNodeMaker();
-            return pathNodeMaker == null
-                || pathNodeMaker.getDefaultNodeType(
-                this.bird, BlockPos.create(this.bird.getX() + (double) x, this.bird.getBlockY(), this.bird.getZ() + (double) z)
-            ) == PathNodeType.WALKABLE;
-        }
-
-        return true;
     }
 }

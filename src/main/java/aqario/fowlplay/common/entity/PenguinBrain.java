@@ -12,7 +12,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.*;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
@@ -22,7 +25,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.int_provider.UniformIntProvider;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -117,12 +120,12 @@ public class PenguinBrain {
             0,
             ImmutableList.of(
                 new BreatheAirTask(SWIM_SPEED),
-                new WalkTask<>(RUN_SPEED),
+                new FleeTask(RUN_SPEED),
                 LocateFoodTask.run(),
                 new LookAroundTask(45, 90),
                 new WanderAroundTask(),
-                new ReduceCooldownTask(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
-                new ReduceCooldownTask(MemoryModuleType.GAZE_COOLDOWN_TICKS)
+                new TemptationCooldownTask(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
+                new TemptationCooldownTask(MemoryModuleType.GAZE_COOLDOWN_TICKS)
             )
         );
     }
@@ -131,8 +134,8 @@ public class PenguinBrain {
         brain.setTaskList(
             Activity.IDLE,
             ImmutableList.of(
-                Pair.of(0, new BreedTask(FowlPlayEntityType.PENGUIN, WALK_SPEED, 10)),
-                Pair.of(1, FollowMobTask.createMatchingType(EntityType.PLAYER, 32.0F)),
+                Pair.of(0, new BreedTask(FowlPlayEntityType.PENGUIN, WALK_SPEED)),
+                Pair.of(1, LookAtMobTask.create(EntityType.PLAYER, 32.0F)),
                 Pair.of(2, new TemptTask(penguin -> TEMPTED_SPEED)),
                 Pair.of(3, WalkTowardClosestAdultTask.create(FOLLOW_ADULT_RANGE, WALK_SPEED)),
                 Pair.of(4, new RandomLookAroundTask(UniformIntProvider.create(150, 250), 30.0F, 0.0F, 0.0F)),
@@ -142,8 +145,8 @@ public class PenguinBrain {
                     new RandomTask<>(
                         ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
                         ImmutableList.of(
-                            Pair.of(MeanderTask.create(WALK_SPEED), 2),
-                            Pair.of(GoTowardsLookTarget.create(WALK_SPEED, 10), 3),
+                            Pair.of(StrollTask.create(WALK_SPEED), 2),
+                            Pair.of(GoTowardsLookTargetTask.create(WALK_SPEED, 10), 3),
                             Pair.of(new RandomSlideTask(20), 5),
                             Pair.of(new WaitTask(400, 800), 5)
                         )
@@ -193,7 +196,7 @@ public class PenguinBrain {
                     true,
                     PICK_UP_RANGE
                 ),
-                ForgetTask.run(PenguinBrain::noFoodInRange, FowlPlayMemoryModuleType.SEES_FOOD)
+                ForgetTask.create(PenguinBrain::noFoodInRange, FowlPlayMemoryModuleType.SEES_FOOD)
             ),
             FowlPlayMemoryModuleType.SEES_FOOD
         );
@@ -207,18 +210,18 @@ public class PenguinBrain {
                 ForgetAttackTargetTask.create(),
                 RangedApproachTask.create(SWIM_SPEED),
                 MeleeAttackTask.create(20),
-                ForgetTask.run(LookTargetUtil::isValidBreedingTarget, MemoryModuleType.ATTACK_TARGET)
+                ForgetTask.create(LookTargetUtil::hasBreedTarget, MemoryModuleType.ATTACK_TARGET)
             ),
             MemoryModuleType.ATTACK_TARGET
         );
     }
 
     private static Optional<? extends LivingEntity> getAttackTarget(PenguinEntity penguin) {
-        return LookTargetUtil.isValidBreedingTarget(penguin) ? Optional.empty() : penguin.getBrain().getOptionalMemory(MemoryModuleType.NEAREST_ATTACKABLE);
+        return LookTargetUtil.hasBreedTarget(penguin) ? Optional.empty() : penguin.getBrain().getOptionalRegisteredMemory(MemoryModuleType.NEAREST_ATTACKABLE);
     }
 
     private static boolean noFoodInRange(PenguinEntity penguin) {
-        Optional<ItemEntity> item = penguin.getBrain().getOptionalMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM);
+        Optional<ItemEntity> item = penguin.getBrain().getOptionalRegisteredMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM);
         return item.isEmpty() || !item.get().isInRange(penguin, PICK_UP_RANGE);
     }
 
@@ -227,19 +230,19 @@ public class PenguinBrain {
     }
 
     public static Ingredient getFood() {
-        return Ingredient.ofTag(FowlPlayItemTags.PENGUIN_FOOD);
+        return Ingredient.fromTag(FowlPlayItemTags.PENGUIN_FOOD);
     }
 
     public static class PenguinSwimTask {
         private static final int[][] SWIM_DISTANCES = new int[][]{/*{15, 7}, */{31, 15}};
 
-        public static TaskControl<PathAwareEntity> create(float speed) {
+        public static Task<PathAwareEntity> create(float speed) {
             return create(speed, PenguinSwimTask::findSwimTargetPos, Entity::isInsideWaterOrBubbleColumn);
         }
 
-        private static ReportingTaskControl<PathAwareEntity> create(float speed, Function<PathAwareEntity, Vec3d> targetGetter, Predicate<PathAwareEntity> predicate) {
-            return TaskBuilder.task(
-                instance -> instance.group(instance.absentMemory(MemoryModuleType.WALK_TARGET)).apply(instance, memoryAccessor -> (world, entity, time) -> {
+        private static SingleTickTask<PathAwareEntity> create(float speed, Function<PathAwareEntity, Vec3d> targetGetter, Predicate<PathAwareEntity> predicate) {
+            return TaskTriggerer.task(
+                instance -> instance.group(instance.queryMemoryAbsent(MemoryModuleType.WALK_TARGET)).apply(instance, memoryAccessor -> (world, entity, time) -> {
                     if (!predicate.test(entity)) {
                         return false;
                     }
@@ -265,7 +268,7 @@ public class PenguinBrain {
                     vec3d2 = entity.getPos().add(entity.getPos().relativize(vec3d).normalize().multiply(is[0], is[1], is[0]));
                 }
 
-                if (vec3d2 == null || entity.getWorld().getFluidState(BlockPos.fromPosition(vec3d2)).isEmpty()) {
+                if (vec3d2 == null || entity.getWorld().getFluidState(BlockPos.ofFloored(vec3d2)).isEmpty()) {
                     return vec3d;
                 }
 
@@ -276,7 +279,7 @@ public class PenguinBrain {
         }
     }
 
-    public static class RandomSlideTask extends Task<PenguinEntity> {
+    public static class RandomSlideTask extends MultiTickTask<PenguinEntity> {
         private final int minimalSlideTicks;
 
         public RandomSlideTask(int seconds) {

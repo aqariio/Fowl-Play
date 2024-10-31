@@ -4,14 +4,14 @@ import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.brain.MemoryModuleState;
-import net.minecraft.entity.ai.brain.task.Task;
+import net.minecraft.entity.ai.brain.task.MultiTickTask;
 import net.minecraft.entity.ai.pathing.LandPathNodeMaker;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 
-public class TeleportToTargetTask extends Task<PathAwareEntity> {
+public class TeleportToTargetTask extends MultiTickTask<PathAwareEntity> {
 
     public TeleportToTargetTask() {
         super(ImmutableMap.of(FowlPlayMemoryModuleType.TELEPORT_TARGET, MemoryModuleState.VALUE_PRESENT));
@@ -33,7 +33,7 @@ public class TeleportToTargetTask extends Task<PathAwareEntity> {
         if (!entity.getBrain().hasMemoryModule(FowlPlayMemoryModuleType.TELEPORT_TARGET)) {
             return false;
         }
-        Entity owner = entity.getBrain().getMemoryValue(FowlPlayMemoryModuleType.TELEPORT_TARGET).get().entity();
+        Entity owner = entity.getBrain().getOptionalMemory(FowlPlayMemoryModuleType.TELEPORT_TARGET).get().entity();
         BlockPos pos = owner.getBlockPos();
 
         for (int i = 0; i < 10; ++i) {
@@ -62,12 +62,12 @@ public class TeleportToTargetTask extends Task<PathAwareEntity> {
     }
 
     private boolean canTeleportTo(PathAwareEntity entity, BlockPos pos) {
-        PathNodeType pathNodeType = LandPathNodeMaker.getLandNodeType(entity, pos.mutableCopy());
+        PathNodeType pathNodeType = LandPathNodeMaker.getLandNodeType(entity.getWorld(), pos.mutableCopy());
         if (pathNodeType != PathNodeType.WALKABLE) {
             return false;
         }
         BlockPos blockPos = pos.subtract(entity.getBlockPos());
-        return entity.getWorld().isSpaceEmpty(entity, entity.getBounds().offset(blockPos));
+        return entity.getWorld().isSpaceEmpty(entity, entity.getBoundingBox().offset(blockPos));
     }
 
     private int getRandomInt(PathAwareEntity entity, int min, int max) {

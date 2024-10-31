@@ -22,6 +22,6 @@ public class GullEntityRenderer extends MobEntityRenderer<GullEntity, GullEntity
 
     @Override
     public Identifier getTexture(GullEntity gull) {
-        return Identifier.of(FowlPlay.ID, "textures/entity/gull/" + gull.getVariant().getId() + "_gull.png");
+        return new Identifier(FowlPlay.ID, "textures/entity/gull/" + gull.getVariant().getId() + "_gull.png");
     }
 }

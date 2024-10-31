@@ -1,27 +1,27 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ReportingTaskControl;
 import net.minecraft.entity.ai.brain.EntityLookTarget;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.WalkTarget;
-import net.minecraft.entity.ai.brain.task.TaskBuilder;
+import net.minecraft.entity.ai.brain.task.SingleTickTask;
+import net.minecraft.entity.ai.brain.task.TaskTriggerer;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.util.math.int_provider.UniformIntProvider;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
 
 import java.util.function.Function;
 
 public class StayNearClosestEntityTask {
-    public static ReportingTaskControl<PassiveEntity> create(UniformIntProvider executionRange, float speed) {
+    public static SingleTickTask<PassiveEntity> create(UniformIntProvider executionRange, float speed) {
         return create(executionRange, livingEntity -> speed);
     }
 
-    public static ReportingTaskControl<PassiveEntity> create(UniformIntProvider executionRange, Function<LivingEntity, Float> speedGetter) {
-        return TaskBuilder.task(
+    public static SingleTickTask<PassiveEntity> create(UniformIntProvider executionRange, Function<LivingEntity, Float> speedGetter) {
+        return TaskTriggerer.task(
             instance -> instance.group(
-                    instance.presentMemory(MemoryModuleType.NEAREST_VISIBLE_ADULT),
-                    instance.registeredMemory(MemoryModuleType.LOOK_TARGET),
-                    instance.absentMemory(MemoryModuleType.WALK_TARGET)
+                    instance.queryMemoryValue(MemoryModuleType.NEAREST_VISIBLE_ADULT),
+                    instance.queryMemoryOptional(MemoryModuleType.LOOK_TARGET),
+                    instance.queryMemoryAbsent(MemoryModuleType.WALK_TARGET)
                 )
                 .apply(
                     instance,

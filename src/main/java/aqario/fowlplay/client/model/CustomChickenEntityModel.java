@@ -11,7 +11,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 public class CustomChickenEntityModel extends SinglePartEntityModel<ChickenEntity> {
-    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of(FowlPlay.ID, "chicken"), "main");
+    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(new Identifier(FowlPlay.ID, "chicken"), "main");
     public final AnimationState idleState = new AnimationState();
     public final AnimationState flyState = new AnimationState();
     public final AnimationState floatState = new AnimationState();
@@ -78,14 +78,14 @@ public class CustomChickenEntityModel extends SinglePartEntityModel<ChickenEntit
 
         // animation state processing
         if (chicken.isOnGround() && !chicken.isInsideWaterOrBubbleColumn()) {
-            this.idleState.start(chicken.age);
+            this.idleState.startIfNotRunning(chicken.age);
         }
         else {
             this.idleState.stop();
         }
 
         if (chicken.isInsideWaterOrBubbleColumn()) {
-            this.floatState.start(chicken.age);
+            this.floatState.startIfNotRunning(chicken.age);
         }
         else {
             this.floatState.stop();
@@ -93,11 +93,11 @@ public class CustomChickenEntityModel extends SinglePartEntityModel<ChickenEntit
         //
 
         if (chicken.isOnGround() && !chicken.isInsideWaterOrBubbleColumn()) {
-            this.animateWalk(ChickenEntityAnimations.CHICKEN_WALK, limbSwing, limbSwingAmount, 3F, 3F);
+            this.animateMovement(ChickenEntityAnimations.CHICKEN_WALK, limbSwing, limbSwingAmount, 3F, 3F);
         }
-        this.animate(this.idleState, ChickenEntityAnimations.CHICKEN_IDLE, ageInTicks);
-        this.animate(this.flyState, ChickenEntityAnimations.CHICKEN_FLY, ageInTicks);
-        this.animate(this.floatState, ChickenEntityAnimations.CHICKEN_FLOAT, ageInTicks);
+        this.updateAnimation(this.idleState, ChickenEntityAnimations.CHICKEN_IDLE, ageInTicks);
+        this.updateAnimation(this.flyState, ChickenEntityAnimations.CHICKEN_FLY, ageInTicks);
+        this.updateAnimation(this.floatState, ChickenEntityAnimations.CHICKEN_FLOAT, ageInTicks);
     }
 
     private void updateHeadRotation(float headYaw, float headPitch) {

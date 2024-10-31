@@ -10,7 +10,7 @@ import com.mojang.serialization.Dynamic;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.control.MoveControl;
-import net.minecraft.entity.ai.pathing.AmphibiousNavigation;
+import net.minecraft.entity.ai.pathing.AmphibiousSwimNavigation;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -31,7 +31,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.random.RandomGenerator;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public class GullEntity extends TrustingBirdEntity implements VariantProvider<GullEntity.Variant>, Aquatic {
+public class GullEntity extends TrustingBirdEntity implements VariantHolder<GullEntity.Variant>, Aquatic {
     private static final TrackedData<String> VARIANT = DataTracker.registerData(GullEntity.class, TrackedDataHandlerRegistry.STRING);
     public final AnimationState idleState = new AnimationState();
     public final AnimationState glideState = new AnimationState();
@@ -50,12 +50,17 @@ public class GullEntity extends TrustingBirdEntity implements VariantProvider<Gu
 
     public GullEntity(EntityType<? extends GullEntity> entityType, World world) {
         super(entityType, world);
-        this.addPathfindingPenalty(PathNodeType.DANGER_FIRE, -1.0f);
-        this.addPathfindingPenalty(PathNodeType.WATER_BORDER, 16.0f);
-        this.addPathfindingPenalty(PathNodeType.WATER, 0.0f);
-        this.addPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, -1.0f);
-        this.addPathfindingPenalty(PathNodeType.COCOA, -1.0f);
-        this.addPathfindingPenalty(PathNodeType.FENCE, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.DANGER_FIRE, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.WATER_BORDER, 16.0f);
+        this.setPathfindingPenalty(PathNodeType.WATER, 0.0f);
+        this.setPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.COCOA, -1.0f);
+        this.setPathfindingPenalty(PathNodeType.FENCE, -1.0f);
+    }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 0.7f;
     }
 
     @Override
@@ -65,19 +70,19 @@ public class GullEntity extends TrustingBirdEntity implements VariantProvider<Gu
 
     @Override
     protected EntityNavigation getLandNavigation() {
-        return new AmphibiousNavigation(this, this.getWorld());
+        return new AmphibiousSwimNavigation(this, this.getWorld());
     }
 
     @SuppressWarnings("unused")
-    public static boolean canSpawn(EntityType<? extends BirdEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, RandomGenerator random) {
+    public static boolean canSpawn(EntityType<? extends BirdEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
         return world.getBiome(pos).isIn(FowlPlayBiomeTags.SPAWNS_GULLS) && world.getBlockState(pos.down()).isIn(FowlPlayBlockTags.SHOREBIRDS_SPAWNABLE_ON);
     }
 
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         GullBrain.init();
         this.setVariant(Util.getRandom(Variant.VARIANTS, world.getRandom()));
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
     @Override
@@ -94,34 +99,27 @@ public class GullEntity extends TrustingBirdEntity implements VariantProvider<Gu
         return 0;
     }
 
-    public static DefaultAttributeContainer.Builder createAttributes() {
-        return MobEntity.createAttributes()
+    public static DefaultAttributeContainer.Builder createMobAttributes() {
+        return MobEntity.createMobAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0f)
             .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.225f)
-            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.2f)
-            .add(EntityAttributes.GENERIC_WATER_MOVEMENT_EFFICIENCY, 0.5f);
-    }
-
-    @Nullable
-    @Override
-    public LivingEntity getTarget() {
-        return this.getAttackTarget();
+            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.2f);
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(VARIANT, Variant.HERRING.toString());
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(VARIANT, Variant.HERRING.toString());
     }
 
     @Override
-    public GullEntity.Variant getVariant() {
-        return GullEntity.Variant.valueOf(this.dataTracker.get(VARIANT));
+    public Variant getVariant() {
+        return Variant.valueOf(this.dataTracker.get(VARIANT));
     }
 
     @Override
-    public void setVariant(GullEntity.Variant variant) {
+    public void setVariant(Variant variant) {
         this.dataTracker.set(VARIANT, variant.toString());
     }
 
@@ -135,7 +133,7 @@ public class GullEntity extends TrustingBirdEntity implements VariantProvider<Gu
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         if (nbt.contains("variant")) {
-            this.setVariant(GullEntity.Variant.valueOf(nbt.getString("variant")));
+            this.setVariant(Variant.valueOf(nbt.getString("variant")));
         }
     }
 
@@ -164,7 +162,7 @@ public class GullEntity extends TrustingBirdEntity implements VariantProvider<Gu
     }
 
     public Ingredient getFood() {
-        return Ingredient.ofTag(FowlPlayItemTags.GULL_FOOD);
+        return Ingredient.fromTag(FowlPlayItemTags.GULL_FOOD);
     }
 
     @Override
@@ -175,9 +173,9 @@ public class GullEntity extends TrustingBirdEntity implements VariantProvider<Gu
     @Override
     public void tick() {
         if (this.getWorld().isClient()) {
-            this.idleState.animateIf(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
-            this.flapState.animateIf(this.isFlying(), this.age);
-            this.floatState.animateIf(this.isInsideWaterOrBubbleColumn(), this.age);
+            this.idleState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
+            this.flapState.setRunning(this.isFlying(), this.age);
+            this.floatState.setRunning(this.isInsideWaterOrBubbleColumn(), this.age);
         }
 
         super.tick();
@@ -263,7 +261,7 @@ public class GullEntity extends TrustingBirdEntity implements VariantProvider<Gu
     @Override
     public boolean isFloating() {
         double maxWaterHeight = 0.35; // how much of the hitbox the water should cover
-        BlockPos blockPos = BlockPos.create(this.getX(), this.getY() + maxWaterHeight, this.getZ());
+        BlockPos blockPos = BlockPos.ofFloored(this.getX(), this.getY() + maxWaterHeight, this.getZ());
         double waterHeight = this.getBlockPos().getY() + this.getWorld().getFluidState(blockPos).getHeight(this.getWorld(), blockPos);
         return this.isSubmergedInWater() || waterHeight > this.getY() + maxWaterHeight;
     }
@@ -272,8 +270,8 @@ public class GullEntity extends TrustingBirdEntity implements VariantProvider<Gu
         HERRING("herring"),
         RING_BILLED("ring_billed");
 
-        public static final List<GullEntity.Variant> VARIANTS = List.of(Arrays.stream(values())
-            .toArray(GullEntity.Variant[]::new));
+        public static final List<Variant> VARIANTS = List.of(Arrays.stream(values())
+            .toArray(Variant[]::new));
 
         private final String id;
 

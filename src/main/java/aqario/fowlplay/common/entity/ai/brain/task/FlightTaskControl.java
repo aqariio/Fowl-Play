@@ -4,8 +4,8 @@ import aqario.fowlplay.common.entity.Aquatic;
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.task.TaskBuilder;
-import net.minecraft.entity.ai.brain.task.TaskControl;
+import net.minecraft.entity.ai.brain.task.Task;
+import net.minecraft.entity.ai.brain.task.TaskTriggerer;
 import net.minecraft.util.Unit;
 
 import java.util.function.Predicate;
@@ -14,10 +14,10 @@ import java.util.function.Predicate;
  * A collection of tasks that control the flying behavior of birds.
  */
 public class FlightTaskControl {
-    public static <E extends FlyingBirdEntity> TaskControl<E> startFlying(Predicate<E> shouldRun) {
-        return TaskBuilder.task(
+    public static <E extends FlyingBirdEntity> Task<E> startFlying(Predicate<E> shouldRun) {
+        return TaskTriggerer.task(
             instance -> instance.group(
-                    instance.absentMemory(FowlPlayMemoryModuleType.IS_FLYING)
+                    instance.queryMemoryAbsent(FowlPlayMemoryModuleType.IS_FLYING)
                 )
                 .apply(
                     instance,
@@ -34,11 +34,11 @@ public class FlightTaskControl {
         );
     }
 
-    public static <E extends FlyingBirdEntity> TaskControl<E> stopFlying(Predicate<E> shouldRun) {
-        return TaskBuilder.task(
+    public static <E extends FlyingBirdEntity> Task<E> stopFlying(Predicate<E> shouldRun) {
+        return TaskTriggerer.task(
             instance -> instance.group(
-                    instance.presentMemory(FowlPlayMemoryModuleType.IS_FLYING),
-                    instance.registeredMemory(MemoryModuleType.WALK_TARGET)
+                    instance.queryMemoryValue(FowlPlayMemoryModuleType.IS_FLYING),
+                    instance.queryMemoryOptional(MemoryModuleType.WALK_TARGET)
                 )
                 .apply(
                     instance,
@@ -55,10 +55,10 @@ public class FlightTaskControl {
         );
     }
 
-    public static <E extends FlyingBirdEntity> TaskControl<E> stopFalling() {
-        return TaskBuilder.task(
+    public static <E extends FlyingBirdEntity> Task<E> stopFalling() {
+        return TaskTriggerer.task(
             instance -> instance.group(
-                    instance.absentMemory(FowlPlayMemoryModuleType.IS_FLYING)
+                    instance.queryMemoryAbsent(FowlPlayMemoryModuleType.IS_FLYING)
                 )
                 .apply(
                     instance,

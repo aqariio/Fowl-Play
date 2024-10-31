@@ -2,12 +2,12 @@ package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.ReportingTaskControl;
 import net.minecraft.entity.ai.NoPenaltySolidTargeting;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.WalkTarget;
-import net.minecraft.entity.ai.brain.task.TaskBuilder;
-import net.minecraft.entity.ai.brain.task.TaskControl;
+import net.minecraft.entity.ai.brain.task.SingleTickTask;
+import net.minecraft.entity.ai.brain.task.Task;
+import net.minecraft.entity.ai.brain.task.TaskTriggerer;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
@@ -21,7 +21,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class FlyTask {
-    public static TaskControl<PathAwareEntity> create(float speed, int horizontalRange, int verticalRange) {
+    public static Task<PathAwareEntity> create(float speed, int horizontalRange, int verticalRange) {
         return create(speed, (entity) -> findFlyTargetPos(entity, horizontalRange, verticalRange), (entity) -> true);
     }
 
@@ -34,8 +34,8 @@ public class FlyTask {
         return NoPenaltySolidTargeting.find(entity, horizontalRange, verticalRange, -2, vec3d.x, vec3d.z, 1.5707963705062866);
     }
 
-    private static ReportingTaskControl<PathAwareEntity> create(float speed, Function<PathAwareEntity, Vec3d> targetGetter, Predicate<PathAwareEntity> predicate) {
-        return TaskBuilder.task((instance) -> instance.group(instance.absentMemory(MemoryModuleType.WALK_TARGET)).apply(instance, (memoryAccessor) -> (world, entity, time) -> {
+    private static SingleTickTask<PathAwareEntity> create(float speed, Function<PathAwareEntity, Vec3d> targetGetter, Predicate<PathAwareEntity> predicate) {
+        return TaskTriggerer.task((instance) -> instance.group(instance.queryMemoryAbsent(MemoryModuleType.WALK_TARGET)).apply(instance, (memoryAccessor) -> (world, entity, time) -> {
             if (!predicate.test(entity)) {
                 return false;
             }

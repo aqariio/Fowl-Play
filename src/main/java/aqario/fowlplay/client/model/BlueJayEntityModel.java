@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 public class BlueJayEntityModel extends BirdEntityModel<BlueJayEntity> {
-    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of(FowlPlay.ID, "blue_jay"), "main");
+    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(new Identifier(FowlPlay.ID, "blue_jay"), "main");
     public final ModelPart root;
     public final ModelPart body;
     public final ModelPart neck;
@@ -101,7 +101,7 @@ public class BlueJayEntityModel extends BirdEntityModel<BlueJayEntity> {
             this.root.roll = blueJay.getRoll(tickDelta) * (float) (Math.PI / 180.0);
         }
         if (!blueJay.isFlying() && !blueJay.isInsideWaterOrBubbleColumn()) {
-            this.animateWalk(BlueJayEntityAnimations.BLUE_JAY_WALK, limbAngle, limbDistance, 6F, 6F);
+            this.animateMovement(BlueJayEntityAnimations.BLUE_JAY_WALK, limbAngle, limbDistance, 6F, 6F);
         }
         if (blueJay.isFlying()) {
             this.leftWingOpen.visible = true;
@@ -115,10 +115,10 @@ public class BlueJayEntityModel extends BirdEntityModel<BlueJayEntity> {
             this.leftWing.visible = true;
             this.rightWing.visible = true;
         }
-        this.animate(blueJay.idleState, BlueJayEntityAnimations.BLUE_JAY_IDLE, ageInTicks);
-        this.animate(blueJay.floatState, BlueJayEntityAnimations.BLUE_JAY_FLOAT, ageInTicks);
-        this.animate(blueJay.glideState, BlueJayEntityAnimations.BLUE_JAY_GLIDE, ageInTicks);
-        this.animate(blueJay.flapState, BlueJayEntityAnimations.BLUE_JAY_FLAP, ageInTicks);
+        this.updateAnimation(blueJay.idleState, BlueJayEntityAnimations.BLUE_JAY_IDLE, ageInTicks);
+        this.updateAnimation(blueJay.floatState, BlueJayEntityAnimations.BLUE_JAY_FLOAT, ageInTicks);
+        this.updateAnimation(blueJay.glideState, BlueJayEntityAnimations.BLUE_JAY_GLIDE, ageInTicks);
+        this.updateAnimation(blueJay.flapState, BlueJayEntityAnimations.BLUE_JAY_FLAP, ageInTicks);
     }
 
     private void updateHeadRotation(float headYaw, float headPitch) {

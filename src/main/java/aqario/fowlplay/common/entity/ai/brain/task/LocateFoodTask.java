@@ -5,16 +5,16 @@ import aqario.fowlplay.common.entity.GullBrain;
 import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.task.TaskBuilder;
-import net.minecraft.entity.ai.brain.task.TaskControl;
+import net.minecraft.entity.ai.brain.task.Task;
+import net.minecraft.entity.ai.brain.task.TaskTriggerer;
 
 public class LocateFoodTask {
-    public static TaskControl<BirdEntity> run() {
-        return TaskBuilder.task(
+    public static Task<BirdEntity> run() {
+        return TaskTriggerer.task(
             builder -> builder.group(
-                    builder.presentMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM),
-                    builder.absentMemory(FowlPlayMemoryModuleType.SEES_FOOD),
-                    builder.absentMemory(FowlPlayMemoryModuleType.CANNOT_PICKUP_FOOD)
+                    builder.queryMemoryValue(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM),
+                    builder.queryMemoryAbsent(FowlPlayMemoryModuleType.SEES_FOOD),
+                    builder.queryMemoryAbsent(FowlPlayMemoryModuleType.CANNOT_PICKUP_FOOD)
                 )
                 .apply(builder, (nearestVisibleWantedItem, seesFood, cannotEatFood) -> (world, entity, time) -> {
                     ItemEntity item = builder.getValue(nearestVisibleWantedItem);

@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.entity.ai.control;
 
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
-import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -20,7 +19,7 @@ public class BirdFlightMoveControl extends BirdMoveControl {
 
     @Override
     public void tick() {
-        if (this.state == MoveControl.State.MOVE_TO && !this.entity.getNavigation().isIdle()) {
+        if (this.state == State.MOVE_TO && !this.entity.getNavigation().isIdle()) {
             // distance to target
             Vec3d distance = new Vec3d(this.targetX - this.bird.getX(), this.targetY - this.bird.getY(), this.targetZ - this.bird.getZ());
             double squaredDistance = distance.lengthSquared();

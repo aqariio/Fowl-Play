@@ -2,62 +2,56 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.FowlPlay;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
 
 public final class FowlPlayEntityType {
     public static final EntityType<BlueJayEntity> BLUE_JAY = register("blue_jay",
-        EntityType.Builder.create(BlueJayEntity::new, SpawnGroup.AMBIENT)
-            .setDimensions(0.4f, 0.55f)
-            .setEyeHeight(0.475f)
+        FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, BlueJayEntity::new)
+            .dimensions(EntityDimensions.changing(0.4f, 0.55f))
     );
 
     public static final EntityType<CardinalEntity> CARDINAL = register("cardinal",
-        EntityType.Builder.create(CardinalEntity::new, SpawnGroup.AMBIENT)
-            .setDimensions(0.4f, 0.55f)
-            .setEyeHeight(0.475f)
+        FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, CardinalEntity::new)
+            .dimensions(EntityDimensions.changing(0.4f, 0.55f))
     );
 
     public static final EntityType<GullEntity> GULL = register("gull",
-        EntityType.Builder.create(GullEntity::new, SpawnGroup.CREATURE)
-            .setDimensions(0.6f, 0.8f)
-            .setEyeHeight(0.7f)
+        FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, GullEntity::new)
+            .dimensions(EntityDimensions.changing(0.6f, 0.8f))
     );
 
     public static final EntityType<PenguinEntity> PENGUIN = register("penguin",
-        EntityType.Builder.create(PenguinEntity::new, SpawnGroup.CREATURE)
-            .setDimensions(0.5f, 1.4f)
-            .setEyeHeight(1.2f)
-            .passengerAttachments(new Vec3d(0, 0.75, -0.1))
+        FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, PenguinEntity::new)
+            .dimensions(EntityDimensions.changing(0.5f, 1.4f))
     );
 
     public static final EntityType<PigeonEntity> PIGEON = register("pigeon",
-        EntityType.Builder.create(PigeonEntity::new, SpawnGroup.CREATURE)
-            .setDimensions(0.5f, 0.6f)
-            .setEyeHeight(0.5f)
+        FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, PigeonEntity::new)
+            .dimensions(EntityDimensions.changing(0.5f, 0.6f))
     );
 
     public static final EntityType<RobinEntity> ROBIN = register("robin",
-        EntityType.Builder.create(RobinEntity::new, SpawnGroup.AMBIENT)
-            .setDimensions(0.4f, 0.55f)
-            .setEyeHeight(0.475f)
+        FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, RobinEntity::new)
+            .dimensions(EntityDimensions.changing(0.4f, 0.55f))
     );
 
-    private static <T extends Entity> EntityType<T> register(String id, EntityType.Builder<T> builder) {
-        return Registry.register(Registries.ENTITY_TYPE, Identifier.of(FowlPlay.ID, id), builder.build());
+    private static <T extends Entity> EntityType<T> register(String id, FabricEntityTypeBuilder<T> builder) {
+        return Registry.register(Registries.ENTITY_TYPE, new Identifier(FowlPlay.ID, id), builder.build());
     }
 
     public static void init() {
-        FabricDefaultAttributeRegistry.register(BLUE_JAY, BlueJayEntity.createAttributes());
-        FabricDefaultAttributeRegistry.register(CARDINAL, CardinalEntity.createAttributes());
-        FabricDefaultAttributeRegistry.register(GULL, GullEntity.createAttributes());
-        FabricDefaultAttributeRegistry.register(PENGUIN, PenguinEntity.createAttributes());
-        FabricDefaultAttributeRegistry.register(PIGEON, PigeonEntity.createAttributes());
-        FabricDefaultAttributeRegistry.register(ROBIN, RobinEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(BLUE_JAY, BlueJayEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(CARDINAL, CardinalEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(GULL, GullEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(PENGUIN, PenguinEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(PIGEON, PigeonEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(ROBIN, RobinEntity.createMobAttributes());
     }
 }

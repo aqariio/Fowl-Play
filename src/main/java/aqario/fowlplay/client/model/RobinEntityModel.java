@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 public class RobinEntityModel extends BirdEntityModel<RobinEntity> {
-    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of(FowlPlay.ID, "robin"), "main");
+    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(new Identifier(FowlPlay.ID, "robin"), "main");
     public final ModelPart root;
     public final ModelPart body;
     public final ModelPart neck;
@@ -97,7 +97,7 @@ public class RobinEntityModel extends BirdEntityModel<RobinEntity> {
             this.root.roll = robin.getRoll(tickDelta) * (float) (Math.PI / 180.0);
         }
         if (!robin.isFlying() && !robin.isInsideWaterOrBubbleColumn()) {
-            this.animateWalk(RobinEntityAnimations.ROBIN_WALK, limbAngle, limbDistance, 6F, 6F);
+            this.animateMovement(RobinEntityAnimations.ROBIN_WALK, limbAngle, limbDistance, 6F, 6F);
         }
         if (robin.isFlying()) {
             this.leftWingOpen.visible = true;
@@ -111,10 +111,10 @@ public class RobinEntityModel extends BirdEntityModel<RobinEntity> {
             this.leftWing.visible = true;
             this.rightWing.visible = true;
         }
-        this.animate(robin.idleState, RobinEntityAnimations.ROBIN_IDLE, ageInTicks);
-        this.animate(robin.floatState, RobinEntityAnimations.ROBIN_FLOAT, ageInTicks);
-        this.animate(robin.glideState, RobinEntityAnimations.ROBIN_GLIDE, ageInTicks);
-        this.animate(robin.flapState, RobinEntityAnimations.ROBIN_FLAP, ageInTicks);
+        this.updateAnimation(robin.idleState, RobinEntityAnimations.ROBIN_IDLE, ageInTicks);
+        this.updateAnimation(robin.floatState, RobinEntityAnimations.ROBIN_FLOAT, ageInTicks);
+        this.updateAnimation(robin.glideState, RobinEntityAnimations.ROBIN_GLIDE, ageInTicks);
+        this.updateAnimation(robin.flapState, RobinEntityAnimations.ROBIN_FLAP, ageInTicks);
     }
 
     private void updateHeadRotation(float headYaw, float headPitch) {

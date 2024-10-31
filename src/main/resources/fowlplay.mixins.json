@@ -4,6 +4,7 @@
   "package": "aqario.fowlplay.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "EnchantmentHelperMixin",
     "LivingEntityMixin",
     "PowderSnowBlockMixin"
   ],

@@ -28,6 +28,7 @@
   "mixins": [
     "fowlplay.mixins.json"
   ],
+  "accessWidener": "fowlplay.accesswidener",
   "depends": {
     "fabricloader": ">=0.16.5",
     "minecraft": ">=1.21",

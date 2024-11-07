@@ -1,0 +1,5 @@
+accessWidener v2 named
+
+accessible method net/minecraft/entity/ai/brain/sensor/SensorType <init> (Ljava/util/function/Supplier;)V
+
+accessible method net/minecraft/entity/ai/brain/Activity <init> (Ljava/lang/String;)V

@@ -19,7 +19,7 @@ public class BirdFlightMoveControl extends BirdMoveControl {
 
     @Override
     public void tick() {
-        if (this.state == State.MOVE_TO && !this.entity.getNavigation().isIdle()) {
+        if (this.state == State.MOVE_TO) {
             // distance to target
             Vec3d distance = new Vec3d(this.targetX - this.bird.getX(), this.targetY - this.bird.getY(), this.targetZ - this.bird.getZ());
             double squaredDistance = distance.lengthSquared();

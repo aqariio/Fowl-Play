@@ -4,6 +4,7 @@ import aqario.fowlplay.client.render.animation.BlueJayEntityAnimations;
 import aqario.fowlplay.common.FowlPlay;
 import aqario.fowlplay.common.entity.BlueJayEntity;
 import net.minecraft.client.model.*;
+import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -86,9 +87,6 @@ public class BlueJayEntityModel extends BirdEntityModel<BlueJayEntity> {
 
     @Override
     public void setAngles(BlueJayEntity blueJay, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch) {
-        if (!blueJay.isFlying()) {
-            this.updateHeadRotation(headYaw, headPitch);
-        }
     }
 
     @Override
@@ -96,12 +94,21 @@ public class BlueJayEntityModel extends BirdEntityModel<BlueJayEntity> {
         this.getPart().traverse().forEach(ModelPart::resetTransform);
         super.animateModel(blueJay, limbAngle, limbDistance, tickDelta);
         float ageInTicks = blueJay.age + tickDelta;
+        float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, blueJay.prevBodyYaw, blueJay.bodyYaw);
+        float headYaw = MathHelper.lerpAngleDegrees(tickDelta, blueJay.prevHeadYaw, blueJay.headYaw);
+        float relativeHeadYaw = headYaw - bodyYaw;
+
+        float headPitch = MathHelper.lerp(tickDelta, blueJay.prevPitch, blueJay.getPitch());
+        if (LivingEntityRenderer.shouldFlipUpsideDown(blueJay)) {
+            headPitch *= -1.0F;
+            relativeHeadYaw *= -1.0F;
+        }
+        if (!blueJay.isFlying()) {
+            this.updateHeadRotation(relativeHeadYaw, headPitch);
+        }
         if (blueJay.isFlying()) {
             this.root.pitch = blueJay.getPitch(tickDelta) * (float) (Math.PI / 180.0);
             this.root.roll = blueJay.getRoll(tickDelta) * (float) (Math.PI / 180.0);
-        }
-        if (!blueJay.isFlying() && !blueJay.isInsideWaterOrBubbleColumn()) {
-            this.animateMovement(BlueJayEntityAnimations.BLUE_JAY_WALK, limbAngle, limbDistance, 6F, 6F);
         }
         if (blueJay.isFlying()) {
             this.leftWingOpen.visible = true;
@@ -114,6 +121,9 @@ public class BlueJayEntityModel extends BirdEntityModel<BlueJayEntity> {
             this.rightWingOpen.visible = false;
             this.leftWing.visible = true;
             this.rightWing.visible = true;
+        }
+        if (!blueJay.isFlying() && !blueJay.isInsideWaterOrBubbleColumn()) {
+            this.animateMovement(BlueJayEntityAnimations.BLUE_JAY_WALK, limbAngle, limbDistance, 6F, 6F);
         }
         this.updateAnimation(blueJay.idleState, BlueJayEntityAnimations.BLUE_JAY_IDLE, ageInTicks);
         this.updateAnimation(blueJay.floatState, BlueJayEntityAnimations.BLUE_JAY_FLOAT, ageInTicks);

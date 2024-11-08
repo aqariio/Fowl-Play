@@ -13,16 +13,19 @@ import net.minecraft.entity.ai.brain.task.TaskTriggerer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class BetterWalkToNearestWantedItemTask {
+/**
+ * Improved {@link net.minecraft.entity.ai.brain.task.WalkToNearestVisibleWantedItemTask WalkToNearestVisibleWantedItemTask} with a speedGetter
+ */
+public class GoToNearestWantedItemTask {
     public static <E extends LivingEntity> Task<E> create(Predicate<E> startPredicate, Function<E, Float> entitySpeedGetter, boolean requiresWalkTarget, int radius) {
         return TaskTriggerer.task(
             instance -> {
-                TaskTriggerer<E, ? extends MemoryQueryResult<? extends K1, WalkTarget>> TaskTriggerer = requiresWalkTarget
+                TaskTriggerer<E, ? extends MemoryQueryResult<? extends K1, WalkTarget>> taskTriggerer = requiresWalkTarget
                     ? instance.queryMemoryOptional(MemoryModuleType.WALK_TARGET)
                     : instance.queryMemoryAbsent(MemoryModuleType.WALK_TARGET);
                 return instance.group(
                         instance.queryMemoryOptional(MemoryModuleType.LOOK_TARGET),
-                        TaskTriggerer,
+                        taskTriggerer,
                         instance.queryMemoryValue(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM),
                         instance.queryMemoryOptional(MemoryModuleType.ITEM_PICKUP_COOLDOWN_TICKS)
                     )
@@ -39,9 +42,7 @@ public class BetterWalkToNearestWantedItemTask {
                                 memoryAccessor2.remember(walkTarget);
                                 return true;
                             }
-                            else {
-                                return false;
-                            }
+                            return false;
                         }
                     );
             }

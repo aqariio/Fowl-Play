@@ -13,7 +13,7 @@ import net.minecraft.util.math.MathHelper;
 public class CustomChickenEntityModel extends SinglePartEntityModel<ChickenEntity> {
     public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(new Identifier(FowlPlay.ID, "chicken"), "main");
     public final AnimationState idleState = new AnimationState();
-    public final AnimationState flyState = new AnimationState();
+    public final AnimationState flapState = new AnimationState();
     public final AnimationState floatState = new AnimationState();
     public final ModelPart root;
     public final ModelPart body;
@@ -84,6 +84,13 @@ public class CustomChickenEntityModel extends SinglePartEntityModel<ChickenEntit
             this.idleState.stop();
         }
 
+        if (!chicken.isOnGround() && !chicken.isInsideWaterOrBubbleColumn()) {
+            this.flapState.startIfNotRunning(chicken.age);
+        }
+        else {
+            this.flapState.stop();
+        }
+
         if (chicken.isInsideWaterOrBubbleColumn()) {
             this.floatState.startIfNotRunning(chicken.age);
         }
@@ -96,7 +103,7 @@ public class CustomChickenEntityModel extends SinglePartEntityModel<ChickenEntit
             this.animateMovement(ChickenEntityAnimations.CHICKEN_WALK, limbSwing, limbSwingAmount, 3F, 3F);
         }
         this.updateAnimation(this.idleState, ChickenEntityAnimations.CHICKEN_IDLE, ageInTicks);
-        this.updateAnimation(this.flyState, ChickenEntityAnimations.CHICKEN_FLY, ageInTicks);
+        this.updateAnimation(this.flapState, ChickenEntityAnimations.CHICKEN_FLAP, ageInTicks);
         this.updateAnimation(this.floatState, ChickenEntityAnimations.CHICKEN_FLOAT, ageInTicks);
     }
 

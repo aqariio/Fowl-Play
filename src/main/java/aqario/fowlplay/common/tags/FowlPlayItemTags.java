@@ -9,10 +9,12 @@ import net.minecraft.util.Identifier;
 public final class FowlPlayItemTags {
     public static final TagKey<Item> BLUE_JAY_FOOD = create("blue_jay_food");
     public static final TagKey<Item> CARDINAL_FOOD = create("cardinal_food");
+    public static final TagKey<Item> CHICKADEE_FOOD = create("chickadee_food");
     public static final TagKey<Item> GULL_FOOD = create("gull_food");
     public static final TagKey<Item> PENGUIN_FOOD = create("penguin_food");
     public static final TagKey<Item> PIGEON_FOOD = create("pigeon_food");
     public static final TagKey<Item> ROBIN_FOOD = create("robin_food");
+    public static final TagKey<Item> SPARROW_FOOD = create("sparrow_food");
 
     private static TagKey<Item> create(String id) {
         return TagKey.of(RegistryKeys.ITEM, new Identifier(FowlPlay.ID, id));

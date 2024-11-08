@@ -14,7 +14,10 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class BetterGoToRememberedPositionTask {
+/**
+ * Improved {@link net.minecraft.entity.ai.brain.task.GoToRememberedPositionTask GoToRememberedPositionTask} with a speedGetter
+ */
+public class GoToWalkTargetTask {
     public static <E extends PathAwareEntity> Task<E> toBlock(MemoryModuleType<BlockPos> memoryType, Function<E, Float> entitySpeedGetter, int range, boolean requiresWalkTarget) {
         return create(memoryType, entitySpeedGetter, range, requiresWalkTarget, Vec3d::ofBottomCenter);
     }

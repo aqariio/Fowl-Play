@@ -4,6 +4,7 @@ import aqario.fowlplay.client.render.animation.RobinEntityAnimations;
 import aqario.fowlplay.common.FowlPlay;
 import aqario.fowlplay.common.entity.RobinEntity;
 import net.minecraft.client.model.*;
+import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -82,9 +83,6 @@ public class RobinEntityModel extends BirdEntityModel<RobinEntity> {
 
     @Override
     public void setAngles(RobinEntity robin, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch) {
-        if (!robin.isFlying()) {
-            this.updateHeadRotation(headYaw, headPitch);
-        }
     }
 
     @Override
@@ -92,12 +90,21 @@ public class RobinEntityModel extends BirdEntityModel<RobinEntity> {
         this.getPart().traverse().forEach(ModelPart::resetTransform);
         super.animateModel(robin, limbAngle, limbDistance, tickDelta);
         float ageInTicks = robin.age + tickDelta;
+        float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, robin.prevBodyYaw, robin.bodyYaw);
+        float headYaw = MathHelper.lerpAngleDegrees(tickDelta, robin.prevHeadYaw, robin.headYaw);
+        float relativeHeadYaw = headYaw - bodyYaw;
+
+        float headPitch = MathHelper.lerp(tickDelta, robin.prevPitch, robin.getPitch());
+        if (LivingEntityRenderer.shouldFlipUpsideDown(robin)) {
+            headPitch *= -1.0F;
+            relativeHeadYaw *= -1.0F;
+        }
+        if (!robin.isFlying()) {
+            this.updateHeadRotation(relativeHeadYaw, headPitch);
+        }
         if (robin.isFlying()) {
             this.root.pitch = robin.getPitch(tickDelta) * (float) (Math.PI / 180.0);
             this.root.roll = robin.getRoll(tickDelta) * (float) (Math.PI / 180.0);
-        }
-        if (!robin.isFlying() && !robin.isInsideWaterOrBubbleColumn()) {
-            this.animateMovement(RobinEntityAnimations.ROBIN_WALK, limbAngle, limbDistance, 6F, 6F);
         }
         if (robin.isFlying()) {
             this.leftWingOpen.visible = true;
@@ -110,6 +117,9 @@ public class RobinEntityModel extends BirdEntityModel<RobinEntity> {
             this.rightWingOpen.visible = false;
             this.leftWing.visible = true;
             this.rightWing.visible = true;
+        }
+        if (!robin.isFlying() && !robin.isInsideWaterOrBubbleColumn()) {
+            this.animateMovement(RobinEntityAnimations.ROBIN_WALK, limbAngle, limbDistance, 6F, 6F);
         }
         this.updateAnimation(robin.idleState, RobinEntityAnimations.ROBIN_IDLE, ageInTicks);
         this.updateAnimation(robin.floatState, RobinEntityAnimations.ROBIN_FLOAT, ageInTicks);

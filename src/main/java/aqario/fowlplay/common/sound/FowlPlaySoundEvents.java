@@ -14,6 +14,10 @@ public final class FowlPlaySoundEvents {
     public static final SoundEvent ENTITY_CARDINAL_SONG = register("entity.cardinal.song");
     public static final SoundEvent ENTITY_CARDINAL_HURT = register("entity.cardinal.hurt");
 
+    public static final SoundEvent ENTITY_CHICKADEE_CALL = register("entity.chickadee.call");
+    public static final SoundEvent ENTITY_CHICKADEE_SONG = register("entity.chickadee.song");
+    public static final SoundEvent ENTITY_CHICKADEE_HURT = register("entity.chickadee.hurt");
+
     public static final SoundEvent ENTITY_GULL_CALL = register("entity.gull.call");
     public static final SoundEvent ENTITY_GULL_LONG_CALL = register("entity.gull.long_call");
     public static final SoundEvent ENTITY_GULL_HURT = register("entity.gull.hurt");
@@ -30,6 +34,10 @@ public final class FowlPlaySoundEvents {
     public static final SoundEvent ENTITY_ROBIN_CALL = register("entity.robin.call");
     public static final SoundEvent ENTITY_ROBIN_SONG = register("entity.robin.song");
     public static final SoundEvent ENTITY_ROBIN_HURT = register("entity.robin.hurt");
+
+    public static final SoundEvent ENTITY_SPARROW_CALL = register("entity.sparrow.call");
+    public static final SoundEvent ENTITY_SPARROW_SONG = register("entity.sparrow.song");
+    public static final SoundEvent ENTITY_SPARROW_HURT = register("entity.sparrow.hurt");
 
     private static SoundEvent register(String id) {
         Identifier identifier = new Identifier(FowlPlay.ID, id);

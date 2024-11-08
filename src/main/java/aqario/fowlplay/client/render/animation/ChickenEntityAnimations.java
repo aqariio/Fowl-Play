@@ -170,9 +170,121 @@ public class ChickenEntityAnimations {
         )
         .build();
 
-    public static final Animation CHICKEN_FLY = Animation.Builder.create(0f)
+    public static final Animation CHICKEN_FLAP = Animation.Builder.create(0f)
+        .addBoneAnimation(
+            "head",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(1f, 0f, 0f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "left_wing",
+            new Transformation(
+                Transformation.Targets.TRANSLATE,
+                new Keyframe(0f, AnimationHelper.createTranslationalVector(-0.2f, -0.2f, 0f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "left_wing",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(-2.22f, -4.2f, -4.71f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "right_wing",
+            new Transformation(
+                Transformation.Targets.TRANSLATE,
+                new Keyframe(0f, AnimationHelper.createTranslationalVector(0.2f, -0.2f, 0f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "right_wing",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(-2.22f, 4.2f, 4.71f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "tail",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(2.5f, 0f, 0f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "left_leg",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(-8.11f, -11.58f, -10.05f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "right_leg",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(-8.11f, 11.58f, 10.05f), Transformation.Interpolations.LINEAR)
+            )
+        )
         .build();
 
     public static final Animation CHICKEN_FLOAT = Animation.Builder.create(0f).looping()
+        .addBoneAnimation(
+            "root",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(20f, 0f, 0f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "head",
+            new Transformation(
+                Transformation.Targets.TRANSLATE,
+                new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, 0f, -0.5f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "head",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(-17.5f, 0f, 0f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "left_wing",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(-1.72f, -7.52f, -7.11f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "right_wing",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(-1.72f, 7.52f, 7.11f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "tail",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(-27.5f, 0f, 0f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "left_leg",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, -15f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "right_leg",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 15f), Transformation.Interpolations.LINEAR)
+            )
+        )
         .build();
 }

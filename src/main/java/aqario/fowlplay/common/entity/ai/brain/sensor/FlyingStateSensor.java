@@ -10,7 +10,7 @@ import net.minecraft.util.Unit;
 
 import java.util.Set;
 
-public class FlyingBirdSensor extends Sensor<FlyingBirdEntity> {
+public class FlyingStateSensor extends Sensor<FlyingBirdEntity> {
     @Override
     public Set<MemoryModuleType<?>> getOutputMemoryModules() {
         return ImmutableSet.of(FowlPlayMemoryModuleType.IS_FLYING);

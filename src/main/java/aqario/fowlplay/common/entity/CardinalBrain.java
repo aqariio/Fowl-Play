@@ -84,9 +84,6 @@ public class CardinalBrain {
     private static final float WALK_SPEED = 1.0F;
     private static final float FLY_SPEED = 2.0F;
 
-    public static void init() {
-    }
-
     public static Brain.Profile<CardinalEntity> createProfile() {
         return Brain.createProfile(MEMORIES, SENSORS);
     }
@@ -197,7 +194,7 @@ public class CardinalBrain {
             10,
             ImmutableList.of(
                 FlightTaskControl.startFlying(cardinal -> true),
-                BetterGoToRememberedPositionTask.toEntity(
+                GoToWalkTargetTask.toEntity(
                     MemoryModuleType.AVOID_TARGET,
                     cardinal -> cardinal.isFlying() ? FLY_SPEED : RUN_SPEED,
                     AVOID_PLAYER_RADIUS,
@@ -216,7 +213,7 @@ public class CardinalBrain {
             FowlPlayActivities.PICKUP_FOOD,
             ImmutableList.of(
                 Pair.of(0, FlightTaskControl.startFlying(cardinal -> true)),
-                Pair.of(1, BetterWalkToNearestWantedItemTask.create(
+                Pair.of(1, GoToNearestWantedItemTask.create(
                     CardinalBrain::doesNotHaveFoodInHand,
                     entity -> entity.isFlying() ? FLY_SPEED : RUN_SPEED,
                     true,

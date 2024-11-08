@@ -84,9 +84,6 @@ public class BlueJayBrain {
     private static final float WALK_SPEED = 1.0F;
     private static final float FLY_SPEED = 2.0F;
 
-    public static void init() {
-    }
-
     public static Brain.Profile<BlueJayEntity> createProfile() {
         return Brain.createProfile(MEMORIES, SENSORS);
     }
@@ -197,7 +194,7 @@ public class BlueJayBrain {
             10,
             ImmutableList.of(
                 FlightTaskControl.startFlying(blueJay -> true),
-                BetterGoToRememberedPositionTask.toEntity(
+                GoToWalkTargetTask.toEntity(
                     MemoryModuleType.AVOID_TARGET,
                     blueJay -> blueJay.isFlying() ? FLY_SPEED : RUN_SPEED,
                     AVOID_PLAYER_RADIUS,
@@ -216,7 +213,7 @@ public class BlueJayBrain {
             FowlPlayActivities.PICKUP_FOOD,
             ImmutableList.of(
                 Pair.of(0, FlightTaskControl.startFlying(blueJay -> true)),
-                Pair.of(1, BetterWalkToNearestWantedItemTask.create(
+                Pair.of(1, GoToNearestWantedItemTask.create(
                     BlueJayBrain::doesNotHaveFoodInHand,
                     entity -> entity.isFlying() ? FLY_SPEED : RUN_SPEED,
                     true,

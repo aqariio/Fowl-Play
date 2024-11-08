@@ -7,12 +7,12 @@ import net.minecraft.entity.ai.brain.sensor.Sensor;
 
 import java.util.function.Predicate;
 
-public class AttackablesSensor extends NearestVisibleLivingEntitySensor {
+public class AttackTargetSensor extends NearestVisibleLivingEntitySensor {
     public static final float TARGET_DETECTION_DISTANCE = 32.0F;
-    private final Predicate<LivingEntity> canHunt;
+    private final Predicate<LivingEntity> canAttack;
 
-    public AttackablesSensor(Predicate<LivingEntity> canHunt) {
-        this.canHunt = canHunt;
+    public AttackTargetSensor(Predicate<LivingEntity> canAttack) {
+        this.canAttack = canAttack;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class AttackablesSensor extends NearestVisibleLivingEntitySensor {
     }
 
     private boolean canHunt(LivingEntity entity, LivingEntity target) {
-        return !entity.getBrain().hasMemoryModule(MemoryModuleType.HAS_HUNTING_COOLDOWN) && canHunt.test(target);
+        return !entity.getBrain().hasMemoryModule(MemoryModuleType.HAS_HUNTING_COOLDOWN) && canAttack.test(target);
     }
 
     private boolean isInRange(LivingEntity entity, LivingEntity target) {

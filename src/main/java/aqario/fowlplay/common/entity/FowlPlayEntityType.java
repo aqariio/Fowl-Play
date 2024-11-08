@@ -22,6 +22,11 @@ public final class FowlPlayEntityType {
             .dimensions(EntityDimensions.changing(0.4f, 0.55f))
     );
 
+    public static final EntityType<ChickadeeEntity> CHICKADEE = register("chickadee",
+        FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ChickadeeEntity::new)
+            .dimensions(EntityDimensions.changing(0.4f, 0.55f))
+    );
+
     public static final EntityType<GullEntity> GULL = register("gull",
         FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, GullEntity::new)
             .dimensions(EntityDimensions.changing(0.6f, 0.8f))
@@ -39,6 +44,11 @@ public final class FowlPlayEntityType {
 
     public static final EntityType<RobinEntity> ROBIN = register("robin",
         FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, RobinEntity::new)
+            .dimensions(EntityDimensions.changing(0.4f, 0.55f))
+    );
+
+    public static final EntityType<SparrowEntity> SPARROW = register("sparrow",
+        FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, SparrowEntity::new)
             .dimensions(EntityDimensions.changing(0.4f, 0.55f))
     );
 

@@ -27,17 +27,17 @@ public final class FowlPlaySensorType {
     public static final SensorType<NearestVisibleAdultsSensor> NEAREST_ADULTS = register("nearest_adults",
         NearestVisibleAdultsSensor::new
     );
-    public static final SensorType<AttackablesSensor> PENGUIN_ATTACKABLES = register("penguin_attackables",
-        () -> new AttackablesSensor(target -> target.getType().isIn(FowlPlayEntityTypeTags.PENGUIN_HUNT_TARGETS))
+    public static final SensorType<AttackTargetSensor> PENGUIN_ATTACKABLES = register("penguin_attackables",
+        () -> new AttackTargetSensor(target -> target.getType().isIn(FowlPlayEntityTypeTags.PENGUIN_HUNT_TARGETS))
     );
-    public static final SensorType<AttackablesSensor> GULL_ATTACKABLES = register("gull_attackables",
-        () -> new AttackablesSensor(target ->
+    public static final SensorType<AttackTargetSensor> GULL_ATTACKABLES = register("gull_attackables",
+        () -> new AttackTargetSensor(target ->
             target.getType().isIn(FowlPlayEntityTypeTags.GULL_HUNT_TARGETS) ||
                 (target.getType().isIn(FowlPlayEntityTypeTags.GULL_BABY_HUNT_TARGETS) && target.isBaby())
         )
     );
-    public static final SensorType<FlyingBirdSensor> IS_FLYING = register("is_flying",
-        FlyingBirdSensor::new
+    public static final SensorType<FlyingStateSensor> IS_FLYING = register("is_flying",
+        FlyingStateSensor::new
     );
 
     private static <U extends Sensor<?>> SensorType<U> register(String id, Supplier<U> factory) {

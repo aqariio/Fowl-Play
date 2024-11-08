@@ -24,6 +24,11 @@ public final class FowlPlayItems {
         new SpawnEggItem(FowlPlayEntityType.CARDINAL, 0xDB2929, 0x42312F, new Item.Settings()),
         ItemGroups.SPAWN_EGGS
     );
+    public static final Item CHICKADEE_SPAWN_EGG = register(
+        "chickadee_spawn_egg",
+        new SpawnEggItem(FowlPlayEntityType.CHICKADEE, 0xE8E5E1, 0x8A8B8E, new Item.Settings()),
+        ItemGroups.SPAWN_EGGS
+    );
     public static final Item GULL_SPAWN_EGG = register(
         "gull_spawn_egg",
         new SpawnEggItem(FowlPlayEntityType.GULL, 0xeaedf0, 0xffd850, new Item.Settings()),
@@ -42,6 +47,11 @@ public final class FowlPlayItems {
     public static final Item ROBIN_SPAWN_EGG = register(
         "robin_spawn_egg",
         new SpawnEggItem(FowlPlayEntityType.ROBIN, 0x66696A, 0xFF823F, new Item.Settings()),
+        ItemGroups.SPAWN_EGGS
+    );
+    public static final Item SPARROW_SPAWN_EGG = register(
+        "sparrow_spawn_egg",
+        new SpawnEggItem(FowlPlayEntityType.SPARROW, 0x6B2F12, 0xBCAE91, new Item.Settings()),
         ItemGroups.SPAWN_EGGS
     );
 

@@ -1,8 +1,9 @@
 {
   "values": [
-    "minecraft:parrot",
     "fowlplay:blue_jay",
     "fowlplay:cardinal",
-    "fowlplay:robin"
+    "fowlplay:chickadee",
+    "fowlplay:robin",
+    "fowlplay:sparrow"
   ]
 }

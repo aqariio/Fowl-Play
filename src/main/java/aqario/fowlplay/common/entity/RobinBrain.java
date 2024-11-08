@@ -84,9 +84,6 @@ public class RobinBrain {
     private static final float WALK_SPEED = 1.0F;
     private static final float FLY_SPEED = 2.0F;
 
-    public static void init() {
-    }
-
     public static Brain.Profile<RobinEntity> createProfile() {
         return Brain.createProfile(MEMORIES, SENSORS);
     }
@@ -197,7 +194,7 @@ public class RobinBrain {
             10,
             ImmutableList.of(
                 FlightTaskControl.startFlying(robin -> true),
-                BetterGoToRememberedPositionTask.toEntity(
+                GoToWalkTargetTask.toEntity(
                     MemoryModuleType.AVOID_TARGET,
                     robin -> robin.isFlying() ? FLY_SPEED : RUN_SPEED,
                     AVOID_PLAYER_RADIUS,
@@ -216,7 +213,7 @@ public class RobinBrain {
             FowlPlayActivities.PICKUP_FOOD,
             ImmutableList.of(
                 Pair.of(0, FlightTaskControl.startFlying(robin -> true)),
-                Pair.of(1, BetterWalkToNearestWantedItemTask.create(
+                Pair.of(1, GoToNearestWantedItemTask.create(
                     RobinBrain::doesNotHaveFoodInHand,
                     entity -> entity.isFlying() ? FLY_SPEED : RUN_SPEED,
                     true,

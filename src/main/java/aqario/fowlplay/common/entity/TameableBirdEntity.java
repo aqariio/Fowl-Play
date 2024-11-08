@@ -13,6 +13,8 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.scoreboard.AbstractTeam;
 import net.minecraft.server.ServerConfigHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.world.EntityView;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -44,7 +46,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements T
             nbt.putUuid("owner", this.getOwnerUuid());
         }
 
-        nbt.putBoolean("sitting", this.sitting);
+        nbt.putBoolean("Sitting", this.sitting);
     }
 
     @Override
@@ -69,7 +71,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements T
             }
         }
 
-        this.sitting = nbt.getBoolean("sitting");
+        this.sitting = nbt.getBoolean("Sitting");
         this.setInSittingPose(this.sitting);
     }
 
@@ -131,6 +133,33 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements T
         else {
             this.dataTracker.set(TAMEABLE_FLAGS, (byte) (b & -2));
         }
+    }
+
+    @Override
+    public boolean damage(DamageSource source, float amount) {
+        if (!this.getWorld().isClient && !this.isInvulnerableTo(source)) {
+            this.setSitting(false);
+        }
+        return super.damage(source, amount);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.isFlying()) {
+            this.setSitting(false);
+        }
+        if (!this.getWorld().isClient) {
+            this.setInSittingPose(this.isSitting());
+            if (this.isSitting() && this.getOwner() != null) {
+                this.getNavigation().stop();
+            }
+        }
+    }
+
+    @Override
+    public ActionResult interactMob(PlayerEntity player, Hand hand) {
+        return super.interactMob(player, hand);
     }
 
     @Nullable

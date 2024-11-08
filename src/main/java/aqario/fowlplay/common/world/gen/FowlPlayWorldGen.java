@@ -23,6 +23,13 @@ public final class FowlPlayWorldGen {
             SpawnGroup.AMBIENT, FowlPlayEntityType.CARDINAL, 35, 1, 2
         );
 
+        SpawnRestriction.register(FowlPlayEntityType.CHICKADEE, SpawnRestriction.Location.NO_RESTRICTIONS,
+            Heightmap.Type.MOTION_BLOCKING, FlyingBirdEntity::canSpawnPasserines
+        );
+        BiomeModifications.addSpawn(biome -> biome.getBiomeRegistryEntry().isIn(FowlPlayBiomeTags.SPAWNS_CHICKADEES),
+            SpawnGroup.AMBIENT, FowlPlayEntityType.CHICKADEE, 50, 3, 5
+        );
+
         SpawnRestriction.register(FowlPlayEntityType.GULL, SpawnRestriction.Location.NO_RESTRICTIONS,
             Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, GullEntity::canSpawn
         );
@@ -31,7 +38,7 @@ public final class FowlPlayWorldGen {
         );
 
         SpawnRestriction.register(FowlPlayEntityType.PENGUIN, SpawnRestriction.Location.NO_RESTRICTIONS,
-            Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, PenguinEntity::canSpawn
+            Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, PenguinEntity::canMobSpawn
         );
         BiomeModifications.addSpawn(biome -> biome.getBiomeRegistryEntry().isIn(FowlPlayBiomeTags.SPAWNS_PENGUINS),
             SpawnGroup.CREATURE, FowlPlayEntityType.PENGUIN, 1, 16, 24
@@ -49,6 +56,13 @@ public final class FowlPlayWorldGen {
         );
         BiomeModifications.addSpawn(biome -> biome.getBiomeRegistryEntry().isIn(FowlPlayBiomeTags.SPAWNS_ROBINS),
             SpawnGroup.AMBIENT, FowlPlayEntityType.ROBIN, 50, 3, 5
+        );
+
+        SpawnRestriction.register(FowlPlayEntityType.SPARROW, SpawnRestriction.Location.NO_RESTRICTIONS,
+            Heightmap.Type.MOTION_BLOCKING, FlyingBirdEntity::canSpawnPasserines
+        );
+        BiomeModifications.addSpawn(biome -> biome.getBiomeRegistryEntry().isIn(FowlPlayBiomeTags.SPAWNS_SPARROWS),
+            SpawnGroup.AMBIENT, FowlPlayEntityType.SPARROW, 75, 6, 10
         );
     }
 }

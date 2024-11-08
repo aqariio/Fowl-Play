@@ -507,4 +507,98 @@ public class PigeonEntityAnimations {
             )
         )
         .build();
+
+    public static final Animation PIGEON_SIT = Animation.Builder.create(0f).looping()
+        .addBoneAnimation(
+            "root",
+            new Transformation(
+                Transformation.Targets.TRANSLATE,
+                new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, -1.7f, 0f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "body",
+            new Transformation(
+                Transformation.Targets.TRANSLATE,
+                new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, -0.25f, 0f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "body",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(35f, 0f, 0f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "neck",
+            new Transformation(
+                Transformation.Targets.TRANSLATE,
+                new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, -0.25f, -0.35f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "neck",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(-25f, 0f, 0f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "left_wing",
+            new Transformation(
+                Transformation.Targets.TRANSLATE,
+                new Keyframe(0f, AnimationHelper.createTranslationalVector(-0.3f, 0f, 0.4f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "left_wing",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(-7.84f, -9.05f, -15.74f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "right_wing",
+            new Transformation(
+                Transformation.Targets.TRANSLATE,
+                new Keyframe(0f, AnimationHelper.createTranslationalVector(0.3f, -0.2f, 0.4f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "right_wing",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(-7.69f, 6.79f, 11.82f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "tail",
+            new Transformation(
+                Transformation.Targets.TRANSLATE,
+                new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, 0.5f, 0f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "tail",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(-35f, 0f, 0f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "left_leg",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(-53.13f, -16.6f, -7.53f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .addBoneAnimation(
+            "right_leg",
+            new Transformation(
+                Transformation.Targets.ROTATE,
+                new Keyframe(0f, AnimationHelper.createRotationalVector(-51.7f, 15.72f, 12.65f), Transformation.Interpolations.LINEAR)
+            )
+        )
+        .build();
 }

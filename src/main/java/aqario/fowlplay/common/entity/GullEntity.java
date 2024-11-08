@@ -80,7 +80,6 @@ public class GullEntity extends TrustingBirdEntity implements VariantHolder<Gull
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        GullBrain.init();
         this.setVariant(Util.getRandom(Variant.VARIANTS, world.getRandom()));
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }

@@ -52,6 +52,7 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
     public final AnimationState glideState = new AnimationState();
     public final AnimationState flapState = new AnimationState();
     public final AnimationState floatState = new AnimationState();
+    public final AnimationState sitState = new AnimationState();
 
     public PigeonEntity(EntityType<? extends PigeonEntity> entityType, World world) {
         super(entityType, world);
@@ -75,7 +76,6 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        PigeonBrain.init();
         this.setVariant(Util.getRandom(Variant.VARIANTS, world.getRandom()));
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
@@ -175,6 +175,7 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
         ItemStack playerStack = player.getStackInHand(hand);
         ItemStack bundleStack = this.getStackInHand(Hand.OFF_HAND);
 
+        // Equip bundle
         if (bundleStack.isEmpty() && playerStack.getItem() instanceof BundleItem && playerStack.hasCustomName() && this.isTamed()) {
             if (!this.getWorld().isClient) {
                 this.setStackInHand(Hand.OFF_HAND, playerStack);
@@ -183,6 +184,7 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
             return ActionResult.success(this.getWorld().isClient);
         }
 
+        // Unequip bundle
         if (playerStack.isEmpty() && bundleStack.getItem() instanceof BundleItem) {
             if (!this.getWorld().isClient) {
                 player.setStackInHand(hand, bundleStack);
@@ -191,11 +193,8 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
             return ActionResult.success(this.getWorld().isClient);
         }
 
-        if (!this.isBreedingItem(playerStack)) {
-            return super.interactMob(player, hand);
-        }
-
-        if (!this.isTamed()) {
+        // Taming
+        if (this.isBreedingItem(playerStack) && !this.isTamed()) {
             if (!this.getWorld().isClient) {
                 this.eat(player, hand, playerStack);
                 if (this.random.nextInt(4) == 0) {
@@ -210,6 +209,18 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
             return ActionResult.success(this.getWorld().isClient);
         }
 
+        // Sitting
+        if (this.isOnGround() && this.isTamed() && this.isOwner(player)) {
+            if (!this.getWorld().isClient) {
+                this.setSitting(!this.isSitting());
+                this.jumping = false;
+                this.navigation.stop();
+                this.setTarget(null);
+            }
+
+            return ActionResult.success(this.getWorld().isClient);
+        }
+
         return super.interactMob(player, hand);
     }
 
@@ -220,7 +231,7 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
 
     @Override
     public boolean canEquip(ItemStack stack) {
-        EquipmentSlot equipmentSlot = this.getPreferredEquipmentSlot(stack);
+        EquipmentSlot equipmentSlot = getPreferredEquipmentSlot(stack);
         if (!this.getEquippedStack(equipmentSlot).isEmpty()) {
             return false;
         }
@@ -245,9 +256,10 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
     @Override
     public void tick() {
         if (this.getWorld().isClient()) {
-            this.idleState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
+            this.idleState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn() && !this.isInSittingPose(), this.age);
             this.flapState.setRunning(this.isFlying(), this.age);
             this.floatState.setRunning(this.isInsideWaterOrBubbleColumn(), this.age);
+            this.sitState.setRunning(this.isInSittingPose(), this.age);
         }
 
         super.tick();

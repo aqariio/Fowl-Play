@@ -99,7 +99,6 @@ public class PenguinEntity extends BirdEntity {
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        PenguinBrain.init();
         this.setLastAnimationTick(world.toServerWorld().getTime());
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }

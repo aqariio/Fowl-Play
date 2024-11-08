@@ -10,6 +10,7 @@ import aqario.fowlplay.common.item.FowlPlayItems;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
 import aqario.fowlplay.common.world.gen.FowlPlayWorldGen;
 import aqario.fowlplay.common.world.gen.PigeonSpawner;
+import aqario.fowlplay.common.world.gen.SparrowSpawner;
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -33,11 +34,19 @@ public class FowlPlay implements ModInitializer {
         FowlPlayTrackedDataHandlerRegistry.init();
         FowlPlayWorldGen.init();
 
-        PigeonSpawner spawner = new PigeonSpawner();
-        ServerTickEvents.END_WORLD_TICK.register(world -> spawner.spawn(
-            world,
-            world.getServer().isMonsterSpawningEnabled(),
-            world.getServer().shouldSpawnAnimals()
-        ));
+        PigeonSpawner pigeonSpawner = new PigeonSpawner();
+        SparrowSpawner sparrowSpawner = new SparrowSpawner();
+        ServerTickEvents.END_WORLD_TICK.register(world -> {
+            pigeonSpawner.spawn(
+                world,
+                world.getServer().isMonsterSpawningEnabled(),
+                world.getServer().shouldSpawnAnimals()
+            );
+            sparrowSpawner.spawn(
+                world,
+                world.getServer().isMonsterSpawningEnabled(),
+                world.getServer().shouldSpawnAnimals()
+            );
+        });
     }
 }

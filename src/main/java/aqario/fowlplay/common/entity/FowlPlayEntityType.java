@@ -59,9 +59,11 @@ public final class FowlPlayEntityType {
     public static void init() {
         FabricDefaultAttributeRegistry.register(BLUE_JAY, BlueJayEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(CARDINAL, CardinalEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(CHICKADEE, ChickadeeEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(GULL, GullEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(PENGUIN, PenguinEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(PIGEON, PigeonEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(ROBIN, RobinEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(SPARROW, SparrowEntity.createMobAttributes());
     }
 }

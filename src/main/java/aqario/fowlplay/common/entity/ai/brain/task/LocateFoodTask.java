@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.BirdEntity;
-import aqario.fowlplay.common.entity.GullBrain;
 import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
@@ -24,7 +23,7 @@ public class LocateFoodTask {
                 )
                 .apply(builder, (nearestVisibleWantedItem, seesFood, cannotEatFood) -> (world, entity, time) -> {
                     ItemEntity item = builder.getValue(nearestVisibleWantedItem);
-                    if (!GullBrain.getFood().test(item.getStack())) {
+                    if (!entity.getFood().test(item.getStack())) {
                         return false;
                     }
                     if (!predicate.test(entity)) {

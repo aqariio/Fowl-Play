@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "angling:worm",
+      "required": false
+    },
+    "minecraft:beetroot_seeds",
+    "minecraft:bread",
+    "minecraft:cod",
+    "minecraft:melon_seeds",
+    "minecraft:pumpkin_seeds",
+    "minecraft:salmon",
+    "minecraft:seagrass",
+    "minecraft:torchflower_seeds",
+    "minecraft:tropical_fish",
+    "minecraft:wheat_seeds"
+  ]
+}

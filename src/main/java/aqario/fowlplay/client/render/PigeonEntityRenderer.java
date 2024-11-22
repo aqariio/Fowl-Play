@@ -16,7 +16,7 @@ public class PigeonEntityRenderer extends MobEntityRenderer<PigeonEntity, Pigeon
         this.addFeature(new BirdHeldItemFeatureRenderer<>(this, context.getHeldItemRenderer()) {
             @Override
             public Vec3d getItemOffset() {
-                return new Vec3d(0.0F, -0.0225F, -0.25625F);
+                return new Vec3d(0.0, -0.0225, -0.1475);
             }
         });
         this.addFeature(new PigeonBundleFeatureRenderer(this, context.getHeldItemRenderer()));

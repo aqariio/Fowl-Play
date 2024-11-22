@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.entity;
 
-import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;
+import aqario.fowlplay.common.entity.ai.control.BirdFloatMoveControl;
 import aqario.fowlplay.common.entity.ai.pathing.BirdNavigation;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
 import aqario.fowlplay.common.tags.FowlPlayBiomeTags;
@@ -65,7 +65,7 @@ public class GullEntity extends TrustingBirdEntity implements VariantHolder<Gull
 
     @Override
     protected MoveControl getLandMoveControl() {
-        return new GullMoveControl(this);
+        return new BirdFloatMoveControl(this);
     }
 
     @Override
@@ -280,20 +280,6 @@ public class GullEntity extends TrustingBirdEntity implements VariantHolder<Gull
 
         public String getId() {
             return id;
-        }
-    }
-
-    private static class GullMoveControl extends BirdMoveControl {
-        public GullMoveControl(GullEntity entity) {
-            super(entity);
-        }
-
-        @Override
-        public void tick() {
-            if (((GullEntity) this.entity).isFloating()) {
-                this.entity.setVelocity(this.entity.getVelocity().add(0.0, 0.05, 0.0));
-            }
-            super.tick();
         }
     }
 }

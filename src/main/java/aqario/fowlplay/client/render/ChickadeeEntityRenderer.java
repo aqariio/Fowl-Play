@@ -15,7 +15,7 @@ public class ChickadeeEntityRenderer extends MobEntityRenderer<ChickadeeEntity, 
         this.addFeature(new BirdHeldItemFeatureRenderer<>(this, context.getHeldItemRenderer()) {
             @Override
             public Vec3d getItemOffset() {
-                return new Vec3d(0.0F, -0.085F, -0.25625F);
+                return new Vec3d(0.0, -0.085, -0.1475);
             }
         });
     }

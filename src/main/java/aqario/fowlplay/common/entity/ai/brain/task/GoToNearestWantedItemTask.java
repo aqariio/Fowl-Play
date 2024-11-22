@@ -31,15 +31,15 @@ public class GoToNearestWantedItemTask {
                     )
                     .apply(
                         instance,
-                        (memoryAccessor, memoryAccessor2, memoryAccessor3, memoryAccessor4) -> (world, livingEntity, l) -> {
-                            ItemEntity itemEntity = instance.getValue(memoryAccessor3);
-                            if (instance.getOptionalValue(memoryAccessor4).isEmpty()
+                        (lookTarget, walkTarget, nearestWantedItem, pickupCooldownTicks) -> (world, livingEntity, l) -> {
+                            ItemEntity itemEntity = instance.getValue(nearestWantedItem);
+                            if (instance.getOptionalValue(pickupCooldownTicks).isEmpty()
                                 && startPredicate.test(livingEntity)
                                 && itemEntity.isInRange(livingEntity, radius)
                                 && livingEntity.getWorld().getWorldBorder().contains(itemEntity.getBlockPos())) {
-                                WalkTarget walkTarget = new WalkTarget(new EntityLookTarget(itemEntity, false), entitySpeedGetter.apply(livingEntity), 0);
-                                memoryAccessor.remember(new EntityLookTarget(itemEntity, true));
-                                memoryAccessor2.remember(walkTarget);
+                                WalkTarget newWalkTarget = new WalkTarget(new EntityLookTarget(itemEntity, false), entitySpeedGetter.apply(livingEntity), 0);
+                                lookTarget.remember(new EntityLookTarget(itemEntity, true));
+                                walkTarget.remember(newWalkTarget);
                                 return true;
                             }
                             return false;

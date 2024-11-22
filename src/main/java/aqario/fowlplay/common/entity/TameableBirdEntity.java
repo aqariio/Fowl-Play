@@ -46,7 +46,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements T
             nbt.putUuid("owner", this.getOwnerUuid());
         }
 
-        nbt.putBoolean("Sitting", this.sitting);
+        nbt.putBoolean("sitting", this.sitting);
     }
 
     @Override
@@ -71,7 +71,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements T
             }
         }
 
-        this.sitting = nbt.getBoolean("Sitting");
+        this.sitting = nbt.getBoolean("sitting");
         this.setInSittingPose(this.sitting);
     }
 
@@ -150,9 +150,12 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements T
             this.setSitting(false);
         }
         if (!this.getWorld().isClient) {
-            this.setInSittingPose(this.isSitting());
-            if (this.isSitting() && this.getOwner() != null) {
+            if (this.isSitting()) {
                 this.getNavigation().stop();
+                this.setInSittingPose(true);
+            }
+            else {
+                this.setInSittingPose(false);
             }
         }
     }

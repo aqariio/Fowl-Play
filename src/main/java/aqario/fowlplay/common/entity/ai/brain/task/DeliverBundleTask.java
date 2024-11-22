@@ -3,62 +3,41 @@ package aqario.fowlplay.common.entity.ai.brain.task;
 import aqario.fowlplay.common.entity.PigeonEntity;
 import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
 import aqario.fowlplay.common.entity.ai.brain.TeleportTarget;
-import com.google.common.collect.ImmutableMap;
 import net.minecraft.entity.ai.brain.EntityLookTarget;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.WalkTarget;
-import net.minecraft.entity.ai.brain.task.MultiTickTask;
+import net.minecraft.entity.ai.brain.task.Task;
+import net.minecraft.entity.ai.brain.task.TaskTriggerer;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 
-public class DeliverBundleTask extends MultiTickTask<PigeonEntity> {
-    private final float speed;
-    private int updateCountdownTicks;
-    private final float maxDistance;
-    private final float minDistance;
-    private PlayerEntity recipient;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
-    public DeliverBundleTask(float speed, float minDistance, float maxDistance) {
-        super(ImmutableMap.of());
-        this.speed = speed;
-        this.minDistance = minDistance;
-        this.maxDistance = maxDistance;
-    }
-
-    @Override
-    protected boolean shouldRun(ServerWorld world, PigeonEntity pigeon) {
-        if (!pigeon.isTamed()) {
-            return false;
-        }
-        if (pigeon.getRecipientUuid() == null) {
-            return false;
-        }
-        this.recipient = pigeon.getWorld().getPlayerByUuid(pigeon.getRecipientUuid());
-        if (this.recipient == null) {
-            return false;
-        }
-        return pigeon.squaredDistanceTo(this.recipient) > this.minDistance * this.minDistance;
-    }
-
-    @Override
-    protected boolean shouldKeepRunning(ServerWorld world, PigeonEntity pigeon, long time) {
-        if (pigeon.getNavigation().isIdle()) {
-            return false;
-        }
-        return pigeon.squaredDistanceTo(this.recipient) < this.maxDistance * this.maxDistance;
-    }
-
-    @Override
-    protected void keepRunning(ServerWorld world, PigeonEntity pigeon, long time) {
-        pigeon.getBrain().remember(MemoryModuleType.LOOK_TARGET, new EntityLookTarget(this.recipient, true));
-        if (--this.updateCountdownTicks <= 0) {
-            this.updateCountdownTicks = 10;
-            if (pigeon.squaredDistanceTo(this.recipient) > 10000 && pigeon.squaredDistanceTo(pigeon.getOwner()) > 1024) {
-                pigeon.getBrain().remember(FowlPlayMemoryModuleType.TELEPORT_TARGET, new TeleportTarget(this.recipient));
-            }
-            else {
-                pigeon.getBrain().remember(MemoryModuleType.WALK_TARGET, new WalkTarget(this.recipient, this.speed, 0));
-            }
-        }
+public class DeliverBundleTask {
+    public static <E extends PigeonEntity> Task<E> run(Predicate<E> startPredicate, Function<E, Float> entitySpeedGetter) {
+        return TaskTriggerer.task(
+            instance -> instance.group(
+                    instance.queryMemoryValue(FowlPlayMemoryModuleType.RECIPIENT),
+                    instance.queryMemoryOptional(MemoryModuleType.LOOK_TARGET),
+                    instance.queryMemoryOptional(MemoryModuleType.WALK_TARGET),
+                    instance.queryMemoryOptional(FowlPlayMemoryModuleType.TELEPORT_TARGET)
+                )
+                .apply(
+                    instance,
+                    (recipientUuid, lookTarget, walkTarget, teleportTarget) -> (world, pigeon, l) -> {
+                        PlayerEntity recipient = world.getPlayerByUuid(instance.getValue(recipientUuid));
+                        if (recipient != null && startPredicate.test(pigeon)) {
+                            WalkTarget newWalkTarget = new WalkTarget(new EntityLookTarget(recipient, false), entitySpeedGetter.apply(pigeon), 0);
+                            lookTarget.remember(new EntityLookTarget(recipient, true));
+                            walkTarget.remember(newWalkTarget);
+                            if (pigeon.getOwner() != null && pigeon.squaredDistanceTo(recipient) > 100 * 100 && pigeon.squaredDistanceTo(pigeon.getOwner()) > 16 * 16) {
+                                teleportTarget.remember(new TeleportTarget(recipient));
+                            }
+                            return true;
+                        }
+                        return false;
+                    }
+                )
+        );
     }
 }

@@ -55,6 +55,10 @@ dependencies {
     modImplementation include("maven.modrinth:midnightlib:${project.midnightlib_version}")
 }
 
+fabricApi {
+    configureDataGeneration()
+}
+
 processResources {
     inputs.property 'version', version
 

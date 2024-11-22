@@ -168,7 +168,7 @@ public class RobinBrain {
         brain.setTaskList(
             FowlPlayActivities.FLY,
             ImmutableList.of(
-                Pair.of(1, FlightTaskControl.stopFlying(robin -> true)),
+                Pair.of(1, FlightTaskControl.tryStopFlying(robin -> true)),
                 Pair.of(2, StayNearClosestEntityTask.create(STAY_NEAR_ENTITY_RANGE, FLY_SPEED)),
                 Pair.of(
                     3,

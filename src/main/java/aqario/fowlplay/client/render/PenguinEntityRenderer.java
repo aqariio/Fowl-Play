@@ -17,7 +17,7 @@ public class PenguinEntityRenderer extends MobEntityRenderer<PenguinEntity, Peng
         this.addFeature(new BirdHeldItemFeatureRenderer<>(this, context.getHeldItemRenderer()) {
             @Override
             public Vec3d getItemOffset() {
-                return new Vec3d(0.0F, -0.145F, -0.31875F);
+                return new Vec3d(0.0, -0.145, -0.1475);
             }
         });
     }

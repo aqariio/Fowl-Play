@@ -31,13 +31,13 @@ public class GoToWalkTargetTask {
     ) {
         return TaskTriggerer.task(
             instance -> instance.group(instance.queryMemoryOptional(MemoryModuleType.WALK_TARGET), instance.queryMemoryValue(memoryType))
-                .apply(instance, (memoryAccessor, memoryAccessor2) -> (world, entity, l) -> {
-                    Optional<WalkTarget> optional = instance.getOptionalValue(memoryAccessor);
+                .apply(instance, (walkTarget, targetType) -> (world, entity, l) -> {
+                    Optional<WalkTarget> optional = instance.getOptionalValue(walkTarget);
                     if (optional.isPresent() && !requiresWalkTarget) {
                         return false;
                     }
                     Vec3d entityPos = entity.getPos();
-                    Vec3d targetPos = targetPositionGetter.apply(instance.getValue(memoryAccessor2));
+                    Vec3d targetPos = targetPositionGetter.apply(instance.getValue(targetType));
                     if (!entityPos.isInRange(targetPos, range)) {
                         return false;
                     }
@@ -52,7 +52,7 @@ public class GoToWalkTargetTask {
                     for (int j = 0; j < 10; j++) {
                         Vec3d vec3d4 = FuzzyTargeting.findFrom(entity, 16, 16, targetPos);
                         if (vec3d4 != null) {
-                            memoryAccessor.remember(new WalkTarget(vec3d4, entitySpeedGetter.apply(entity), 0));
+                            walkTarget.remember(new WalkTarget(vec3d4, entitySpeedGetter.apply(entity), 0));
                             break;
                         }
                     }

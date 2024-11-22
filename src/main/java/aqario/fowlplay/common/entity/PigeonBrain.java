@@ -30,6 +30,7 @@ import net.minecraft.util.math.intprovider.UniformIntProvider;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 public class PigeonBrain {
     private static final ImmutableList<SensorType<? extends Sensor<? super PigeonEntity>>> SENSORS = ImmutableList.of(
@@ -41,7 +42,8 @@ public class PigeonBrain {
         SensorType.IS_IN_WATER,
         FowlPlaySensorType.IS_FLYING,
         FowlPlaySensorType.NEAREST_ADULTS,
-        FowlPlaySensorType.PIGEON_TEMPTATIONS
+        FowlPlaySensorType.PIGEON_TEMPTATIONS,
+        FowlPlaySensorType.PIGEON_SPECIFIC_SENSOR
     );
     private static final ImmutableList<MemoryModuleType<?>> MEMORIES = ImmutableList.of(
         MemoryModuleType.LOOK_TARGET,
@@ -95,6 +97,7 @@ public class PigeonBrain {
         addCoreActivities(brain);
         addIdleActivities(brain);
         addFlyActivities(brain);
+        addDeliverActivities(brain);
         addAvoidActivities(brain);
         addPickupFoodActivities(brain);
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
@@ -108,6 +111,7 @@ public class PigeonBrain {
             ImmutableList.of(
                 Activity.IDLE,
                 FowlPlayActivities.FLY,
+                FowlPlayActivities.DELIVER,
                 Activity.AVOID,
                 FowlPlayActivities.PICKUP_FOOD
             )
@@ -124,9 +128,8 @@ public class PigeonBrain {
                 new TeleportToTargetTask(),
                 new FleeTask(RUN_SPEED),
                 new DelivererFollowOwnerTask(WALK_SPEED, 5, 10),
-                new DeliverBundleTask(WALK_SPEED, 4, 1024),
                 makeAddPlayerToAvoidTargetTask(),
-                LocateFoodTask.run(pigeon -> !pigeon.isSitting()),
+                LocateFoodTask.run(pigeon -> !pigeon.isSitting() && pigeon.getRecipientUuid() == null),
                 new LookAroundTask(45, 90),
                 new WanderAroundTask(),
                 new TemptationCooldownTask(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
@@ -175,7 +178,7 @@ public class PigeonBrain {
         brain.setTaskList(
             FowlPlayActivities.FLY,
             ImmutableList.of(
-                Pair.of(1, FlightTaskControl.stopFlying(pigeon -> true)),
+                Pair.of(1, FlightTaskControl.tryStopFlying(pigeon -> true)),
                 Pair.of(2, StayNearClosestEntityTask.create(STAY_NEAR_ENTITY_RANGE, FLY_SPEED)),
                 Pair.of(
                     3,
@@ -190,8 +193,22 @@ public class PigeonBrain {
             ImmutableSet.of(
                 Pair.of(FowlPlayMemoryModuleType.IS_FLYING, MemoryModuleState.VALUE_PRESENT),
                 Pair.of(MemoryModuleType.AVOID_TARGET, MemoryModuleState.VALUE_ABSENT),
-                Pair.of(FowlPlayMemoryModuleType.SEES_FOOD, MemoryModuleState.VALUE_ABSENT)
+                Pair.of(FowlPlayMemoryModuleType.SEES_FOOD, MemoryModuleState.VALUE_ABSENT),
+                Pair.of(FowlPlayMemoryModuleType.RECIPIENT, MemoryModuleState.VALUE_ABSENT)
             )
+        );
+    }
+
+    private static void addDeliverActivities(Brain<PigeonEntity> brain) {
+        brain.setTaskList(
+            FowlPlayActivities.DELIVER,
+            0,
+            ImmutableList.of(
+                FlightTaskControl.stopFlying(PigeonBrain::shouldStopFlyingToRecipient),
+                FlightTaskControl.startFlying(PigeonBrain::shouldFlyToRecipient),
+                DeliverBundleTask.run(pigeon -> true, pigeon -> pigeon.isFlying() ? FLY_SPEED : WALK_SPEED)
+            ),
+            FowlPlayMemoryModuleType.RECIPIENT
         );
     }
 
@@ -230,7 +247,8 @@ public class PigeonBrain {
             ),
             Set.of(
                 Pair.of(FowlPlayMemoryModuleType.SEES_FOOD, MemoryModuleState.VALUE_PRESENT),
-                Pair.of(MemoryModuleType.AVOID_TARGET, MemoryModuleState.VALUE_ABSENT)
+                Pair.of(MemoryModuleType.AVOID_TARGET, MemoryModuleState.VALUE_ABSENT),
+                Pair.of(FowlPlayMemoryModuleType.RECIPIENT, MemoryModuleState.VALUE_ABSENT)
             )
         );
     }
@@ -330,6 +348,30 @@ public class PigeonBrain {
 
     private static boolean doesNotHaveFoodInHand(PigeonEntity pigeon) {
         return !getFood().test(pigeon.getMainHandStack());
+    }
+
+    private static boolean shouldFlyToRecipient(PigeonEntity pigeon) {
+        UUID recipientUuid = pigeon.getBrain().getOptionalMemory(FowlPlayMemoryModuleType.RECIPIENT).orElse(null);
+        if (recipientUuid == null) {
+            return false;
+        }
+        PlayerEntity recipient = pigeon.getWorld().getPlayerByUuid(recipientUuid);
+        if (recipient == null) {
+            return false;
+        }
+        return pigeon.squaredDistanceTo(recipient) > 64;
+    }
+
+    private static boolean shouldStopFlyingToRecipient(PigeonEntity pigeon) {
+        UUID recipientUuid = pigeon.getBrain().getOptionalMemory(FowlPlayMemoryModuleType.RECIPIENT).orElse(null);
+        if (recipientUuid == null) {
+            return true;
+        }
+        PlayerEntity recipient = pigeon.getWorld().getPlayerByUuid(recipientUuid);
+        if (recipient == null) {
+            return true;
+        }
+        return pigeon.squaredDistanceTo(recipient) < 16;
     }
 
     public static Ingredient getFood() {

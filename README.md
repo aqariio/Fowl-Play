@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/blue_jay_icon.png" alt="Blue Jay Icon"> <img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/cardinal_icon.png" alt="Cardinal Icon"> <img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/chickadee_icon.png" alt="Chickadee Icon"> <img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/gull_icon.png" alt="Gull Icon"> <img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/gull_flying_icon.png" alt="Gull Flying Icon"> <img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/pigeon_icon.png" alt="Pigeon Icon"> <img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/robin_icon.png" alt="Robin Icon"> <img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/sparrow_icon.png" alt="Sparrow Icon">
+<img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/blue_jay_icon.png" alt="Blue Jay Icon"><img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/cardinal_icon.png" alt="Cardinal Icon"><img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/chickadee_icon.png" alt="Chickadee Icon"><img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/duck_icon.png" alt="Duck Icon"><img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/gull_flying_icon.png" alt="Gull Flying Icon"><img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/pigeon_icon.png" alt="Pigeon Icon"><img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/raven_flying_icon.png" alt="Raven Flying Icon"><img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/robin_icon.png" alt="Robin Icon"><img src="https://raw.githubusercontent.com/aqariio/Fowl-Play/main/src/main/resources/assets/fowlplay/sparrow_icon.png" alt="Sparrow Icon">
 
 # Fowl Play
 
@@ -6,7 +6,7 @@ Fowl Play adds a variety of birds to Minecraft, with the aim of giving them real
 
 ## Disclaimer
 
-_This mod is in development, and many features are missing. It's very possible that I may change some stuff that causes progress to be lost, or worlds to be corrupted. **I do not recommend using this on a long-term world.** If you could help me find some bugs, that would be awesome!_
+_This mod is in beta, and some features are incomplete. As always, it's possible I may change some stuff that causes progress to be lost, or worlds to be corrupted. If you could help me find some bugs, that would be awesome!_
 
 ## Mobs
 
@@ -15,18 +15,18 @@ _This mod adds a custom chicken model in the style of its other birds. The model
 **Added mobs:**
 
 - Penguin (Emperor penguin)
-- Gull (Herring gull and ring-billed gull)
+- Gull (Herring gull, ring-billed gull)
 - Robin (American robin)
 - Pigeon (Rock pigeon)
 - Cardinal
 - Blue Jay
 - Old world Sparrow (House sparrow)
 - Chickadee (Black-capped chickadee)
+- Raven
+- Duck (Mallard duck)
 
 **Planned additions (in order of priority):**
 
-- Crows / Ravens
-- Ducks (Mallard duck)
 - Hawks (Red tailed hawk, osprey)
 - Woodpeckers (Downy woodpecker, pileated woodpecker, yellow-bellied sapsucker)
 - Geese (Domestic goose, Canada goose)
@@ -34,5 +34,6 @@ _This mod adds a custom chicken model in the style of its other birds. The model
 - Owls (Great horned owl, snowy owl)
 - New world Vultures (Black vulture, turkey vulture)
 - Falcons (Peregrine falcon, gyrfalcon)
+- Crows
 - Finches (American goldfinch, house finch)
 - New world Blackbirds (Red-winged blackbird, common grackle)

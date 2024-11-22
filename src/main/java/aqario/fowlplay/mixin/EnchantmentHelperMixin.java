@@ -1,6 +1,6 @@
 package aqario.fowlplay.mixin;
 
-import aqario.fowlplay.common.entity.GullEntity;
+import aqario.fowlplay.common.entity.Aquatic;
 import aqario.fowlplay.common.entity.PenguinEntity;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
@@ -18,7 +18,7 @@ public class EnchantmentHelperMixin {
             cir.setReturnValue(3);
             return;
         }
-        if (entity instanceof GullEntity) {
+        if (entity instanceof Aquatic) {
             cir.setReturnValue(1);
         }
     }

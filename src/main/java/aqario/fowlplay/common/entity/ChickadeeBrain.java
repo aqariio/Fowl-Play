@@ -133,7 +133,7 @@ public class ChickadeeBrain {
         brain.setTaskList(
             Activity.IDLE,
             ImmutableList.of(
-                Pair.of(1, new BreedTask(FowlPlayEntityType.ROBIN, WALK_SPEED)),
+                Pair.of(1, new BreedTask(FowlPlayEntityType.CHICKADEE, WALK_SPEED)),
                 Pair.of(2, WalkTowardClosestAdultTask.create(FOLLOW_ADULT_RANGE, WALK_SPEED)),
                 Pair.of(3, LookAtMobTask.create(ChickadeeBrain::isPlayerHoldingFood, 32.0F)),
                 Pair.of(4, StayNearClosestEntityTask.create(STAY_NEAR_ENTITY_RANGE, WALK_SPEED)),
@@ -168,7 +168,7 @@ public class ChickadeeBrain {
         brain.setTaskList(
             FowlPlayActivities.FLY,
             ImmutableList.of(
-                Pair.of(1, FlightTaskControl.stopFlying(chickadee -> true)),
+                Pair.of(1, FlightTaskControl.tryStopFlying(chickadee -> true)),
                 Pair.of(2, StayNearClosestEntityTask.create(STAY_NEAR_ENTITY_RANGE, FLY_SPEED)),
                 Pair.of(
                     3,
@@ -230,7 +230,7 @@ public class ChickadeeBrain {
 
     private static ImmutableList<Pair<SingleTickTask<LivingEntity>, Integer>> createLookTasks() {
         return ImmutableList.of(
-            Pair.of(LookAtMobTask.create(FowlPlayEntityType.ROBIN, 8.0F), 1),
+            Pair.of(LookAtMobTask.create(FowlPlayEntityType.CHICKADEE, 8.0F), 1),
             Pair.of(LookAtMobTask.create(8.0F), 1)
         );
     }

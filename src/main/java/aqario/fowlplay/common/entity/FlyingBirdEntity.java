@@ -38,7 +38,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         this.setMoveControl(false);
     }
 
-    public static DefaultAttributeContainer.Builder createMobAttributes() {
+    public static DefaultAttributeContainer.Builder createAttributes() {
         return MobEntity.createMobAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 6.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.28f)

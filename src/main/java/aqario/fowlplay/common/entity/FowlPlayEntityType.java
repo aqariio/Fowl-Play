@@ -27,6 +27,11 @@ public final class FowlPlayEntityType {
             .dimensions(EntityDimensions.changing(0.4f, 0.55f))
     );
 
+    public static final EntityType<DuckEntity> DUCK = register("duck",
+        FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, DuckEntity::new)
+            .dimensions(EntityDimensions.changing(0.6f, 0.8f))
+    );
+
     public static final EntityType<GullEntity> GULL = register("gull",
         FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, GullEntity::new)
             .dimensions(EntityDimensions.changing(0.6f, 0.8f))
@@ -40,6 +45,11 @@ public final class FowlPlayEntityType {
     public static final EntityType<PigeonEntity> PIGEON = register("pigeon",
         FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, PigeonEntity::new)
             .dimensions(EntityDimensions.changing(0.5f, 0.6f))
+    );
+
+    public static final EntityType<RavenEntity> RAVEN = register("raven",
+        FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, RavenEntity::new)
+            .dimensions(EntityDimensions.changing(0.6f, 0.8f))
     );
 
     public static final EntityType<RobinEntity> ROBIN = register("robin",
@@ -57,13 +67,15 @@ public final class FowlPlayEntityType {
     }
 
     public static void init() {
-        FabricDefaultAttributeRegistry.register(BLUE_JAY, BlueJayEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(CARDINAL, CardinalEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(CHICKADEE, ChickadeeEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(GULL, GullEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(PENGUIN, PenguinEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(PIGEON, PigeonEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(ROBIN, RobinEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(SPARROW, SparrowEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(BLUE_JAY, BlueJayEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(CARDINAL, CardinalEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(CHICKADEE, ChickadeeEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(DUCK, DuckEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(GULL, GullEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(PENGUIN, PenguinEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(PIGEON, PigeonEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(RAVEN, RavenEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(ROBIN, RobinEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(SPARROW, SparrowEntity.createAttributes());
     }
 }

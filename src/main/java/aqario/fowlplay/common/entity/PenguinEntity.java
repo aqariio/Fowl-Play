@@ -119,8 +119,8 @@ public class PenguinEntity extends BirdEntity {
         return Ingredient.fromTag(FowlPlayItemTags.PENGUIN_FOOD);
     }
 
-    public static DefaultAttributeContainer.Builder createMobAttributes() {
-        return BirdEntity.createMobAttributes()
+    public static DefaultAttributeContainer.Builder createAttributes() {
+        return BirdEntity.createAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 16.0f)
             .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.135f);

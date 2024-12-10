@@ -2,7 +2,7 @@
 
 # Fowl Play
 
-Fowl Play adds a variety of birds to Minecraft, with the aim of giving them realistic behaviours and sounds. Unlike the fluttering parrots of the base game, the avians of this mod can all take to the skies gracefully (except, of course, flightless birds). Some of them add ambience, others have useful features and all of them try to annoy you as much as they can, just like real birds!
+Fowl Play adds a variety of birds to Minecraft, with the aim of giving them realistic behaviours and sounds. Unlike the fluttering parrots of the base game, the avians of this mod can all take to the skies gracefully (except flightless birds, of course). Some of them add ambience, others have useful features and all of them try to annoy you as much as they can, just like real birds!
 
 ## Disclaimer
 
@@ -37,3 +37,18 @@ _This mod adds a custom chicken model in the style of its other birds. The model
 - Crows
 - Finches (American goldfinch, house finch)
 - New world Blackbirds (Red-winged blackbird, common grackle)
+
+## Frequently Asked Questions
+
+<details>
+<summary>Is this mod available on Forge? / Can I use Sinytra connector?</summary>
+
+This mod currently does not have a Forge version. To use Sinytra connector, you must use a version under my [GitHub releases](https://github.com/aqariio/Fowl-Play/releases). This is because the normal release will crash when using Sinytra. Additionally, if you are using the 1.21 version of the mod with Sinytra connector, mobs will no longer be able to move in water. To fix this, you will need https://github.com/unilock/sinytra1343. ([Link to releases page](https://github.com/unilock/sinytra1343/releases))
+
+Forge support is planned for the future, but it is not a priority at the moment, as I want to focus on adding new features and fixing bugs. If you would like to port the mod, you are completely free to do so! Just make sure to credit me and link back to this page, of course. 
+
+**Here is the explanation for why you need to download a special release for Sinytra connector:**
+
+The two mixins fowlplay\$modifySlipperiness and fowlplay\$increaseAirSpeed in LivingEntityMixin cause a crash when loaded with Sinytra connector. This is because they modify code that does not exist when loaded with Forge. Both getAirSpeed() and getSlipperiness() are written differently in Forge compared to Fabric, which is what causes this crash. The special jars in the GitHub releases simply remove these two mixins. As for the fix for the 1.21 version, the solution was given in [this](https://github.com/aqariio/Fowl-Play/issues/15) thread.
+
+</details>

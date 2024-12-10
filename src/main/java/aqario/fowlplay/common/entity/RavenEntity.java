@@ -1,5 +1,6 @@
 package aqario.fowlplay.common.entity;
 
+import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
 import aqario.fowlplay.common.tags.FowlPlayBiomeTags;
 import aqario.fowlplay.common.tags.FowlPlayBlockTags;
@@ -135,7 +136,7 @@ public class RavenEntity extends TrustingBirdEntity {
 
     @Override
     protected float getCallVolume() {
-        return 12.0F;
+        return FowlPlayConfig.ravenCallVolume;
     }
 
     @Override

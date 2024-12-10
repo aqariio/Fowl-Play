@@ -18,6 +18,10 @@ repositories {
     maven {
         url "https://gitlab.com/api/v4/projects/21830712/packages/maven"
     }
+    maven {
+        name 'Xander Maven'
+        url 'https://maven.isxander.dev/releases'
+    }
 }
 
 dependencies {
@@ -51,8 +55,8 @@ dependencies {
         transitive = false
     }
 
-    // MidnightLib
-    modImplementation include("maven.modrinth:midnightlib:${project.midnightlib_version}")
+    // Yet Another Config Lib
+    modImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}")
 }
 
 fabricApi {

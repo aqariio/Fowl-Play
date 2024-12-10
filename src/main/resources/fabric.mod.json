@@ -24,6 +24,9 @@
     ],
     "client": [
       "aqario.fowlplay.client.FowlPlayClient"
+    ],
+    "modmenu": [
+      "aqario.fowlplay.common.config.ModMenuIntegration"
     ]
   },
   "mixins": [
@@ -36,5 +39,6 @@
     "fabric-api": "*"
   },
   "suggests": {
+    "yet_another_config_lib_v3": ">=3.6.1+1.20.1-fabric"
   }
 }

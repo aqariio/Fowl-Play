@@ -1,6 +1,18 @@
 {
   "values": [
-    "minecraft:beach",
+    {
+      "id": "natures_spirit:bamboo_wetlands",
+      "required": false
+    },
+    {
+      "id": "natures_spirit:marsh",
+      "required": false
+    },
+    {
+      "id": "natures_spirit:wisteria_forest",
+      "required": false
+    },
+    "minecraft:swamp",
     "minecraft:river"
   ]
 }

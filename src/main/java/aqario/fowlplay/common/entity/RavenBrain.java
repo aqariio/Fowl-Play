@@ -128,7 +128,7 @@ public class RavenBrain {
                 new StayAboveWaterTask(0.5F),
                 new FleeTask(RUN_SPEED),
                 makeAddPlayerToAvoidTargetTask(),
-                LocateFoodTask.run(),
+                LocateFoodTask.run(RavenBrain::shouldPickUpFood),
                 new LookAroundTask(45, 90),
                 new WanderAroundTask(),
                 new TemptationCooldownTask(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
@@ -223,9 +223,9 @@ public class RavenBrain {
         brain.setTaskList(
             FowlPlayActivities.PICKUP_FOOD,
             ImmutableList.of(
-                Pair.of(0, FlightTaskControl.startFlying(raven -> true)),
+                Pair.of(0, FlightTaskControl.startFlying(RavenBrain::shouldPickUpFood)),
                 Pair.of(1, GoToNearestWantedItemTask.create(
-                    RavenBrain::doesNotHaveFoodInHand,
+                    RavenBrain::shouldPickUpFood,
                     entity -> entity.isFlying() ? FLY_SPEED : RUN_SPEED,
                     true,
                     PICK_UP_RANGE
@@ -348,8 +348,19 @@ public class RavenBrain {
         return target.getType() == EntityType.PLAYER && target.isHolding(stack -> getFood().test(stack));
     }
 
-    private static boolean doesNotHaveFoodInHand(RavenEntity raven) {
-        return !getFood().test(raven.getMainHandStack());
+    private static boolean shouldPickUpFood(RavenEntity raven) {
+        Brain<RavenEntity> brain = raven.getBrain();
+        if (!brain.hasMemoryModule(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM)) {
+            return false;
+        }
+        boolean playerNear = false;
+        if (brain.hasMemoryModule(MemoryModuleType.NEAREST_VISIBLE_PLAYER)) {
+            ItemEntity wantedItem = brain.getOptionalMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM).get();
+            PlayerEntity player = brain.getOptionalMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER).get();
+            playerNear = player.isInRange(wantedItem, AVOID_PLAYER_RADIUS);
+        }
+
+        return !getFood().test(raven.getMainHandStack()) && !playerNear;
     }
 
     public static Ingredient getFood() {

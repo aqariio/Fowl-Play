@@ -1,5 +1,6 @@
 package aqario.fowlplay.common.entity;
 
+import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.control.BirdFlightMoveControl;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
@@ -116,12 +117,12 @@ public class SparrowEntity extends FlyingBirdEntity {
 
     @Override
     protected float getCallVolume() {
-        return 2.0F;
+        return FowlPlayConfig.sparrowCallVolume;
     }
 
     @Override
     protected float getSongVolume() {
-        return 8.0F;
+        return FowlPlayConfig.sparrowSongVolume;
     }
 
     @Override

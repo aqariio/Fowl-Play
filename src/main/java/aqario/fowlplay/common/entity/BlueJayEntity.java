@@ -1,5 +1,6 @@
 package aqario.fowlplay.common.entity;
 
+import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
@@ -103,7 +104,7 @@ public class BlueJayEntity extends FlyingBirdEntity {
 
     @Override
     protected float getCallVolume() {
-        return 10.0F;
+        return FowlPlayConfig.blueJayCallVolume;
     }
 
     @Override

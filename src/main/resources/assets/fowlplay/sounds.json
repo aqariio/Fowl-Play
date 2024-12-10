@@ -169,35 +169,17 @@
   },
   "entity.raven.call": {
     "sounds": [
-      {
-        "name": "fowlplay:mob/raven/call1",
-        "volume": 1.5
-      },
-      {
-        "name": "fowlplay:mob/raven/call2",
-        "volume": 1.5
-      },
-      {
-        "name": "fowlplay:mob/raven/call3",
-        "volume": 1.5
-      },
-      {
-        "name": "fowlplay:mob/raven/call4",
-        "volume": 1.5
-      }
+      "fowlplay:mob/raven/call1",
+      "fowlplay:mob/raven/call2",
+      "fowlplay:mob/raven/call3",
+      "fowlplay:mob/raven/call4"
     ],
     "subtitle": "subtitles.entity.raven.call"
   },
   "entity.raven.hurt": {
     "sounds": [
-      {
-        "name": "fowlplay:mob/raven/hurt1",
-        "volume": 2
-      },
-      {
-        "name": "fowlplay:mob/raven/hurt2",
-        "volume": 2
-      }
+      "fowlplay:mob/raven/hurt1",
+      "fowlplay:mob/raven/hurt2"
     ],
     "subtitle": "subtitles.entity.raven.hurt"
   },

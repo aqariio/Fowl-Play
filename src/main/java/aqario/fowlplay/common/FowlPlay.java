@@ -1,6 +1,5 @@
 package aqario.fowlplay.common;
 
-import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.FowlPlayEntityType;
 import aqario.fowlplay.common.entity.ai.brain.FowlPlayActivities;
 import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
@@ -11,7 +10,6 @@ import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
 import aqario.fowlplay.common.world.gen.FowlPlayWorldGen;
 import aqario.fowlplay.common.world.gen.PigeonSpawner;
 import aqario.fowlplay.common.world.gen.SparrowSpawner;
-import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import org.slf4j.Logger;
@@ -24,7 +22,6 @@ public class FowlPlay implements ModInitializer {
     @Override
     public void onInitialize() {
         LOGGER.info("Loading Fowl Play");
-        MidnightConfig.init(ID, FowlPlayConfig.class);
         FowlPlayActivities.init();
         FowlPlayEntityType.init();
         FowlPlayItems.init();

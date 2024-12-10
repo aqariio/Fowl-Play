@@ -1,5 +1,6 @@
 package aqario.fowlplay.common.entity;
 
+import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
@@ -110,12 +111,12 @@ public class ChickadeeEntity extends FlyingBirdEntity {
 
     @Override
     protected float getCallVolume() {
-        return 6.0F;
+        return FowlPlayConfig.chickadeeCallVolume;
     }
 
     @Override
     protected float getSongVolume() {
-        return 8.0F;
+        return FowlPlayConfig.chickadeeSongVolume;
     }
 
     @Override

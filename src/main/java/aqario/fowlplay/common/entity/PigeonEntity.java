@@ -1,5 +1,6 @@
 package aqario.fowlplay.common.entity;
 
+import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
 import aqario.fowlplay.common.tags.FowlPlayBiomeTags;
 import aqario.fowlplay.common.tags.FowlPlayBlockTags;
@@ -343,8 +344,13 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
     }
 
     @Override
+    protected float getCallVolume() {
+        return FowlPlayConfig.pigeonCallVolume;
+    }
+
+    @Override
     protected float getSongVolume() {
-        return 8.0F;
+        return FowlPlayConfig.pigeonSongVolume;
     }
 
     @Override

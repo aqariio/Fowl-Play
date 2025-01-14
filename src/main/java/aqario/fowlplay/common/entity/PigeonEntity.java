@@ -4,6 +4,7 @@ import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
 import aqario.fowlplay.common.tags.FowlPlayBiomeTags;
 import aqario.fowlplay.common.tags.FowlPlayBlockTags;
+import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.entity.*;
@@ -155,11 +156,11 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
         return false;
     }
 
-    public static DefaultAttributeContainer.Builder createAttributes() {
-        return FlyingBirdEntity.createAttributes()
+    public static DefaultAttributeContainer.Builder createPigeonAttributes() {
+        return FlyingBirdEntity.createFlyingBirdAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 8.0)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2f)
-            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.25f);
+            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.225f);
     }
 
     @Override
@@ -242,6 +243,16 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
     @Override
     public Ingredient getFood() {
         return Ingredient.fromTag(FowlPlayItemTags.PIGEON_FOOD);
+    }
+
+    @Override
+    public boolean shouldAvoid(LivingEntity entity) {
+        return entity.getType().isIn(FowlPlayEntityTypeTags.PIGEON_AVOIDS);
+    }
+
+    @Override
+    public int fleeRange() {
+        return this.getTrustedUuids().isEmpty() ? super.fleeRange() : 6;
     }
 
     @Override

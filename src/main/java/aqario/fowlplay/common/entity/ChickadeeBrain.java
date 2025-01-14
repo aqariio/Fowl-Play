@@ -22,9 +22,7 @@ import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.ai.brain.task.*;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.util.TimeHelper;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 
 import java.util.List;
@@ -33,14 +31,15 @@ import java.util.Set;
 
 public class ChickadeeBrain {
     private static final ImmutableList<SensorType<? extends Sensor<? super ChickadeeEntity>>> SENSORS = ImmutableList.of(
-        SensorType.NEAREST_LIVING_ENTITIES,
         SensorType.NEAREST_PLAYERS,
         SensorType.NEAREST_ITEMS,
         SensorType.NEAREST_ADULT,
         SensorType.HURT_BY,
         SensorType.IS_IN_WATER,
         FowlPlaySensorType.IS_FLYING,
-        FowlPlaySensorType.NEAREST_ADULTS
+        FowlPlaySensorType.NEARBY_LIVING_ENTITIES,
+        FowlPlaySensorType.AVOID_TARGETS,
+        FowlPlaySensorType.NEARBY_ADULTS
     );
     private static final ImmutableList<MemoryModuleType<?>> MEMORIES = ImmutableList.of(
         MemoryModuleType.LOOK_TARGET,
@@ -70,16 +69,15 @@ public class ChickadeeBrain {
         MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM,
         MemoryModuleType.NEAREST_PLAYER_HOLDING_WANTED_ITEM,
         MemoryModuleType.ITEM_PICKUP_COOLDOWN_TICKS,
+        FowlPlayMemoryModuleType.IS_AVOIDING,
         FowlPlayMemoryModuleType.IS_FLYING,
         FowlPlayMemoryModuleType.SEES_FOOD,
         FowlPlayMemoryModuleType.CANNOT_PICKUP_FOOD,
         FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS
     );
-    private static final UniformIntProvider RUN_FROM_PLAYER_MEMORY_DURATION = TimeHelper.betweenSeconds(5, 7);
     private static final UniformIntProvider FOLLOW_ADULT_RANGE = UniformIntProvider.create(5, 16);
     private static final UniformIntProvider STAY_NEAR_ENTITY_RANGE = UniformIntProvider.create(16, 32);
     private static final int PICK_UP_RANGE = 32;
-    private static final int AVOID_PLAYER_RADIUS = 10;
     private static final float RUN_SPEED = 1.4F;
     private static final float WALK_SPEED = 1.0F;
     private static final float FLY_SPEED = 2.0F;
@@ -117,10 +115,10 @@ public class ChickadeeBrain {
             0,
             ImmutableList.of(
                 new StayAboveWaterTask(0.5F),
-                FlightTaskControl.stopFalling(),
+                FlightControlTask.stopFalling(),
                 new FleeTask(RUN_SPEED),
-                makeAddPlayerToAvoidTargetTask(),
-                LocateFoodTask.run(),
+                AvoidTask.run(),
+                LocateFoodTask.run(Bird::canPickupFood),
                 new LookAroundTask(45, 90),
                 new WanderAroundTask(),
                 new TemptationCooldownTask(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
@@ -136,7 +134,7 @@ public class ChickadeeBrain {
                 Pair.of(1, new BreedTask(FowlPlayEntityType.CHICKADEE, WALK_SPEED)),
                 Pair.of(2, WalkTowardClosestAdultTask.create(FOLLOW_ADULT_RANGE, WALK_SPEED)),
                 Pair.of(3, LookAtMobTask.create(ChickadeeBrain::isPlayerHoldingFood, 32.0F)),
-                Pair.of(4, StayNearClosestEntityTask.create(STAY_NEAR_ENTITY_RANGE, WALK_SPEED)),
+                Pair.of(4, GoToClosestEntityTask.create(STAY_NEAR_ENTITY_RANGE, WALK_SPEED)),
                 Pair.of(5, new RandomLookAroundTask(
                     UniformIntProvider.create(150, 250),
                     30.0F,
@@ -151,14 +149,14 @@ public class ChickadeeBrain {
                             Pair.of(StrollTask.create(WALK_SPEED), 4),
                             Pair.of(TaskTriggerer.predicate(Entity::isInsideWaterOrBubbleColumn), 3),
                             Pair.of(new WaitTask(100, 300), 3),
-                            Pair.of(FlightTaskControl.startFlying(chickadee -> chickadee.getRandom().nextFloat() < 0.1F), 1)
+                            Pair.of(FlightControlTask.startFlying(chickadee -> chickadee.getRandom().nextFloat() < 0.1F), 1)
                         )
                     )
                 )
             ),
             ImmutableSet.of(
                 Pair.of(FowlPlayMemoryModuleType.IS_FLYING, MemoryModuleState.VALUE_ABSENT),
-                Pair.of(MemoryModuleType.AVOID_TARGET, MemoryModuleState.VALUE_ABSENT),
+                Pair.of(FowlPlayMemoryModuleType.IS_AVOIDING, MemoryModuleState.VALUE_ABSENT),
                 Pair.of(FowlPlayMemoryModuleType.SEES_FOOD, MemoryModuleState.VALUE_ABSENT)
             )
         );
@@ -168,8 +166,8 @@ public class ChickadeeBrain {
         brain.setTaskList(
             FowlPlayActivities.FLY,
             ImmutableList.of(
-                Pair.of(1, FlightTaskControl.tryStopFlying(chickadee -> true)),
-                Pair.of(2, StayNearClosestEntityTask.create(STAY_NEAR_ENTITY_RANGE, FLY_SPEED)),
+                Pair.of(1, FlightControlTask.tryStopFlying(chickadee -> true)),
+                Pair.of(2, GoToClosestEntityTask.create(STAY_NEAR_ENTITY_RANGE, FLY_SPEED)),
                 Pair.of(
                     3,
                     new RandomTask<>(
@@ -182,7 +180,7 @@ public class ChickadeeBrain {
             ),
             ImmutableSet.of(
                 Pair.of(FowlPlayMemoryModuleType.IS_FLYING, MemoryModuleState.VALUE_PRESENT),
-                Pair.of(MemoryModuleType.AVOID_TARGET, MemoryModuleState.VALUE_ABSENT),
+                Pair.of(FowlPlayMemoryModuleType.IS_AVOIDING, MemoryModuleState.VALUE_ABSENT),
                 Pair.of(FowlPlayMemoryModuleType.SEES_FOOD, MemoryModuleState.VALUE_ABSENT)
             )
         );
@@ -193,18 +191,17 @@ public class ChickadeeBrain {
             Activity.AVOID,
             10,
             ImmutableList.of(
-                FlightTaskControl.startFlying(chickadee -> true),
-                GoToWalkTargetTask.toEntity(
+                FlightControlTask.startFlying(chickadee -> true),
+                MoveAwayFromPositionTask.entity(
                     MemoryModuleType.AVOID_TARGET,
                     chickadee -> chickadee.isFlying() ? FLY_SPEED : RUN_SPEED,
-                    AVOID_PLAYER_RADIUS,
                     true
                 ),
                 makeRandomFollowTask(),
                 makeRandomWanderTask(),
-                ForgetTask.create(entity -> true, MemoryModuleType.AVOID_TARGET)
+                AvoidTask.forget()
             ),
-            MemoryModuleType.AVOID_TARGET
+            FowlPlayMemoryModuleType.IS_AVOIDING
         );
     }
 
@@ -212,9 +209,9 @@ public class ChickadeeBrain {
         brain.setTaskList(
             FowlPlayActivities.PICKUP_FOOD,
             ImmutableList.of(
-                Pair.of(0, FlightTaskControl.startFlying(chickadee -> true)),
+                Pair.of(0, FlightControlTask.startFlying(Bird::canPickupFood)),
                 Pair.of(1, GoToNearestWantedItemTask.create(
-                    ChickadeeBrain::doesNotHaveFoodInHand,
+                    Bird::canPickupFood,
                     entity -> entity.isFlying() ? FLY_SPEED : RUN_SPEED,
                     true,
                     PICK_UP_RANGE
@@ -223,7 +220,7 @@ public class ChickadeeBrain {
             ),
             Set.of(
                 Pair.of(FowlPlayMemoryModuleType.SEES_FOOD, MemoryModuleState.VALUE_PRESENT),
-                Pair.of(MemoryModuleType.AVOID_TARGET, MemoryModuleState.VALUE_ABSENT)
+                Pair.of(FowlPlayMemoryModuleType.IS_AVOIDING, MemoryModuleState.VALUE_ABSENT)
             )
         );
     }
@@ -255,25 +252,6 @@ public class ChickadeeBrain {
                 Pair.of(new WaitTask(30, 60), 1)
             )
         );
-    }
-
-    private static Task<ChickadeeEntity> makeAddPlayerToAvoidTargetTask() {
-        return MemoryTransferTask.create(
-            ChickadeeBrain::hasAvoidTarget, MemoryModuleType.NEAREST_VISIBLE_PLAYER, MemoryModuleType.AVOID_TARGET, RUN_FROM_PLAYER_MEMORY_DURATION
-        );
-    }
-
-    private static boolean hasAvoidTarget(ChickadeeEntity chickadee) {
-        Brain<ChickadeeEntity> brain = chickadee.getBrain();
-        if (!brain.hasMemoryModule(MemoryModuleType.NEAREST_VISIBLE_PLAYER)) {
-            return false;
-        }
-        PlayerEntity player = brain.getOptionalRegisteredMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER).get();
-        if (!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(player)) {
-            return false;
-        }
-
-        return chickadee.isInRange(player, AVOID_PLAYER_RADIUS);
     }
 
     public static void onAttacked(ChickadeeEntity chickadee, LivingEntity attacker) {
@@ -314,10 +292,6 @@ public class ChickadeeBrain {
 
     public static boolean isPlayerHoldingFood(LivingEntity target) {
         return target.getType() == EntityType.PLAYER && target.isHolding(stack -> getFood().test(stack));
-    }
-
-    private static boolean doesNotHaveFoodInHand(ChickadeeEntity chickadee) {
-        return !getFood().test(chickadee.getMainHandStack());
     }
 
     public static Ingredient getFood() {

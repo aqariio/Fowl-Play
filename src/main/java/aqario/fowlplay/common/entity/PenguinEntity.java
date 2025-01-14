@@ -4,6 +4,7 @@ import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
 import aqario.fowlplay.common.tags.FowlPlayBiomeTags;
 import aqario.fowlplay.common.tags.FowlPlayBlockTags;
+import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Dynamic;
@@ -64,11 +65,7 @@ public class PenguinEntity extends BirdEntity {
     public PenguinEntity(EntityType<? extends PenguinEntity> entityType, World world) {
         super(entityType, world);
         this.setMoveControl(false);
-//        this.setPathfindingPenalty(PathNodeType.DANGER_FIRE, -1.0f);
         this.setPathfindingPenalty(PathNodeType.WATER, 0.0f);
-//        this.setPathfindingPenalty(PathNodeType.WATER_BORDER, 16.0f);
-//        this.setPathfindingPenalty(PathNodeType.COCOA, -1.0f);
-//        this.setPathfindingPenalty(PathNodeType.FENCE, -1.0f);
         this.lookControl = new YawAdjustingLookControl(this, 85);
     }
 
@@ -82,6 +79,11 @@ public class PenguinEntity extends BirdEntity {
         return this.isInsideWaterOrBubbleColumn() ? this.getMovementSpeed() : super.getOffGroundSpeed();
     }
 
+    @Override
+    public float getMovementSpeed() {
+        return this.getPose() == EntityPose.LONG_JUMPING ? super.getMovementSpeed() * 1.5F : super.getMovementSpeed();
+    }
+
     protected void setMoveControl(boolean isSwimming) {
         if (isSwimming) {
             this.moveControl = new AquaticMoveControl(this, 85, 15, 1.0F, 1.0F, true);
@@ -91,6 +93,16 @@ public class PenguinEntity extends BirdEntity {
             this.moveControl = new MoveControl(this);
             this.isAquaticMoveControl = false;
         }
+    }
+
+    @Override
+    public int getMaxLookPitchChange() {
+        return this.isInsideWaterOrBubbleColumn() ? 1 : super.getMaxLookPitchChange();
+    }
+
+    @Override
+    public int getMaxHeadRotation() {
+        return this.isInsideWaterOrBubbleColumn() ? 1 : super.getMaxHeadRotation();
     }
 
     @Override
@@ -120,11 +132,21 @@ public class PenguinEntity extends BirdEntity {
         return Ingredient.fromTag(FowlPlayItemTags.PENGUIN_FOOD);
     }
 
-    public static DefaultAttributeContainer.Builder createAttributes() {
-        return BirdEntity.createAttributes()
+    @Override
+    public boolean canHunt(LivingEntity target) {
+        return target.getType().isIn(FowlPlayEntityTypeTags.PENGUIN_HUNT_TARGETS);
+    }
+
+    @Override
+    public boolean shouldAvoid(LivingEntity entity) {
+        return entity.getType().isIn(FowlPlayEntityTypeTags.PENGUIN_AVOIDS);
+    }
+
+    public static DefaultAttributeContainer.Builder createPenguinAttributes() {
+        return BirdEntity.createBirdAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 16.0f)
-            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0f)
-            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.135f);
+            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0f)
+            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.145f);
     }
 
     @Override
@@ -209,7 +231,7 @@ public class PenguinEntity extends BirdEntity {
 
         if (!this.getWorld().isClient) {
             if (this.isSliding() && this.isInsideWaterOrBubbleColumn()) {
-                this.standUp();
+                this.stopSliding();
             }
             if (this.isInsideWaterOrBubbleColumn() != this.isAquaticMoveControl) {
                 this.setMoveControl(this.isInsideWaterOrBubbleColumn());
@@ -438,6 +460,14 @@ public class PenguinEntity extends BirdEntity {
         return super.interactMob(player, hand);
     }
 
+    public boolean canStartSliding() {
+        return !this.isInsideWaterOrBubbleColumn()
+            && !this.hasPassengers()
+            && this.isOnGround()
+            && (this.getWorld().getBlockState(this.getBlockPos().down()).isIn(FowlPlayBlockTags.PENGUINS_SLIDE_ON)
+            || this.getWorld().getBlockState(this.getBlockPos()).isIn(FowlPlayBlockTags.PENGUINS_SLIDE_ON));
+    }
+
     public boolean isSliding() {
         return this.dataTracker.get(LAST_ANIMATION_TICK) < 0L;
     }
@@ -457,15 +487,13 @@ public class PenguinEntity extends BirdEntity {
 
     public void startSliding() {
         if (!this.isSliding()) {
-            this.playSoundIfNotSilent(SoundEvents.ENTITY_CAMEL_SIT);
             this.setPose(EntityPose.LONG_JUMPING);
             this.setLastAnimationTick(-this.getWorld().getTime());
         }
     }
 
-    public void standUp() {
+    public void stopSliding() {
         if (this.isSliding()) {
-            this.playSoundIfNotSilent(SoundEvents.ENTITY_CAMEL_STAND);
             this.setPose(EntityPose.STANDING);
             this.setLastAnimationTick(this.getWorld().getTime());
         }

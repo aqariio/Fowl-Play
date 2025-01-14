@@ -12,12 +12,11 @@ import net.minecraft.util.math.Vec3d;
 public class GullEntityRenderer extends MobEntityRenderer<GullEntity, GullEntityModel> {
     public GullEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new GullEntityModel(context.getPart(GullEntityModel.MODEL_LAYER)), 0.3f);
-        this.addFeature(new BirdHeldItemFeatureRenderer<>(this, context.getHeldItemRenderer()) {
-            @Override
-            public Vec3d getItemOffset() {
-                return new Vec3d(0.0, -0.085, -0.1475);
-            }
-        });
+        this.addFeature(new BirdHeldItemFeatureRenderer<>(
+            this,
+            context.getHeldItemRenderer(),
+            new Vec3d(0.0, -0.085, -0.1475)
+        ));
     }
 
     @Override

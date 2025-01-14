@@ -6,6 +6,7 @@ import aqario.fowlplay.common.entity.ai.pathing.BirdNavigation;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
 import aqario.fowlplay.common.tags.FowlPlayBiomeTags;
 import aqario.fowlplay.common.tags.FowlPlayBlockTags;
+import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.entity.*;
@@ -98,10 +99,10 @@ public class GullEntity extends TrustingBirdEntity implements VariantHolder<Gull
         return 0;
     }
 
-    public static DefaultAttributeContainer.Builder createAttributes() {
-        return FlyingBirdEntity.createAttributes()
+    public static DefaultAttributeContainer.Builder createGullAttributes() {
+        return FlyingBirdEntity.createFlyingBirdAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0f)
-            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0f)
+            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.225f)
             .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.2f);
     }
@@ -162,6 +163,22 @@ public class GullEntity extends TrustingBirdEntity implements VariantHolder<Gull
 
     public Ingredient getFood() {
         return Ingredient.fromTag(FowlPlayItemTags.GULL_FOOD);
+    }
+
+    @Override
+    public boolean canHunt(LivingEntity target) {
+        return target.getType().isIn(FowlPlayEntityTypeTags.GULL_HUNT_TARGETS) ||
+            (target.getType().isIn(FowlPlayEntityTypeTags.GULL_BABY_HUNT_TARGETS) && target.isBaby());
+    }
+
+    @Override
+    public boolean shouldAvoid(LivingEntity entity) {
+        return entity.getType().isIn(FowlPlayEntityTypeTags.GULL_AVOIDS);
+    }
+
+    @Override
+    public int fleeRange() {
+        return this.getTrustedUuids().isEmpty() ? super.fleeRange() : 6;
     }
 
     @Override

@@ -39,6 +39,11 @@ public final class FowlPlayItems {
         new SpawnEggItem(FowlPlayEntityType.GULL, 0xeaedf0, 0xffd850, new Item.Settings()),
         ItemGroups.SPAWN_EGGS
     );
+    public static final Item HAWK_SPAWN_EGG = register(
+        "hawk_spawn_egg",
+        new SpawnEggItem(FowlPlayEntityType.HAWK, 0x544135, 0xE5D8C0, new Item.Settings()),
+        ItemGroups.SPAWN_EGGS
+    );
     public static final Item PENGUIN_SPAWN_EGG = register(
         "penguin_spawn_egg",
         new SpawnEggItem(FowlPlayEntityType.PENGUIN, 0x151419, 0xfafafa, new Item.Settings()),

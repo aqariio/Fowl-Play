@@ -2,6 +2,7 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
+import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.entity.*;
@@ -29,7 +30,6 @@ public class RobinEntity extends FlyingBirdEntity implements VariantHolder<Robin
     public final AnimationState glideState = new AnimationState();
     public final AnimationState flapState = new AnimationState();
     public final AnimationState floatState = new AnimationState();
-    private int flapAnimationTimeout = 0;
 
     public RobinEntity(EntityType<? extends RobinEntity> entityType, World world) {
         super(entityType, world);
@@ -90,6 +90,11 @@ public class RobinEntity extends FlyingBirdEntity implements VariantHolder<Robin
     @Override
     public Ingredient getFood() {
         return Ingredient.fromTag(FowlPlayItemTags.ROBIN_FOOD);
+    }
+
+    @Override
+    public boolean shouldAvoid(LivingEntity entity) {
+        return entity.getType().isIn(FowlPlayEntityTypeTags.ROBIN_AVOIDS);
     }
 
     @Override

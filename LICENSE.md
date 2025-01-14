@@ -1,14 +1,3 @@
-The following directory, its subdirectories, and any files inside said directory or subdirectories are subject to
-the license below.
-
-/src/main/resources/
-
-All Rights Reserved
-
-Copyright (c) 2022 aqariio
-
-All other files within this repository are subject to the license below.
-
 MIT License
 
 Copyright (c) 2022 aqariio

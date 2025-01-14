@@ -37,8 +37,8 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         this.setMoveControl(false);
     }
 
-    public static DefaultAttributeContainer.Builder createAttributes() {
-        return BirdEntity.createAttributes()
+    public static DefaultAttributeContainer.Builder createFlyingBirdAttributes() {
+        return BirdEntity.createBirdAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 6.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.28f)
             .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.2f);
@@ -128,7 +128,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     protected BirdFlightMoveControl getFlightMoveControl() {
-        return new BirdFlightMoveControl(this, 40, 8);
+        return new BirdFlightMoveControl(this, 40, 10);
     }
 
     protected BirdNavigation getFlightNavigation() {
@@ -158,6 +158,14 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     @Override
+    public boolean damage(DamageSource source, float amount) {
+        if (!this.getWorld().isClient && this.isFlying()) {
+            this.stopFlying();
+        }
+        return super.damage(source, amount);
+    }
+
+    @Override
     public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
         return !this.isFlying() && super.handleFallDamage(fallDistance, damageMultiplier, damageSource);
     }
@@ -169,11 +177,13 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         }
     }
 
+    public boolean canStartFlying() {
+        return !this.isFlying() && this.getHealth() > 2.0F;
+    }
+
     public void startFlying() {
-        if (this.getHealth() > 2.0F) {
-            this.setFlying(true);
-            this.setMoveControl(true);
-        }
+        this.setFlying(true);
+        this.setMoveControl(true);
     }
 
     public void stopFlying() {

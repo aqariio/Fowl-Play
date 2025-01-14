@@ -72,6 +72,15 @@ public class YACLIntegration {
                     val -> FowlPlayConfig.gullSongVolume = val
                 ))
                 .group(createSoundGroup(
+                    "entity.fowlplay.hawk",
+                    8,
+                    () -> FowlPlayConfig.hawkCallVolume,
+                    val -> FowlPlayConfig.hawkCallVolume = val,
+                    0,
+                    null,
+                    null
+                ))
+                .group(createSoundGroup(
                     "entity.fowlplay.penguin",
                     4,
                     () -> FowlPlayConfig.penguinCallVolume,
@@ -158,7 +167,7 @@ public class YACLIntegration {
                 ))
                 .group(createSpawningGroup(
                     "entity.fowlplay.duck",
-                    20,
+                    10,
                     () -> FowlPlayConfig.duckSpawnWeight,
                     val -> FowlPlayConfig.duckSpawnWeight = val,
                     6,
@@ -179,6 +188,18 @@ public class YACLIntegration {
                     12,
                     () -> FowlPlayConfig.gullMaxGroupSize,
                     val -> FowlPlayConfig.gullMaxGroupSize = val
+                ))
+                .group(createSpawningGroup(
+                    "entity.fowlplay.hawk",
+                    15,
+                    () -> FowlPlayConfig.hawkSpawnWeight,
+                    val -> FowlPlayConfig.hawkSpawnWeight = val,
+                    1,
+                    () -> FowlPlayConfig.hawkMinGroupSize,
+                    val -> FowlPlayConfig.hawkMinGroupSize = val,
+                    2,
+                    () -> FowlPlayConfig.hawkMaxGroupSize,
+                    val -> FowlPlayConfig.hawkMaxGroupSize = val
                 ))
                 .group(createSpawningGroup(
                     "entity.fowlplay.penguin",

@@ -64,7 +64,7 @@ public abstract class TrustingBirdEntity extends FlyingBirdEntity {
     protected void loot(ItemEntity item) {
         super.loot(item);
         UUID thrower = item.getOwner() != null ? item.getOwner().getUuid() : null;
-        if (thrower != null && !this.isTrustedUuid(thrower)) {
+        if (thrower != null && !this.trustsUuid(thrower)) {
             if (this.random.nextInt(3) == 0) {
                 this.addTrustedUuid(thrower);
                 this.getWorld().sendEntityStatus(this, EntityStatuses.ADD_POSITIVE_PLAYER_REACTION_PARTICLES);
@@ -99,6 +99,14 @@ public abstract class TrustingBirdEntity extends FlyingBirdEntity {
         }
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+        if (!this.isPersistent() && !this.getTrustedUuids().isEmpty()) {
+            this.setPersistent();
+        }
+    }
+
     public List<UUID> getTrustedUuids() {
         return this.dataTracker.get(TRUSTED);
     }
@@ -130,14 +138,14 @@ public abstract class TrustingBirdEntity extends FlyingBirdEntity {
 
     @Override
     public boolean canTarget(LivingEntity target) {
-        return (!(target instanceof PlayerEntity player) || !this.isTrusted(player)) && super.canTarget(target);
+        return (!(target instanceof PlayerEntity player) || !this.trusts(player)) && super.canTarget(target);
     }
 
-    public boolean isTrusted(PlayerEntity player) {
+    public boolean trusts(PlayerEntity player) {
         return this.getTrusted().contains(player);
     }
 
-    public boolean isTrustedUuid(UUID uuid) {
+    public boolean trustsUuid(UUID uuid) {
         return this.getTrustedUuids().contains(uuid);
     }
 }

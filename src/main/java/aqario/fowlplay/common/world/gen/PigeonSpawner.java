@@ -53,7 +53,7 @@ public class PigeonSpawner implements Spawner {
             .count(holder -> holder.matchesKey(PointOfInterestTypes.HOME), pos, 48, PointOfInterestStorage.OccupationStatus.IS_OCCUPIED)
             > 4L) {
             List<PigeonEntity> nearbyPigeons = world.getNonSpectatingEntities(PigeonEntity.class, new Box(pos).expand(48.0, 8.0, 48.0));
-            if (nearbyPigeons.size() < MAX_PIGEONS) {
+            if (nearbyPigeons.size() < MAX_PIGEONS && world.isSkyVisible(pos)) {
                 return this.spawn(pos, world);
             }
         }

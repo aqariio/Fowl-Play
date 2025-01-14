@@ -70,49 +70,49 @@ public class PenguinEntityModel extends BirdEntityModel<PenguinEntity> {
 
         ModelPartData head2 = neck2.addChild("head2", ModelPartBuilder.create().uv(0, 15).cuboid(-2.0F, -3.0F, -2.0F, 4.0F, 3.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -3.0F, 0.0F));
 
-        ModelPartData beak2 = head2.addChild("beak2", ModelPartBuilder.create().uv(12, 15).cuboid(-0.5F, -0.5F, -2.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -1.5F, -2.0F));
+        head2.addChild("beak2", ModelPartBuilder.create().uv(12, 15).cuboid(-0.5F, -0.5F, -2.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -1.5F, -2.0F));
 
-        ModelPartData torso2 = body2.addChild("torso2", ModelPartBuilder.create().uv(0, 0).cuboid(-3.0F, -8.0F, -2.5F, 6.0F, 10.0F, 5.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -2.0F, 0.0F));
+        body2.addChild("torso2", ModelPartBuilder.create().uv(0, 0).cuboid(-3.0F, -8.0F, -2.5F, 6.0F, 10.0F, 5.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -2.0F, 0.0F));
 
-        ModelPartData left_wing2 = body2.addChild("left_wing2", ModelPartBuilder.create().uv(22, 0).mirrored().cuboid(0.0F, -1.0F, -1.5F, 1.0F, 8.0F, 3.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.pivot(3.0F, -8.0F, 0.0F));
+        body2.addChild("left_wing2", ModelPartBuilder.create().uv(22, 0).mirrored().cuboid(0.0F, -1.0F, -1.5F, 1.0F, 8.0F, 3.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.pivot(3.0F, -8.0F, 0.0F));
 
-        ModelPartData right_wing2 = body2.addChild("right_wing2", ModelPartBuilder.create().uv(22, 0).cuboid(-1.0F, -1.0F, -1.5F, 1.0F, 8.0F, 3.0F, new Dilation(0.0F)), ModelTransform.pivot(-3.0F, -8.0F, 0.0F));
+        body2.addChild("right_wing2", ModelPartBuilder.create().uv(22, 0).cuboid(-1.0F, -1.0F, -1.5F, 1.0F, 8.0F, 3.0F, new Dilation(0.0F)), ModelTransform.pivot(-3.0F, -8.0F, 0.0F));
 
         ModelPartData tail2 = body2.addChild("tail2", ModelPartBuilder.create(), ModelTransform.of(0.0F, -3.5F, 2.0F, -0.7854F, 0.0F, 0.0F));
 
-        ModelPartData cube_r1 = tail2.addChild("cube_r1", ModelPartBuilder.create().uv(27, 14).cuboid(0.0F, 0.0F, 0.0F, 3.0F, 0.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.3491F));
+        tail2.addChild("cube_r1", ModelPartBuilder.create().uv(27, 14).cuboid(0.0F, 0.0F, 0.0F, 3.0F, 0.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.3491F));
 
-        ModelPartData cube_r2 = tail2.addChild("cube_r2", ModelPartBuilder.create().uv(21, 14).cuboid(-3.0F, 0.0F, 0.0F, 3.0F, 0.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.3491F));
+        tail2.addChild("cube_r2", ModelPartBuilder.create().uv(21, 14).cuboid(-3.0F, 0.0F, 0.0F, 3.0F, 0.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.3491F));
 
-        ModelPartData left_leg2 = baby.addChild("left_leg2", ModelPartBuilder.create().uv(30, 0).mirrored().cuboid(-1.0F, 0.0F, -3.0F, 2.0F, 1.0F, 4.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.pivot(1.5F, 10.0F, 0.0F));
+        baby.addChild("left_leg2", ModelPartBuilder.create().uv(30, 0).mirrored().cuboid(-1.0F, 0.0F, -3.0F, 2.0F, 1.0F, 4.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.pivot(1.5F, 10.0F, 0.0F));
 
-        ModelPartData right_leg2 = baby.addChild("right_leg2", ModelPartBuilder.create().uv(30, 0).cuboid(-1.0F, 0.0F, -3.0F, 2.0F, 1.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(-1.5F, 10.0F, 0.0F));
+        baby.addChild("right_leg2", ModelPartBuilder.create().uv(30, 0).cuboid(-1.0F, 0.0F, -3.0F, 2.0F, 1.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(-1.5F, 10.0F, 0.0F));
 
         ModelPartData body = root.addChild("body", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 8.0F, 0.0F));
 
-        ModelPartData neck = body.addChild("neck", ModelPartBuilder.create().uv(0, 27).cuboid(-2.0F, -4.0F, -2.0F, 4.0F, 4.0F, 4.0F, new Dilation(-0.001F)), ModelTransform.pivot(0.0F, -11.5F, 0.0F));
+        ModelPartData neck = body.addChild("neck", ModelPartBuilder.create().uv(0, 29).cuboid(-2.0F, -4.0F, -2.0F, 4.0F, 4.0F, 4.0F, new Dilation(-0.001F)), ModelTransform.pivot(0.0F, -13.5F, 0.0F));
 
-        ModelPartData head = neck.addChild("head", ModelPartBuilder.create().uv(0, 20).cuboid(-2.0F, -3.0F, -2.0F, 4.0F, 3.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -3.0F, 0.0F));
+        ModelPartData head = neck.addChild("head", ModelPartBuilder.create().uv(0, 22).cuboid(-2.0F, -3.0F, -2.0F, 4.0F, 3.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -3.0F, 0.0F));
 
-        ModelPartData beak = head.addChild("beak", ModelPartBuilder.create().uv(12, 20).cuboid(-0.5F, -0.5F, -3.0F, 1.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -1.5F, -2.0F));
+        head.addChild("beak", ModelPartBuilder.create().uv(12, 22).cuboid(-0.5F, -0.5F, -3.0F, 1.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -1.5F, -2.0F));
 
-        ModelPartData torso = body.addChild("torso", ModelPartBuilder.create().uv(0, 0).cuboid(-3.5F, -12.0F, -3.0F, 7.0F, 14.0F, 6.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -2.0F, 0.0F));
+        body.addChild("torso", ModelPartBuilder.create().uv(0, 0).cuboid(-3.5F, -14.0F, -3.0F, 7.0F, 16.0F, 6.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -2.0F, 0.0F));
 
-        ModelPartData left_wing = body.addChild("left_wing", ModelPartBuilder.create().uv(26, 0).mirrored().cuboid(0.0F, -1.0F, -2.0F, 1.0F, 10.0F, 4.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.pivot(3.5F, -11.0F, 0.0F));
+        body.addChild("left_wing", ModelPartBuilder.create().uv(26, 0).mirrored().cuboid(0.0F, -1.0F, -1.5F, 1.0F, 10.0F, 3.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.pivot(3.5F, -12.0F, 0.0F));
 
-        ModelPartData right_wing = body.addChild("right_wing", ModelPartBuilder.create().uv(26, 0).cuboid(-1.0F, -1.0F, -2.0F, 1.0F, 10.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(-3.5F, -11.0F, 0.0F));
+        body.addChild("right_wing", ModelPartBuilder.create().uv(26, 0).cuboid(-1.0F, -1.0F, -1.5F, 1.0F, 10.0F, 3.0F, new Dilation(0.0F)), ModelTransform.pivot(-3.5F, -12.0F, 0.0F));
 
         ModelPartData tail = body.addChild("tail", ModelPartBuilder.create(), ModelTransform.of(0.0F, -1.5F, 3.0F, -0.7854F, 0.0F, 0.0F));
 
-        ModelPartData cube_r3 = tail.addChild("cube_r3", ModelPartBuilder.create().uv(27, 14).cuboid(0.0F, 0.0F, 0.0F, 3.0F, 0.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.3491F));
+        tail.addChild("cube_r3", ModelPartBuilder.create().uv(27, 13).cuboid(0.0F, 0.0F, 0.0F, 3.0F, 0.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.3491F));
 
-        ModelPartData cube_r4 = tail.addChild("cube_r4", ModelPartBuilder.create().uv(21, 14).cuboid(-3.0F, 0.0F, 0.0F, 3.0F, 0.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.3491F));
+        tail.addChild("cube_r4", ModelPartBuilder.create().uv(21, 13).cuboid(-3.0F, 0.0F, 0.0F, 3.0F, 0.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.3491F));
 
-        ModelPartData left_leg = root.addChild("left_leg", ModelPartBuilder.create().uv(36, 0).cuboid(-1.0F, -2.0F, -0.5F, 2.0F, 4.0F, 2.0F, new Dilation(0.0F))
-            .uv(40, 2).mirrored().cuboid(-1.0F, 2.0F, -2.5F, 2.0F, 1.0F, 4.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.pivot(2.0F, 8.0F, 0.0F));
+        root.addChild("left_leg", ModelPartBuilder.create().uv(36, 0).cuboid(-1.0F, -2.0F, -0.5F, 2.0F, 4.0F, 2.0F, new Dilation(0.0F))
+            .uv(40, 2).mirrored().cuboid(-1.5F, 2.0F, -2.5F, 3.0F, 1.0F, 4.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.pivot(2.0F, 8.0F, 0.0F));
 
-        ModelPartData right_leg = root.addChild("right_leg", ModelPartBuilder.create().uv(36, 0).mirrored().cuboid(-1.0F, -2.0F, -0.5F, 2.0F, 4.0F, 2.0F, new Dilation(0.0F)).mirrored(false)
-            .uv(40, 2).cuboid(-1.0F, 2.0F, -2.5F, 2.0F, 1.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(-2.0F, 8.0F, 0.0F));
+        root.addChild("right_leg", ModelPartBuilder.create().uv(36, 0).mirrored().cuboid(-1.0F, -2.0F, -0.5F, 2.0F, 4.0F, 2.0F, new Dilation(0.0F)).mirrored(false)
+            .uv(40, 2).cuboid(-1.5F, 2.0F, -2.5F, 3.0F, 1.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(-2.0F, 8.0F, 0.0F));
 
         return TexturedModelData.of(modelData, 64, 64);
     }
@@ -132,13 +132,18 @@ public class PenguinEntityModel extends BirdEntityModel<PenguinEntity> {
             this.leftLeg.visible = true;
             this.rightLeg.visible = true;
         }
-        if (penguin.isBaby()) {
-            this.updateBabyHeadRotation(penguin.isInsideWaterOrBubbleColumn(), headYaw, headPitch);
+        if (!penguin.isSliding()) {
+            if (penguin.isBaby()) {
+                this.updateBabyHeadRotation(penguin.isInsideWaterOrBubbleColumn(), headYaw, headPitch);
+            }
+            else {
+                this.updateHeadRotation(penguin.isInsideWaterOrBubbleColumn(), headYaw, headPitch);
+            }
+            if (!penguin.isInsideWaterOrBubbleColumn()) {
+                this.animateMovement(PenguinEntityAnimations.PENGUIN_WALK, limbAngle, limbDistance, 7F, 7F);
+            }
         }
-        else {
-            this.updateHeadRotation(penguin.isInsideWaterOrBubbleColumn(), headYaw, headPitch);
-        }
-        this.animateMovement(PenguinEntityAnimations.PENGUIN_WALK, limbAngle, limbDistance, 2.0F, 2.5F);
+
         this.updateAnimation(penguin.idleState, PenguinEntityAnimations.PENGUIN_IDLE, ageInTicks);
         this.updateAnimation(penguin.slideState, PenguinEntityAnimations.PENGUIN_SLIDE, ageInTicks);
         this.updateAnimation(penguin.fallingState, PenguinEntityAnimations.PENGUIN_SLIDE, ageInTicks);

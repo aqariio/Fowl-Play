@@ -20,24 +20,24 @@ public class GoToNearestWantedItemTask {
     public static <E extends LivingEntity> Task<E> create(Predicate<E> startPredicate, Function<E, Float> entitySpeedGetter, boolean requiresWalkTarget, int radius) {
         return TaskTriggerer.task(
             instance -> {
-                TaskTriggerer<E, ? extends MemoryQueryResult<? extends K1, WalkTarget>> taskTriggerer = requiresWalkTarget
+                TaskTriggerer<E, ? extends MemoryQueryResult<? extends K1, WalkTarget>> taskBuilder = requiresWalkTarget
                     ? instance.queryMemoryOptional(MemoryModuleType.WALK_TARGET)
                     : instance.queryMemoryAbsent(MemoryModuleType.WALK_TARGET);
                 return instance.group(
                         instance.queryMemoryOptional(MemoryModuleType.LOOK_TARGET),
-                        taskTriggerer,
+                        taskBuilder,
                         instance.queryMemoryValue(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM),
                         instance.queryMemoryOptional(MemoryModuleType.ITEM_PICKUP_COOLDOWN_TICKS)
                     )
                     .apply(
                         instance,
-                        (lookTarget, walkTarget, nearestWantedItem, pickupCooldownTicks) -> (world, livingEntity, l) -> {
+                        (lookTarget, walkTarget, nearestWantedItem, pickupCooldownTicks) -> (world, entity, l) -> {
                             ItemEntity itemEntity = instance.getValue(nearestWantedItem);
                             if (instance.getOptionalValue(pickupCooldownTicks).isEmpty()
-                                && startPredicate.test(livingEntity)
-                                && itemEntity.isInRange(livingEntity, radius)
-                                && livingEntity.getWorld().getWorldBorder().contains(itemEntity.getBlockPos())) {
-                                WalkTarget newWalkTarget = new WalkTarget(new EntityLookTarget(itemEntity, false), entitySpeedGetter.apply(livingEntity), 0);
+                                && startPredicate.test(entity)
+                                && itemEntity.isInRange(entity, radius)
+                                && entity.getWorld().getWorldBorder().contains(itemEntity.getBlockPos())) {
+                                WalkTarget newWalkTarget = new WalkTarget(new EntityLookTarget(itemEntity, false), entitySpeedGetter.apply(entity), 0);
                                 lookTarget.remember(new EntityLookTarget(itemEntity, true));
                                 walkTarget.remember(newWalkTarget);
                                 return true;

@@ -11,7 +11,7 @@ import net.minecraft.util.math.intprovider.UniformIntProvider;
 
 import java.util.function.Function;
 
-public class StayNearClosestEntityTask {
+public class GoToClosestEntityTask {
     public static SingleTickTask<PassiveEntity> create(UniformIntProvider executionRange, float speed) {
         return create(executionRange, livingEntity -> speed);
     }

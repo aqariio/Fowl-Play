@@ -12,7 +12,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 
 public class TeleportToTargetTask extends MultiTickTask<BirdEntity> {
-
     public TeleportToTargetTask() {
         super(ImmutableMap.of(FowlPlayMemoryModuleType.TELEPORT_TARGET, MemoryModuleState.VALUE_PRESENT));
     }

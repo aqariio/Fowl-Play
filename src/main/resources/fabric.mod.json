@@ -8,12 +8,13 @@
     "aqario"
   ],
   "contributors": [
-    "Aesthel",
+    "Penguin60",
     "Disketaa"
   ],
   "contact": {
-    "sources": "https://github.com/aqariio/fowl-play",
-    "issues": "https://github.com/aqariio/fowl-play/issues"
+    "homepage": "https://github.com/aqariio/Fowl-Play/discussions",
+    "sources": "https://github.com/aqariio/Fowl-Play",
+    "issues": "https://github.com/aqariio/Fowl-Play/issues"
   },
   "license": "MIT",
   "icon": "assets/fowlplay/icon.png",

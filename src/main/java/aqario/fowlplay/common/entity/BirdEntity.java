@@ -33,7 +33,7 @@ public abstract class BirdEntity extends AnimalEntity {
         this.songChance = this.random.nextInt(this.getSongDelay()) - this.getSongDelay();
     }
 
-    public static DefaultAttributeContainer.Builder createAttributes() {
+    public static DefaultAttributeContainer.Builder createBirdAttributes() {
         return MobEntity.createMobAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 6.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2f);
@@ -52,8 +52,6 @@ public abstract class BirdEntity extends AnimalEntity {
     public boolean isBreedingItem(ItemStack stack) {
         return false;
     }
-
-    public abstract Ingredient getFood();
 
     @Override
     public boolean canPickupItem(ItemStack stack) {
@@ -94,8 +92,26 @@ public abstract class BirdEntity extends AnimalEntity {
         }
     }
 
+    public abstract Ingredient getFood();
+
     private boolean canEat(ItemStack stack) {
         return this.getFood().test(stack)/* && !this.isSleeping()*/;
+    }
+
+    public boolean shouldAvoid(LivingEntity entity) {
+        return false;
+    }
+
+    public boolean canHunt(LivingEntity target) {
+        return false;
+    }
+
+    public boolean canAttack(LivingEntity target) {
+        return false;
+    }
+
+    public int fleeRange() {
+        return 10;
     }
 
     @Override

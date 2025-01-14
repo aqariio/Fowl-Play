@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "#c:foods/raw_meats",
+      "required": false
+    },
+    {
+      "id": "#c:foods/raw_meat",
+      "required": false
+    },
+    "minecraft:egg",
+    "minecraft:turtle_egg"
+  ]
+}

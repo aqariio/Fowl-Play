@@ -13,12 +13,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 
-public abstract class BirdHeldItemFeatureRenderer<E extends BirdEntity, M extends BirdEntityModel<E>> extends FeatureRenderer<E, M> {
+public class BirdHeldItemFeatureRenderer<E extends BirdEntity, M extends BirdEntityModel<E>> extends FeatureRenderer<E, M> {
     private final HeldItemRenderer itemRenderer;
+    // Z should be ((number of pixels offset from head pivot point) / 16 + 0.0225) * -1
+    private final Vec3d heldItemOffset;
 
-    public BirdHeldItemFeatureRenderer(FeatureRendererContext<E, M> context, HeldItemRenderer heldItemRenderer) {
+    public BirdHeldItemFeatureRenderer(FeatureRendererContext<E, M> context, HeldItemRenderer heldItemRenderer, Vec3d heldItemOffset) {
         super(context);
         this.itemRenderer = heldItemRenderer;
+        this.heldItemOffset = heldItemOffset;
     }
 
     @Override
@@ -61,7 +64,7 @@ public abstract class BirdHeldItemFeatureRenderer<E extends BirdEntity, M extend
         matrices.multiply(RotationAxis.POSITIVE_Y.rotation(this.getContextModel().head.getTransform().yaw));
         matrices.multiply(RotationAxis.POSITIVE_X.rotation(this.getContextModel().head.getTransform().pitch));
 
-        matrices.translate(this.getItemOffset().x, this.getItemOffset().y, this.getItemOffset().z);
+        matrices.translate(this.heldItemOffset.x, this.heldItemOffset.y, this.heldItemOffset.z);
         matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(90.0F));
         matrices.scale(0.5F, 0.5F, 0.5F);
 
@@ -69,7 +72,4 @@ public abstract class BirdHeldItemFeatureRenderer<E extends BirdEntity, M extend
         this.itemRenderer.renderItem(bird, stack, ModelTransformationMode.GROUND, false, matrices, vertexConsumers, light);
         matrices.pop();
     }
-
-    // Z should be ((number of pixels offset from head pivot point) / 16 + 0.0225) * -1
-    public abstract Vec3d getItemOffset();
 }

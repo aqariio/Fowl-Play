@@ -68,6 +68,11 @@ public class FowlPlayConfig {
     @SerialEntry
     public static int gullSongVolume = 7;
 
+    // Hawk
+
+    @SerialEntry
+    public static int hawkCallVolume = 8;
+
     // Penguin
 
     @SerialEntry
@@ -131,7 +136,7 @@ public class FowlPlayConfig {
     // Duck
 
     @SerialEntry
-    public static int duckSpawnWeight = 20;
+    public static int duckSpawnWeight = 10;
     @SerialEntry
     public static int duckMinGroupSize = 6;
     @SerialEntry
@@ -145,6 +150,15 @@ public class FowlPlayConfig {
     public static int gullMinGroupSize = 8;
     @SerialEntry
     public static int gullMaxGroupSize = 12;
+
+    // Hawk
+
+    @SerialEntry
+    public static int hawkSpawnWeight = 15;
+    @SerialEntry
+    public static int hawkMinGroupSize = 1;
+    @SerialEntry
+    public static int hawkMaxGroupSize = 2;
 
     // Penguin
 

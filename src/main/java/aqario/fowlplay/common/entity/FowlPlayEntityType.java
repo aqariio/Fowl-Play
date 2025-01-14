@@ -16,7 +16,7 @@ public final class FowlPlayEntityType {
             .entityFactory(BlueJayEntity::new)
             .spawnGroup(SpawnGroup.AMBIENT)
             .dimensions(EntityDimensions.changing(0.4f, 0.55f))
-            .defaultAttributes(BlueJayEntity::createAttributes)
+            .defaultAttributes(BlueJayEntity::createFlyingBirdAttributes)
     );
 
     public static final EntityType<CardinalEntity> CARDINAL = register("cardinal",
@@ -24,7 +24,7 @@ public final class FowlPlayEntityType {
             .entityFactory(CardinalEntity::new)
             .spawnGroup(SpawnGroup.AMBIENT)
             .dimensions(EntityDimensions.changing(0.4f, 0.55f))
-            .defaultAttributes(CardinalEntity::createAttributes)
+            .defaultAttributes(CardinalEntity::createFlyingBirdAttributes)
     );
 
     public static final EntityType<ChickadeeEntity> CHICKADEE = register("chickadee",
@@ -32,7 +32,7 @@ public final class FowlPlayEntityType {
             .entityFactory(ChickadeeEntity::new)
             .spawnGroup(SpawnGroup.AMBIENT)
             .dimensions(EntityDimensions.changing(0.4f, 0.55f))
-            .defaultAttributes(ChickadeeEntity::createAttributes)
+            .defaultAttributes(ChickadeeEntity::createFlyingBirdAttributes)
     );
 
     public static final EntityType<DuckEntity> DUCK = register("duck",
@@ -40,7 +40,7 @@ public final class FowlPlayEntityType {
             .entityFactory(DuckEntity::new)
             .spawnGroup(SpawnGroup.CREATURE)
             .dimensions(EntityDimensions.changing(0.6f, 0.8f))
-            .defaultAttributes(DuckEntity::createAttributes)
+            .defaultAttributes(DuckEntity::createDuckAttributes)
     );
 
     public static final EntityType<GullEntity> GULL = register("gull",
@@ -48,7 +48,15 @@ public final class FowlPlayEntityType {
             .entityFactory(GullEntity::new)
             .spawnGroup(SpawnGroup.CREATURE)
             .dimensions(EntityDimensions.changing(0.6f, 0.8f))
-            .defaultAttributes(GullEntity::createAttributes)
+            .defaultAttributes(GullEntity::createGullAttributes)
+    );
+
+    public static final EntityType<HawkEntity> HAWK = register("hawk",
+        FabricEntityTypeBuilder.createMob()
+            .entityFactory(HawkEntity::new)
+            .spawnGroup(SpawnGroup.CREATURE)
+            .dimensions(EntityDimensions.changing(0.6f, 0.8f))
+            .defaultAttributes(HawkEntity::createHawkAttributes)
     );
 
     public static final EntityType<PenguinEntity> PENGUIN = register("penguin",
@@ -56,7 +64,7 @@ public final class FowlPlayEntityType {
             .entityFactory(PenguinEntity::new)
             .spawnGroup(SpawnGroup.CREATURE)
             .dimensions(EntityDimensions.changing(0.5f, 1.4f))
-            .defaultAttributes(PenguinEntity::createAttributes)
+            .defaultAttributes(PenguinEntity::createPenguinAttributes)
     );
 
     public static final EntityType<PigeonEntity> PIGEON = register("pigeon",
@@ -64,7 +72,7 @@ public final class FowlPlayEntityType {
             .entityFactory(PigeonEntity::new)
             .spawnGroup(SpawnGroup.CREATURE)
             .dimensions(EntityDimensions.changing(0.5f, 0.6f))
-            .defaultAttributes(PigeonEntity::createAttributes)
+            .defaultAttributes(PigeonEntity::createPigeonAttributes)
     );
 
     public static final EntityType<RavenEntity> RAVEN = register("raven",
@@ -72,7 +80,7 @@ public final class FowlPlayEntityType {
             .entityFactory(RavenEntity::new)
             .spawnGroup(SpawnGroup.CREATURE)
             .dimensions(EntityDimensions.changing(0.6f, 0.8f))
-            .defaultAttributes(RavenEntity::createAttributes)
+            .defaultAttributes(RavenEntity::createRavenAttributes)
     );
 
     public static final EntityType<RobinEntity> ROBIN = register("robin",
@@ -80,7 +88,7 @@ public final class FowlPlayEntityType {
             .entityFactory(RobinEntity::new)
             .spawnGroup(SpawnGroup.AMBIENT)
             .dimensions(EntityDimensions.changing(0.4f, 0.55f))
-            .defaultAttributes(RobinEntity::createAttributes)
+            .defaultAttributes(RobinEntity::createFlyingBirdAttributes)
     );
 
     public static final EntityType<SparrowEntity> SPARROW = register("sparrow",
@@ -88,7 +96,7 @@ public final class FowlPlayEntityType {
             .entityFactory(SparrowEntity::new)
             .spawnGroup(SpawnGroup.AMBIENT)
             .dimensions(EntityDimensions.changing(0.4f, 0.55f))
-            .defaultAttributes(SparrowEntity::createAttributes)
+            .defaultAttributes(SparrowEntity::createFlyingBirdAttributes)
     );
 
     private static <T extends Entity> EntityType<T> register(String id, FabricEntityTypeBuilder<T> builder) {

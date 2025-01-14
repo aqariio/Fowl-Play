@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 /**
  * A collection of tasks that control the flying behavior of birds.
  */
-public class FlightTaskControl {
+public class FlightControlTask {
     public static <E extends FlyingBirdEntity> Task<E> startFlying(Predicate<E> shouldRun) {
         return TaskTriggerer.task(
             instance -> instance.group(
@@ -22,7 +22,7 @@ public class FlightTaskControl {
                 .apply(
                     instance,
                     (flying) -> (world, bird, l) -> {
-                        if (!bird.isFlying() && shouldRun.test(bird)) {
+                        if (bird.canStartFlying() && shouldRun.test(bird)) {
                             bird.getJumpControl().setActive();
                             bird.startFlying();
                             flying.remember(Unit.INSTANCE);
@@ -84,7 +84,7 @@ public class FlightTaskControl {
                 .apply(
                     instance,
                     (flying) -> (world, bird, l) -> {
-                        if (bird.fallDistance > 1 && !bird.isFlying()) {
+                        if (bird.fallDistance > 1 && bird.canStartFlying()) {
                             bird.startFlying();
                             flying.remember(Unit.INSTANCE);
                             return true;

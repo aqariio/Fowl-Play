@@ -2,6 +2,7 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
+import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.entity.*;
@@ -23,7 +24,6 @@ public class BlueJayEntity extends FlyingBirdEntity {
     public final AnimationState glideState = new AnimationState();
     public final AnimationState flapState = new AnimationState();
     public final AnimationState floatState = new AnimationState();
-    private int flapAnimationTimeout = 0;
 
     protected BlueJayEntity(EntityType<? extends BirdEntity> entityType, World world) {
         super(entityType, world);
@@ -45,6 +45,11 @@ public class BlueJayEntity extends FlyingBirdEntity {
         return Ingredient.fromTag(FowlPlayItemTags.BLUE_JAY_FOOD);
     }
 
+    @Override
+    public boolean shouldAvoid(LivingEntity entity) {
+        return entity.getType().isIn(FowlPlayEntityTypeTags.BLUE_JAY_AVOIDS);
+    }
+
     @Nullable
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
@@ -64,17 +69,6 @@ public class BlueJayEntity extends FlyingBirdEntity {
     @Override
     public void tick() {
         if (this.getWorld().isClient()) {
-//            if (!this.isOnGround()) {
-//                this.flapState.start(this.age);
-//            }
-//            else if (this.flapAnimationTimeout <= 0) {
-//                this.flapAnimationTimeout = this.getFlapFrequency();
-//                this.flapState.restart(this.age);
-//            }
-//            else {
-//                --this.flapAnimationTimeout;
-//            }
-
             this.idleState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
             this.flapState.setRunning(this.isFlying(), this.age);
             this.floatState.setRunning(this.isInsideWaterOrBubbleColumn(), this.age);

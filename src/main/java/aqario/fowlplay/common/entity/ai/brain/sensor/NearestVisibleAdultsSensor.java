@@ -26,7 +26,8 @@ public class NearestVisibleAdultsSensor extends Sensor<PassiveEntity> {
         LivingTargetCache visibleMobs = brain.getOptionalRegisteredMemory(MemoryModuleType.VISIBLE_MOBS)
             .orElse(LivingTargetCache.empty());
 
-        visibleMobs.stream(living -> living.getType() == entity.getType() && !entity.isBaby()).forEach(living -> nearbyVisibleAdults.add((PassiveEntity) living));
+        visibleMobs.stream(living -> living.getType() == entity.getType() && !entity.isBaby())
+            .forEach(living -> nearbyVisibleAdults.add((PassiveEntity) living));
 
         brain.remember(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS, nearbyVisibleAdults);
     }

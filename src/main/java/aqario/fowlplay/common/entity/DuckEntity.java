@@ -5,6 +5,7 @@ import aqario.fowlplay.common.entity.ai.control.BirdFloatMoveControl;
 import aqario.fowlplay.common.entity.ai.pathing.BirdNavigation;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
 import aqario.fowlplay.common.tags.FowlPlayBiomeTags;
+import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.entity.*;
@@ -97,10 +98,10 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
         return 0;
     }
 
-    public static DefaultAttributeContainer.Builder createAttributes() {
-        return FlyingBirdEntity.createAttributes()
+    public static DefaultAttributeContainer.Builder createDuckAttributes() {
+        return FlyingBirdEntity.createFlyingBirdAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0f)
-            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0f)
+            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.225f)
             .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.2f);
     }
@@ -112,12 +113,12 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
     }
 
     @Override
-    public DuckEntity.Variant getVariant() {
-        return DuckEntity.Variant.valueOf(this.dataTracker.get(VARIANT));
+    public Variant getVariant() {
+        return Variant.valueOf(this.dataTracker.get(VARIANT));
     }
 
     @Override
-    public void setVariant(DuckEntity.Variant variant) {
+    public void setVariant(Variant variant) {
         this.dataTracker.set(VARIANT, variant.toString());
     }
 
@@ -131,7 +132,7 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         if (nbt.contains("variant")) {
-            this.setVariant(DuckEntity.Variant.valueOf(nbt.getString("variant")));
+            this.setVariant(Variant.valueOf(nbt.getString("variant")));
         }
     }
 
@@ -161,6 +162,17 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
 
     public Ingredient getFood() {
         return Ingredient.fromTag(FowlPlayItemTags.DUCK_FOOD);
+    }
+
+    @Override
+    public boolean canHunt(LivingEntity target) {
+        return target.getType().isIn(FowlPlayEntityTypeTags.DUCK_HUNT_TARGETS) ||
+            (target.getType().isIn(FowlPlayEntityTypeTags.DUCK_BABY_HUNT_TARGETS) && target.isBaby());
+    }
+
+    @Override
+    public boolean shouldAvoid(LivingEntity entity) {
+        return entity.getType().isIn(FowlPlayEntityTypeTags.DUCK_AVOIDS);
     }
 
     @Override
@@ -256,8 +268,8 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
     public enum Variant {
         MALLARD("mallard");
 
-        public static final List<DuckEntity.Variant> VARIANTS = List.of(Arrays.stream(values())
-            .toArray(DuckEntity.Variant[]::new));
+        public static final List<Variant> VARIANTS = List.of(Arrays.stream(values())
+            .toArray(Variant[]::new));
 
         private final String id;
 

@@ -34,7 +34,7 @@ public class FlockTask extends MultiTickTask<FlyingBirdEntity> {
             return false;
         }
 
-        this.nearbyBirds = bird.getBrain().getOptionalMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS).get();
+        this.nearbyBirds = bird.getBrain().getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS).get();
 
         return this.nearbyBirds.size() > 5;
     }

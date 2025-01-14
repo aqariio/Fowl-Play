@@ -1,9 +1,11 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
+import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
 import aqario.fowlplay.common.tags.FowlPlayBiomeTags;
 import aqario.fowlplay.common.tags.FowlPlayBlockTags;
+import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.entity.*;
@@ -25,6 +27,9 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
 
 public class RavenEntity extends TrustingBirdEntity {
     public final AnimationState idleState = new AnimationState();
@@ -51,10 +56,10 @@ public class RavenEntity extends TrustingBirdEntity {
         return 0;
     }
 
-    public static DefaultAttributeContainer.Builder createAttributes() {
-        return FlyingBirdEntity.createAttributes()
+    public static DefaultAttributeContainer.Builder createRavenAttributes() {
+        return FlyingBirdEntity.createFlyingBirdAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0f)
-            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0f)
+            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.225f)
             .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.225f);
     }
@@ -99,7 +104,28 @@ public class RavenEntity extends TrustingBirdEntity {
     }
 
     public Ingredient getFood() {
-        return Ingredient.fromTag(FowlPlayItemTags.GULL_FOOD);
+        return Ingredient.fromTag(FowlPlayItemTags.RAVEN_FOOD);
+    }
+
+    @Override
+    public boolean canHunt(LivingEntity target) {
+        return target.getType().isIn(FowlPlayEntityTypeTags.RAVEN_HUNT_TARGETS) ||
+            (target.getType().isIn(FowlPlayEntityTypeTags.RAVEN_BABY_HUNT_TARGETS) && target.isBaby());
+    }
+
+    @Override
+    public boolean canAttack(LivingEntity target) {
+        if (!target.getType().isIn(FowlPlayEntityTypeTags.RAVEN_ATTACK_TARGETS)) {
+            return false;
+        }
+        Brain<RavenEntity> brain = this.getBrain();
+        Optional<List<PassiveEntity>> nearbyAdults = brain.getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS);
+        return nearbyAdults.filter(passiveEntities -> passiveEntities.size() >= 2).isPresent();
+    }
+
+    @Override
+    public boolean shouldAvoid(LivingEntity entity) {
+        return entity.getType().isIn(FowlPlayEntityTypeTags.RAVEN_AVOIDS);
     }
 
     @Override
@@ -174,10 +200,10 @@ public class RavenEntity extends TrustingBirdEntity {
 
     @Override
     protected void mobTick() {
-        this.getWorld().getProfiler().push("gullBrain");
+        this.getWorld().getProfiler().push("ravenBrain");
         this.getBrain().tick((ServerWorld) this.getWorld(), this);
         this.getWorld().getProfiler().pop();
-        this.getWorld().getProfiler().push("gullActivityUpdate");
+        this.getWorld().getProfiler().push("ravenActivityUpdate");
         RavenBrain.reset(this);
         this.getWorld().getProfiler().pop();
         super.mobTick();

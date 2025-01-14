@@ -19,6 +19,7 @@ public final class FowlPlayMemoryModuleType {
     public static final MemoryModuleType<Boolean> SEES_FOOD = register("sees_food", Codec.BOOL);
     public static final MemoryModuleType<Boolean> CANNOT_PICKUP_FOOD = register("cannot_eat_food", Codec.BOOL);
     public static final MemoryModuleType<Unit> IS_FLYING = register("is_flying", Codec.unit(Unit.INSTANCE));
+    public static final MemoryModuleType<Unit> IS_AVOIDING = register("is_avoiding", Codec.unit(Unit.INSTANCE));
     public static final MemoryModuleType<TeleportTarget> TELEPORT_TARGET = register("teleport_target");
     public static final MemoryModuleType<UUID> RECIPIENT = register("recipient", Uuids.INT_STREAM_CODEC);
 

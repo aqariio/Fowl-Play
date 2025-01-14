@@ -1,0 +1,59 @@
+{
+  "values": [
+    {
+      "id": "natures_spirit:golden_wilds",
+      "required": false
+    },
+    {
+      "id": "natures_spirit:marigold_meadows",
+      "required": false
+    },
+    {
+      "id": "natures_spirit:prairie",
+      "required": false
+    },
+    {
+      "id": "natures_spirit:alpine_clearings",
+      "required": false
+    },
+    {
+      "id": "natures_spirit:blooming_dunes",
+      "required": false
+    },
+    {
+      "id": "natures_spirit:lively_dunes",
+      "required": false
+    },
+    {
+      "id": "natures_spirit:shrubby_highlands",
+      "required": false
+    },
+    {
+      "id": "natures_spirit:cypress_fields",
+      "required": false
+    },
+    {
+      "id": "natures_spirit:carnation_fields",
+      "required": false
+    },
+    {
+      "id": "natures_spirit:lavender_fields",
+      "required": false
+    },
+    {
+      "id": "natures_spirit:shrubland",
+      "required": false
+    },
+    {
+      "id": "natures_spirit:flowering_shrubland",
+      "required": false
+    },
+    "minecraft:plains",
+    "minecraft:savanna",
+    "minecraft:savanna_plateau",
+    "minecraft:sparse_jungle",
+    "minecraft:sunflower_plains",
+    "minecraft:windswept_forest",
+    "minecraft:windswept_hills"
+  ]
+}

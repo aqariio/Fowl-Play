@@ -2,6 +2,7 @@ package aqario.fowlplay.common.world.gen;
 
 import aqario.fowlplay.common.entity.FowlPlayEntityType;
 import aqario.fowlplay.common.entity.SparrowEntity;
+import aqario.fowlplay.common.tags.FowlPlayBlockTags;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -53,7 +54,10 @@ public class SparrowSpawner implements Spawner {
             .count(holder -> holder.matchesKey(PointOfInterestTypes.HOME), pos, 48, PointOfInterestStorage.OccupationStatus.IS_OCCUPIED)
             > 4L) {
             List<SparrowEntity> nearbySparrows = world.getNonSpectatingEntities(SparrowEntity.class, new Box(pos).expand(48.0, 8.0, 48.0));
-            if (nearbySparrows.size() < MAX_SPARROWS) {
+            if (nearbySparrows.size() < MAX_SPARROWS
+                && world.isSkyVisible(pos)
+                && world.getBlockState(pos).isIn(FowlPlayBlockTags.PASSERINES_SPAWNABLE_ON)
+            ) {
                 return this.spawn(pos, world);
             }
         }

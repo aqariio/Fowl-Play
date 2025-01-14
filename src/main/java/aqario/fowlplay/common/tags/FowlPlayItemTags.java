@@ -12,6 +12,7 @@ public final class FowlPlayItemTags {
     public static final TagKey<Item> CHICKADEE_FOOD = create("chickadee_food");
     public static final TagKey<Item> DUCK_FOOD = create("duck_food");
     public static final TagKey<Item> GULL_FOOD = create("gull_food");
+    public static final TagKey<Item> HAWK_FOOD = create("hawk_food");
     public static final TagKey<Item> PENGUIN_FOOD = create("penguin_food");
     public static final TagKey<Item> PIGEON_FOOD = create("pigeon_food");
     public static final TagKey<Item> RAVEN_FOOD = create("raven_food");

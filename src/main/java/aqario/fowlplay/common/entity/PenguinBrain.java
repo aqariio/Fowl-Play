@@ -114,7 +114,7 @@ public class PenguinBrain {
             ImmutableList.of(
                 new BreatheAirTask(SWIM_SPEED),
                 new FleeTask(RUN_SPEED),
-                LocateFoodTask.run(Bird::canPickupFood),
+                PickupFoodTask.run(Bird::canPickupFood),
                 new LookAroundTask(45, 90),
                 new WanderAroundTask(),
                 new TemptationCooldownTask(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),

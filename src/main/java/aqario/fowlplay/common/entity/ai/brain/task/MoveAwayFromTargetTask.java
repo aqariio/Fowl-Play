@@ -17,7 +17,7 @@ import java.util.function.Function;
 /**
  * Improved {@link net.minecraft.entity.ai.brain.task.GoToRememberedPositionTask GoToRememberedPositionTask} with a speedGetter
  */
-public class MoveAwayFromPositionTask {
+public class MoveAwayFromTargetTask {
     public static <E extends BirdEntity> Task<E> block(MemoryModuleType<BlockPos> memoryType, Function<E, Float> entitySpeedGetter, boolean requiresWalkTarget) {
         return create(memoryType, entitySpeedGetter, requiresWalkTarget, Vec3d::ofBottomCenter);
     }
@@ -38,7 +38,7 @@ public class MoveAwayFromPositionTask {
                     }
                     Vec3d entityPos = entity.getPos();
                     Vec3d targetPos = targetPositionGetter.apply(instance.getValue(targetType));
-                    if (!entityPos.isInRange(targetPos, entity.fleeRange())) {
+                    if (!entityPos.isInRange(targetPos, entity.getFleeRange())) {
                         return false;
                     }
                     if (optional.isPresent() && optional.get().getSpeed() == entitySpeedGetter.apply(entity)) {

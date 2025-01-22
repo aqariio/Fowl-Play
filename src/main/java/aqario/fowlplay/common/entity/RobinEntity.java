@@ -155,12 +155,12 @@ public class RobinEntity extends FlyingBirdEntity implements VariantHolder<Robin
 
     @Override
     protected float getCallVolume() {
-        return FowlPlayConfig.robinCallVolume;
+        return FowlPlayConfig.getInstance().robinCallVolume;
     }
 
     @Override
     protected float getSongVolume() {
-        return FowlPlayConfig.robinSongVolume;
+        return FowlPlayConfig.getInstance().robinSongVolume;
     }
 
     @Override

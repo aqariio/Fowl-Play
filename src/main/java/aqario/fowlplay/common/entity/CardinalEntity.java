@@ -104,12 +104,12 @@ public class CardinalEntity extends FlyingBirdEntity {
 
     @Override
     protected float getCallVolume() {
-        return FowlPlayConfig.cardinalCallVolume;
+        return FowlPlayConfig.getInstance().cardinalCallVolume;
     }
 
     @Override
     protected float getSongVolume() {
-        return FowlPlayConfig.cardinalSongVolume;
+        return FowlPlayConfig.getInstance().cardinalSongVolume;
     }
 
     @Override

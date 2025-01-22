@@ -21,20 +21,9 @@ public class PenguinEntityModel extends BirdEntityModel<PenguinEntity> {
     public final ModelPart tail2;
     public final ModelPart left_leg2;
     public final ModelPart right_leg2;
-    public final ModelPart root;
-    public final ModelPart body;
-    public final ModelPart neck;
-    public final ModelPart head;
-    public final ModelPart torso;
-    public final ModelPart leftWing;
-    public final ModelPart rightWing;
-    public final ModelPart leftLeg;
-    public final ModelPart rightLeg;
-    public final ModelPart tail;
 
     public PenguinEntityModel(ModelPart root) {
         super(root);
-        this.root = root.getChild("root");
         this.baby = this.root.getChild("baby");
         this.body2 = this.baby.getChild("body2");
         this.neck2 = this.body2.getChild("neck2");
@@ -46,15 +35,6 @@ public class PenguinEntityModel extends BirdEntityModel<PenguinEntity> {
         this.tail2 = this.body2.getChild("tail2");
         this.left_leg2 = this.baby.getChild("left_leg2");
         this.right_leg2 = this.baby.getChild("right_leg2");
-        this.body = this.root.getChild("body");
-        this.neck = this.body.getChild("neck");
-        this.head = this.neck.getChild("head");
-        this.torso = this.body.getChild("torso");
-        this.leftWing = this.body.getChild("left_wing");
-        this.rightWing = this.body.getChild("right_wing");
-        this.leftLeg = this.root.getChild("left_leg");
-        this.rightLeg = this.root.getChild("right_leg");
-        this.tail = this.body.getChild("tail");
     }
 
     public static TexturedModelData getTexturedModelData() {

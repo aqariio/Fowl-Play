@@ -9,7 +9,7 @@ import net.minecraft.entity.ai.brain.task.TaskTriggerer;
 
 import java.util.function.Predicate;
 
-public class LocateFoodTask {
+public class PickupFoodTask {
     public static <E extends BirdEntity> Task<E> run() {
         return run(bird -> true);
     }

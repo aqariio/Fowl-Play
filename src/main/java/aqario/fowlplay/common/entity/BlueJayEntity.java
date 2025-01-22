@@ -98,7 +98,7 @@ public class BlueJayEntity extends FlyingBirdEntity {
 
     @Override
     protected float getCallVolume() {
-        return FowlPlayConfig.blueJayCallVolume;
+        return FowlPlayConfig.getInstance().blueJayCallVolume;
     }
 
     @Override

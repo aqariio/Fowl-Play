@@ -2,7 +2,6 @@ package aqario.fowlplay.common.config;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.screen.ScreenTexts;
@@ -14,7 +13,7 @@ import java.net.URI;
 public class ModMenuIntegration implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        if (FabricLoader.getInstance().isModLoaded("yet_another_config_lib_v3")) {
+        if (FowlPlayConfig.isYACLLoaded()) {
             return YACLIntegration::createScreen;
         }
         String link = "https://modrinth.com/mod/yacl/versions";

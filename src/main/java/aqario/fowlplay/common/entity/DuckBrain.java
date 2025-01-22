@@ -126,9 +126,9 @@ public class DuckBrain {
                 FlightControlTask.stopFalling(),
                 new FleeTask(RUN_SPEED),
                 AvoidTask.run(),
-                LocateFoodTask.run(Bird::canPickupFood),
+                PickupFoodTask.run(Bird::canPickupFood),
                 new LookAroundTask(45, 90),
-                new WalkToTargetTask(),
+                new WanderAroundTask(),
                 new TemptationCooldownTask(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
                 new TemptationCooldownTask(MemoryModuleType.GAZE_COOLDOWN_TICKS)
             )
@@ -184,7 +184,7 @@ public class DuckBrain {
                     new RandomTask<>(
                         ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
                         ImmutableList.of(
-                            Pair.of(FlyTask.create(FLY_SPEED, 64, 32), 1)
+                            Pair.of(FlyTask.create(FLY_SPEED, 24, 16), 1)
                         )
                     )
                 )
@@ -204,7 +204,7 @@ public class DuckBrain {
             10,
             ImmutableList.of(
                 FlightControlTask.startFlying(duck -> true),
-                MoveAwayFromPositionTask.entity(
+                MoveAwayFromTargetTask.entity(
                     MemoryModuleType.AVOID_TARGET,
                     duck -> duck.isFlying() ? FLY_SPEED : RUN_SPEED,
                     true
@@ -314,7 +314,7 @@ public class DuckBrain {
         duck.getBrain().remember(MemoryModuleType.AVOID_TARGET, target, 160L);
     }
 
-    protected static List<PassiveEntity> getNearbyVisibleDucks(DuckEntity duck) {
+    protected static List<? extends PassiveEntity> getNearbyVisibleDucks(DuckEntity duck) {
         return duck.getBrain().getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS).orElse(ImmutableList.of());
     }
 

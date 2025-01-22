@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public final class FowlPlayMemoryModuleType {
-    public static final MemoryModuleType<List<PassiveEntity>> NEAREST_VISIBLE_ADULTS = register("nearest_visible_adults");
+    public static final MemoryModuleType<List<? extends PassiveEntity>> NEAREST_VISIBLE_ADULTS = register("nearest_visible_adults");
     public static final MemoryModuleType<Boolean> SEES_FOOD = register("sees_food", Codec.BOOL);
     public static final MemoryModuleType<Boolean> CANNOT_PICKUP_FOOD = register("cannot_eat_food", Codec.BOOL);
     public static final MemoryModuleType<Unit> IS_FLYING = register("is_flying", Codec.unit(Unit.INSTANCE));

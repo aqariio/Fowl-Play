@@ -92,15 +92,11 @@ public abstract class BirdEntity extends AnimalEntity {
         }
     }
 
-    public abstract Ingredient getFood();
-
     private boolean canEat(ItemStack stack) {
         return this.getFood().test(stack)/* && !this.isSleeping()*/;
     }
 
-    public boolean shouldAvoid(LivingEntity entity) {
-        return false;
-    }
+    public abstract Ingredient getFood();
 
     public boolean canHunt(LivingEntity target) {
         return false;
@@ -110,8 +106,24 @@ public abstract class BirdEntity extends AnimalEntity {
         return false;
     }
 
-    public int fleeRange() {
+    public boolean shouldAvoid(LivingEntity entity) {
+        return false;
+    }
+
+    public int getFleeRange() {
         return 10;
+    }
+
+    public float getWalkSpeedMultiplier() {
+        return 1.0F;
+    }
+
+    public float getRunSpeedMultiplier() {
+        return 1.4F;
+    }
+
+    public float getSwimSpeedMultiplier() {
+        return 1.0F;
     }
 
     @Override
@@ -202,7 +214,7 @@ public abstract class BirdEntity extends AnimalEntity {
     }
 
     protected boolean canSing() {
-        return this.getWorld().isDay();
+        return this.getWorld().isDay() && !this.isBaby();
     }
 
     private void resetCallDelay() {

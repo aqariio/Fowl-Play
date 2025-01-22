@@ -177,8 +177,8 @@ public class GullEntity extends TrustingBirdEntity implements VariantHolder<Gull
     }
 
     @Override
-    public int fleeRange() {
-        return this.getTrustedUuids().isEmpty() ? super.fleeRange() : 6;
+    public int getFleeRange() {
+        return this.getTrustedUuids().isEmpty() ? super.getFleeRange() : 6;
     }
 
     @Override
@@ -221,12 +221,12 @@ public class GullEntity extends TrustingBirdEntity implements VariantHolder<Gull
 
     @Override
     protected float getCallVolume() {
-        return FowlPlayConfig.gullCallVolume;
+        return FowlPlayConfig.getInstance().gullCallVolume;
     }
 
     @Override
     protected float getSongVolume() {
-        return FowlPlayConfig.gullSongVolume;
+        return FowlPlayConfig.getInstance().gullSongVolume;
     }
 
     @Nullable

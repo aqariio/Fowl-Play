@@ -1,5 +1,6 @@
 package aqario.fowlplay.common.world.gen;
 
+import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.FowlPlayEntityType;
 import aqario.fowlplay.common.entity.SparrowEntity;
 import aqario.fowlplay.common.tags.FowlPlayBlockTags;
@@ -24,26 +25,30 @@ public class SparrowSpawner implements Spawner {
     @SuppressWarnings("deprecation")
     @Override
     public int spawn(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals) {
-        if (spawnAnimals && world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING)) {
-            this.ticksUntilNextSpawn--;
-            if (this.ticksUntilNextSpawn > 0) {
-                return 0;
-            }
-            this.ticksUntilNextSpawn = SPAWN_COOLDOWN;
-            PlayerEntity player = world.getRandomAlivePlayer();
-            if (player == null) {
-                return 0;
-            }
-            Random random = world.random;
-            int x = (8 + random.nextInt(24)) * (random.nextBoolean() ? -1 : 1);
-            int z = (8 + random.nextInt(24)) * (random.nextBoolean() ? -1 : 1);
-            BlockPos pos = player.getBlockPos().add(x, 0, z);
-            if (!world.isRegionLoaded(pos.getX() - 10, pos.getZ() - 10, pos.getX() + 10, pos.getZ() + 10)) {
-                return 0;
-            }
-            if (world.isNearOccupiedPointOfInterest(pos, 2)) {
-                return this.spawnNearPoi(world, pos);
-            }
+        if (!spawnAnimals
+            || !world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING)
+            || FowlPlayConfig.getInstance().sparrowSpawnWeight <= 0
+        ) {
+            return 0;
+        }
+        this.ticksUntilNextSpawn--;
+        if (this.ticksUntilNextSpawn > 0) {
+            return 0;
+        }
+        this.ticksUntilNextSpawn = SPAWN_COOLDOWN;
+        PlayerEntity player = world.getRandomAlivePlayer();
+        if (player == null) {
+            return 0;
+        }
+        Random random = world.random;
+        int x = (8 + random.nextInt(24)) * (random.nextBoolean() ? -1 : 1);
+        int z = (8 + random.nextInt(24)) * (random.nextBoolean() ? -1 : 1);
+        BlockPos pos = player.getBlockPos().add(x, 0, z);
+        if (!world.isRegionLoaded(pos.getX() - 10, pos.getZ() - 10, pos.getX() + 10, pos.getZ() + 10)) {
+            return 0;
+        }
+        if (world.isNearOccupiedPointOfInterest(pos, 2)) {
+            return this.spawnNearPoi(world, pos);
         }
 
         return 0;

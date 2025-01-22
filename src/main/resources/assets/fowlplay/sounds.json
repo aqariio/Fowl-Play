@@ -117,6 +117,23 @@
     ],
     "subtitle": "subtitles.entity.gull.hurt"
   },
+  "entity.hawk.call": {
+    "sounds": [
+      "fowlplay:mob/hawk/call1",
+      "fowlplay:mob/hawk/call2",
+      "fowlplay:mob/hawk/call3",
+      "fowlplay:mob/hawk/call4",
+      "fowlplay:mob/hawk/call5"
+    ],
+    "subtitle": "subtitles.entity.hawk.call"
+  },
+  "entity.hawk.hurt": {
+    "sounds": [
+      "fowlplay:mob/hawk/call1",
+      "fowlplay:mob/hawk/call2"
+    ],
+    "subtitle": "subtitles.entity.hawk.hurt"
+  },
   "entity.penguin.call": {
     "sounds": [
       "fowlplay:mob/penguin/call1",

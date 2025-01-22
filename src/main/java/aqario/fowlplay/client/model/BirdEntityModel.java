@@ -33,4 +33,8 @@ public abstract class BirdEntityModel<E extends BirdEntity> extends SinglePartEn
     public ModelPart getPart() {
         return this.root;
     }
+
+    @Override
+    public void setAngles(E bird, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch) {
+    }
 }

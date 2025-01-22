@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class PigeonEntity extends TameableBirdEntity implements VariantHolder<PigeonEntity.Variant> {
+public class PigeonEntity extends TameableBirdEntity implements VariantHolder<PigeonEntity.Variant>, Flocking {
     private static final TrackedData<Optional<UUID>> RECIPIENT = DataTracker.registerData(PigeonEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     private static final TrackedData<String> VARIANT = DataTracker.registerData(PigeonEntity.class, TrackedDataHandlerRegistry.STRING);
     public final AnimationState idleState = new AnimationState();
@@ -251,8 +251,8 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
     }
 
     @Override
-    public int fleeRange() {
-        return this.getTrustedUuids().isEmpty() ? super.fleeRange() : 6;
+    public int getFleeRange() {
+        return this.getTrustedUuids().isEmpty() ? super.getFleeRange() : 6;
     }
 
     @Override
@@ -356,12 +356,12 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
 
     @Override
     protected float getCallVolume() {
-        return FowlPlayConfig.pigeonCallVolume;
+        return FowlPlayConfig.getInstance().pigeonCallVolume;
     }
 
     @Override
     protected float getSongVolume() {
-        return FowlPlayConfig.pigeonSongVolume;
+        return FowlPlayConfig.getInstance().pigeonSongVolume;
     }
 
     @Override
@@ -401,6 +401,15 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
     protected void sendAiDebugData() {
         super.sendAiDebugData();
         DebugInfoSender.sendBrainDebugData(this);
+    }
+
+    @Override
+    public boolean isLeader() {
+        return false;
+    }
+
+    @Override
+    public void setLeader() {
     }
 
     public enum Variant {

@@ -127,9 +127,9 @@ public class PigeonBrain {
                 new FleeTask(RUN_SPEED),
                 new FollowOwnerTask(WALK_SPEED, 5, 10),
                 AvoidTask.run(),
-                LocateFoodTask.run(pigeon -> !pigeon.isSitting() && pigeon.getRecipientUuid() == null),
+                PickupFoodTask.run(pigeon -> !pigeon.isSitting() && pigeon.getRecipientUuid() == null),
                 new LookAroundTask(45, 90),
-                new WanderAroundTask(),
+                new WalkToTargetTask(),
                 new TemptationCooldownTask(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
                 new TemptationCooldownTask(MemoryModuleType.GAZE_COOLDOWN_TICKS)
             )
@@ -183,7 +183,7 @@ public class PigeonBrain {
                     new RandomTask<>(
                         ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
                         ImmutableList.of(
-                            Pair.of(FlyTask.create(FLY_SPEED, 64, 32), 1)
+                            Pair.of(FlyTask.perch(FLY_SPEED), 1)
                         )
                     )
                 )
@@ -216,7 +216,7 @@ public class PigeonBrain {
             10,
             ImmutableList.of(
                 FlightControlTask.startFlying(pigeon -> true),
-                MoveAwayFromPositionTask.entity(
+                MoveAwayFromTargetTask.entity(
                     MemoryModuleType.AVOID_TARGET,
                     pigeon -> pigeon.isFlying() ? FLY_SPEED : RUN_SPEED,
                     true
@@ -308,7 +308,7 @@ public class PigeonBrain {
         pigeon.getBrain().remember(MemoryModuleType.AVOID_TARGET, target, 160L);
     }
 
-    protected static List<PassiveEntity> getNearbyVisiblePigeons(PigeonEntity pigeon) {
+    protected static List<? extends PassiveEntity> getNearbyVisiblePigeons(PigeonEntity pigeon) {
         return pigeon.getBrain().getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS).orElse(ImmutableList.of());
     }
 

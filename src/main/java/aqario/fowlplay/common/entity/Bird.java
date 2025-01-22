@@ -26,7 +26,7 @@ public final class Bird {
         Optional<LivingEntity> avoidTarget = visibleMobs.get().stream(entity -> true)
             .filter(bird::shouldAvoid)
             .filter(EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR)
-            .filter(entity -> entity.isInRange(wantedItem, bird.fleeRange()))
+            .filter(entity -> entity.isInRange(wantedItem, bird.getFleeRange()))
             .findFirst();
 
         return !bird.getFood().test(bird.getMainHandStack()) && avoidTarget.isEmpty();

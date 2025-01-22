@@ -119,7 +119,7 @@ public class RavenEntity extends TrustingBirdEntity {
             return false;
         }
         Brain<RavenEntity> brain = this.getBrain();
-        Optional<List<PassiveEntity>> nearbyAdults = brain.getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS);
+        Optional<List<? extends PassiveEntity>> nearbyAdults = brain.getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS);
         return nearbyAdults.filter(passiveEntities -> passiveEntities.size() >= 2).isPresent();
     }
 
@@ -162,7 +162,7 @@ public class RavenEntity extends TrustingBirdEntity {
 
     @Override
     protected float getCallVolume() {
-        return FowlPlayConfig.ravenCallVolume;
+        return FowlPlayConfig.getInstance().ravenCallVolume;
     }
 
     @Override

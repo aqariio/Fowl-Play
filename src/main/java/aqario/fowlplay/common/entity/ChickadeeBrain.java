@@ -118,7 +118,7 @@ public class ChickadeeBrain {
                 FlightControlTask.stopFalling(),
                 new FleeTask(RUN_SPEED),
                 AvoidTask.run(),
-                LocateFoodTask.run(Bird::canPickupFood),
+                PickupFoodTask.run(Bird::canPickupFood),
                 new LookAroundTask(45, 90),
                 new WanderAroundTask(),
                 new TemptationCooldownTask(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
@@ -173,7 +173,7 @@ public class ChickadeeBrain {
                     new RandomTask<>(
                         ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
                         ImmutableList.of(
-                            Pair.of(FlyTask.create(FLY_SPEED, 64, 32), 1)
+                            Pair.of(FlyTask.perch(FLY_SPEED), 1)
                         )
                     )
                 )
@@ -192,7 +192,7 @@ public class ChickadeeBrain {
             10,
             ImmutableList.of(
                 FlightControlTask.startFlying(chickadee -> true),
-                MoveAwayFromPositionTask.entity(
+                MoveAwayFromTargetTask.entity(
                     MemoryModuleType.AVOID_TARGET,
                     chickadee -> chickadee.isFlying() ? FLY_SPEED : RUN_SPEED,
                     true
@@ -281,7 +281,7 @@ public class ChickadeeBrain {
         chickadee.getBrain().remember(MemoryModuleType.AVOID_TARGET, target, 160L);
     }
 
-    protected static List<PassiveEntity> getNearbyVisibleChickadees(ChickadeeEntity chickadee) {
+    protected static List<? extends PassiveEntity> getNearbyVisibleChickadees(ChickadeeEntity chickadee) {
         return chickadee.getBrain().getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS).orElse(ImmutableList.of());
     }
 

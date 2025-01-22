@@ -17,6 +17,10 @@
       "required": false
     },
     {
+      "id": "natures_spirit:snowy_fir_forest",
+      "required": false
+    },
+    {
       "id": "natures_spirit:prairie",
       "required": false
     },

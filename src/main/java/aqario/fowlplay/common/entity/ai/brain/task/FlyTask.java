@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
-import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.FuzzyTargeting;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
@@ -22,14 +21,15 @@ import java.util.function.Predicate;
 
 public class FlyTask {
     public static Task<FlyingBirdEntity> create(float speed, int horizontalRange, int verticalRange) {
-        return create(speed, (entity) -> findTargetPos(entity, horizontalRange, verticalRange), (entity) -> true);
+        return create(speed, (entity) -> FuzzyTargeting.find(entity, horizontalRange, verticalRange), (entity) -> true);
+    }
+
+    public static Task<FlyingBirdEntity> perch(float speed) {
+        return create(speed, FlyTask::findTreePos, (entity) -> true);
     }
 
     @Nullable
     private static Vec3d findTargetPos(FlyingBirdEntity entity, int horizontalRange, int verticalRange) {
-        if (entity.getType().isIn(FowlPlayEntityTypeTags.PASSERINES) && entity.getRandom().nextFloat() < 0.8F) {
-            return findTreePos(entity);
-        }
         return FuzzyTargeting.find(entity, horizontalRange, verticalRange);
     }
 
@@ -52,24 +52,24 @@ public class FlyTask {
 
         for (BlockPos targetPos : BlockPos.iterate(
             MathHelper.floor(entity.getX() - 12.0),
-            MathHelper.floor(entity.getY() - 18.0),
+            MathHelper.floor(entity.getY() + 4.0),
             MathHelper.floor(entity.getZ() - 12.0),
             MathHelper.floor(entity.getX() + 12.0),
-            MathHelper.floor(entity.getY() + 18.0),
+            MathHelper.floor(entity.getY() + 20.0),
             MathHelper.floor(entity.getZ() + 12.0)
         )) {
             if (!entityPos.equals(targetPos)) {
                 BlockState state = entity.getWorld().getBlockState(mutable2.set(targetPos, Direction.DOWN));
                 boolean validBlock = state.isIn(BlockTags.LEAVES) || state.isIn(BlockTags.LOGS);
-                if (
-                    validBlock && entity.getWorld().isAir(targetPos)
-                        && (entity.getBoundingBox().getYLength() <= 1 || entity.getWorld().isAir(mutable.set(targetPos, Direction.UP)))
+                if (validBlock && entity.getWorld().isAir(targetPos)
+                    && (entity.getBoundingBox().getYLength() <= 1
+                    || entity.getWorld().isAir(mutable.set(targetPos, Direction.UP)))
                 ) {
                     return Vec3d.ofBottomCenter(targetPos);
                 }
             }
         }
 
-        return null;
+        return FuzzyTargeting.find(entity, 16, 16);
     }
 }

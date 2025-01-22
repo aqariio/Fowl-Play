@@ -8,200 +8,211 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 
 public class FowlPlayConfig {
-    public static void loadConfig() {
-        ConfigClassHandler.createBuilder(FowlPlayConfig.class)
-            .id(Identifier.of(FowlPlay.ID, "config"))
-            .serializer(config -> GsonConfigSerializerBuilder.create(config)
-                .setPath(FabricLoader.getInstance().getConfigDir().resolve(FowlPlay.ID + ".json5"))
-                .setJson5(true)
-                .build())
-            .build()
-            .load();
+    public static boolean isYACLLoaded() {
+        return FabricLoader.getInstance().isModLoaded("yet_another_config_lib_v3");
     }
 
-    public static void saveConfig() {
-        ConfigClassHandler.createBuilder(FowlPlayConfig.class)
+    private static ConfigClassHandler<FowlPlayConfig> getConfig() {
+        return ConfigClassHandler.createBuilder(FowlPlayConfig.class)
             .id(Identifier.of(FowlPlay.ID, "config"))
             .serializer(config -> GsonConfigSerializerBuilder.create(config)
                 .setPath(FabricLoader.getInstance().getConfigDir().resolve(FowlPlay.ID + ".json5"))
                 .setJson5(true)
                 .build())
-            .build()
-            .save();
+            .build();
+    }
+
+    public static FowlPlayConfig getInstance() {
+        if (isYACLLoaded()) {
+            return getConfig().instance();
+        }
+        return new FowlPlayConfig();
+    }
+
+    public static FowlPlayConfig getDefaults() {
+        return getConfig().defaults();
+    }
+
+    public static void load() {
+        getConfig().load();
+    }
+
+    public static void save() {
+        getConfig().save();
     }
 
     // Visual
 
     @SerialEntry
-    public static boolean customChickenModel = true;
+    public boolean customChickenModel = true;
 
     // Audio
 
     // Blue Jay
 
     @SerialEntry
-    public static int blueJayCallVolume = 10;
+    public int blueJayCallVolume = 9;
 
     // Cardinal
 
     @SerialEntry
-    public static int cardinalCallVolume = 2;
+    public int cardinalCallVolume = 2;
     @SerialEntry
-    public static int cardinalSongVolume = 6;
+    public int cardinalSongVolume = 6;
 
     // Chickadee
 
     @SerialEntry
-    public static int chickadeeCallVolume = 6;
+    public int chickadeeCallVolume = 6;
     @SerialEntry
-    public static int chickadeeSongVolume = 6;
+    public int chickadeeSongVolume = 6;
 
     // Duck
 
     @SerialEntry
-    public static int duckCallVolume = 2;
+    public int duckCallVolume = 2;
 
     // Gull
 
     @SerialEntry
-    public static int gullCallVolume = 6;
+    public int gullCallVolume = 6;
     @SerialEntry
-    public static int gullSongVolume = 7;
+    public int gullSongVolume = 7;
 
     // Hawk
 
     @SerialEntry
-    public static int hawkCallVolume = 8;
+    public int hawkCallVolume = 12;
 
     // Penguin
 
     @SerialEntry
-    public static int penguinCallVolume = 4;
+    public int penguinCallVolume = 4;
 
     // Pigeon
 
     @SerialEntry
-    public static int pigeonCallVolume = 1;
+    public int pigeonCallVolume = 1;
     @SerialEntry
-    public static int pigeonSongVolume = 6;
+    public int pigeonSongVolume = 6;
 
     // Raven
 
     @SerialEntry
-    public static int ravenCallVolume = 10;
+    public int ravenCallVolume = 10;
 
     // Robin
 
     @SerialEntry
-    public static int robinCallVolume = 2;
+    public int robinCallVolume = 2;
     @SerialEntry
-    public static int robinSongVolume = 6;
+    public int robinSongVolume = 6;
 
     // Sparrow
 
     @SerialEntry
-    public static int sparrowCallVolume = 2;
+    public int sparrowCallVolume = 2;
     @SerialEntry
-    public static int sparrowSongVolume = 6;
+    public int sparrowSongVolume = 6;
 
     // Spawning
 
     // Blue Jay
 
     @SerialEntry
-    public static int blueJaySpawnWeight = 25;
+    public int blueJaySpawnWeight = 25;
     @SerialEntry
-    public static int blueJayMinGroupSize = 1;
+    public int blueJayMinGroupSize = 1;
     @SerialEntry
-    public static int blueJayMaxGroupSize = 2;
+    public int blueJayMaxGroupSize = 2;
 
     // Cardinal
 
     @SerialEntry
-    public static int cardinalSpawnWeight = 35;
+    public int cardinalSpawnWeight = 35;
     @SerialEntry
-    public static int cardinalMinGroupSize = 1;
+    public int cardinalMinGroupSize = 1;
     @SerialEntry
-    public static int cardinalMaxGroupSize = 2;
+    public int cardinalMaxGroupSize = 2;
 
     // Chickadee
 
     @SerialEntry
-    public static int chickadeeSpawnWeight = 50;
+    public int chickadeeSpawnWeight = 50;
     @SerialEntry
-    public static int chickadeeMinGroupSize = 3;
+    public int chickadeeMinGroupSize = 3;
     @SerialEntry
-    public static int chickadeeMaxGroupSize = 5;
+    public int chickadeeMaxGroupSize = 5;
 
     // Duck
 
     @SerialEntry
-    public static int duckSpawnWeight = 10;
+    public int duckSpawnWeight = 8;
     @SerialEntry
-    public static int duckMinGroupSize = 6;
+    public int duckMinGroupSize = 6;
     @SerialEntry
-    public static int duckMaxGroupSize = 12;
+    public int duckMaxGroupSize = 10;
 
     // Gull
 
     @SerialEntry
-    public static int gullSpawnWeight = 30;
+    public int gullSpawnWeight = 30;
     @SerialEntry
-    public static int gullMinGroupSize = 8;
+    public int gullMinGroupSize = 8;
     @SerialEntry
-    public static int gullMaxGroupSize = 12;
+    public int gullMaxGroupSize = 12;
 
     // Hawk
 
     @SerialEntry
-    public static int hawkSpawnWeight = 15;
+    public int hawkSpawnWeight = 15;
     @SerialEntry
-    public static int hawkMinGroupSize = 1;
+    public int hawkMinGroupSize = 1;
     @SerialEntry
-    public static int hawkMaxGroupSize = 2;
+    public int hawkMaxGroupSize = 2;
 
     // Penguin
 
     @SerialEntry
-    public static int penguinSpawnWeight = 1;
+    public int penguinSpawnWeight = 1;
     @SerialEntry
-    public static int penguinMinGroupSize = 16;
+    public int penguinMinGroupSize = 16;
     @SerialEntry
-    public static int penguinMaxGroupSize = 24;
+    public int penguinMaxGroupSize = 24;
 
     // Pigeon
 
     @SerialEntry
-    public static int pigeonSpawnWeight = 20;
+    public int pigeonSpawnWeight = 20;
     @SerialEntry
-    public static int pigeonMinGroupSize = 4;
+    public int pigeonMinGroupSize = 4;
     @SerialEntry
-    public static int pigeonMaxGroupSize = 8;
+    public int pigeonMaxGroupSize = 8;
 
     // Raven
 
     @SerialEntry
-    public static int ravenSpawnWeight = 20;
+    public int ravenSpawnWeight = 20;
     @SerialEntry
-    public static int ravenMinGroupSize = 1;
+    public int ravenMinGroupSize = 1;
     @SerialEntry
-    public static int ravenMaxGroupSize = 3;
+    public int ravenMaxGroupSize = 3;
 
     // Robin
 
     @SerialEntry
-    public static int robinSpawnWeight = 50;
+    public int robinSpawnWeight = 50;
     @SerialEntry
-    public static int robinMinGroupSize = 3;
+    public int robinMinGroupSize = 3;
     @SerialEntry
-    public static int robinMaxGroupSize = 5;
+    public int robinMaxGroupSize = 5;
 
     // Sparrow
 
     @SerialEntry
-    public static int sparrowSpawnWeight = 75;
+    public int sparrowSpawnWeight = 75;
     @SerialEntry
-    public static int sparrowMinGroupSize = 6;
+    public int sparrowMinGroupSize = 6;
     @SerialEntry
-    public static int sparrowMaxGroupSize = 10;
+    public int sparrowMaxGroupSize = 10;
 }

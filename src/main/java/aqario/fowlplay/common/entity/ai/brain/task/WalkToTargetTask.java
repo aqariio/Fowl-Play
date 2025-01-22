@@ -1,8 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
-import aqario.fowlplay.common.entity.FlyingBirdEntity;
+import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.entity.ai.FuzzyTargeting;
 import net.minecraft.entity.ai.NoPenaltyTargeting;
 import net.minecraft.entity.ai.brain.*;
 import net.minecraft.entity.ai.brain.task.MultiTickTask;
@@ -18,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class WalkToTargetTask extends MultiTickTask<MobEntity> {
-    private static final int MAX_UPDATE_COUNTDOWN = 40;
+    private static final int MAX_UPDATE_COUNTDOWN = 80;
     private int pathUpdateCountdownTicks;
     @Nullable
     private Path path;
@@ -38,7 +37,9 @@ public class WalkToTargetTask extends MultiTickTask<MobEntity> {
                 MemoryModuleType.PATH,
                 MemoryModuleState.VALUE_ABSENT,
                 MemoryModuleType.WALK_TARGET,
-                MemoryModuleState.VALUE_PRESENT
+                MemoryModuleState.VALUE_PRESENT,
+                FowlPlayMemoryModuleType.TELEPORT_TARGET,
+                MemoryModuleState.VALUE_ABSENT
             ),
             minRunTime,
             maxRunTime
@@ -52,7 +53,7 @@ public class WalkToTargetTask extends MultiTickTask<MobEntity> {
         }
         Brain<?> brain = entity.getBrain();
         WalkTarget walkTarget = brain.getOptionalRegisteredMemory(MemoryModuleType.WALK_TARGET).get();
-        boolean reachedTarget = this.hasReached(entity, walkTarget);
+        boolean reachedTarget = hasReached(entity, walkTarget);
         if (!reachedTarget && this.hasFinishedPath(entity, walkTarget, world.getTime())) {
             this.lookTargetPos = walkTarget.getLookTarget().getBlockPos();
             return true;
@@ -66,18 +67,18 @@ public class WalkToTargetTask extends MultiTickTask<MobEntity> {
     }
 
     protected boolean shouldKeepRunning(ServerWorld world, MobEntity entity, long l) {
-        if (this.path != null && this.lookTargetPos != null) {
-            Optional<WalkTarget> walkTarget = entity.getBrain().getOptionalRegisteredMemory(MemoryModuleType.WALK_TARGET);
-            boolean bl = walkTarget.map(WalkToTargetTask::isTargetSpectator).orElse(false);
-            EntityNavigation entityNavigation = entity.getNavigation();
-            return !entityNavigation.isIdle() && walkTarget.isPresent() && !this.hasReached(entity, walkTarget.get()) && !bl;
+        if (this.path == null || this.lookTargetPos == null) {
+            return false;
         }
-        return false;
+        Optional<WalkTarget> walkTarget = entity.getBrain().getOptionalRegisteredMemory(MemoryModuleType.WALK_TARGET);
+        boolean isTargetSpectator = walkTarget.map(WalkToTargetTask::isTargetSpectator).orElse(false);
+        EntityNavigation navigation = entity.getNavigation();
+        return !navigation.isIdle() && walkTarget.isPresent() && !hasReached(entity, walkTarget.get()) && !isTargetSpectator;
     }
 
     protected void finishRunning(ServerWorld world, MobEntity entity, long l) {
         if (entity.getBrain().hasMemoryModule(MemoryModuleType.WALK_TARGET)
-            && !this.hasReached(entity, entity.getBrain().getOptionalRegisteredMemory(MemoryModuleType.WALK_TARGET).get())
+            && !hasReached(entity, entity.getBrain().getOptionalRegisteredMemory(MemoryModuleType.WALK_TARGET).get())
             && entity.getNavigation().isNearPathStartPos()) {
             this.pathUpdateCountdownTicks = world.getRandom().nextInt(MAX_UPDATE_COUNTDOWN);
         }
@@ -111,11 +112,11 @@ public class WalkToTargetTask extends MultiTickTask<MobEntity> {
     }
 
     private boolean hasFinishedPath(MobEntity entity, WalkTarget walkTarget, long time) {
-        BlockPos blockPos = walkTarget.getLookTarget().getBlockPos();
-        this.path = entity.getNavigation().findPathTo(blockPos, 0);
+        BlockPos targetPos = walkTarget.getLookTarget().getBlockPos();
+        this.path = entity.getNavigation().findPathTo(targetPos, 0);
         this.speed = walkTarget.getSpeed();
         Brain<?> brain = entity.getBrain();
-        if (this.hasReached(entity, walkTarget)) {
+        if (hasReached(entity, walkTarget)) {
             brain.forget(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
         }
         else {
@@ -131,13 +132,13 @@ public class WalkToTargetTask extends MultiTickTask<MobEntity> {
                 return true;
             }
 
-            Vec3d target;
-            if (entity instanceof FlyingBirdEntity bird && bird.isFlying()) {
-                target = FuzzyTargeting.find(bird, 64, 32);
-            }
-            else {
-                target = NoPenaltyTargeting.findTo((PathAwareEntity) entity, 10, 7, Vec3d.ofBottomCenter(blockPos), (float) (Math.PI / 2));
-            }
+            Vec3d target = NoPenaltyTargeting.findTo(
+                (PathAwareEntity) entity,
+                24,
+                16,
+                Vec3d.ofBottomCenter(targetPos),
+                (float) (Math.PI / 4)
+            );
 
             if (target != null) {
                 this.path = entity.getNavigation().findPathTo(target.x, target.y, target.z, 0);
@@ -148,7 +149,7 @@ public class WalkToTargetTask extends MultiTickTask<MobEntity> {
         return false;
     }
 
-    private boolean hasReached(MobEntity entity, WalkTarget walkTarget) {
+    private static boolean hasReached(MobEntity entity, WalkTarget walkTarget) {
         return walkTarget.getLookTarget().getBlockPos().getManhattanDistance(entity.getBlockPos()) <= walkTarget.getCompletionRange();
     }
 

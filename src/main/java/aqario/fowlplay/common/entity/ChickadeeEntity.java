@@ -117,12 +117,12 @@ public class ChickadeeEntity extends FlyingBirdEntity {
 
     @Override
     protected float getCallVolume() {
-        return FowlPlayConfig.chickadeeCallVolume;
+        return FowlPlayConfig.getInstance().chickadeeCallVolume;
     }
 
     @Override
     protected float getSongVolume() {
-        return FowlPlayConfig.chickadeeSongVolume;
+        return FowlPlayConfig.getInstance().chickadeeSongVolume;
     }
 
     @Override

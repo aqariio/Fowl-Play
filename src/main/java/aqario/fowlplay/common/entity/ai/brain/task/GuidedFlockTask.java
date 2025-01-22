@@ -1,8 +1,10 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
+import aqario.fowlplay.common.entity.Flocking;
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.brain.task.MultiTickTask;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -10,17 +12,23 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.List;
 
-public class FlockTask extends MultiTickTask<FlyingBirdEntity> {
-    public final float coherence;
-    public final float alignment;
+public class GuidedFlockTask extends MultiTickTask<FlyingBirdEntity> {
+    public float coherence;
+    public float alignment;
     public final float separation;
     public final float separationRange;
+    private FlyingBirdEntity leader;
     private List<? extends PassiveEntity> nearbyBirds;
 
-    public FlockTask(float coherence, float alignment, float separation, float separationRange) {
-        super(ImmutableMap.of());
-        this.coherence = coherence;
-        this.alignment = alignment;
+    public GuidedFlockTask(float separation, float separationRange) {
+        super(ImmutableMap.of(
+            FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS,
+            MemoryModuleState.VALUE_PRESENT,
+            FowlPlayMemoryModuleType.IS_AVOIDING,
+            MemoryModuleState.VALUE_ABSENT,
+            FowlPlayMemoryModuleType.SEES_FOOD,
+            MemoryModuleState.VALUE_ABSENT
+        ));
         this.separation = separation;
         this.separationRange = separationRange;
     }
@@ -30,13 +38,29 @@ public class FlockTask extends MultiTickTask<FlyingBirdEntity> {
         if (!bird.isFlying()) {
             return false;
         }
-        if (!bird.getBrain().hasMemoryModule(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS)) {
+
+        this.nearbyBirds = bird.getBrain().getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS)
+            .get()
+            .stream()
+            .filter(entity -> entity.squaredDistanceTo(bird) < 64)
+            .toList();
+
+        if (this.nearbyBirds.isEmpty()) {
+            return false;
+        }
+        this.leader = null;
+        this.nearbyBirds.forEach(entity -> {
+            if (entity instanceof Flocking flockingBird && flockingBird.isLeader()) {
+                this.leader = (FlyingBirdEntity) flockingBird;
+            }
+        });
+
+        if (this.leader == null) {
+            ((Flocking) bird).setLeader();
             return false;
         }
 
-        this.nearbyBirds = bird.getBrain().getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS).get();
-
-        return this.nearbyBirds.size() > 5;
+        return true;
     }
 
     @Override
@@ -70,7 +94,12 @@ public class FlockTask extends MultiTickTask<FlyingBirdEntity> {
         cohesion = cohesion.multiply(this.coherence);
         alignment = alignment.multiply(this.alignment);
         separation = separation.multiply(this.separation);
+        Vec3d randomness = new Vec3d(
+            bird.getRandom().nextFloat() - bird.getRandom().nextFloat(),
+            bird.getRandom().nextFloat() - bird.getRandom().nextFloat(),
+            bird.getRandom().nextFloat() - bird.getRandom().nextFloat())
+            .multiply(0.5);
 
-        return cohesion.add(separation).add(alignment);
+        return cohesion.add(separation).add(alignment).add(randomness);
     }
 }

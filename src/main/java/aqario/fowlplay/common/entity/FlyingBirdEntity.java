@@ -119,6 +119,10 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         return tickDelta == 1.0F ? this.visualRoll : MathHelper.lerp(tickDelta, this.prevRoll, this.visualRoll);
     }
 
+    public float getFlySpeedMultiplier() {
+        return 2.0F;
+    }
+
     protected MoveControl getLandMoveControl() {
         return new BirdMoveControl(this);
     }
@@ -128,7 +132,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     protected BirdFlightMoveControl getFlightMoveControl() {
-        return new BirdFlightMoveControl(this, 40, 10);
+        return new BirdFlightMoveControl(this, 15, 10);
     }
 
     protected BirdNavigation getFlightNavigation() {

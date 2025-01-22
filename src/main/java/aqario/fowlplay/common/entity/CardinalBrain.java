@@ -118,7 +118,7 @@ public class CardinalBrain {
                 FlightControlTask.stopFalling(),
                 new FleeTask(RUN_SPEED),
                 AvoidTask.run(),
-                LocateFoodTask.run(Bird::canPickupFood),
+                PickupFoodTask.run(Bird::canPickupFood),
                 new LookAroundTask(45, 90),
                 new WanderAroundTask(),
                 new TemptationCooldownTask(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
@@ -173,7 +173,7 @@ public class CardinalBrain {
                     new RandomTask<>(
                         ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
                         ImmutableList.of(
-                            Pair.of(FlyTask.create(FLY_SPEED, 64, 32), 1)
+                            Pair.of(FlyTask.perch(FLY_SPEED), 1)
                         )
                     )
                 )
@@ -192,7 +192,7 @@ public class CardinalBrain {
             10,
             ImmutableList.of(
                 FlightControlTask.startFlying(cardinal -> true),
-                MoveAwayFromPositionTask.entity(
+                MoveAwayFromTargetTask.entity(
                     MemoryModuleType.AVOID_TARGET,
                     cardinal -> cardinal.isFlying() ? FLY_SPEED : RUN_SPEED,
                     true
@@ -281,7 +281,7 @@ public class CardinalBrain {
         cardinal.getBrain().remember(MemoryModuleType.AVOID_TARGET, target, 160L);
     }
 
-    protected static List<PassiveEntity> getNearbyVisibleCardinals(CardinalEntity cardinal) {
+    protected static List<? extends PassiveEntity> getNearbyVisibleCardinals(CardinalEntity cardinal) {
         return cardinal.getBrain().getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS).orElse(ImmutableList.of());
     }
 

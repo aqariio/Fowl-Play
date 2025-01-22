@@ -11,6 +11,9 @@ import java.util.function.Supplier;
 
 public class YACLIntegration {
     protected static Screen createScreen(Screen parent) {
+        FowlPlayConfig config = FowlPlayConfig.getInstance();
+        FowlPlayConfig defaults = FowlPlayConfig.getDefaults();
+
         return YetAnotherConfigLib.createBuilder()
             .title(Text.translatable("config.title"))
             .category(ConfigCategory.createBuilder()
@@ -18,7 +21,7 @@ public class YACLIntegration {
                 .option(Option.<Boolean>createBuilder()
                     .name(Text.translatable("config.visual.customChickenModel"))
                     .description(OptionDescription.of(Text.translatable("config.info.restart").append("\n\n").append(Text.translatable("config.visual.customChickenModel.desc"))))
-                    .binding(true, () -> FowlPlayConfig.customChickenModel, val -> FowlPlayConfig.customChickenModel = val)
+                    .binding(true, () -> config.customChickenModel, val -> config.customChickenModel = val)
                     .controller(BooleanControllerBuilder::create)
                     .build()
                 )
@@ -28,102 +31,102 @@ public class YACLIntegration {
                 .name(Text.translatable("config.audio"))
                 .group(createSoundGroup(
                     "entity.fowlplay.blue_jay",
-                    10,
-                    () -> FowlPlayConfig.blueJayCallVolume,
-                    val -> FowlPlayConfig.blueJayCallVolume = val,
+                    defaults.blueJayCallVolume,
+                    () -> config.blueJayCallVolume,
+                    val -> config.blueJayCallVolume = val,
                     0,
                     null,
                     null
                 ))
                 .group(createSoundGroup(
                     "entity.fowlplay.cardinal",
-                    2,
-                    () -> FowlPlayConfig.cardinalCallVolume,
-                    val -> FowlPlayConfig.cardinalCallVolume = val,
-                    6,
-                    () -> FowlPlayConfig.cardinalSongVolume,
-                    val -> FowlPlayConfig.cardinalSongVolume = val
+                    defaults.cardinalCallVolume,
+                    () -> config.cardinalCallVolume,
+                    val -> config.cardinalCallVolume = val,
+                    defaults.cardinalSongVolume,
+                    () -> config.cardinalSongVolume,
+                    val -> config.cardinalSongVolume = val
                 ))
                 .group(createSoundGroup(
                     "entity.fowlplay.chickadee",
-                    6,
-                    () -> FowlPlayConfig.chickadeeCallVolume,
-                    val -> FowlPlayConfig.chickadeeCallVolume = val,
-                    6,
-                    () -> FowlPlayConfig.chickadeeSongVolume,
-                    val -> FowlPlayConfig.chickadeeSongVolume = val
+                    defaults.chickadeeCallVolume,
+                    () -> config.chickadeeCallVolume,
+                    val -> config.chickadeeCallVolume = val,
+                    defaults.chickadeeSongVolume,
+                    () -> config.chickadeeSongVolume,
+                    val -> config.chickadeeSongVolume = val
                 ))
                 .group(createSoundGroup(
                     "entity.fowlplay.duck",
-                    2,
-                    () -> FowlPlayConfig.duckCallVolume,
-                    val -> FowlPlayConfig.duckCallVolume = val,
+                    defaults.duckCallVolume,
+                    () -> config.duckCallVolume,
+                    val -> config.duckCallVolume = val,
                     0,
                     null,
                     null
                 ))
                 .group(createSoundGroup(
                     "entity.fowlplay.gull",
-                    6,
-                    () -> FowlPlayConfig.gullCallVolume,
-                    val -> FowlPlayConfig.gullCallVolume = val,
-                    7,
-                    () -> FowlPlayConfig.gullSongVolume,
-                    val -> FowlPlayConfig.gullSongVolume = val
+                    defaults.gullCallVolume,
+                    () -> config.gullCallVolume,
+                    val -> config.gullCallVolume = val,
+                    defaults.gullSongVolume,
+                    () -> config.gullSongVolume,
+                    val -> config.gullSongVolume = val
                 ))
                 .group(createSoundGroup(
                     "entity.fowlplay.hawk",
-                    8,
-                    () -> FowlPlayConfig.hawkCallVolume,
-                    val -> FowlPlayConfig.hawkCallVolume = val,
+                    defaults.hawkCallVolume,
+                    () -> config.hawkCallVolume,
+                    val -> config.hawkCallVolume = val,
                     0,
                     null,
                     null
                 ))
                 .group(createSoundGroup(
                     "entity.fowlplay.penguin",
-                    4,
-                    () -> FowlPlayConfig.penguinCallVolume,
-                    val -> FowlPlayConfig.penguinCallVolume = val,
+                    defaults.penguinCallVolume,
+                    () -> config.penguinCallVolume,
+                    val -> config.penguinCallVolume = val,
                     0,
                     null,
                     null
                 ))
                 .group(createSoundGroup(
                     "entity.fowlplay.pigeon",
-                    1,
-                    () -> FowlPlayConfig.pigeonCallVolume,
-                    val -> FowlPlayConfig.pigeonCallVolume = val,
-                    6,
-                    () -> FowlPlayConfig.pigeonSongVolume,
-                    val -> FowlPlayConfig.pigeonSongVolume = val
+                    defaults.pigeonCallVolume,
+                    () -> config.pigeonCallVolume,
+                    val -> config.pigeonCallVolume = val,
+                    defaults.pigeonSongVolume,
+                    () -> config.pigeonSongVolume,
+                    val -> config.pigeonSongVolume = val
                 ))
                 .group(createSoundGroup(
                     "entity.fowlplay.raven",
-                    10,
-                    () -> FowlPlayConfig.ravenCallVolume,
-                    val -> FowlPlayConfig.ravenCallVolume = val,
+                    defaults.ravenCallVolume,
+                    () -> config.ravenCallVolume,
+                    val -> config.ravenCallVolume = val,
                     0,
                     null,
                     null
                 ))
                 .group(createSoundGroup(
                     "entity.fowlplay.robin",
-                    2,
-                    () -> FowlPlayConfig.robinCallVolume,
-                    val -> FowlPlayConfig.robinCallVolume = val,
-                    6,
-                    () -> FowlPlayConfig.robinSongVolume,
-                    val -> FowlPlayConfig.robinSongVolume = val
+                    defaults.robinCallVolume,
+                    () -> config.robinCallVolume,
+                    val -> config.robinCallVolume = val,
+                    defaults.robinSongVolume,
+                    () -> config.robinSongVolume,
+                    val -> config.robinSongVolume = val
                 ))
                 .group(createSoundGroup(
                     "entity.fowlplay.sparrow",
-                    2,
-                    () -> FowlPlayConfig.sparrowCallVolume,
-                    val -> FowlPlayConfig.sparrowCallVolume = val,
-                    6,
-                    () -> FowlPlayConfig.sparrowSongVolume,
-                    val -> FowlPlayConfig.sparrowSongVolume = val
+                    defaults.sparrowCallVolume,
+                    () -> config.sparrowCallVolume,
+                    val -> config.sparrowCallVolume = val,
+                    defaults.sparrowSongVolume,
+                    () -> config.sparrowSongVolume,
+                    val -> config.sparrowSongVolume = val
                 ))
                 .build()
             )
@@ -131,139 +134,139 @@ public class YACLIntegration {
                 .name(Text.translatable("config.spawning"))
                 .group(createSpawningGroup(
                     "entity.fowlplay.blue_jay",
-                    25,
-                    () -> FowlPlayConfig.blueJaySpawnWeight,
-                    val -> FowlPlayConfig.blueJaySpawnWeight = val,
-                    1,
-                    () -> FowlPlayConfig.blueJayMinGroupSize,
-                    val -> FowlPlayConfig.blueJayMinGroupSize = val,
-                    2,
-                    () -> FowlPlayConfig.blueJayMaxGroupSize,
-                    val -> FowlPlayConfig.blueJayMaxGroupSize = val
+                    defaults.blueJaySpawnWeight,
+                    () -> config.blueJaySpawnWeight,
+                    val -> config.blueJaySpawnWeight = val,
+                    defaults.blueJayMinGroupSize,
+                    () -> config.blueJayMinGroupSize,
+                    val -> config.blueJayMinGroupSize = val,
+                    defaults.blueJayMaxGroupSize,
+                    () -> config.blueJayMaxGroupSize,
+                    val -> config.blueJayMaxGroupSize = val
                 ))
                 .group(createSpawningGroup(
                     "entity.fowlplay.cardinal",
-                    35,
-                    () -> FowlPlayConfig.cardinalSpawnWeight,
-                    val -> FowlPlayConfig.cardinalSpawnWeight = val,
-                    1,
-                    () -> FowlPlayConfig.cardinalMinGroupSize,
-                    val -> FowlPlayConfig.cardinalMinGroupSize = val,
-                    2,
-                    () -> FowlPlayConfig.cardinalMaxGroupSize,
-                    val -> FowlPlayConfig.cardinalMaxGroupSize = val
+                    defaults.cardinalSpawnWeight,
+                    () -> config.cardinalSpawnWeight,
+                    val -> config.cardinalSpawnWeight = val,
+                    defaults.cardinalMinGroupSize,
+                    () -> config.cardinalMinGroupSize,
+                    val -> config.cardinalMinGroupSize = val,
+                    defaults.cardinalMaxGroupSize,
+                    () -> config.cardinalMaxGroupSize,
+                    val -> config.cardinalMaxGroupSize = val
                 ))
                 .group(createSpawningGroup(
                     "entity.fowlplay.chickadee",
-                    50,
-                    () -> FowlPlayConfig.chickadeeSpawnWeight,
-                    val -> FowlPlayConfig.chickadeeSpawnWeight = val,
-                    3,
-                    () -> FowlPlayConfig.chickadeeMinGroupSize,
-                    val -> FowlPlayConfig.chickadeeMinGroupSize = val,
-                    5,
-                    () -> FowlPlayConfig.chickadeeMaxGroupSize,
-                    val -> FowlPlayConfig.chickadeeMaxGroupSize = val
+                    defaults.chickadeeSpawnWeight,
+                    () -> config.chickadeeSpawnWeight,
+                    val -> config.chickadeeSpawnWeight = val,
+                    defaults.chickadeeMinGroupSize,
+                    () -> config.chickadeeMinGroupSize,
+                    val -> config.chickadeeMinGroupSize = val,
+                    defaults.chickadeeMaxGroupSize,
+                    () -> config.chickadeeMaxGroupSize,
+                    val -> config.chickadeeMaxGroupSize = val
                 ))
                 .group(createSpawningGroup(
                     "entity.fowlplay.duck",
-                    10,
-                    () -> FowlPlayConfig.duckSpawnWeight,
-                    val -> FowlPlayConfig.duckSpawnWeight = val,
-                    6,
-                    () -> FowlPlayConfig.duckMinGroupSize,
-                    val -> FowlPlayConfig.duckMinGroupSize = val,
-                    12,
-                    () -> FowlPlayConfig.duckMaxGroupSize,
-                    val -> FowlPlayConfig.duckMaxGroupSize = val
+                    defaults.duckSpawnWeight,
+                    () -> config.duckSpawnWeight,
+                    val -> config.duckSpawnWeight = val,
+                    defaults.duckMinGroupSize,
+                    () -> config.duckMinGroupSize,
+                    val -> config.duckMinGroupSize = val,
+                    defaults.duckMaxGroupSize,
+                    () -> config.duckMaxGroupSize,
+                    val -> config.duckMaxGroupSize = val
                 ))
                 .group(createSpawningGroup(
                     "entity.fowlplay.gull",
-                    30,
-                    () -> FowlPlayConfig.gullSpawnWeight,
-                    val -> FowlPlayConfig.gullSpawnWeight = val,
-                    8,
-                    () -> FowlPlayConfig.gullMinGroupSize,
-                    val -> FowlPlayConfig.gullMinGroupSize = val,
-                    12,
-                    () -> FowlPlayConfig.gullMaxGroupSize,
-                    val -> FowlPlayConfig.gullMaxGroupSize = val
+                    defaults.gullSpawnWeight,
+                    () -> config.gullSpawnWeight,
+                    val -> config.gullSpawnWeight = val,
+                    defaults.gullMinGroupSize,
+                    () -> config.gullMinGroupSize,
+                    val -> config.gullMinGroupSize = val,
+                    defaults.gullMaxGroupSize,
+                    () -> config.gullMaxGroupSize,
+                    val -> config.gullMaxGroupSize = val
                 ))
                 .group(createSpawningGroup(
                     "entity.fowlplay.hawk",
-                    15,
-                    () -> FowlPlayConfig.hawkSpawnWeight,
-                    val -> FowlPlayConfig.hawkSpawnWeight = val,
-                    1,
-                    () -> FowlPlayConfig.hawkMinGroupSize,
-                    val -> FowlPlayConfig.hawkMinGroupSize = val,
-                    2,
-                    () -> FowlPlayConfig.hawkMaxGroupSize,
-                    val -> FowlPlayConfig.hawkMaxGroupSize = val
+                    defaults.hawkSpawnWeight,
+                    () -> config.hawkSpawnWeight,
+                    val -> config.hawkSpawnWeight = val,
+                    defaults.hawkMinGroupSize,
+                    () -> config.hawkMinGroupSize,
+                    val -> config.hawkMinGroupSize = val,
+                    defaults.hawkMaxGroupSize,
+                    () -> config.hawkMaxGroupSize,
+                    val -> config.hawkMaxGroupSize = val
                 ))
                 .group(createSpawningGroup(
                     "entity.fowlplay.penguin",
-                    1,
-                    () -> FowlPlayConfig.penguinSpawnWeight,
-                    val -> FowlPlayConfig.penguinSpawnWeight = val,
-                    16,
-                    () -> FowlPlayConfig.penguinMinGroupSize,
-                    val -> FowlPlayConfig.penguinMinGroupSize = val,
-                    24,
-                    () -> FowlPlayConfig.penguinMaxGroupSize,
-                    val -> FowlPlayConfig.penguinMaxGroupSize = val
+                    defaults.penguinSpawnWeight,
+                    () -> config.penguinSpawnWeight,
+                    val -> config.penguinSpawnWeight = val,
+                    defaults.penguinMinGroupSize,
+                    () -> config.penguinMinGroupSize,
+                    val -> config.penguinMinGroupSize = val,
+                    defaults.penguinMaxGroupSize,
+                    () -> config.penguinMaxGroupSize,
+                    val -> config.penguinMaxGroupSize = val
                 ))
                 .group(createSpawningGroup(
                     "entity.fowlplay.pigeon",
-                    20,
-                    () -> FowlPlayConfig.pigeonSpawnWeight,
-                    val -> FowlPlayConfig.pigeonSpawnWeight = val,
-                    4,
-                    () -> FowlPlayConfig.pigeonMinGroupSize,
-                    val -> FowlPlayConfig.pigeonMinGroupSize = val,
-                    8,
-                    () -> FowlPlayConfig.pigeonMaxGroupSize,
-                    val -> FowlPlayConfig.pigeonMaxGroupSize = val
+                    defaults.pigeonSpawnWeight,
+                    () -> config.pigeonSpawnWeight,
+                    val -> config.pigeonSpawnWeight = val,
+                    defaults.pigeonMinGroupSize,
+                    () -> config.pigeonMinGroupSize,
+                    val -> config.pigeonMinGroupSize = val,
+                    defaults.pigeonMaxGroupSize,
+                    () -> config.pigeonMaxGroupSize,
+                    val -> config.pigeonMaxGroupSize = val
                 ))
                 .group(createSpawningGroup(
                     "entity.fowlplay.raven",
-                    20,
-                    () -> FowlPlayConfig.ravenSpawnWeight,
-                    val -> FowlPlayConfig.ravenSpawnWeight = val,
-                    1,
-                    () -> FowlPlayConfig.ravenMinGroupSize,
-                    val -> FowlPlayConfig.ravenMinGroupSize = val,
-                    3,
-                    () -> FowlPlayConfig.ravenMaxGroupSize,
-                    val -> FowlPlayConfig.ravenMaxGroupSize = val
+                    defaults.ravenSpawnWeight,
+                    () -> config.ravenSpawnWeight,
+                    val -> config.ravenSpawnWeight = val,
+                    defaults.ravenMinGroupSize,
+                    () -> config.ravenMinGroupSize,
+                    val -> config.ravenMinGroupSize = val,
+                    defaults.ravenMaxGroupSize,
+                    () -> config.ravenMaxGroupSize,
+                    val -> config.ravenMaxGroupSize = val
                 ))
                 .group(createSpawningGroup(
                     "entity.fowlplay.robin",
-                    50,
-                    () -> FowlPlayConfig.robinSpawnWeight,
-                    val -> FowlPlayConfig.robinSpawnWeight = val,
-                    3,
-                    () -> FowlPlayConfig.robinMinGroupSize,
-                    val -> FowlPlayConfig.robinMinGroupSize = val,
-                    5,
-                    () -> FowlPlayConfig.robinMaxGroupSize,
-                    val -> FowlPlayConfig.robinMaxGroupSize = val
+                    defaults.robinSpawnWeight,
+                    () -> config.robinSpawnWeight,
+                    val -> config.robinSpawnWeight = val,
+                    defaults.robinMinGroupSize,
+                    () -> config.robinMinGroupSize,
+                    val -> config.robinMinGroupSize = val,
+                    defaults.robinMaxGroupSize,
+                    () -> config.robinMaxGroupSize,
+                    val -> config.robinMaxGroupSize = val
                 ))
                 .group(createSpawningGroup(
                     "entity.fowlplay.sparrow",
-                    75,
-                    () -> FowlPlayConfig.sparrowSpawnWeight,
-                    val -> FowlPlayConfig.sparrowSpawnWeight = val,
-                    6,
-                    () -> FowlPlayConfig.sparrowMinGroupSize,
-                    val -> FowlPlayConfig.sparrowMinGroupSize = val,
-                    10,
-                    () -> FowlPlayConfig.sparrowMaxGroupSize,
-                    val -> FowlPlayConfig.sparrowMaxGroupSize = val
+                    defaults.sparrowSpawnWeight,
+                    () -> config.sparrowSpawnWeight,
+                    val -> config.sparrowSpawnWeight = val,
+                    defaults.sparrowMinGroupSize,
+                    () -> config.sparrowMinGroupSize,
+                    val -> config.sparrowMinGroupSize = val,
+                    defaults.sparrowMaxGroupSize,
+                    () -> config.sparrowMaxGroupSize,
+                    val -> config.sparrowMaxGroupSize = val
                 ))
                 .build()
             )
-            .save(FowlPlayConfig::saveConfig)
+            .save(FowlPlayConfig::save)
             .build()
             .generateScreen(parent);
     }

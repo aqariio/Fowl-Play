@@ -23,7 +23,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class SparrowEntity extends FlyingBirdEntity {
+public class SparrowEntity extends FlyingBirdEntity implements Flocking {
     public final AnimationState idleState = new AnimationState();
     public final AnimationState glideState = new AnimationState();
     public final AnimationState flapState = new AnimationState();
@@ -41,7 +41,7 @@ public class SparrowEntity extends FlyingBirdEntity {
 
     @Override
     protected BirdFlightMoveControl getFlightMoveControl() {
-        return new BirdFlightMoveControl(this, 40, 15);
+        return new BirdFlightMoveControl(this, 15, 15);
     }
 
     @Nullable
@@ -66,7 +66,7 @@ public class SparrowEntity extends FlyingBirdEntity {
     }
 
     @Override
-    public int fleeRange() {
+    public int getFleeRange() {
         return 7;
     }
 
@@ -128,12 +128,12 @@ public class SparrowEntity extends FlyingBirdEntity {
 
     @Override
     protected float getCallVolume() {
-        return FowlPlayConfig.sparrowCallVolume;
+        return FowlPlayConfig.getInstance().sparrowCallVolume;
     }
 
     @Override
     protected float getSongVolume() {
-        return FowlPlayConfig.sparrowSongVolume;
+        return FowlPlayConfig.getInstance().sparrowSongVolume;
     }
 
     @Override
@@ -189,5 +189,14 @@ public class SparrowEntity extends FlyingBirdEntity {
     protected void sendAiDebugData() {
         super.sendAiDebugData();
         DebugInfoSender.sendBrainDebugData(this);
+    }
+
+    @Override
+    public boolean isLeader() {
+        return false;
+    }
+
+    @Override
+    public void setLeader() {
     }
 }

@@ -9,35 +9,11 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
-public class SparrowEntityModel extends BirdEntityModel<SparrowEntity> {
+public class SparrowEntityModel extends FlyingBirdEntityModel<SparrowEntity> {
     public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of(FowlPlay.ID, "sparrow"), "main");
-    public final ModelPart root;
-    public final ModelPart body;
-    public final ModelPart neck;
-    public final ModelPart head;
-    public final ModelPart torso;
-    public final ModelPart leftWing;
-    public final ModelPart rightWing;
-    public final ModelPart leftWingOpen;
-    public final ModelPart rightWingOpen;
-    public final ModelPart leftLeg;
-    public final ModelPart rightLeg;
-    public final ModelPart tail;
 
     public SparrowEntityModel(ModelPart root) {
         super(root);
-        this.root = root.getChild("root");
-        this.body = this.root.getChild("body");
-        this.neck = this.body.getChild("neck");
-        this.head = this.neck.getChild("head");
-        this.torso = this.body.getChild("torso");
-        this.leftWing = this.body.getChild("left_wing");
-        this.rightWing = this.body.getChild("right_wing");
-        this.leftWingOpen = this.body.getChild("left_wing_open");
-        this.rightWingOpen = this.body.getChild("right_wing_open");
-        this.leftLeg = this.root.getChild("left_leg");
-        this.rightLeg = this.root.getChild("right_leg");
-        this.tail = this.body.getChild("tail");
     }
 
     public static TexturedModelData getTexturedModelData() {
@@ -79,10 +55,6 @@ public class SparrowEntityModel extends BirdEntityModel<SparrowEntity> {
         right_leg.addChild("cube_r2", ModelPartBuilder.create().uv(-1, 2).cuboid(-0.5F, 0.0F, -1.0F, 1.0F, 0.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 2.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
 
         return TexturedModelData.of(modelData, 32, 32);
-    }
-
-    @Override
-    public void setAngles(SparrowEntity sparrow, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch) {
     }
 
     @Override

@@ -118,7 +118,7 @@ public class SparrowBrain {
                 FlightControlTask.stopFalling(),
                 new FleeTask(RUN_SPEED),
                 AvoidTask.run(),
-                LocateFoodTask.run(Bird::canPickupFood),
+                PickupFoodTask.run(Bird::canPickupFood),
                 new LookAroundTask(45, 90),
                 new WanderAroundTask(),
                 new TemptationCooldownTask(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
@@ -167,9 +167,9 @@ public class SparrowBrain {
             FowlPlayActivities.FLY,
             ImmutableList.of(
                 Pair.of(0, FlightControlTask.tryStopFlying(sparrow -> true)),
-                Pair.of(1, new FlockTask(
-                    0.05f,
-                    0.5f,
+                Pair.of(1, new LeaderlessFlockTask(
+                    0.03f,
+                    0.6f,
                     0.05f,
                     3f
                 )),
@@ -178,7 +178,7 @@ public class SparrowBrain {
                     new RandomTask<>(
                         ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
                         ImmutableList.of(
-                            Pair.of(FlyTask.create(FLY_SPEED, 64, 32), 1)
+                            Pair.of(FlyTask.perch(FLY_SPEED), 1)
                         )
                     )
                 )
@@ -197,7 +197,7 @@ public class SparrowBrain {
             10,
             ImmutableList.of(
                 FlightControlTask.startFlying(sparrow -> true),
-                MoveAwayFromPositionTask.entity(
+                MoveAwayFromTargetTask.entity(
                     MemoryModuleType.AVOID_TARGET,
                     sparrow -> sparrow.isFlying() ? FLY_SPEED : RUN_SPEED,
                     true
@@ -286,7 +286,7 @@ public class SparrowBrain {
         sparrow.getBrain().remember(MemoryModuleType.AVOID_TARGET, target, 160L);
     }
 
-    protected static List<PassiveEntity> getNearbyVisibleSparrows(SparrowEntity sparrow) {
+    protected static List<? extends PassiveEntity> getNearbyVisibleSparrows(SparrowEntity sparrow) {
         return sparrow.getBrain().getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS).orElse(ImmutableList.of());
     }
 

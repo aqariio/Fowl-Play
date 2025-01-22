@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public class DuckEntity extends TrustingBirdEntity implements VariantHolder<DuckEntity.Variant>, Aquatic {
+public class DuckEntity extends TrustingBirdEntity implements VariantHolder<DuckEntity.Variant>, Aquatic, Flocking {
     private static final TrackedData<String> VARIANT = DataTracker.registerData(DuckEntity.class, TrackedDataHandlerRegistry.STRING);
     public final AnimationState idleState = new AnimationState();
     public final AnimationState glideState = new AnimationState();
@@ -209,7 +209,7 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
 
     @Override
     protected float getCallVolume() {
-        return FowlPlayConfig.duckCallVolume;
+        return FowlPlayConfig.getInstance().duckCallVolume;
     }
 
     @Nullable
@@ -263,6 +263,15 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
         BlockPos blockPos = BlockPos.ofFloored(this.getX(), this.getY() + maxWaterHeight, this.getZ());
         double waterHeight = this.getBlockPos().getY() + this.getWorld().getFluidState(blockPos).getHeight(this.getWorld(), blockPos);
         return this.isSubmergedInWater() || waterHeight > this.getY() + maxWaterHeight;
+    }
+
+    @Override
+    public boolean isLeader() {
+        return false;
+    }
+
+    @Override
+    public void setLeader() {
     }
 
     public enum Variant {

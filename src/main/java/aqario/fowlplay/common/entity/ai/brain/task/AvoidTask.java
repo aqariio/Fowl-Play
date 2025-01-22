@@ -1,6 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.BirdEntity;
+import aqario.fowlplay.common.entity.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
@@ -26,7 +27,11 @@ public class AvoidTask {
                     if (!predicate.test(entity)) {
                         return false;
                     }
-                    if (entity.isInRange(instance.getValue(avoidTarget), entity.fleeRange())) {
+                    LivingEntity target = instance.getValue(avoidTarget);
+                    if (entity.isInRange(
+                        target,
+                        entity.getFleeRange() * (target instanceof FlyingBirdEntity ? 2.0F : 1.0F)
+                    )) {
                         isAvoiding.remember(Unit.INSTANCE);
                         return true;
                     }
@@ -50,7 +55,10 @@ public class AvoidTask {
                         return false;
                     }
                     Optional<LivingEntity> target = instance.getOptionalValue(avoidTarget);
-                    if (target.isPresent() && entity.isInRange(target.get(), entity.fleeRange())) {
+                    if (target.isPresent() && entity.isInRange(
+                        target.get(),
+                        entity.getFleeRange() * (target.get() instanceof FlyingBirdEntity ? 2.0F : 1.0F)
+                    )) {
                         return false;
                     }
                     isAvoiding.forget();

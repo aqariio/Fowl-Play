@@ -4,6 +4,7 @@ import aqario.fowlplay.common.entity.ai.brain.FowlPlayActivities;
 import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
 import aqario.fowlplay.common.entity.ai.brain.sensor.FowlPlaySensorType;
 import aqario.fowlplay.common.entity.ai.brain.task.*;
+import aqario.fowlplay.common.tags.FowlPlayBlockTags;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -48,23 +49,14 @@ public class SparrowBrain {
         MemoryModuleType.WALK_TARGET,
         MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
         MemoryModuleType.PATH,
-//        MemoryModuleType.BREED_TARGET,
         MemoryModuleType.NEAREST_VISIBLE_PLAYER,
         MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER,
         MemoryModuleType.AVOID_TARGET,
-//        MemoryModuleType.ATTACK_COOLING_DOWN,
         MemoryModuleType.NEAREST_VISIBLE_ADULT,
-//        MemoryModuleType.ATTACK_TARGET,
-//        MemoryModuleType.HAS_HUNTING_COOLDOWN,
-//        MemoryModuleType.TEMPTING_PLAYER,
-//        MemoryModuleType.TEMPTATION_COOLDOWN_TICKS,
         MemoryModuleType.GAZE_COOLDOWN_TICKS,
-//        MemoryModuleType.IS_TEMPTED,
         MemoryModuleType.HURT_BY,
         MemoryModuleType.HURT_BY_ENTITY,
-//        MemoryModuleType.NEAREST_ATTACKABLE,
         MemoryModuleType.IS_IN_WATER,
-//        MemoryModuleType.IS_PREGNANT,
         MemoryModuleType.IS_PANICKING,
         MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM,
         MemoryModuleType.NEAREST_PLAYER_HOLDING_WANTED_ITEM,
@@ -75,7 +67,6 @@ public class SparrowBrain {
         FowlPlayMemoryModuleType.CANNOT_PICKUP_FOOD,
         FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS
     );
-    private static final UniformIntProvider FOLLOW_ADULT_RANGE = UniformIntProvider.create(5, 16);
     private static final UniformIntProvider STAY_NEAR_ENTITY_RANGE = UniformIntProvider.create(16, 32);
     private static final int PICK_UP_RANGE = 32;
     private static final float RUN_SPEED = 1.4F;
@@ -131,22 +122,23 @@ public class SparrowBrain {
         brain.setTaskList(
             Activity.IDLE,
             ImmutableList.of(
-                Pair.of(1, new BreedTask(FowlPlayEntityType.SPARROW, WALK_SPEED)),
-                Pair.of(2, WalkTowardClosestAdultTask.create(FOLLOW_ADULT_RANGE, WALK_SPEED)),
-                Pair.of(3, LookAtMobTask.create(SparrowBrain::isPlayerHoldingFood, 32.0F)),
-                Pair.of(4, GoToClosestEntityTask.create(STAY_NEAR_ENTITY_RANGE, WALK_SPEED)),
-                Pair.of(5, new RandomLookAroundTask(
+                Pair.of(1, LookAtMobTask.create(SparrowBrain::isPlayerHoldingFood, 32.0F)),
+                Pair.of(2, GoToClosestEntityTask.create(STAY_NEAR_ENTITY_RANGE, WALK_SPEED)),
+                Pair.of(3, new RandomLookAroundTask(
                     UniformIntProvider.create(150, 250),
                     30.0F,
                     0.0F,
                     0.0F
                 )),
                 Pair.of(
-                    6,
+                    4,
                     new RandomTask<>(
                         ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
                         ImmutableList.of(
-                            Pair.of(StrollTask.create(WALK_SPEED), 4),
+                            Pair.of(TaskTriggerer.runIf(
+                                entity -> !entity.getWorld().getBlockState(entity.getBlockPos().down()).isIn(FowlPlayBlockTags.PASSERINES_SPAWNABLE_ON),
+                                StrollTask.create(WALK_SPEED)
+                            ), 4),
                             Pair.of(TaskTriggerer.predicate(Entity::isInsideWaterOrBubbleColumn), 3),
                             Pair.of(new WaitTask(100, 300), 3),
                             Pair.of(FlightControlTask.startFlying(sparrow -> sparrow.getRandom().nextFloat() < 0.1F), 1)

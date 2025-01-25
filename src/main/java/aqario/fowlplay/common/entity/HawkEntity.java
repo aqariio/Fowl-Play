@@ -3,15 +3,12 @@ package aqario.fowlplay.common.entity;
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.control.BirdFlightMoveControl;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
-import aqario.fowlplay.common.tags.FowlPlayBiomeTags;
-import aqario.fowlplay.common.tags.FowlPlayBlockTags;
 import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -26,11 +23,8 @@ import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -47,11 +41,6 @@ public class HawkEntity extends TrustingBirdEntity {
         super(entityType, world);
     }
 
-    @SuppressWarnings("unused")
-    public static boolean canSpawn(EntityType<? extends BirdEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getBiome(pos).isIn(FowlPlayBiomeTags.SPAWNS_HAWKS) && world.getBlockState(pos.down()).isIn(FowlPlayBlockTags.PASSERINES_SPAWNABLE_ON);
-    }
-
     @Override
     public int getFlapFrequency() {
         return 100;
@@ -59,15 +48,15 @@ public class HawkEntity extends TrustingBirdEntity {
 
     public static DefaultAttributeContainer.Builder createHawkAttributes() {
         return FlyingBirdEntity.createFlyingBirdAttributes()
-            .add(EntityAttributes.GENERIC_MAX_HEALTH, 14.0f)
-            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0f)
+            .add(EntityAttributes.GENERIC_MAX_HEALTH, 15.0f)
+            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.225f)
-            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.235f);
+            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.27f);
     }
 
     @Override
     protected BirdFlightMoveControl getFlightMoveControl() {
-        return new BirdFlightMoveControl(this, 12, 8);
+        return new BirdFlightMoveControl(this, 15, 10);
     }
 
     @Override

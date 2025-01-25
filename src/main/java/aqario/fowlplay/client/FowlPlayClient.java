@@ -2,6 +2,7 @@ package aqario.fowlplay.client;
 
 import aqario.fowlplay.client.model.*;
 import aqario.fowlplay.client.render.*;
+import aqario.fowlplay.common.FowlPlay;
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.FowlPlayEntityType;
 import net.fabricmc.api.ClientModInitializer;
@@ -13,7 +14,7 @@ import net.minecraft.entity.EntityType;
 public class FowlPlayClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        if (FowlPlayConfig.isYACLLoaded()) {
+        if (FowlPlay.isYACLLoaded()) {
             FowlPlayConfig.load();
         }
 

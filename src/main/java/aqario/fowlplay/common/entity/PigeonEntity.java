@@ -1,9 +1,9 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
+import aqario.fowlplay.common.entity.data.FowlPlayTrackedDataHandlerRegistry;
+import aqario.fowlplay.common.registry.FowlPlayRegistries;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
-import aqario.fowlplay.common.tags.FowlPlayBiomeTags;
-import aqario.fowlplay.common.tags.FowlPlayBlockTags;
 import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
@@ -32,24 +32,27 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class PigeonEntity extends TameableBirdEntity implements VariantHolder<PigeonEntity.Variant>, Flocking {
-    private static final TrackedData<Optional<UUID>> RECIPIENT = DataTracker.registerData(PigeonEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
-    private static final TrackedData<String> VARIANT = DataTracker.registerData(PigeonEntity.class, TrackedDataHandlerRegistry.STRING);
+public class PigeonEntity extends TameableBirdEntity implements VariantHolder<PigeonVariant>, Flocking {
+    private static final TrackedData<Optional<UUID>> RECIPIENT = DataTracker.registerData(
+        PigeonEntity.class,
+        TrackedDataHandlerRegistry.OPTIONAL_UUID
+    );
+    private static final TrackedData<PigeonVariant> VARIANT = DataTracker.registerData(
+        PigeonEntity.class,
+        FowlPlayTrackedDataHandlerRegistry.PIGEON_VARIANT
+    );
     public final AnimationState idleState = new AnimationState();
     public final AnimationState glideState = new AnimationState();
     public final AnimationState flapState = new AnimationState();
@@ -71,14 +74,11 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
         return 0.5f;
     }
 
-    @SuppressWarnings("unused")
-    public static boolean canSpawn(EntityType<? extends BirdEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getBiome(pos).isIn(FowlPlayBiomeTags.SPAWNS_PIGEONS) && world.getBlockState(pos.down()).isIn(FowlPlayBlockTags.SHOREBIRDS_SPAWNABLE_ON);
-    }
-
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        this.setVariant(Util.getRandom(Variant.VARIANTS, world.getRandom()));
+        FowlPlayRegistries.PIGEON_VARIANT
+            .getRandom(random)
+            .ifPresent(variant -> this.setVariant(variant.value()));
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
@@ -92,23 +92,23 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(RECIPIENT, Optional.empty());
-        this.dataTracker.startTracking(VARIANT, Variant.BANDED.toString());
+        this.dataTracker.startTracking(VARIANT, PigeonVariant.BANDED);
     }
 
     @Override
-    public Variant getVariant() {
-        return Variant.valueOf(this.dataTracker.get(VARIANT));
+    public PigeonVariant getVariant() {
+        return this.dataTracker.get(VARIANT);
     }
 
     @Override
-    public void setVariant(Variant variant) {
-        this.dataTracker.set(VARIANT, variant.toString());
+    public void setVariant(PigeonVariant variant) {
+        this.dataTracker.set(VARIANT, variant);
     }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.putString("variant", this.getVariant().toString());
+        nbt.putString("variant", FowlPlayRegistries.PIGEON_VARIANT.getId(this.getVariant()).toString());
         if (this.getRecipientUuid() != null) {
             nbt.putUuid("recipient", this.getRecipientUuid());
         }
@@ -117,13 +117,15 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        if (!nbt.containsUuid("recipient")) {
-            this.setRecipientUuid(null);
-            return;
+        PigeonVariant variant = FowlPlayRegistries.PIGEON_VARIANT.get(Identifier.tryParse(nbt.getString("variant")));
+        if (variant != null) {
+            this.setVariant(variant);
         }
-        this.setRecipientUuid(nbt.getUuid("recipient"));
-        if (nbt.contains("variant")) {
-            this.setVariant(Variant.valueOf(nbt.getString("variant")));
+        if (nbt.containsUuid("recipient")) {
+            this.setRecipientUuid(nbt.getUuid("recipient"));
+        }
+        else {
+            this.setRecipientUuid(null);
         }
     }
 
@@ -160,7 +162,7 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
         return FlyingBirdEntity.createFlyingBirdAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 8.0)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2f)
-            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.225f);
+            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.26f);
     }
 
     @Override
@@ -410,26 +412,5 @@ public class PigeonEntity extends TameableBirdEntity implements VariantHolder<Pi
 
     @Override
     public void setLeader() {
-    }
-
-    public enum Variant {
-        BANDED("banded"),
-        CHECKERED("checkered"),
-        GRAY("gray"),
-        RUSTY("rusty"),
-        WHITE("white");
-
-        public static final List<Variant> VARIANTS = List.of(Arrays.stream(values())
-            .toArray(Variant[]::new));
-
-        private final String id;
-
-        Variant(String id) {
-            this.id = id;
-        }
-
-        public String getId() {
-            return id;
-        }
     }
 }

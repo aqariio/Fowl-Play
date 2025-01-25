@@ -41,7 +41,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         return BirdEntity.createBirdAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 6.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.28f)
-            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.2f);
+            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.25f);
     }
 
     @SuppressWarnings("unused")
@@ -52,6 +52,21 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     @SuppressWarnings("unused")
     public static boolean canSpawnShorebirds(EntityType<? extends BirdEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
         return world.getBlockState(pos.down()).isIn(FowlPlayBlockTags.SHOREBIRDS_SPAWNABLE_ON);
+    }
+
+    @Override
+    public boolean cannotDespawn() {
+        return super.cannotDespawn() || this.isPersistent();
+    }
+
+    @Override
+    public boolean canImmediatelyDespawn(double distanceSquared) {
+        return !this.isPersistent() && !this.hasCustomName();
+    }
+
+    @Override
+    public int getLimitPerChunk() {
+        return 8;
     }
 
     @Override
@@ -132,7 +147,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     protected BirdFlightMoveControl getFlightMoveControl() {
-        return new BirdFlightMoveControl(this, 15, 10);
+        return new BirdFlightMoveControl(this, 20, 15);
     }
 
     protected BirdNavigation getFlightNavigation() {

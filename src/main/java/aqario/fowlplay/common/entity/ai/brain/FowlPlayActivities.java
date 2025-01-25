@@ -15,7 +15,7 @@ public final class FowlPlayActivities {
     public static final Activity SOAR = register("soar");
 
     private static Activity register(String id) {
-        return Registry.register(Registries.ACTIVITY, new Identifier(FowlPlay.ID, id), new Activity(id));
+        return Registry.register(Registries.ACTIVITY, Identifier.of(FowlPlay.ID, id), new Activity(id));
     }
 
     public static void init() {

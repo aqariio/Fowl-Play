@@ -3,7 +3,6 @@ package aqario.fowlplay.client.render;
 import aqario.fowlplay.client.model.PigeonEntityModel;
 import aqario.fowlplay.client.render.feature.BirdHeldItemFeatureRenderer;
 import aqario.fowlplay.client.render.feature.PigeonBundleFeatureRenderer;
-import aqario.fowlplay.common.FowlPlay;
 import aqario.fowlplay.common.entity.PigeonEntity;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
@@ -22,7 +21,7 @@ public class PigeonEntityRenderer extends MobEntityRenderer<PigeonEntity, Pigeon
     }
 
     @Override
-    public Identifier getTexture(PigeonEntity entity) {
-        return new Identifier(FowlPlay.ID, "textures/entity/pigeon/pigeon.png");
+    public Identifier getTexture(PigeonEntity pigeon) {
+        return pigeon.getVariant().texture();
     }
 }

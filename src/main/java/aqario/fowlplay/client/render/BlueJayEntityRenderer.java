@@ -10,6 +10,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 public class BlueJayEntityRenderer extends MobEntityRenderer<BlueJayEntity, BlueJayEntityModel> {
+    private static final Identifier TEXTURE = Identifier.of(FowlPlay.ID, "textures/entity/blue_jay/blue_jay.png");
+
     public BlueJayEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new BlueJayEntityModel(context.getPart(BlueJayEntityModel.MODEL_LAYER)), 0.15f);
         this.addFeature(new BirdHeldItemFeatureRenderer<>(
@@ -21,6 +23,6 @@ public class BlueJayEntityRenderer extends MobEntityRenderer<BlueJayEntity, Blue
 
     @Override
     public Identifier getTexture(BlueJayEntity entity) {
-        return new Identifier(FowlPlay.ID, "textures/entity/blue_jay/blue_jay.png");
+        return TEXTURE;
     }
 }

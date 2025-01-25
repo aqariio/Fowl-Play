@@ -38,7 +38,9 @@ public class LeaderlessFlockTask extends MultiTickTask<FlyingBirdEntity> {
         if (!bird.isFlying()) {
             return false;
         }
-
+        if (bird.getBrain().getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS).isEmpty()) {
+            return false;
+        }
         this.nearbyBirds = bird.getBrain().getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS).get();
         this.nearbyBirds.removeIf(entity -> entity.squaredDistanceTo(bird) > 64);
 

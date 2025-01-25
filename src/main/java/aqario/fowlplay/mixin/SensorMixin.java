@@ -14,18 +14,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Sensor.class)
 public class SensorMixin {
     @Unique
+    private static final double SIGHT_DISTANCE = 32.0;
+    @Unique
     private static final TargetPredicate TARGET_PREDICATE = TargetPredicate.createNonAttackable()
-        .setBaseMaxDistance(32.0);
+        .setBaseMaxDistance(SIGHT_DISTANCE);
     @Unique
     private static final TargetPredicate TARGET_PREDICATE_IGNORE_DISTANCE_SCALING = TargetPredicate.createNonAttackable()
-        .setBaseMaxDistance(32.0)
+        .setBaseMaxDistance(SIGHT_DISTANCE)
         .ignoreDistanceScalingFactor();
     @Unique
     private static final TargetPredicate ATTACKABLE_TARGET_PREDICATE = TargetPredicate.createAttackable()
-        .setBaseMaxDistance(32.0);
+        .setBaseMaxDistance(SIGHT_DISTANCE);
     @Unique
     private static final TargetPredicate ATTACKABLE_TARGET_PREDICATE_IGNORE_DISTANCE_SCALING = TargetPredicate.createAttackable()
-        .setBaseMaxDistance(32.0)
+        .setBaseMaxDistance(SIGHT_DISTANCE)
         .ignoreDistanceScalingFactor();
 
     @Inject(method = "testTargetPredicate", at = @At("HEAD"), cancellable = true)

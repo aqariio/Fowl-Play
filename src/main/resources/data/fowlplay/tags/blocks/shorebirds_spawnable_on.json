@@ -3,7 +3,6 @@
     "minecraft:sand",
     "minecraft:gravel",
     "minecraft:stone",
-    "minecraft:grass_block",
-    "minecraft:air"
+    "minecraft:grass_block"
   ]
 }

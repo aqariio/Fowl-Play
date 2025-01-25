@@ -1,8 +1,11 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
+import aqario.fowlplay.common.entity.ai.control.BirdFlightMoveControl;
 import aqario.fowlplay.common.entity.ai.control.BirdFloatMoveControl;
 import aqario.fowlplay.common.entity.ai.pathing.BirdNavigation;
+import aqario.fowlplay.common.entity.data.FowlPlayTrackedDataHandlerRegistry;
+import aqario.fowlplay.common.registry.FowlPlayRegistries;
 import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
 import aqario.fowlplay.common.tags.FowlPlayBiomeTags;
 import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
@@ -19,7 +22,6 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -28,7 +30,7 @@ import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Util;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -38,11 +40,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
-
-public class DuckEntity extends TrustingBirdEntity implements VariantHolder<DuckEntity.Variant>, Aquatic, Flocking {
-    private static final TrackedData<String> VARIANT = DataTracker.registerData(DuckEntity.class, TrackedDataHandlerRegistry.STRING);
+public class DuckEntity extends TrustingBirdEntity implements VariantHolder<DuckVariant>, Aquatic, Flocking {
+    private static final TrackedData<DuckVariant> VARIANT = DataTracker.registerData(
+        DuckEntity.class,
+        FowlPlayTrackedDataHandlerRegistry.DUCK_VARIANT
+    );
     public final AnimationState idleState = new AnimationState();
     public final AnimationState glideState = new AnimationState();
     public final AnimationState flapState = new AnimationState();
@@ -58,6 +60,11 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
         this.setPathfindingPenalty(PathNodeType.FENCE, -1.0f);
     }
 
+    @SuppressWarnings("unused")
+    public static boolean canSpawn(EntityType<? extends BirdEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
+        return world.getBiome(pos).isIn(FowlPlayBiomeTags.SPAWNS_DUCKS);
+    }
+
     @Override
     protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
         return 0.7f;
@@ -69,18 +76,20 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
     }
 
     @Override
+    protected BirdFlightMoveControl getFlightMoveControl() {
+        return new BirdFlightMoveControl(this, 15, 10);
+    }
+
+    @Override
     protected EntityNavigation getLandNavigation() {
         return new AmphibiousSwimNavigation(this, this.getWorld());
     }
 
-    @SuppressWarnings("unused")
-    public static boolean canSpawn(EntityType<? extends BirdEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getBiome(pos).isIn(FowlPlayBiomeTags.SPAWNS_DUCKS);
-    }
-
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        this.setVariant(Util.getRandom(Variant.VARIANTS, world.getRandom()));
+        FowlPlayRegistries.DUCK_VARIANT
+            .getRandom(random)
+            .ifPresent(variant -> this.setVariant(variant.value()));
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
@@ -103,36 +112,37 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0f)
             .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.225f)
-            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.2f);
+            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.22f);
     }
 
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.dataTracker.startTracking(VARIANT, Variant.MALLARD.toString());
+        this.dataTracker.startTracking(VARIANT, DuckVariant.GREEN_HEADED);
     }
 
     @Override
-    public Variant getVariant() {
-        return Variant.valueOf(this.dataTracker.get(VARIANT));
+    public DuckVariant getVariant() {
+        return this.dataTracker.get(VARIANT);
     }
 
     @Override
-    public void setVariant(Variant variant) {
-        this.dataTracker.set(VARIANT, variant.toString());
+    public void setVariant(DuckVariant variant) {
+        this.dataTracker.set(VARIANT, variant);
     }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.putString("variant", this.getVariant().toString());
+        nbt.putString("variant", FowlPlayRegistries.DUCK_VARIANT.getId(this.getVariant()).toString());
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        if (nbt.contains("variant")) {
-            this.setVariant(Variant.valueOf(nbt.getString("variant")));
+        DuckVariant variant = FowlPlayRegistries.DUCK_VARIANT.get(Identifier.tryParse(nbt.getString("variant")));
+        if (variant != null) {
+            this.setVariant(variant);
         }
     }
 
@@ -272,22 +282,5 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
 
     @Override
     public void setLeader() {
-    }
-
-    public enum Variant {
-        MALLARD("mallard");
-
-        public static final List<Variant> VARIANTS = List.of(Arrays.stream(values())
-            .toArray(Variant[]::new));
-
-        private final String id;
-
-        Variant(String id) {
-            this.id = id;
-        }
-
-        public String getId() {
-            return id;
-        }
     }
 }

@@ -10,6 +10,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 public class RavenEntityRenderer extends MobEntityRenderer<RavenEntity, RavenEntityModel> {
+    private static final Identifier TEXTURE = Identifier.of(FowlPlay.ID, "textures/entity/raven/raven.png");
+
     public RavenEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new RavenEntityModel(context.getPart(RavenEntityModel.MODEL_LAYER)), 0.3f);
         this.addFeature(new BirdHeldItemFeatureRenderer<>(
@@ -21,6 +23,6 @@ public class RavenEntityRenderer extends MobEntityRenderer<RavenEntity, RavenEnt
 
     @Override
     public Identifier getTexture(RavenEntity raven) {
-        return Identifier.of(FowlPlay.ID, "textures/entity/raven/raven.png");
+        return TEXTURE;
     }
 }

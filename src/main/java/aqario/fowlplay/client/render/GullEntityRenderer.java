@@ -2,7 +2,6 @@ package aqario.fowlplay.client.render;
 
 import aqario.fowlplay.client.model.GullEntityModel;
 import aqario.fowlplay.client.render.feature.BirdHeldItemFeatureRenderer;
-import aqario.fowlplay.common.FowlPlay;
 import aqario.fowlplay.common.entity.GullEntity;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
@@ -21,6 +20,6 @@ public class GullEntityRenderer extends MobEntityRenderer<GullEntity, GullEntity
 
     @Override
     public Identifier getTexture(GullEntity gull) {
-        return new Identifier(FowlPlay.ID, "textures/entity/gull/" + gull.getVariant().getId() + "_gull.png");
+        return gull.getVariant().texture();
     }
 }

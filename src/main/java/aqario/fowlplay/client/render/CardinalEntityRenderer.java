@@ -10,6 +10,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 public class CardinalEntityRenderer extends MobEntityRenderer<CardinalEntity, CardinalEntityModel> {
+    private static final Identifier TEXTURE = Identifier.of(FowlPlay.ID, "textures/entity/cardinal/cardinal.png");
+
     public CardinalEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new CardinalEntityModel(context.getPart(CardinalEntityModel.MODEL_LAYER)), 0.15f);
         this.addFeature(new BirdHeldItemFeatureRenderer<>(
@@ -21,6 +23,6 @@ public class CardinalEntityRenderer extends MobEntityRenderer<CardinalEntity, Ca
 
     @Override
     public Identifier getTexture(CardinalEntity entity) {
-        return new Identifier(FowlPlay.ID, "textures/entity/cardinal/cardinal.png");
+        return TEXTURE;
     }
 }

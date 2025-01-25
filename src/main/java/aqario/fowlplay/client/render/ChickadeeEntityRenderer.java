@@ -10,6 +10,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 public class ChickadeeEntityRenderer extends MobEntityRenderer<ChickadeeEntity, ChickadeeEntityModel> {
+    private static final Identifier TEXTURE = Identifier.of(FowlPlay.ID, "textures/entity/chickadee/black_capped_chickadee.png");
+
     public ChickadeeEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new ChickadeeEntityModel(context.getPart(ChickadeeEntityModel.MODEL_LAYER)), 0.15f);
         this.addFeature(new BirdHeldItemFeatureRenderer<>(
@@ -21,6 +23,6 @@ public class ChickadeeEntityRenderer extends MobEntityRenderer<ChickadeeEntity, 
 
     @Override
     public Identifier getTexture(ChickadeeEntity entity) {
-        return Identifier.of(FowlPlay.ID, "textures/entity/chickadee/black_capped_chickadee.png");
+        return TEXTURE;
     }
 }

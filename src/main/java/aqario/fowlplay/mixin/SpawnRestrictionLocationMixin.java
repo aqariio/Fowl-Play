@@ -17,7 +17,7 @@ public class SpawnRestrictionLocationMixin {
         throw new AssertionError();
     }
 
-    // Vanilla Spawn Groups array
+    // Vanilla Spawn Location array
     @Shadow
     @Mutable
     @Final
@@ -29,7 +29,7 @@ public class SpawnRestrictionLocationMixin {
     }
 
     @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/SpawnRestriction$Location;field_6319:[Lnet/minecraft/entity/SpawnRestriction$Location;", shift = At.Shift.AFTER))
-    private static void addGroups(CallbackInfo ci) {
+    private static void addLocations(CallbackInfo ci) {
         int vanillaSpawnLocationsLength = field_6319.length;
         FowlPlaySpawnLocation[] locations = FowlPlaySpawnLocation.values();
         field_6319 = Arrays.copyOf(field_6319, vanillaSpawnLocationsLength + locations.length);

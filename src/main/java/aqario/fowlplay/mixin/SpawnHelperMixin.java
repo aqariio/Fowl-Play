@@ -51,6 +51,22 @@ public class SpawnHelperMixin {
         if (location == FowlPlaySpawnLocation.SEMIAQUATIC.location) {
             cir.setReturnValue(spawnsInWater(world, pos, entityType) || spawnsOnGround(world, pos, entityType));
         }
+        // reimplement vanilla checks so the switch statement doesn't have a stroke
+        BlockState blockState = world.getBlockState(pos);
+        FluidState fluidState = world.getFluidState(pos);
+        BlockPos blockPos = pos.up();
+        BlockPos blockPos2 = pos.down();
+        if (location == SpawnRestriction.Location.IN_WATER) {
+            cir.setReturnValue(fluidState.isIn(FluidTags.WATER) && !world.getBlockState(blockPos).isSolidBlock(world, blockPos));
+        }
+        else if (location == SpawnRestriction.Location.IN_LAVA) {
+            cir.setReturnValue(fluidState.isIn(FluidTags.LAVA));
+        }
+        else {
+            BlockState blockState2 = world.getBlockState(blockPos2);
+            cir.setReturnValue(blockState2.allowsSpawning(world, blockPos2, entityType) && SpawnHelper.isClearForSpawn(world, pos, blockState, fluidState, entityType)
+                && SpawnHelper.isClearForSpawn(world, blockPos, world.getBlockState(blockPos), world.getFluidState(blockPos), entityType));
+        }
     }
 
     @Inject(method = "spawnEntitiesInChunk(Lnet/minecraft/entity/SpawnGroup;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/chunk/WorldChunk;Lnet/minecraft/world/SpawnHelper$Checker;Lnet/minecraft/world/SpawnHelper$Runner;)V", at = @At("HEAD"), cancellable = true)

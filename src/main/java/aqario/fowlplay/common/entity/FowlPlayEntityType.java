@@ -38,7 +38,7 @@ public final class FowlPlayEntityType {
     public static final EntityType<DuckEntity> DUCK = register("duck",
         FabricEntityTypeBuilder.createMob()
             .entityFactory(DuckEntity::new)
-            .spawnGroup(SpawnGroup.CREATURE)
+            .spawnGroup(FowlPlaySpawnGroup.BIRD.spawnGroup)
             .dimensions(EntityDimensions.changing(0.6f, 0.8f))
             .defaultAttributes(DuckEntity::createDuckAttributes)
     );
@@ -46,7 +46,7 @@ public final class FowlPlayEntityType {
     public static final EntityType<GullEntity> GULL = register("gull",
         FabricEntityTypeBuilder.createMob()
             .entityFactory(GullEntity::new)
-            .spawnGroup(SpawnGroup.CREATURE)
+            .spawnGroup(FowlPlaySpawnGroup.BIRD.spawnGroup)
             .dimensions(EntityDimensions.changing(0.6f, 0.8f))
             .defaultAttributes(GullEntity::createGullAttributes)
     );
@@ -54,7 +54,7 @@ public final class FowlPlayEntityType {
     public static final EntityType<HawkEntity> HAWK = register("hawk",
         FabricEntityTypeBuilder.createMob()
             .entityFactory(HawkEntity::new)
-            .spawnGroup(SpawnGroup.CREATURE)
+            .spawnGroup(FowlPlaySpawnGroup.BIRD.spawnGroup)
             .dimensions(EntityDimensions.changing(0.6f, 0.8f))
             .defaultAttributes(HawkEntity::createHawkAttributes)
     );
@@ -70,7 +70,7 @@ public final class FowlPlayEntityType {
     public static final EntityType<PigeonEntity> PIGEON = register("pigeon",
         FabricEntityTypeBuilder.createMob()
             .entityFactory(PigeonEntity::new)
-            .spawnGroup(SpawnGroup.CREATURE)
+            .spawnGroup(FowlPlaySpawnGroup.BIRD.spawnGroup)
             .dimensions(EntityDimensions.changing(0.5f, 0.6f))
             .defaultAttributes(PigeonEntity::createPigeonAttributes)
     );
@@ -78,7 +78,7 @@ public final class FowlPlayEntityType {
     public static final EntityType<RavenEntity> RAVEN = register("raven",
         FabricEntityTypeBuilder.createMob()
             .entityFactory(RavenEntity::new)
-            .spawnGroup(SpawnGroup.CREATURE)
+            .spawnGroup(FowlPlaySpawnGroup.BIRD.spawnGroup)
             .dimensions(EntityDimensions.changing(0.6f, 0.8f))
             .defaultAttributes(RavenEntity::createRavenAttributes)
     );

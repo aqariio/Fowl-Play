@@ -343,6 +343,11 @@ public class PenguinEntity extends BirdEntity {
     }
 
     @Override
+    public float getScaleFactor() {
+        return this.isBaby() ? 0.62F : 1.0F;
+    }
+
+    @Override
     public EntityDimensions getDimensions(EntityPose pose) {
         EntityDimensions dimensions = super.getDimensions(pose);
         return pose == EntityPose.LONG_JUMPING || pose == EntityPose.SWIMMING ? dimensions.scaled(1.0F, 0.35F) : dimensions;

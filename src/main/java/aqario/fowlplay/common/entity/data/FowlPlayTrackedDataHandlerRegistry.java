@@ -1,9 +1,6 @@
 package aqario.fowlplay.common.entity.data;
 
-import aqario.fowlplay.common.entity.DuckVariant;
-import aqario.fowlplay.common.entity.GullVariant;
-import aqario.fowlplay.common.entity.PigeonVariant;
-import aqario.fowlplay.common.entity.SparrowVariant;
+import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.common.registry.FowlPlayRegistries;
 import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -13,6 +10,9 @@ import java.util.List;
 import java.util.UUID;
 
 public final class FowlPlayTrackedDataHandlerRegistry {
+    public static final TrackedDataHandler<ChickenVariant> CHICKEN_VARIANT = register(
+        TrackedDataHandler.of(FowlPlayRegistries.CHICKEN_VARIANT)
+    );
     public static final TrackedDataHandler<DuckVariant> DUCK_VARIANT = register(
         TrackedDataHandler.of(FowlPlayRegistries.DUCK_VARIANT)
     );

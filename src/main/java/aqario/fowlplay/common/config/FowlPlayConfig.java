@@ -125,25 +125,25 @@ public class FowlPlayConfig {
     // Duck
 
     @SerialEntry
-    public int duckSpawnWeight = 15;
+    public int duckSpawnWeight = 4;
     @SerialEntry
-    public int duckMinGroupSize = 6;
+    public int duckMinGroupSize = 12;
     @SerialEntry
-    public int duckMaxGroupSize = 12;
+    public int duckMaxGroupSize = 18;
 
     // Gull
 
     @SerialEntry
-    public int gullSpawnWeight = 30;
+    public int gullSpawnWeight = 5;
     @SerialEntry
-    public int gullMinGroupSize = 8;
+    public int gullMinGroupSize = 10;
     @SerialEntry
-    public int gullMaxGroupSize = 12;
+    public int gullMaxGroupSize = 16;
 
     // Hawk
 
     @SerialEntry
-    public int hawkSpawnWeight = 15;
+    public int hawkSpawnWeight = 1;
     @SerialEntry
     public int hawkMinGroupSize = 1;
     @SerialEntry
@@ -161,16 +161,16 @@ public class FowlPlayConfig {
     // Pigeon
 
     @SerialEntry
-    public int pigeonSpawnWeight = 20;
+    public int pigeonSpawnWeight = 3;
     @SerialEntry
-    public int pigeonMinGroupSize = 4;
+    public int pigeonMinGroupSize = 2;
     @SerialEntry
-    public int pigeonMaxGroupSize = 8;
+    public int pigeonMaxGroupSize = 5;
 
     // Raven
 
     @SerialEntry
-    public int ravenSpawnWeight = 10;
+    public int ravenSpawnWeight = 1;
     @SerialEntry
     public int ravenMinGroupSize = 1;
     @SerialEntry

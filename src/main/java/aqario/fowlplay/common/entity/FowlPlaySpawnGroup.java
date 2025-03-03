@@ -3,7 +3,8 @@ package aqario.fowlplay.common.entity;
 import net.minecraft.entity.SpawnGroup;
 
 public enum FowlPlaySpawnGroup {
-    BIRD_AMBIENT("bird_ambient", 15, true, false, 64);
+    BIRD_AMBIENT("bird_ambient", 15, true, false, 64),
+    BIRD("bird", 25, true, false, 96);
 
     public SpawnGroup spawnGroup;
     public final String name;

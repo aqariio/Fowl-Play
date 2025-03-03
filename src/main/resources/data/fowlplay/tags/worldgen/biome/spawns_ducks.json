@@ -1,18 +1,24 @@
 {
   "values": [
     {
-      "id": "natures_spirit:bamboo_wetlands",
+      "id": "#natures_spirit:is_wetland",
       "required": false
     },
     {
-      "id": "natures_spirit:marsh",
+      "id": "#c:river",
       "required": false
     },
     {
-      "id": "natures_spirit:wisteria_forest",
+      "id": "#c:swamp",
       "required": false
     },
-    "minecraft:swamp",
-    "minecraft:river"
+    {
+      "id": "#c:is_river",
+      "required": false
+    },
+    {
+      "id": "#c:is_swamp",
+      "required": false
+    }
   ]
 }

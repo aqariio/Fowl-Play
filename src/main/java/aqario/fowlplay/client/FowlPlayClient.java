@@ -37,6 +37,7 @@ public class FowlPlayClient implements ClientModInitializer {
         EntityRendererRegistry.register(FowlPlayEntityType.HAWK, HawkEntityRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(PenguinEntityModel.MODEL_LAYER, PenguinEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(BabyPenguinEntityModel.MODEL_LAYER, BabyPenguinEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(FowlPlayEntityType.PENGUIN, PenguinEntityRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(PigeonEntityModel.MODEL_LAYER, PigeonEntityModel::getTexturedModelData);
@@ -53,6 +54,7 @@ public class FowlPlayClient implements ClientModInitializer {
 
         if (FowlPlayConfig.getInstance().customChickenModel) {
             EntityModelLayerRegistry.registerModelLayer(CustomChickenEntityModel.MODEL_LAYER, CustomChickenEntityModel::getTexturedModelData);
+            EntityModelLayerRegistry.registerModelLayer(CustomBabyChickenEntityModel.MODEL_LAYER, CustomBabyChickenEntityModel::getTexturedModelData);
             EntityRendererRegistry.register(EntityType.CHICKEN, CustomChickenEntityRenderer::new);
         }
     }

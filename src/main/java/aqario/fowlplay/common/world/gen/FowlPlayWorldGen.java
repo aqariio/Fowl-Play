@@ -1,7 +1,10 @@
 package aqario.fowlplay.common.world.gen;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.*;
+import aqario.fowlplay.common.entity.FlyingBirdEntity;
+import aqario.fowlplay.common.entity.FowlPlayEntityType;
+import aqario.fowlplay.common.entity.FowlPlaySpawnGroup;
+import aqario.fowlplay.common.entity.PenguinEntity;
 import aqario.fowlplay.common.tags.FowlPlayBiomeTags;
 import com.google.common.base.Preconditions;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -11,7 +14,6 @@ import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnRestriction;
-import net.minecraft.entity.SpawnRestriction.Location;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.Heightmap;
@@ -20,37 +22,37 @@ import java.util.function.Predicate;
 
 public final class FowlPlayWorldGen {
     public static void init() {
-        SpawnRestriction.register(FowlPlayEntityType.BLUE_JAY, Location.NO_RESTRICTIONS,
+        SpawnRestriction.register(FowlPlayEntityType.BLUE_JAY, FowlPlaySpawnLocation.GROUND.location,
             Heightmap.Type.MOTION_BLOCKING, FlyingBirdEntity::canSpawnPasserines
         );
-        SpawnRestriction.register(FowlPlayEntityType.CARDINAL, Location.NO_RESTRICTIONS,
+        SpawnRestriction.register(FowlPlayEntityType.CARDINAL, FowlPlaySpawnLocation.GROUND.location,
             Heightmap.Type.MOTION_BLOCKING, FlyingBirdEntity::canSpawnPasserines
         );
-        SpawnRestriction.register(FowlPlayEntityType.CHICKADEE, Location.NO_RESTRICTIONS,
+        SpawnRestriction.register(FowlPlayEntityType.CHICKADEE, FowlPlaySpawnLocation.GROUND.location,
             Heightmap.Type.MOTION_BLOCKING, FlyingBirdEntity::canSpawnPasserines
         );
-        SpawnRestriction.register(FowlPlayEntityType.DUCK, Location.NO_RESTRICTIONS,
-            Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, DuckEntity::canSpawn
+        SpawnRestriction.register(FowlPlayEntityType.DUCK, FowlPlaySpawnLocation.SEMIAQUATIC.location,
+            Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, FlyingBirdEntity::canSpawnWaterfowl
         );
-        SpawnRestriction.register(FowlPlayEntityType.GULL, Location.NO_RESTRICTIONS,
+        SpawnRestriction.register(FowlPlayEntityType.GULL, FowlPlaySpawnLocation.SEMIAQUATIC.location,
             Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, FlyingBirdEntity::canSpawnShorebirds
         );
-        SpawnRestriction.register(FowlPlayEntityType.HAWK, Location.NO_RESTRICTIONS,
+        SpawnRestriction.register(FowlPlayEntityType.HAWK, FowlPlaySpawnLocation.GROUND.location,
             Heightmap.Type.MOTION_BLOCKING, FlyingBirdEntity::canSpawnPasserines
         );
-        SpawnRestriction.register(FowlPlayEntityType.PENGUIN, Location.NO_RESTRICTIONS,
+        SpawnRestriction.register(FowlPlayEntityType.PENGUIN, FowlPlaySpawnLocation.SEMIAQUATIC.location,
             Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, PenguinEntity::canSpawnPenguins
         );
-        SpawnRestriction.register(FowlPlayEntityType.PIGEON, Location.NO_RESTRICTIONS,
+        SpawnRestriction.register(FowlPlayEntityType.PIGEON, FowlPlaySpawnLocation.GROUND.location,
             Heightmap.Type.MOTION_BLOCKING, FlyingBirdEntity::canSpawnShorebirds
         );
-        SpawnRestriction.register(FowlPlayEntityType.RAVEN, Location.NO_RESTRICTIONS,
+        SpawnRestriction.register(FowlPlayEntityType.RAVEN, FowlPlaySpawnLocation.GROUND.location,
             Heightmap.Type.MOTION_BLOCKING, FlyingBirdEntity::canSpawnPasserines
         );
-        SpawnRestriction.register(FowlPlayEntityType.ROBIN, Location.NO_RESTRICTIONS,
+        SpawnRestriction.register(FowlPlayEntityType.ROBIN, FowlPlaySpawnLocation.GROUND.location,
             Heightmap.Type.MOTION_BLOCKING, FlyingBirdEntity::canSpawnPasserines
         );
-        SpawnRestriction.register(FowlPlayEntityType.SPARROW, Location.NO_RESTRICTIONS,
+        SpawnRestriction.register(FowlPlayEntityType.SPARROW, FowlPlaySpawnLocation.GROUND.location,
             Heightmap.Type.MOTION_BLOCKING, FlyingBirdEntity::canSpawnPasserines
         );
 
@@ -80,7 +82,7 @@ public final class FowlPlayWorldGen {
         );
         BiomeModifications.addSpawn(
             BiomeSelectors.tag(FowlPlayBiomeTags.SPAWNS_DUCKS),
-            SpawnGroup.CREATURE,
+            FowlPlaySpawnGroup.BIRD.spawnGroup,
             FowlPlayEntityType.DUCK,
             FowlPlayConfig.getInstance().duckSpawnWeight,
             FowlPlayConfig.getInstance().duckMinGroupSize,
@@ -88,20 +90,20 @@ public final class FowlPlayWorldGen {
         );
         BiomeModifications.addSpawn(
             BiomeSelectors.tag(FowlPlayBiomeTags.SPAWNS_GULLS),
-            SpawnGroup.CREATURE,
+            FowlPlaySpawnGroup.BIRD.spawnGroup,
             FowlPlayEntityType.GULL,
             FowlPlayConfig.getInstance().gullSpawnWeight,
             FowlPlayConfig.getInstance().gullMinGroupSize,
             FowlPlayConfig.getInstance().gullMaxGroupSize
         );
-        BiomeModifications.addSpawn(
-            BiomeSelectors.tag(FowlPlayBiomeTags.SPAWNS_HAWKS),
-            SpawnGroup.CREATURE,
-            FowlPlayEntityType.HAWK,
-            FowlPlayConfig.getInstance().hawkSpawnWeight,
-            FowlPlayConfig.getInstance().hawkMinGroupSize,
-            FowlPlayConfig.getInstance().hawkMaxGroupSize
-        );
+//        BiomeModifications.addSpawn(
+//            BiomeSelectors.tag(FowlPlayBiomeTags.SPAWNS_HAWKS),
+//            FowlPlaySpawnGroup.BIRD.spawnGroup,
+//            FowlPlayEntityType.HAWK,
+//            FowlPlayConfig.getInstance().hawkSpawnWeight,
+//            FowlPlayConfig.getInstance().hawkMinGroupSize,
+//            FowlPlayConfig.getInstance().hawkMaxGroupSize
+//        );
         BiomeModifications.addSpawn(
             BiomeSelectors.tag(FowlPlayBiomeTags.SPAWNS_PENGUINS),
             SpawnGroup.CREATURE,
@@ -112,7 +114,7 @@ public final class FowlPlayWorldGen {
         );
         BiomeModifications.addSpawn(
             BiomeSelectors.tag(FowlPlayBiomeTags.SPAWNS_PIGEONS),
-            SpawnGroup.CREATURE,
+            FowlPlaySpawnGroup.BIRD.spawnGroup,
             FowlPlayEntityType.PIGEON,
             FowlPlayConfig.getInstance().pigeonSpawnWeight,
             FowlPlayConfig.getInstance().pigeonMinGroupSize,
@@ -120,7 +122,7 @@ public final class FowlPlayWorldGen {
         );
         BiomeModifications.addSpawn(
             BiomeSelectors.tag(FowlPlayBiomeTags.SPAWNS_RAVENS),
-            SpawnGroup.CREATURE,
+            FowlPlaySpawnGroup.BIRD_AMBIENT.spawnGroup,
             FowlPlayEntityType.RAVEN,
             FowlPlayConfig.getInstance().ravenSpawnWeight,
             FowlPlayConfig.getInstance().ravenMinGroupSize,

@@ -32,6 +32,7 @@ public class FowlPlay implements ModInitializer {
         LOGGER.info("Loading Fowl Play");
         FowlPlayActivities.init();
         FowlPlayEntityType.init();
+        ChickenVariant.init();
         DuckVariant.init();
         GullVariant.init();
         PigeonVariant.init();

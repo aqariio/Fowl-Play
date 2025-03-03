@@ -1,50 +1,36 @@
 {
   "values": [
     {
-      "id": "natures_spirit:aspen_forest",
+      "id": "#natures_spirit:is_autumn",
       "required": false
     },
     {
-      "id": "natures_spirit:golden_wilds",
+      "id": "#natures_spirit:is_cold",
       "required": false
     },
     {
-      "id": "natures_spirit:maple_woodlands",
+      "id": "#natures_spirit:is_frontier",
       "required": false
     },
     {
-      "id": "natures_spirit:fir_forest",
+      "id": "#c:is_forest",
       "required": false
     },
     {
-      "id": "natures_spirit:prairie",
+      "id": "#c:forest",
       "required": false
     },
     {
-      "id": "natures_spirit:redwood_forest",
+      "id": "#c:tree_deciduous",
       "required": false
     },
     {
-      "id": "natures_spirit:coniferous_covert",
+      "id": "#c:is_tree_deciduous",
       "required": false
     },
     {
-      "id": "natures_spirit:sugi_forest",
+      "id": "#c:is_tree/deciduous",
       "required": false
-    },
-    {
-      "id": "natures_spirit:blooming_sugi_forest",
-      "required": false
-    },
-    "minecraft:forest",
-    "minecraft:dark_forest",
-    "minecraft:flower_forest",
-    "minecraft:birch_forest",
-    "minecraft:taiga",
-    "minecraft:grove",
-    "minecraft:cherry_grove",
-    "minecraft:old_growth_birch_forest",
-    "minecraft:old_growth_pine_taiga",
-    "minecraft:old_growth_spruce_taiga"
+    }
   ]
 }

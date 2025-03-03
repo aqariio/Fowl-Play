@@ -24,18 +24,18 @@ public class AttackTargetSensor extends Sensor<BirdEntity> {
         Optional<LivingEntity> attackTarget = visibleMobs.get().stream(bird::canAttack)
             .filter(entity -> canAttack(bird, entity))
             .findFirst();
-        Optional<LivingEntity> huntTarget = visibleMobs.get().stream(bird::canHunt)
-            .filter(entity -> canHunt(bird, entity))
-            .findFirst();
-        if (huntTarget.isEmpty() && attackTarget.isEmpty()) {
-            brain.forget(MemoryModuleType.NEAREST_ATTACKABLE);
-            return;
-        }
         if (attackTarget.isPresent()) {
             brain.remember(MemoryModuleType.NEAREST_ATTACKABLE, attackTarget.get());
             return;
         }
-        brain.remember(MemoryModuleType.NEAREST_ATTACKABLE, huntTarget.get());
+        Optional<LivingEntity> huntTarget = visibleMobs.get().stream(bird::canHunt)
+            .filter(entity -> canHunt(bird, entity))
+            .findFirst();
+        if (huntTarget.isPresent()) {
+            brain.remember(MemoryModuleType.NEAREST_ATTACKABLE, huntTarget.get());
+            return;
+        }
+        brain.forget(MemoryModuleType.NEAREST_ATTACKABLE);
     }
 
     private static boolean canAttack(BirdEntity bird, LivingEntity target) {

@@ -1,9 +1,12 @@
 {
   "values": [
     {
-      "id": "natures_spirit:white_cliffs",
+      "id": "#c:is_stony_shores",
       "required": false
     },
-    "minecraft:stony_shore"
+    {
+      "id": "natures_spirit:white_cliffs",
+      "required": false
+    }
   ]
 }

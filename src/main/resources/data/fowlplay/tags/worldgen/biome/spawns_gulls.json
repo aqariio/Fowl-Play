@@ -1,14 +1,20 @@
 {
   "values": [
     {
-      "id": "natures_spirit:white_cliffs",
+      "id": "#natures_spirit:is_coast",
       "required": false
     },
     {
-      "id": "natures_spirit:tropical_shores",
+      "id": "#c:beach",
       "required": false
     },
-    "minecraft:beach",
-    "minecraft:stony_shore"
+    {
+      "id": "#c:is_beach",
+      "required": false
+    },
+    {
+      "id": "#c:is_stony_shores",
+      "required": false
+    }
   ]
 }

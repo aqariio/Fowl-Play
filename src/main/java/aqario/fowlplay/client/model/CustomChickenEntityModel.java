@@ -84,7 +84,7 @@ public class CustomChickenEntityModel extends SinglePartEntityModel<ChickenEntit
     public void setAngles(ChickenEntity chicken, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.getPart().traverse().forEach(ModelPart::resetTransform);
         this.updateHeadRotation(netHeadYaw, headPitch);
-        if (chicken.isOnGround()) {
+        if (chicken.isOnGround() || chicken.isInsideWaterOrBubbleColumn()) {
             this.leftWingOpen.visible = false;
             this.rightWingOpen.visible = false;
             this.leftWing.visible = true;

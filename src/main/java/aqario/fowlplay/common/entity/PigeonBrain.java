@@ -1,10 +1,10 @@
 package aqario.fowlplay.common.entity;
 
+import aqario.fowlplay.common.entity.ai.brain.Birds;
 import aqario.fowlplay.common.entity.ai.brain.FowlPlayActivities;
 import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
 import aqario.fowlplay.common.entity.ai.brain.sensor.FowlPlaySensorType;
 import aqario.fowlplay.common.entity.ai.brain.task.*;
-import aqario.fowlplay.common.tags.FowlPlayBlockTags;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 public class PigeonBrain {
     private static final ImmutableList<SensorType<? extends Sensor<? super PigeonEntity>>> SENSORS = ImmutableList.of(
@@ -81,12 +82,6 @@ public class PigeonBrain {
         FowlPlayMemoryModuleType.TELEPORT_TARGET,
         FowlPlayMemoryModuleType.RECIPIENT
     );
-    private static final UniformIntProvider FOLLOW_ADULT_RANGE = UniformIntProvider.create(5, 16);
-    private static final UniformIntProvider STAY_NEAR_ENTITY_RANGE = UniformIntProvider.create(16, 32);
-    private static final int PICK_UP_RANGE = 32;
-    private static final float RUN_SPEED = 1.4F;
-    private static final float WALK_SPEED = 1.0F;
-    private static final float FLY_SPEED = 2.0F;
 
     public static Brain.Profile<PigeonEntity> createProfile() {
         return Brain.createProfile(MEMORIES, SENSORS);
@@ -112,7 +107,7 @@ public class PigeonBrain {
                 FowlPlayActivities.FLY,
                 FowlPlayActivities.DELIVER,
                 Activity.AVOID,
-                FowlPlayActivities.PICKUP_FOOD
+                FowlPlayActivities.PICK_UP
             )
         );
     }
@@ -125,8 +120,8 @@ public class PigeonBrain {
                 new StayAboveWaterTask(0.5F),
                 FlightControlTask.stopFalling(),
                 new TeleportToTargetTask(),
-                new FleeTask(RUN_SPEED),
-                new FollowOwnerTask(WALK_SPEED, 5, 10),
+                new FleeTask(Birds.RUN_SPEED),
+                new FollowOwnerTask(Birds.WALK_SPEED, 5, 10),
                 AvoidTask.run(),
                 PickupFoodTask.run(pigeon -> !pigeon.isSitting() && pigeon.getRecipientUuid() == null),
                 new LookAroundTask(45, 90),
@@ -141,10 +136,10 @@ public class PigeonBrain {
         brain.setTaskList(
             Activity.IDLE,
             ImmutableList.of(
-                Pair.of(1, new BreedTask(FowlPlayEntityType.PIGEON, WALK_SPEED)),
-                Pair.of(2, WalkTowardClosestAdultTask.create(FOLLOW_ADULT_RANGE, WALK_SPEED)),
+                Pair.of(1, new BreedTask(FowlPlayEntityType.PIGEON, Birds.WALK_SPEED)),
+                Pair.of(2, WalkTowardClosestAdultTask.create(Birds.FOLLOW_ADULT_RANGE, Birds.WALK_SPEED)),
                 Pair.of(3, LookAtMobTask.create(PigeonBrain::isPlayerHoldingFood, 32.0F)),
-                Pair.of(4, GoToClosestEntityTask.create(STAY_NEAR_ENTITY_RANGE, WALK_SPEED)),
+                Pair.of(4, GoToClosestEntityTask.create(Birds.STAY_NEAR_ENTITY_RANGE, Birds.WALK_SPEED)),
                 Pair.of(5, new RandomLookAroundTask(
                     UniformIntProvider.create(150, 250),
                     30.0F,
@@ -157,8 +152,8 @@ public class PigeonBrain {
                         ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
                         ImmutableList.of(
                             Pair.of(TaskTriggerer.runIf(
-                                entity -> !entity.getWorld().getBlockState(entity.getBlockPos().down()).isIn(FowlPlayBlockTags.PASSERINES_SPAWNABLE_ON),
-                                StrollTask.create(WALK_SPEED)
+                                Predicate.not(Birds::isPerching),
+                                StrollTask.create(Birds.WALK_SPEED)
                             ), 4),
                             Pair.of(TaskTriggerer.predicate(Entity::isInsideWaterOrBubbleColumn), 3),
                             Pair.of(new WaitTask(100, 300), 3),
@@ -181,13 +176,13 @@ public class PigeonBrain {
             FowlPlayActivities.FLY,
             ImmutableList.of(
                 Pair.of(1, FlightControlTask.tryStopFlying(pigeon -> true)),
-                Pair.of(2, GoToClosestEntityTask.create(STAY_NEAR_ENTITY_RANGE, FLY_SPEED)),
+                Pair.of(2, GoToClosestEntityTask.create(Birds.STAY_NEAR_ENTITY_RANGE, Birds.FLY_SPEED)),
                 Pair.of(
                     3,
                     new RandomTask<>(
                         ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
                         ImmutableList.of(
-                            Pair.of(FlyTask.perch(FLY_SPEED), 1)
+                            Pair.of(FlyTask.perch(Birds.FLY_SPEED), 1)
                         )
                     )
                 )
@@ -208,7 +203,7 @@ public class PigeonBrain {
             ImmutableList.of(
                 FlightControlTask.stopFlying(PigeonBrain::shouldStopFlyingToRecipient),
                 FlightControlTask.startFlying(PigeonBrain::shouldFlyToRecipient),
-                DeliverBundleTask.run(pigeon -> true, pigeon -> pigeon.isFlying() ? FLY_SPEED : WALK_SPEED)
+                DeliverBundleTask.run(pigeon -> true, pigeon -> pigeon.isFlying() ? Birds.FLY_SPEED : Birds.WALK_SPEED)
             ),
             FowlPlayMemoryModuleType.RECIPIENT
         );
@@ -222,11 +217,11 @@ public class PigeonBrain {
                 FlightControlTask.startFlying(pigeon -> true),
                 MoveAwayFromTargetTask.entity(
                     MemoryModuleType.AVOID_TARGET,
-                    pigeon -> pigeon.isFlying() ? FLY_SPEED : RUN_SPEED,
+                    pigeon -> pigeon.isFlying() ? Birds.FLY_SPEED : Birds.RUN_SPEED,
                     true
                 ),
-                makeRandomFollowTask(),
-                makeRandomWanderTask(),
+                CompositeTasks.makeRandomFollowTask(FowlPlayEntityType.PIGEON),
+                CompositeTasks.makeRandomWanderTask(),
                 AvoidTask.forget()
             ),
             FowlPlayMemoryModuleType.IS_AVOIDING
@@ -235,14 +230,14 @@ public class PigeonBrain {
 
     private static void addPickupFoodActivities(Brain<PigeonEntity> brain) {
         brain.setTaskList(
-            FowlPlayActivities.PICKUP_FOOD,
+            FowlPlayActivities.PICK_UP,
             ImmutableList.of(
-                Pair.of(0, FlightControlTask.startFlying(pigeon -> !pigeon.isTamed() && Bird.canPickupFood(pigeon))),
+                Pair.of(0, FlightControlTask.startFlying(pigeon -> !pigeon.isTamed() && Birds.canPickupFood(pigeon))),
                 Pair.of(1, GoToNearestWantedItemTask.create(
-                    Bird::canPickupFood,
-                    entity -> entity.isFlying() ? FLY_SPEED : RUN_SPEED,
+                    Birds::canPickupFood,
+                    entity -> entity.isFlying() ? Birds.FLY_SPEED : Birds.RUN_SPEED,
                     true,
-                    PICK_UP_RANGE
+                    Birds.ITEM_PICK_UP_RANGE
                 )),
                 Pair.of(2, ForgetTask.create(PigeonBrain::noFoodInRange, FowlPlayMemoryModuleType.SEES_FOOD))
             ),
@@ -250,35 +245,6 @@ public class PigeonBrain {
                 Pair.of(FowlPlayMemoryModuleType.SEES_FOOD, MemoryModuleState.VALUE_PRESENT),
                 Pair.of(FowlPlayMemoryModuleType.IS_AVOIDING, MemoryModuleState.VALUE_ABSENT),
                 Pair.of(FowlPlayMemoryModuleType.RECIPIENT, MemoryModuleState.VALUE_ABSENT)
-            )
-        );
-    }
-
-    private static ImmutableList<Pair<SingleTickTask<LivingEntity>, Integer>> createLookTasks() {
-        return ImmutableList.of(
-            Pair.of(LookAtMobTask.create(FowlPlayEntityType.PIGEON, 8.0F), 1),
-            Pair.of(LookAtMobTask.create(8.0F), 1)
-        );
-    }
-
-    private static RandomTask<LivingEntity> makeRandomFollowTask() {
-        return new RandomTask<>(
-            ImmutableList.<Pair<? extends Task<? super LivingEntity>, Integer>>builder()
-                .addAll(createLookTasks())
-                .add(Pair.of(new WaitTask(30, 60), 1))
-                .build()
-        );
-    }
-
-    private static RandomTask<PigeonEntity> makeRandomWanderTask() {
-        return new RandomTask<>(
-            ImmutableList.of(
-                Pair.of(StrollTask.create(0.6F), 2),
-                Pair.of(TaskTriggerer.runIf(
-                    livingEntity -> true,
-                    GoTowardsLookTargetTask.create(0.6F, 3)
-                ), 2),
-                Pair.of(new WaitTask(30, 60), 1)
             )
         );
     }
@@ -318,7 +284,7 @@ public class PigeonBrain {
 
     private static boolean noFoodInRange(PigeonEntity pigeon) {
         Optional<ItemEntity> item = pigeon.getBrain().getOptionalRegisteredMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM);
-        return item.isEmpty() || !item.get().isInRange(pigeon, PICK_UP_RANGE);
+        return item.isEmpty() || !item.get().isInRange(pigeon, Birds.ITEM_PICK_UP_RANGE);
     }
 
     public static boolean isPlayerHoldingFood(LivingEntity target) {

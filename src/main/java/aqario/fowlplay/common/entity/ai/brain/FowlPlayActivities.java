@@ -11,7 +11,7 @@ public final class FowlPlayActivities {
     public static final Activity FLY = register("fly");
     public static final Activity FORAGE = register("forage");
     public static final Activity PERCH = register("perch");
-    public static final Activity PICKUP_FOOD = register("pickup_food");
+    public static final Activity PICK_UP = register("pick_up");
     public static final Activity SOAR = register("soar");
 
     private static Activity register(String id) {

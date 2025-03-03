@@ -1,51 +1,39 @@
 {
   "values": [
     {
-      "id": "natures_spirit:golden_wilds",
+      "id": "#natures_spirit:is_alpine",
       "required": false
     },
     {
-      "id": "natures_spirit:marigold_meadows",
+      "id": "#natures_spirit:is_autumn",
       "required": false
     },
     {
-      "id": "natures_spirit:prairie",
+      "id": "#natures_spirit:is_cold",
       "required": false
     },
     {
-      "id": "natures_spirit:alpine_clearings",
+      "id": "#natures_spirit:is_cypress",
       "required": false
     },
     {
-      "id": "natures_spirit:blooming_dunes",
+      "id": "#natures_spirit:is_field",
       "required": false
     },
     {
-      "id": "natures_spirit:lively_dunes",
+      "id": "#natures_spirit:is_frontier",
       "required": false
     },
     {
-      "id": "natures_spirit:shrubby_highlands",
+      "id": "#natures_spirit:is_freezing",
       "required": false
     },
     {
-      "id": "natures_spirit:cypress_fields",
+      "id": "#c:vegetation_sparse",
       "required": false
     },
     {
-      "id": "natures_spirit:carnation_fields",
-      "required": false
-    },
-    {
-      "id": "natures_spirit:lavender_fields",
-      "required": false
-    },
-    {
-      "id": "natures_spirit:shrubland",
-      "required": false
-    },
-    {
-      "id": "natures_spirit:flowering_shrubland",
+      "id": "#c:is_sparse_vegetation/overworld",
       "required": false
     },
     "minecraft:plains",

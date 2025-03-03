@@ -28,12 +28,12 @@ _This mod adds a custom chicken model in the style of its other birds. The model
 
 **Planned additions (in order of priority):**
 
-- Geese (Domestic goose, Canada goose)
 - Eagles (Bald eagle, golden eagle)
 - Old world Vultures (Griffon vulture, lappet-faced vulture)
-- Woodpeckers (Downy woodpecker, pileated woodpecker, yellow-bellied sapsucker)
 - Ostriches (Common ostrich)
 - Owls (Great horned owl, snowy owl, barn owl)
+- Geese (Domestic goose, Canada goose)
+- Woodpeckers (Downy woodpecker, pileated woodpecker, yellow-bellied sapsucker)
 - Falcons (Peregrine falcon, gyrfalcon, American kestrel)
 
 ## Frequently Asked Questions

@@ -1,17 +1,16 @@
 package aqario.fowlplay.common.entity;
 
+import aqario.fowlplay.common.entity.ai.brain.Birds;
 import aqario.fowlplay.common.entity.ai.brain.FowlPlayActivities;
 import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
 import aqario.fowlplay.common.entity.ai.brain.sensor.FowlPlaySensorType;
 import aqario.fowlplay.common.entity.ai.brain.task.*;
-import aqario.fowlplay.common.tags.FowlPlayBlockTags;
 import aqario.fowlplay.common.tags.FowlPlayItemTags;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.Brain;
@@ -28,6 +27,7 @@ import net.minecraft.util.math.intprovider.UniformIntProvider;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class RavenBrain {
     private static final ImmutableList<SensorType<? extends Sensor<? super RavenEntity>>> SENSORS = ImmutableList.of(
@@ -77,12 +77,6 @@ public class RavenBrain {
         FowlPlayMemoryModuleType.CANNOT_PICKUP_FOOD,
         FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS
     );
-    private static final UniformIntProvider FOLLOW_ADULT_RANGE = UniformIntProvider.create(5, 16);
-    private static final UniformIntProvider STAY_NEAR_ENTITY_RANGE = UniformIntProvider.create(16, 32);
-    private static final int PICK_UP_RANGE = 32;
-    private static final float RUN_SPEED = 1.4F;
-    private static final float WALK_SPEED = 1.0F;
-    private static final float FLY_SPEED = 2.0F;
 
     public static Brain.Profile<RavenEntity> createProfile() {
         return Brain.createProfile(MEMORIES, SENSORS);
@@ -109,7 +103,7 @@ public class RavenBrain {
                 Activity.IDLE,
                 FowlPlayActivities.FLY,
                 Activity.AVOID,
-                FowlPlayActivities.PICKUP_FOOD,
+                FowlPlayActivities.PICK_UP,
                 Activity.FIGHT
             )
         );
@@ -125,9 +119,9 @@ public class RavenBrain {
             ImmutableList.of(
                 FlightControlTask.stopFalling(),
                 new StayAboveWaterTask(0.5F),
-                new FleeTask(RUN_SPEED),
+                new FleeTask(Birds.RUN_SPEED),
                 AvoidTask.run(),
-                PickupFoodTask.run(Bird::canPickupFood),
+                PickupFoodTask.run(Birds::canPickupFood),
                 new LookAroundTask(45, 90),
                 new WanderAroundTask(),
                 new TemptationCooldownTask(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
@@ -140,11 +134,11 @@ public class RavenBrain {
         brain.setTaskList(
             Activity.IDLE,
             ImmutableList.of(
-                Pair.of(1, new BreedTask(FowlPlayEntityType.RAVEN, WALK_SPEED)),
-                Pair.of(2, WalkTowardClosestAdultTask.create(FOLLOW_ADULT_RANGE, WALK_SPEED)),
+                Pair.of(1, new BreedTask(FowlPlayEntityType.RAVEN, Birds.WALK_SPEED)),
+                Pair.of(2, WalkTowardClosestAdultTask.create(Birds.FOLLOW_ADULT_RANGE, Birds.WALK_SPEED)),
                 Pair.of(3, LookAtMobTask.create(RavenBrain::isPlayerHoldingFood, 32.0F)),
                 Pair.of(4, UpdateAttackTargetTask.create(raven -> !raven.isInsideWaterOrBubbleColumn(), RavenBrain::getAttackTarget)),
-                Pair.of(5, GoToClosestEntityTask.create(STAY_NEAR_ENTITY_RANGE, WALK_SPEED)),
+                Pair.of(5, GoToClosestEntityTask.create(Birds.STAY_NEAR_ENTITY_RANGE, Birds.WALK_SPEED)),
                 Pair.of(6, new RandomLookAroundTask(
                     UniformIntProvider.create(150, 250),
                     30.0F,
@@ -157,8 +151,8 @@ public class RavenBrain {
                         ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
                         ImmutableList.of(
                             Pair.of(TaskTriggerer.runIf(
-                                entity -> !entity.getWorld().getBlockState(entity.getBlockPos().down()).isIn(FowlPlayBlockTags.PASSERINES_SPAWNABLE_ON),
-                                StrollTask.create(WALK_SPEED)
+                                Predicate.not(Birds::isPerching),
+                                StrollTask.create(Birds.WALK_SPEED)
                             ), 4),
                             Pair.of(new WaitTask(100, 300), 3),
                             Pair.of(FlightControlTask.startFlying(raven -> raven.isInsideWaterOrBubbleColumn() || raven.getRandom().nextFloat() < 0.3F), 1)
@@ -181,14 +175,14 @@ public class RavenBrain {
             ImmutableList.of(
                 Pair.of(1, FlightControlTask.tryStopFlying(raven -> true)),
                 Pair.of(2, UpdateAttackTargetTask.create(RavenBrain::getAttackTarget)),
-                Pair.of(3, GoToClosestEntityTask.create(STAY_NEAR_ENTITY_RANGE, FLY_SPEED)),
+                Pair.of(3, GoToClosestEntityTask.create(Birds.STAY_NEAR_ENTITY_RANGE, Birds.FLY_SPEED)),
                 Pair.of(
                     4,
                     new RandomTask<>(
                         ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
                         ImmutableList.of(
-                            Pair.of(FlyTask.perch(FLY_SPEED), 5),
-                            Pair.of(FlyTask.create(FLY_SPEED, 24, 16), 1)
+                            Pair.of(FlyTask.perch(Birds.FLY_SPEED), 5),
+                            Pair.of(FlyTask.create(Birds.FLY_SPEED, 24, 16), 1)
                         )
                     )
                 )
@@ -210,11 +204,11 @@ public class RavenBrain {
                 FlightControlTask.startFlying(raven -> true),
                 MoveAwayFromTargetTask.entity(
                     MemoryModuleType.AVOID_TARGET,
-                    raven -> raven.isFlying() ? FLY_SPEED : RUN_SPEED,
+                    raven -> raven.isFlying() ? Birds.FLY_SPEED : Birds.RUN_SPEED,
                     true
                 ),
-                makeRandomFollowTask(),
-                makeRandomWanderTask(),
+                CompositeTasks.makeRandomFollowTask(FowlPlayEntityType.RAVEN),
+                CompositeTasks.makeRandomWanderTask(),
                 AvoidTask.forget()
             ),
             FowlPlayMemoryModuleType.IS_AVOIDING
@@ -223,16 +217,16 @@ public class RavenBrain {
 
     private static void addPickupFoodActivities(Brain<RavenEntity> brain) {
         brain.setTaskList(
-            FowlPlayActivities.PICKUP_FOOD,
+            FowlPlayActivities.PICK_UP,
             ImmutableList.of(
-                Pair.of(0, FlightControlTask.startFlying(Bird::canPickupFood)),
+                Pair.of(0, FlightControlTask.startFlying(Birds::canPickupFood)),
                 Pair.of(1, GoToNearestWantedItemTask.create(
-                    Bird::canPickupFood,
-                    entity -> entity.isFlying() ? FLY_SPEED : RUN_SPEED,
+                    Birds::canPickupFood,
+                    entity -> entity.isFlying() ? Birds.FLY_SPEED : Birds.RUN_SPEED,
                     true,
-                    PICK_UP_RANGE
+                    Birds.ITEM_PICK_UP_RANGE
                 )),
-                Pair.of(2, ForgetTask.create(RavenBrain::noFoodInRange, FowlPlayMemoryModuleType.SEES_FOOD))
+                Pair.of(2, ForgetTask.create(Birds::noFoodInRange, FowlPlayMemoryModuleType.SEES_FOOD))
             ),
             Set.of(
                 Pair.of(FowlPlayMemoryModuleType.SEES_FOOD, MemoryModuleState.VALUE_PRESENT),
@@ -248,7 +242,7 @@ public class RavenBrain {
             ImmutableList.of(
                 FlightControlTask.startFlying(raven -> true),
                 ForgetAttackTargetTask.create(),
-                RangedApproachTask.create(FLY_SPEED),
+                RangedApproachTask.create(Birds.FLY_SPEED),
                 MeleeAttackTask.create(20),
                 ForgetTask.create(LookTargetUtil::hasBreedTarget, MemoryModuleType.ATTACK_TARGET)
             ),
@@ -258,35 +252,6 @@ public class RavenBrain {
 
     private static Optional<? extends LivingEntity> getAttackTarget(RavenEntity raven) {
         return LookTargetUtil.hasBreedTarget(raven) ? Optional.empty() : raven.getBrain().getOptionalRegisteredMemory(MemoryModuleType.NEAREST_ATTACKABLE);
-    }
-
-    private static ImmutableList<Pair<SingleTickTask<LivingEntity>, Integer>> createLookTasks() {
-        return ImmutableList.of(
-            Pair.of(LookAtMobTask.create(FowlPlayEntityType.RAVEN, 8.0F), 1),
-            Pair.of(LookAtMobTask.create(8.0F), 1)
-        );
-    }
-
-    private static RandomTask<LivingEntity> makeRandomFollowTask() {
-        return new RandomTask<>(
-            ImmutableList.<Pair<? extends Task<? super LivingEntity>, Integer>>builder()
-                .addAll(createLookTasks())
-                .add(Pair.of(new WaitTask(30, 60), 1))
-                .build()
-        );
-    }
-
-    private static RandomTask<RavenEntity> makeRandomWanderTask() {
-        return new RandomTask<>(
-            ImmutableList.of(
-                Pair.of(StrollTask.create(0.6F), 2),
-                Pair.of(TaskTriggerer.runIf(
-                    livingEntity -> true,
-                    GoTowardsLookTargetTask.create(0.6F, 3)
-                ), 2),
-                Pair.of(new WaitTask(30, 60), 1)
-            )
-        );
     }
 
     public static void onAttacked(RavenEntity raven, LivingEntity attacker) {
@@ -320,11 +285,6 @@ public class RavenBrain {
 
     protected static List<? extends PassiveEntity> getNearbyVisibleRavens(RavenEntity raven) {
         return raven.getBrain().getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS).orElse(ImmutableList.of());
-    }
-
-    private static boolean noFoodInRange(RavenEntity raven) {
-        Optional<ItemEntity> item = raven.getBrain().getOptionalRegisteredMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM);
-        return item.isEmpty() || !item.get().isInRange(raven, PICK_UP_RANGE);
     }
 
     public static boolean isPlayerHoldingFood(LivingEntity target) {

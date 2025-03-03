@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.spawner.Spawner;
 
@@ -20,6 +21,7 @@ import java.util.List;
 
 public class HawkSpawner implements Spawner {
     private static final int SPAWN_COOLDOWN = 7200;
+    private static final int MAX_SPAWN_HEIGHT = 48;
     private int cooldown;
 
     @Override
@@ -50,6 +52,9 @@ public class HawkSpawner implements Spawner {
         if (SpawnHelper.isClearForSpawn(world, spawnPos, block, fluid, FowlPlayEntityType.HAWK)
             && world.getBiome(spawnPos).isIn(FowlPlayBiomeTags.SPAWNS_HAWKS)
         ) {
+            if (spawnPos.getY() - world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, spawnPos.getX(), spawnPos.getZ()) > MAX_SPAWN_HEIGHT) {
+                return 0;
+            }
             List<HawkEntity> nearbyHawks = world.getNonSpectatingEntities(
                 HawkEntity.class,
                 new Box(spawnPos).expand(72, 48, 72)

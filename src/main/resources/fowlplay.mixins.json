@@ -8,7 +8,9 @@
     "LivingEntityMixin",
     "PowderSnowBlockMixin",
     "SensorMixin",
-    "SpawnGroupMixin"
+    "SpawnGroupMixin",
+    "SpawnHelperMixin",
+    "SpawnRestrictionLocationMixin"
   ],
   "client": [
   ],

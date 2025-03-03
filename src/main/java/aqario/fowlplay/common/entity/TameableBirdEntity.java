@@ -146,6 +146,12 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements T
     @Override
     public void tick() {
         super.tick();
+        if (this.getOwnerUuid() != null) {
+            this.addTrustedUuid(this.getOwnerUuid());
+            if (!this.isPersistent()) {
+                this.setPersistent();
+            }
+        }
         if (this.isFlying()) {
             this.setSitting(false);
         }
@@ -162,7 +168,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements T
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        return super.interactMob(player, hand);
+        return this.trusts(player) ? super.interactMob(player, hand) : ActionResult.PASS;
     }
 
     @Nullable

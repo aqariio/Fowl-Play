@@ -104,7 +104,7 @@ public class DuckEntityModel extends FlyingBirdEntityModel<DuckEntity> {
     }
 
     private void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = MathHelper.clamp(headYaw, -30.0F, 30.0F);
+        headYaw = MathHelper.clamp(headYaw, -135.0F, 135.0F);
         headPitch = MathHelper.clamp(headPitch, -25.0F, 45.0F);
         this.neck.yaw = headYaw * (float) (Math.PI / 180.0);
         this.neck.pitch = headPitch * (float) (Math.PI / 180.0);

@@ -7,6 +7,7 @@ import net.minecraft.util.math.MathHelper;
 
 public class BirdBodyControl extends BodyControl {
     private final BirdEntity entity;
+    private static final int BODY_KEEP_UP_THRESHOLD = 15;
     private float lastHeadYaw;
 
     public BirdBodyControl(BirdEntity entity) {
@@ -21,12 +22,10 @@ public class BirdBodyControl extends BodyControl {
             this.keepUpHead();
             this.lastHeadYaw = this.entity.headYaw;
         }
-        else {
-            if (this.isIndependent()) {
-                if (Math.abs(this.entity.headYaw - this.lastHeadYaw) > 15.0F) {
-                    this.lastHeadYaw = this.entity.headYaw;
-                    this.keepUpBody();
-                }
+        else if (this.isIndependent()) {
+            if (Math.abs(this.entity.headYaw - this.lastHeadYaw) > BODY_KEEP_UP_THRESHOLD) {
+                this.lastHeadYaw = this.entity.headYaw;
+                this.keepUpBody();
             }
         }
     }

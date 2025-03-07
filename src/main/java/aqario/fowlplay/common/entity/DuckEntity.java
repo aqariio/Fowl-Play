@@ -260,11 +260,15 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
     }
 
     @Override
+    public float getMaxWaterHeight() {
+        return 0.35F;
+    }
+
+    @Override
     public boolean isFloating() {
-        double maxWaterHeight = 0.35; // how much of the hitbox the water should cover
-        BlockPos blockPos = BlockPos.ofFloored(this.getX(), this.getY() + maxWaterHeight, this.getZ());
+        BlockPos blockPos = BlockPos.ofFloored(this.getX(), this.getY() + this.getMaxWaterHeight(), this.getZ());
         double waterHeight = this.getBlockPos().getY() + this.getWorld().getFluidState(blockPos).getHeight(this.getWorld(), blockPos);
-        return this.isSubmergedInWater() || waterHeight > this.getY() + maxWaterHeight;
+        return this.isSubmergedInWater() || waterHeight > this.getY() + this.getMaxWaterHeight();
     }
 
     @Override

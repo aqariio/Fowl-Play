@@ -145,18 +145,6 @@ public abstract class BirdEntity extends AnimalEntity {
         return 10;
     }
 
-    public float getWalkSpeedMultiplier() {
-        return 1.0F;
-    }
-
-    public float getRunSpeedMultiplier() {
-        return 1.4F;
-    }
-
-    public float getSwimSpeedMultiplier() {
-        return 1.0F;
-    }
-
     @Override
     public void tickMovement() {
         super.tickMovement();
@@ -308,7 +296,7 @@ public abstract class BirdEntity extends AnimalEntity {
 
     @Override
     public int getMaxHeadRotation() {
-        return 270;
+        return 90;
     }
 
     @Override

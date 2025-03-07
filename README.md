@@ -4,9 +4,13 @@
 
 Fowl Play adds a variety of birds to Minecraft, with the aim of giving them realistic behaviours and sounds. Unlike the fluttering parrots of the base game, the avians of this mod can all take to the skies gracefully (except flightless birds, of course). Some of them add ambience, others have useful features and all of them try to annoy you as much as they can, just like real birds!
 
+<br/>
+
 ## Disclaimer
 
 _This mod is in beta, and some features are incomplete. As always, it's possible I may change some stuff that causes progress to be lost, or worlds to be corrupted. If you could help me find some bugs, that would be awesome!_
+
+<br/>
 
 ## Mobs
 
@@ -36,9 +40,9 @@ _This mod adds a custom chicken model in the style of its other birds. The model
 - Woodpeckers (Downy woodpecker, pileated woodpecker, yellow-bellied sapsucker)
 - Falcons (Peregrine falcon, gyrfalcon, American kestrel)
 
-## Frequently Asked Questions
-
 <br/>
+
+## Frequently Asked Questions
 
 ### Is this mod available on Forge?
 
@@ -48,7 +52,7 @@ Forge support is planned for the future, but it is not a priority at the moment,
 
 ### Sinytra connector is crashing!
 
-**To use Sinytra connector, you must download the mod from my [GitHub](https://github.com/aqariio/Fowl-Play/releases)**. This is because the normal release will crash when loaded using Sinytra. 
+**To use Sinytra connector, you must download the mod from my [GitHub](https://github.com/aqariio/Fowl-Play/releases)**. This is because the normal release will crash when loaded using Sinytra.
 
 **If you are using the 1.21 version of the mod with Sinytra connector**, mobs will no longer be able to move in water. **To fix this, you will need https://github.com/unilock/sinytra1343**. ([Link to releases page](https://github.com/unilock/sinytra1343/releases))
 

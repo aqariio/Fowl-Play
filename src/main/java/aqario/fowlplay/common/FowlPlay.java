@@ -1,5 +1,6 @@
 package aqario.fowlplay.common;
 
+import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.common.entity.ai.brain.FowlPlayActivities;
 import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
@@ -30,6 +31,10 @@ public class FowlPlay implements ModInitializer {
     @Override
     public void onInitialize() {
         LOGGER.info("Loading Fowl Play");
+        if (isYACLLoaded()) {
+            FowlPlayConfig.load();
+        }
+
         FowlPlayActivities.init();
         FowlPlayEntityType.init();
         ChickenVariant.init();

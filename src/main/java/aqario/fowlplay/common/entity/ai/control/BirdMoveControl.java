@@ -19,6 +19,7 @@ public class BirdMoveControl extends MoveControl {
         this.bird = bird;
     }
 
+    @Override
     public void tick() {
         if (this.state == State.MOVE_TO) {
             this.state = State.WAIT;
@@ -28,26 +29,26 @@ public class BirdMoveControl extends MoveControl {
                 this.state = State.WAIT;
                 return;
             }
-
             float angle = (float) (MathHelper.atan2(distance.z, distance.x) * 180.0F / (float) Math.PI) - 90.0F;
             this.bird.setYaw(this.wrapDegrees(this.bird.getYaw(), angle, 15.0F));
             this.bird.setMovementSpeed((float) (this.speed * this.bird.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED)));
-            BlockPos blockPos = this.bird.getBlockPos();
-            BlockState blockState = this.bird.getWorld().getBlockState(blockPos);
-            VoxelShape voxelShape = blockState.getCollisionShape(this.bird.getWorld(), blockPos);
-            if (distance.y > (double) this.bird.getStepHeight() && distance.x * distance.x + distance.z * distance.z < (double) Math.max(1.0F, this.bird.getWidth())
-                || !voxelShape.isEmpty()
-                && this.bird.getY() < voxelShape.getMax(Direction.Axis.Y) + (double) blockPos.getY()
-                && !blockState.isIn(BlockTags.DOORS)
-                && !blockState.isIn(BlockTags.FENCES)) {
+            BlockPos pos = this.bird.getBlockPos();
+            BlockState state = this.bird.getWorld().getBlockState(pos);
+            VoxelShape collisionShape = state.getCollisionShape(this.bird.getWorld(), pos);
+            double horizontalSqDistance = distance.x * distance.x + distance.z * distance.z;
+            if (distance.y > (double) this.bird.getStepHeight() && horizontalSqDistance < (double) Math.max(1.0F, this.bird.getWidth())
+                || !collisionShape.isEmpty()
+                && this.bird.getY() < collisionShape.getMax(Direction.Axis.Y) + (double) pos.getY()
+                && !state.isIn(BlockTags.DOORS)
+                && !state.isIn(BlockTags.FENCES)) {
                 this.bird.getJumpControl().setActive();
                 this.state = State.JUMPING;
             }
-            if (distance.y < (double) this.bird.getStepHeight() && distance.x * distance.x + distance.z * distance.z < (double) Math.max(1.0F, this.bird.getWidth())
-                || !voxelShape.isEmpty()
-                && this.bird.getY() > voxelShape.getMax(Direction.Axis.Y) + (double) blockPos.getY()
-                && !blockState.isIn(BlockTags.DOORS)
-                && !blockState.isIn(BlockTags.FENCES)) {
+            if (distance.y < (double) this.bird.getStepHeight() && horizontalSqDistance < (double) Math.max(1.0F, this.bird.getWidth())
+                || !collisionShape.isEmpty()
+                && this.bird.getY() > collisionShape.getMax(Direction.Axis.Y) + (double) pos.getY()
+                && !state.isIn(BlockTags.DOORS)
+                && !state.isIn(BlockTags.FENCES)) {
                 this.bird.setSneaking(true);
             }
         }

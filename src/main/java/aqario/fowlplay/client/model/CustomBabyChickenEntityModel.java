@@ -67,7 +67,7 @@ public class CustomBabyChickenEntityModel extends CustomChickenEntityModel {
     }
 
     private void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = MathHelper.clamp(headYaw, -30.0F, 30.0F);
+        headYaw = MathHelper.clamp(headYaw, -135.0F, 135.0F);
         headPitch = MathHelper.clamp(headPitch, -25.0F, 45.0F);
         this.head.yaw = headYaw * (float) (Math.PI / 180.0);
         this.head.pitch = headPitch * (float) (Math.PI / 180.0);

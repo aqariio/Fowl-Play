@@ -2,6 +2,7 @@ package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
+import aqario.fowlplay.common.entity.ai.brain.Birds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.FuzzyTargeting;
 import net.minecraft.entity.ai.NoPenaltySolidTargeting;
@@ -52,13 +53,13 @@ public class LocateWalkTargetTask {
                 }
                 float speed;
                 if (bird instanceof FlyingBirdEntity flyingBird && flyingBird.isFlying()) {
-                    speed = flyingBird.getFlySpeedMultiplier();
+                    speed = Birds.FLY_SPEED;
                 }
                 else if (bird.isInsideWaterOrBubbleColumn()) {
-                    speed = bird.getSwimSpeedMultiplier();
+                    speed = Birds.SWIM_SPEED;
                 }
                 else {
-                    speed = bird.getWalkSpeedMultiplier();
+                    speed = Birds.WALK_SPEED;
                 }
                 Optional<Vec3d> optional = Optional.ofNullable(targetGetter.apply(bird));
                 walkTarget.remember(optional.map(pos -> new WalkTarget(pos, speed, 0)));

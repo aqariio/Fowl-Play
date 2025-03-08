@@ -10,11 +10,10 @@
 //import net.minecraft.loot.LootTable;
 //import net.minecraft.loot.context.LootContextTypes;
 //import net.minecraft.loot.entry.ItemEntry;
-//import net.minecraft.loot.function.EnchantedCountIncreaseLootFunction;
+//import net.minecraft.loot.function.LootingEnchantLootFunction;
 //import net.minecraft.loot.function.SetCountLootFunction;
 //import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 //import net.minecraft.loot.provider.number.UniformLootNumberProvider;
-//import net.minecraft.registry.Registries;
 //import net.minecraft.registry.RegistryKey;
 //import net.minecraft.registry.RegistryWrapper;
 //import net.minecraft.util.Identifier;
@@ -45,9 +44,9 @@
 //        this.registerBird(biConsumer, FowlPlayEntityType.SPARROW);
 //    }
 //
-//    private void registerBird(BiConsumer<RegistryKey<LootTable>, LootTable.Builder> biConsumer, EntityType<?> type) {
+//    private void registerBird(BiConsumer<RegistryKey<LootTable>, LootTable.Builder> exporter, EntityType<?> type) {
 //        this.register(
-//            biConsumer,
+//            exporter,
 //            type,
 //            LootTable.builder()
 //                .pool(
@@ -56,14 +55,14 @@
 //                        .with(
 //                            ItemEntry.builder(Items.FEATHER)
 //                                .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0F, 2.0F)))
-//                                .apply(EnchantedCountIncreaseLootFunction.builder(this.registryLookupFuture.join(), UniformLootNumberProvider.create(0.0F, 1.0F)))
+//                                .apply(LootingEnchantLootFunction.builder(UniformLootNumberProvider.create(0.0F, 1.0F)))
 //                        )
 //                )
-//                .randomSequenceId(Identifier.of(FowlPlay.ID, "entities/" + Registries.ENTITY_TYPE.getId(type).getPath()))
+//                .randomSequenceId(Identifier.of(FowlPlay.ID, type.getLootTableId().getPath()))
 //        );
 //    }
 //
-//    private void register(BiConsumer<RegistryKey<LootTable>, LootTable.Builder> biConsumer, EntityType<?> type, LootTable.Builder builder) {
-//        biConsumer.accept(type.getLootTableId(), builder);
+//    private void register(BiConsumer<RegistryKey<LootTable>, LootTable.Builder> exporter, EntityType<?> type, LootTable.Builder builder) {
+//        exporter.accept(type.getLootTableId(), builder);
 //    }
 //}

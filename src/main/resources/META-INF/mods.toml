@@ -1,0 +1,47 @@
+modLoader = "javafml"
+loaderVersion = "*"
+license = "MIT"
+issueTrackerURL = "https://github.com/aqariio/Fowl-Play/issues"
+
+[properties]
+"connector:placeholder" = true
+
+[[mods]]
+modId = "fowlplay"
+version = "${version}"
+displayName = "Fowl Play"
+description = '''
+Just smile and wave, boys. Smile and wave.
+'''
+logoFile = "assets/fowlplay/icon.png"
+authors = "aqario"
+credits = "Penguin60, Disketaa, owen233666"
+displayURL = "https://modrinth.com/mod/fowlplay"
+
+[[dependencies.fowlplay]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.fowlplay]]
+modId = "forge"
+mandatory = true
+versionRange = "[47,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.fowlplay]]
+modId = "fabric_api"
+mandatory = true
+versionRange = "[${fabric_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.fowlplay]]
+modId = "connector"
+mandatory = true
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"

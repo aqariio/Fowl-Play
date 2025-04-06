@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:adventure/shoot_arrow",
+  "criteria": {
+    "hit_flying_bird": {
+      "conditions": {
+        "damage": {
+          "type": {
+            "tags": [
+              {
+                "expected": true,
+                "id": "minecraft:is_projectile"
+              }
+            ]
+          }
+        },
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#fowlplay:birds",
+              "nbt": "{flying:1b}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_hurt_entity"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.adventure.damage_flying_bird.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:spectral_arrow"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.adventure.damage_flying_bird.title"
+    }
+  },
+  "requirements": [
+    [
+      "hit_flying_bird"
+    ]
+  ],
+  "rewards": {
+    "experience": 50
+  },
+  "sends_telemetry_event": false
+}

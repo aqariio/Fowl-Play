@@ -53,7 +53,7 @@ public class SlideControlTask {
                 .apply(
                     instance,
                     (walkTarget) -> (world, penguin, l) -> {
-                        if ((!penguin.canStartSliding() && !penguin.isSliding()) || penguin.getAnimationTicks() < (long) seconds * 20) {
+                        if ((!penguin.canStartSliding() && !penguin.isSliding()) || penguin.getLastPoseTickDelta() < (long) seconds * 20) {
                             return false;
                         }
                         if (penguin.isSliding()) {

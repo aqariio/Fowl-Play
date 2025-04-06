@@ -1,8 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
-import aqario.fowlplay.common.entity.Aquatic;
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
-import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
+import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.task.Task;
 import net.minecraft.entity.ai.brain.task.TaskTriggerer;
@@ -23,7 +22,6 @@ public class FlightControlTask {
                     instance,
                     (flying) -> (world, bird, l) -> {
                         if (bird.canStartFlying() && shouldRun.test(bird)) {
-                            bird.getJumpControl().setActive();
                             bird.startFlying();
                             flying.remember(Unit.INSTANCE);
                             return true;
@@ -43,7 +41,7 @@ public class FlightControlTask {
                 .apply(
                     instance,
                     (flying, walkTarget) -> (world, bird, l) -> {
-                        if ((bird.isOnGround() || (bird instanceof Aquatic aquaticBird ? aquaticBird.isFloating() : bird.isInsideWaterOrBubbleColumn())) && shouldRun.test(bird)) {
+                        if ((bird.isOnGround() || bird.isBelowWaterline()) && shouldRun.test(bird)) {
                             bird.stopFlying();
                             flying.forget();
                             walkTarget.forget();

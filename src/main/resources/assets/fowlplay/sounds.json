@@ -28,6 +28,13 @@
     ],
     "subtitle": "subtitles.entity.cardinal.call"
   },
+  "entity.cardinal.hurt": {
+    "sounds": [
+      "fowlplay:mob/cardinal/call1",
+      "fowlplay:mob/cardinal/call2"
+    ],
+    "subtitle": "subtitles.entity.cardinal.hurt"
+  },
   "entity.cardinal.song": {
     "sounds": [
       "fowlplay:mob/cardinal/song1",
@@ -36,16 +43,10 @@
       "fowlplay:mob/cardinal/song4",
       "fowlplay:mob/cardinal/song5",
       "fowlplay:mob/cardinal/song6",
-      "fowlplay:mob/cardinal/song7"
+      "fowlplay:mob/cardinal/song7",
+      "fowlplay:mob/cardinal/song8"
     ],
     "subtitle": "subtitles.entity.cardinal.song"
-  },
-  "entity.cardinal.hurt": {
-    "sounds": [
-      "fowlplay:mob/cardinal/call1",
-      "fowlplay:mob/cardinal/call2"
-    ],
-    "subtitle": "subtitles.entity.cardinal.hurt"
   },
   "entity.chickadee.call": {
     "sounds": [
@@ -61,6 +62,13 @@
     ],
     "subtitle": "subtitles.entity.chickadee.call"
   },
+  "entity.chickadee.hurt": {
+    "sounds": [
+      "fowlplay:mob/chickadee/call1",
+      "fowlplay:mob/chickadee/call2"
+    ],
+    "subtitle": "subtitles.entity.chickadee.hurt"
+  },
   "entity.chickadee.song": {
     "sounds": [
       "fowlplay:mob/chickadee/song1",
@@ -72,12 +80,18 @@
     ],
     "subtitle": "subtitles.entity.chickadee.song"
   },
-  "entity.chickadee.hurt": {
+  "entity.crow.call": {
     "sounds": [
-      "fowlplay:mob/chickadee/call1",
-      "fowlplay:mob/chickadee/call2"
+      "fowlplay:mob/crow/call1",
+      "fowlplay:mob/crow/call2"
     ],
-    "subtitle": "subtitles.entity.chickadee.hurt"
+    "subtitle": "subtitles.entity.crow.call"
+  },
+  "entity.crow.hurt": {
+    "sounds": [
+      "fowlplay:mob/crow/call1"
+    ],
+    "subtitle": "subtitles.entity.crow.hurt"
   },
   "entity.duck.call": {
     "sounds": [
@@ -89,7 +103,7 @@
   "entity.duck.hurt": {
     "sounds": [
       "fowlplay:mob/duck/call1",
-      "fowlplay:mob/duck/call1"
+      "fowlplay:mob/duck/call2"
     ],
     "subtitle": "subtitles.entity.duck.hurt"
   },
@@ -102,6 +116,13 @@
     ],
     "subtitle": "subtitles.entity.gull.call"
   },
+  "entity.gull.hurt": {
+    "sounds": [
+      "fowlplay:mob/gull/hurt1",
+      "fowlplay:mob/gull/hurt2"
+    ],
+    "subtitle": "subtitles.entity.gull.hurt"
+  },
   "entity.gull.long_call": {
     "sounds": [
       "fowlplay:mob/gull/long_call1",
@@ -109,13 +130,6 @@
       "fowlplay:mob/gull/long_call3"
     ],
     "subtitle": "subtitles.entity.gull.long_call"
-  },
-  "entity.gull.hurt": {
-    "sounds": [
-      "fowlplay:mob/gull/hurt1",
-      "fowlplay:mob/gull/hurt2"
-    ],
-    "subtitle": "subtitles.entity.gull.hurt"
   },
   "entity.hawk.call": {
     "sounds": [
@@ -142,11 +156,17 @@
     ],
     "subtitle": "subtitles.entity.penguin.call"
   },
-  "entity.penguin_baby.call": {
+  "entity.penguin.death": {
     "sounds": [
-      "fowlplay:mob/penguin/baby_call"
+      "fowlplay:mob/penguin/hurt"
     ],
-    "subtitle": "subtitles.entity.penguin_baby.call"
+    "subtitle": "subtitles.entity.penguin.death"
+  },
+  "entity.penguin.hurt": {
+    "sounds": [
+      "fowlplay:mob/penguin/hurt"
+    ],
+    "subtitle": "subtitles.entity.penguin.hurt"
   },
   "entity.penguin.swim": {
     "sounds": [
@@ -158,17 +178,11 @@
     ],
     "subtitle": "subtitles.entity.penguin.swim"
   },
-  "entity.penguin.hurt": {
+  "entity.penguin_baby.call": {
     "sounds": [
-      "fowlplay:mob/penguin/hurt"
+      "fowlplay:mob/penguin/baby_call"
     ],
-    "subtitle": "subtitles.entity.penguin.hurt"
-  },
-  "entity.penguin.death": {
-    "sounds": [
-      "fowlplay:mob/penguin/hurt"
-    ],
-    "subtitle": "subtitles.entity.penguin.death"
+    "subtitle": "subtitles.entity.penguin_baby.call"
   },
   "entity.pigeon.call": {
     "sounds": [
@@ -211,23 +225,21 @@
     ],
     "subtitle": "subtitles.entity.robin.call"
   },
-  "entity.robin.song": {
-    "sounds": [
-      "fowlplay:mob/robin/song1",
-      "fowlplay:mob/robin/song2",
-      "fowlplay:mob/robin/song3",
-      "fowlplay:mob/robin/song4",
-      "fowlplay:mob/robin/song5",
-      "fowlplay:mob/robin/song6"
-    ],
-    "subtitle": "subtitles.entity.robin.song"
-  },
   "entity.robin.hurt": {
     "sounds": [
       "fowlplay:mob/robin/hurt1",
       "fowlplay:mob/robin/hurt2"
     ],
     "subtitle": "subtitles.entity.robin.hurt"
+  },
+  "entity.robin.song": {
+    "sounds": [
+      "fowlplay:mob/robin/song1",
+      "fowlplay:mob/robin/song2",
+      "fowlplay:mob/robin/song3",
+      "fowlplay:mob/robin/song4"
+    ],
+    "subtitle": "subtitles.entity.robin.song"
   },
   "entity.sparrow.call": {
     "sounds": [
@@ -239,6 +251,14 @@
     ],
     "subtitle": "subtitles.entity.sparrow.call"
   },
+  "entity.sparrow.hurt": {
+    "sounds": [
+      "fowlplay:mob/sparrow/call3",
+      "fowlplay:mob/sparrow/call4",
+      "fowlplay:mob/sparrow/call5"
+    ],
+    "subtitle": "subtitles.entity.sparrow.hurt"
+  },
   "entity.sparrow.song": {
     "sounds": [
       "fowlplay:mob/sparrow/song1",
@@ -247,13 +267,5 @@
       "fowlplay:mob/sparrow/song4"
     ],
     "subtitle": "subtitles.entity.sparrow.song"
-  },
-  "entity.sparrow.hurt": {
-    "sounds": [
-      "fowlplay:mob/sparrow/call3",
-      "fowlplay:mob/sparrow/call4",
-      "fowlplay:mob/sparrow/call5"
-    ],
-    "subtitle": "subtitles.entity.sparrow.hurt"
   }
 }

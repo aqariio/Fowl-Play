@@ -2,8 +2,8 @@ package aqario.fowlplay.client.render;
 
 import aqario.fowlplay.client.model.CustomBabyChickenEntityModel;
 import aqario.fowlplay.client.model.CustomChickenEntityModel;
-import aqario.fowlplay.common.FowlPlay;
 import aqario.fowlplay.common.entity.ChickenVariant;
+import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;

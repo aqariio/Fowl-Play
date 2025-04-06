@@ -1,12 +1,18 @@
 {
+  "replace": false,
   "values": [
     {
-      "id": "natures_spirit:pink_sand",
+      "id": "#minecraft:dirt",
       "required": false
     },
-    "minecraft:sand",
-    "minecraft:gravel",
-    "minecraft:stone",
-    "minecraft:grass_block"
+    {
+      "id": "#minecraft:sand",
+      "required": false
+    },
+    {
+      "id": "#c:stones",
+      "required": false
+    },
+    "minecraft:gravel"
   ]
 }

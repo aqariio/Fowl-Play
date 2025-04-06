@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     {
       "id": "#natures_spirit:is_alpine",
@@ -29,11 +30,15 @@
       "required": false
     },
     {
-      "id": "#c:vegetation_sparse",
+      "id": "#c:is_vegetation_sparse",
       "required": false
     },
     {
-      "id": "#c:is_sparse_vegetation/overworld",
+      "id": "#c:is_vegetation_sparse/overworld",
+      "required": false
+    },
+    {
+      "id": "#c:vegetation_sparse",
       "required": false
     },
     "minecraft:plains",

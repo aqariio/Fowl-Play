@@ -9,7 +9,8 @@
   ],
   "contributors": [
     "Penguin60",
-    "Disketaa"
+    "Disketaa",
+    "owen233666"
   ],
   "contact": {
     "homepage": "https://github.com/aqariio/Fowl-Play/discussions",
@@ -21,31 +22,35 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "aqario.fowlplay.common.FowlPlay"
+      "aqario.fowlplay.core.FowlPlay"
     ],
     "client": [
       "aqario.fowlplay.client.FowlPlayClient"
     ],
     "fabric-datagen": [
-      "aqario.fowlplay.common.data.FowlPlayDataGeneration"
+      "aqario.fowlplay.datagen.FowlPlayDataGen"
     ],
     "modmenu": [
       "aqario.fowlplay.common.config.ModMenuIntegration"
     ]
   },
+  "accessWidener": "fowlplay.accesswidener",
   "mixins": [
-    "fowlplay.mixins.json"
+    "fowlplay.mixins.json",
+    {
+      "config": "fowlplay.client.mixins.json",
+      "environment": "client"
+    }
   ],
   "depends": {
-    "fabricloader": ">=0.16.5",
+    "fabricloader": ">=${loader_version}",
     "minecraft": ">=1.20",
-    "java": ">=17",
-    "fabric-api": "*"
+    "fabric-api": ">=${fabric_version}"
   },
   "breaks": {
-    "yet_another_config_lib_v3": "<3.6.1+1.21-fabric"
+    "yet_another_config_lib_v3": "<${yacl_version}"
   },
   "suggests": {
-    "yet_another_config_lib_v3": ">=3.6.1+1.20.1-fabric"
+    "yet_another_config_lib_v3": ">=${yacl_version}"
   }
 }

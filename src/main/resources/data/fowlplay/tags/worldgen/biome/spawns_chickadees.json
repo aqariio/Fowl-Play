@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     {
       "id": "#natures_spirit:is_autumn",
@@ -13,15 +14,15 @@
       "required": false
     },
     {
-      "id": "#c:is_forest",
-      "required": false
-    },
-    {
       "id": "#c:forest",
       "required": false
     },
     {
-      "id": "#c:tree_deciduous",
+      "id": "#c:is_forest",
+      "required": false
+    },
+    {
+      "id": "#c:is_tree/deciduous",
       "required": false
     },
     {
@@ -29,7 +30,7 @@
       "required": false
     },
     {
-      "id": "#c:is_tree/deciduous",
+      "id": "#c:tree_deciduous",
       "required": false
     }
   ]

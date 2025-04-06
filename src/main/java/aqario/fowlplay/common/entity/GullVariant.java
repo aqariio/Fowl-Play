@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity;
 
-import aqario.fowlplay.common.FowlPlay;
-import aqario.fowlplay.common.registry.FowlPlayRegistries;
+import aqario.fowlplay.core.FowlPlay;
+import aqario.fowlplay.core.FowlPlayRegistries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 

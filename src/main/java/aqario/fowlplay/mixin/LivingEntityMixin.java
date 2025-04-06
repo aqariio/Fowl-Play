@@ -1,7 +1,7 @@
 package aqario.fowlplay.mixin;
 
 import aqario.fowlplay.common.entity.PenguinEntity;
-import aqario.fowlplay.common.tags.FowlPlayBlockTags;
+import aqario.fowlplay.core.tags.FowlPlayBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;

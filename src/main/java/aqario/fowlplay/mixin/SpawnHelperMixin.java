@@ -24,20 +24,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(SpawnHelper.class)
 public class SpawnHelperMixin {
     @Unique
-    private static boolean spawnsOnGround(WorldView world, BlockPos pos, EntityType<?> entityType) {
+    private static boolean isClearForSpawn(WorldView world, BlockPos pos, EntityType<?> entityType) {
         BlockState blockState = world.getBlockState(pos);
-        FluidState fluidState = world.getFluidState(pos);
-        BlockPos headPos = pos.up();
-        return SpawnHelper.isClearForSpawn(world, pos, blockState, fluidState, entityType)
-            && SpawnHelper.isClearForSpawn(world, headPos, world.getBlockState(headPos), world.getFluidState(headPos), entityType);
-
+        return SpawnHelper.isClearForSpawn(world, pos, blockState, blockState.getFluidState(), entityType);
     }
 
     @Unique
-    private static boolean spawnsInWater(WorldView world, BlockPos pos, EntityType<?> entityType) {
-        if (entityType != null && world.getWorldBorder().contains(pos)) {
-            BlockPos headPos = pos.up();
-            return world.getFluidState(pos).isIn(FluidTags.WATER) && !world.getBlockState(headPos).isSolidBlock(world, headPos);
+    private static boolean spawnsOnGround(WorldView world, BlockPos spawnPos, EntityType<?> entityType) {
+        if (entityType != null && world.getWorldBorder().contains(spawnPos)) {
+            BlockPos headPos = spawnPos.up();
+            return isClearForSpawn(world, spawnPos, entityType) && (entityType.getHeight() <= 1 || isClearForSpawn(world, headPos, entityType));
+        }
+        return false;
+    }
+
+    @Unique
+    private static boolean spawnsOnWater(WorldView world, BlockPos spawnPos, EntityType<?> entityType) {
+        if (entityType != null && world.getWorldBorder().contains(spawnPos)) {
+            BlockPos headPos = spawnPos.up();
+            return world.getFluidState(spawnPos.down()).isIn(FluidTags.WATER)
+                && (entityType.getHeight() <= 1 || isClearForSpawn(world, headPos, entityType));
         }
         return false;
     }
@@ -49,7 +55,12 @@ public class SpawnHelperMixin {
             return;
         }
         if (location == FowlPlaySpawnLocation.SEMIAQUATIC.location) {
-            cir.setReturnValue(spawnsInWater(world, pos, entityType) || spawnsOnGround(world, pos, entityType));
+            cir.setReturnValue(spawnsOnWater(world, pos, entityType) || spawnsOnGround(world, pos, entityType));
+            return;
+        }
+        if (location == FowlPlaySpawnLocation.AQUATIC.location) {
+            cir.setReturnValue(spawnsOnWater(world, pos, entityType));
+            return;
         }
         // reimplement vanilla checks so the switch statement doesn't have a stroke
         BlockState blockState = world.getBlockState(pos);

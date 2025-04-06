@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.sensor;
 
 import aqario.fowlplay.common.entity.PigeonEntity;
-import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
+import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.server.world.ServerWorld;

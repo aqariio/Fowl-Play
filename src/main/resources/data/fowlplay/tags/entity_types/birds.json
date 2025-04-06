@@ -1,10 +1,12 @@
 {
+  "replace": false,
   "values": [
     "minecraft:chicken",
     "minecraft:parrot",
     "fowlplay:blue_jay",
     "fowlplay:cardinal",
     "fowlplay:chickadee",
+    "fowlplay:crow",
     "fowlplay:duck",
     "fowlplay:gull",
     "fowlplay:hawk",

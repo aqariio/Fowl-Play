@@ -1,13 +1,11 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
 import aqario.fowlplay.common.entity.ai.control.BirdFlightMoveControl;
-import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
-import aqario.fowlplay.common.tags.FowlPlayBiomeTags;
-import aqario.fowlplay.common.tags.FowlPlayBlockTags;
-import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
-import aqario.fowlplay.common.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.FowlPlayMemoryModuleType;
+import aqario.fowlplay.core.FowlPlaySoundEvents;
+import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
+import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
@@ -15,28 +13,24 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
 
 public class RavenEntity extends TrustingBirdEntity {
-    public final AnimationState idleState = new AnimationState();
-    public final AnimationState glideState = new AnimationState();
-    public final AnimationState flapState = new AnimationState();
-    public final AnimationState floatState = new AnimationState();
+    public final AnimationState standingState = new AnimationState();
+    public final AnimationState glidingState = new AnimationState();
+    public final AnimationState flappingState = new AnimationState();
+    public final AnimationState floatingState = new AnimationState();
 
     public RavenEntity(EntityType<? extends RavenEntity> entityType, World world) {
         super(entityType, world);
@@ -45,11 +39,6 @@ public class RavenEntity extends TrustingBirdEntity {
     @Override
     protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
         return 0.7f;
-    }
-
-    @SuppressWarnings("unused")
-    public static boolean canSpawn(EntityType<? extends BirdEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getBiome(pos).isIn(FowlPlayBiomeTags.SPAWNS_RAVENS) && world.getBlockState(pos.down()).isIn(FowlPlayBlockTags.PASSERINES_SPAWNABLE_ON);
     }
 
     @Override
@@ -135,19 +124,19 @@ public class RavenEntity extends TrustingBirdEntity {
     }
 
     @Override
-    public SoundEvent getEatSound(ItemStack stack) {
-        return SoundEvents.ENTITY_PARROT_EAT;
-    }
-
-    @Override
     public void tick() {
         if (this.getWorld().isClient()) {
-            this.idleState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
-            this.flapState.setRunning(this.isFlying(), this.age);
-            this.floatState.setRunning(this.isInsideWaterOrBubbleColumn(), this.age);
+            this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
+            this.flappingState.setRunning(this.isFlying(), this.age);
+            this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
         }
 
         super.tick();
+    }
+
+    @Override
+    public float getWaterline() {
+        return 0.5F;
     }
 
     @Override
@@ -180,12 +169,6 @@ public class RavenEntity extends TrustingBirdEntity {
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         return FowlPlaySoundEvents.ENTITY_RAVEN_HURT;
-    }
-
-    @Nullable
-    @Override
-    protected SoundEvent getDeathSound() {
-        return null;
     }
 
     @Override

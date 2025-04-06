@@ -2,9 +2,10 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.entity.ai.control.BirdFlightMoveControl;
 import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;
-import aqario.fowlplay.common.entity.ai.pathing.BirdNavigation;
-import aqario.fowlplay.common.tags.FowlPlayBlockTags;
+import aqario.fowlplay.common.entity.ai.pathing.FlightNavigation;
+import aqario.fowlplay.core.tags.FowlPlayBlockTags;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.LeavesBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.SpawnReason;
@@ -19,10 +20,12 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.tag.FluidTags;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
@@ -32,6 +35,9 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     private float prevRoll;
     private float visualRoll;
     public int timeFlying = 0;
+    private static final int ROLL_FACTOR = 4;
+    private static final float MIN_HEALTH_TO_FLY = 2.0F;
+    private static final int MIN_FLIGHT_TIME = 15;
 
     protected FlyingBirdEntity(EntityType<? extends BirdEntity> entityType, World world) {
         super(entityType, world);
@@ -47,17 +53,22 @@ public abstract class FlyingBirdEntity extends BirdEntity {
 
     @SuppressWarnings("unused")
     public static boolean canSpawnPasserines(EntityType<? extends BirdEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getBlockState(pos.down()).isIn(FowlPlayBlockTags.PASSERINES_SPAWNABLE_ON);
+        return world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()) <= pos.getY()
+            && world.getBlockState(pos.down()).getBlock() instanceof LeavesBlock
+            && world.getBlockState(pos.down()).get(Properties.DISTANCE_1_7) < 7;
     }
 
     @SuppressWarnings("unused")
     public static boolean canSpawnShorebirds(EntityType<? extends BirdEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getBlockState(pos.down()).isIn(FowlPlayBlockTags.SHOREBIRDS_SPAWNABLE_ON) || world.getFluidState(pos.down()).isIn(FluidTags.WATER);
+        return world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()) <= pos.getY()
+            && (world.getBlockState(pos.down()).isIn(FowlPlayBlockTags.SHOREBIRDS_SPAWNABLE_ON)
+            || world.getFluidState(pos.down()).isIn(FluidTags.WATER));
     }
 
     @SuppressWarnings("unused")
     public static boolean canSpawnWaterfowl(EntityType<? extends BirdEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getBlockState(pos.down()).isIn(FowlPlayBlockTags.WATERFOWL_SPAWNABLE_ON) || world.getFluidState(pos.down()).isIn(FluidTags.WATER);
+        return world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()) <= pos.getY()
+            && world.getFluidState(pos.down()).isIn(FluidTags.WATER);
     }
 
     @Override
@@ -109,7 +120,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
                 this.timeFlying++;
                 this.setNoGravity(true);
                 this.fallDistance = 0.0F;
-                if (this.isOnGround() || this.isInsideWaterOrBubbleColumn()) {
+                if (this.shouldStopFlying()) {
                     this.stopFlying();
                 }
             }
@@ -133,7 +144,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         if (difference < -180.0F) {
             difference = -(360.0F + difference);
         }
-        return -difference * 3;
+        return -difference * ROLL_FACTOR;
     }
 
     public float getRoll(float tickDelta) {
@@ -152,15 +163,19 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         return new BirdFlightMoveControl(this, 20, 15);
     }
 
-    protected BirdNavigation getFlightNavigation() {
-        BirdNavigation birdNavigation = new BirdNavigation(this, this.getWorld());
-        birdNavigation.setCanPathThroughDoors(false);
-        birdNavigation.setCanEnterOpenDoors(true);
-        birdNavigation.setCanSwim(false);
-        return birdNavigation;
+    protected FlightNavigation getFlightNavigation() {
+        FlightNavigation navigation = new FlightNavigation(this, this.getWorld());
+        navigation.setCanPathThroughDoors(false);
+        navigation.setCanEnterOpenDoors(true);
+        navigation.setCanSwim(this.canSwim());
+        return navigation;
     }
 
-    protected void setMoveControl(boolean isFlying) {
+    protected boolean canSwim() {
+        return false;
+    }
+
+    public void setMoveControl(boolean isFlying) {
         if (isFlying) {
             this.moveControl = this.getFlightMoveControl();
             this.navigation = this.getFlightNavigation();
@@ -179,14 +194,6 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
-        if (!this.getWorld().isClient && this.isFlying()) {
-            this.stopFlying();
-        }
-        return super.damage(source, amount);
-    }
-
-    @Override
     public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
         return !this.isFlying() && super.handleFallDamage(fallDistance, damageMultiplier, damageSource);
     }
@@ -199,7 +206,17 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     public boolean canStartFlying() {
-        return !this.isFlying() && this.getHealth() > 2.0F;
+        return !this.isFlying() && !this.isBelowWaterline() && this.getHealth() >= MIN_HEALTH_TO_FLY;
+    }
+
+    public boolean shouldStopFlying() {
+        if (this.isSubmergedInWater()) {
+            return true;
+        }
+        if (this.timeFlying < MIN_FLIGHT_TIME) {
+            return false;
+        }
+        return this.isOnGround() || this.isBelowWaterline() || this.getHealth() < MIN_HEALTH_TO_FLY;
     }
 
     public void startFlying() {
@@ -210,6 +227,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     public void stopFlying() {
         this.setFlying(false);
         this.setMoveControl(false);
+        this.getNavigation().stop();
     }
 
     public boolean isFlying() {
@@ -233,6 +251,33 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     @Override
+    public void updateLimbs(boolean flutter) {
+        float yDelta = (float) (this.getY() - this.prevY);
+        float posDelta;
+        if (!this.isFlying() || yDelta > 0) {
+            posDelta = (float) MathHelper.magnitude(this.getX() - this.prevX, 0.0, this.getZ() - this.prevZ);
+        }
+        else {
+            posDelta = (float) MathHelper.magnitude(this.getX() - this.prevX, yDelta, this.getZ() - this.prevZ);
+        }
+        float speed;
+        if (this.isFlying()) {
+            speed = Math.abs(1 - Math.min(posDelta * 0.8F, 1.0F));
+            if (yDelta > 0) {
+                speed = (float) Math.sqrt(speed * speed + yDelta * yDelta * 4.0F);
+            }
+        }
+        else {
+            speed = Math.min(posDelta * 4.0F, 1.0F);
+        }
+        this.limbAnimator.updateLimbs(speed, 0.4F);
+    }
+
+    @Override
+    protected void updateLimbs(float posDelta) {
+    }
+
+    @Override
     public void travel(Vec3d movementInput) {
         if (!this.isFlying()) {
             super.travel(movementInput);
@@ -241,7 +286,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
 
         if (this.isLogicalSideForUpdatingMovement()) {
             if (this.isTouchingWater()) {
-                this.updateVelocity(0.02F, movementInput);
+                this.updateVelocity(this.isBelowWaterline() ? 0.02F : this.getMovementSpeed(), movementInput);
                 this.move(MovementType.SELF, this.getVelocity());
                 this.setVelocity(this.getVelocity().multiply(0.8F));
             }
@@ -258,5 +303,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
                 this.setVelocity(this.getVelocity().multiply(friction));
             }
         }
+
+        this.updateLimbs(false);
     }
 }

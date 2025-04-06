@@ -2,18 +2,15 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.control.BirdFlightMoveControl;
-import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
-import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
-import aqario.fowlplay.common.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.FowlPlaySoundEvents;
+import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
+import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
-import net.minecraft.entity.AnimationState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
@@ -24,10 +21,13 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class SparrowEntity extends FlyingBirdEntity implements Flocking {
-    public final AnimationState idleState = new AnimationState();
-    public final AnimationState glideState = new AnimationState();
-    public final AnimationState flapState = new AnimationState();
-    public final AnimationState floatState = new AnimationState();
+    public final AnimationState standingState = new AnimationState();
+    public final AnimationState glidingState = new AnimationState();
+    public final AnimationState flappingState = new AnimationState();
+    public final AnimationState floatingState = new AnimationState();
+    private int timeSinceLastFlap = this.getFlapFrequency();
+    private static final int FLAP_DURATION = 8;
+    private int flapTime = 0;
 
     public SparrowEntity(EntityType<? extends SparrowEntity> entityType, World world) {
         super(entityType, world);
@@ -37,6 +37,11 @@ public class SparrowEntity extends FlyingBirdEntity implements Flocking {
         this.setPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, -1.0f);
         this.setPathfindingPenalty(PathNodeType.COCOA, -1.0f);
         this.setPathfindingPenalty(PathNodeType.FENCE, -1.0f);
+    }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 0.475f;
     }
 
     @Override
@@ -71,21 +76,38 @@ public class SparrowEntity extends FlyingBirdEntity implements Flocking {
     }
 
     @Override
-    public SoundEvent getEatSound(ItemStack stack) {
-        return SoundEvents.ENTITY_PARROT_EAT;
-    }
-
-    @Override
     public int getFlapFrequency() {
-        return 7;
+        return 1;
     }
 
     @Override
     public void tick() {
         if (this.getWorld().isClient()) {
-            this.idleState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
-            this.flapState.setRunning(this.isFlying(), this.age);
-            this.floatState.setRunning(this.isInsideWaterOrBubbleColumn(), this.age);
+            this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
+            if (this.isFlying()) {
+                if (this.timeSinceLastFlap >= this.getFlapFrequency()) {
+                    this.timeSinceLastFlap = 0;
+                    this.flapTime++;
+                }
+                else if (this.flapTime >= 0 && this.flapTime < FLAP_DURATION) {
+                    this.flapTime++;
+                    this.glidingState.stop();
+                    this.flappingState.startIfNotRunning(this.age);
+                }
+                else {
+                    this.timeSinceLastFlap++;
+                    this.flapTime = 0;
+                    this.flappingState.stop();
+                    this.glidingState.startIfNotRunning(this.age);
+                }
+            }
+            else {
+                this.timeSinceLastFlap = this.getFlapFrequency();
+                this.flapTime = 0;
+                this.flappingState.stop();
+                this.glidingState.stop();
+            }
+            this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
         }
 
         super.tick();
@@ -102,6 +124,11 @@ public class SparrowEntity extends FlyingBirdEntity implements Flocking {
         }
 
         return bl;
+    }
+
+    @Override
+    public float getWaterline() {
+        return 0.45F;
     }
 
     @Override
@@ -150,12 +177,6 @@ public class SparrowEntity extends FlyingBirdEntity implements Flocking {
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         return FowlPlaySoundEvents.ENTITY_SPARROW_HURT;
-    }
-
-    @Nullable
-    @Override
-    protected SoundEvent getDeathSound() {
-        return null;
     }
 
     @Override

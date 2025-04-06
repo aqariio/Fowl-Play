@@ -1,9 +1,9 @@
 package aqario.fowlplay.common.world.gen;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.FowlPlayEntityType;
 import aqario.fowlplay.common.entity.HawkEntity;
-import aqario.fowlplay.common.tags.FowlPlayBiomeTags;
+import aqario.fowlplay.core.FowlPlayEntityType;
+import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;

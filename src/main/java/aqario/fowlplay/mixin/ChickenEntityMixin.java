@@ -1,9 +1,9 @@
 package aqario.fowlplay.mixin;
 
 import aqario.fowlplay.common.entity.ChickenVariant;
-import aqario.fowlplay.common.entity.data.FowlPlayTrackedDataHandlerRegistry;
-import aqario.fowlplay.common.registry.FowlPlayRegistries;
 import aqario.fowlplay.common.util.ChickenAnimationStates;
+import aqario.fowlplay.core.FowlPlayRegistries;
+import aqario.fowlplay.core.FowlPlayTrackedDataHandlerRegistry;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -29,11 +29,11 @@ public abstract class ChickenEntityMixin extends AnimalEntity implements Variant
         FowlPlayTrackedDataHandlerRegistry.CHICKEN_VARIANT
     );
     @Unique
-    private final AnimationState idleState = new AnimationState();
+    private final AnimationState standingState = new AnimationState();
     @Unique
-    private final AnimationState flapState = new AnimationState();
+    private final AnimationState flappingState = new AnimationState();
     @Unique
-    private final AnimationState floatState = new AnimationState();
+    private final AnimationState floatingState = new AnimationState();
 
     protected ChickenEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
@@ -87,25 +87,25 @@ public abstract class ChickenEntityMixin extends AnimalEntity implements Variant
     @Override
     public void tick() {
         if (this.getWorld().isClient()) {
-            this.idleState.setRunning(this.isOnGround() && !this.isInsideWaterOrBubbleColumn(), this.age);
-            this.flapState.setRunning(!this.isOnGround() && !this.isInsideWaterOrBubbleColumn(), this.age);
-            this.floatState.setRunning(this.isInsideWaterOrBubbleColumn(), this.age);
+            this.standingState.setRunning(this.isOnGround() && !this.isInsideWaterOrBubbleColumn(), this.age);
+            this.flappingState.setRunning(!this.isOnGround() && !this.isInsideWaterOrBubbleColumn(), this.age);
+            this.floatingState.setRunning(this.isInsideWaterOrBubbleColumn(), this.age);
         }
         super.tick();
     }
 
     @Override
-    public AnimationState fowlplay$getIdleState() {
-        return this.idleState;
+    public AnimationState fowlplay$getStandingState() {
+        return this.standingState;
     }
 
     @Override
-    public AnimationState fowlplay$getFlapState() {
-        return this.flapState;
+    public AnimationState fowlplay$getFlappingState() {
+        return this.flappingState;
     }
 
     @Override
-    public AnimationState fowlplay$getFloatState() {
-        return this.floatState;
+    public AnimationState fowlplay$getFloatingState() {
+        return this.floatingState;
     }
 }

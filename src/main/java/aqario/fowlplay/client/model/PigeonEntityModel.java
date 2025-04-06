@@ -1,8 +1,8 @@
 package aqario.fowlplay.client.model;
 
-import aqario.fowlplay.client.render.animation.PigeonEntityAnimations;
-import aqario.fowlplay.common.FowlPlay;
+import aqario.fowlplay.client.render.animation.PigeonAnimations;
 import aqario.fowlplay.common.entity.PigeonEntity;
+import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
@@ -94,13 +94,13 @@ public class PigeonEntityModel extends FlyingBirdEntityModel<PigeonEntity> {
             this.rightWing.visible = true;
         }
         if (!pigeon.isFlying() && !pigeon.isInsideWaterOrBubbleColumn() && !pigeon.isInSittingPose()) {
-            this.animateMovement(PigeonEntityAnimations.PIGEON_WALK, limbAngle, limbDistance, 5F, 5F);
+            this.animateMovement(PigeonAnimations.WALKING, limbAngle, limbDistance, 5F, 5F);
         }
-        this.updateAnimation(pigeon.idleState, PigeonEntityAnimations.PIGEON_IDLE, ageInTicks);
-        this.updateAnimation(pigeon.floatState, PigeonEntityAnimations.PIGEON_FLOAT, ageInTicks);
-        this.updateAnimation(pigeon.glideState, PigeonEntityAnimations.PIGEON_GLIDE, ageInTicks);
-        this.updateAnimation(pigeon.flapState, PigeonEntityAnimations.PIGEON_FLAP, ageInTicks);
-        this.updateAnimation(pigeon.sitState, PigeonEntityAnimations.PIGEON_SIT, ageInTicks);
+        this.updateAnimation(pigeon.standingState, PigeonAnimations.STANDING, ageInTicks);
+        this.updateAnimation(pigeon.floatingState, PigeonAnimations.FLOATING, ageInTicks);
+        this.updateAnimation(pigeon.glidingState, PigeonAnimations.GLIDING, ageInTicks);
+        this.updateAnimation(pigeon.flappingState, PigeonAnimations.FLAPPING, ageInTicks);
+        this.updateAnimation(pigeon.sittingState, PigeonAnimations.SITTING, ageInTicks);
     }
 
     private void updateHeadRotation(float headYaw, float headPitch) {

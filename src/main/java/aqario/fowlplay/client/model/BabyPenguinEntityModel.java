@@ -1,8 +1,8 @@
 package aqario.fowlplay.client.model;
 
-import aqario.fowlplay.client.render.animation.PenguinEntityAnimations;
-import aqario.fowlplay.common.FowlPlay;
+import aqario.fowlplay.client.render.animation.PenguinAnimations;
 import aqario.fowlplay.common.entity.PenguinEntity;
+import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
@@ -54,15 +54,15 @@ public class BabyPenguinEntityModel extends PenguinEntityModel {
             this.updateHeadRotation(penguin.isInsideWaterOrBubbleColumn(), headYaw, headPitch);
 
             if (!penguin.isInsideWaterOrBubbleColumn()) {
-                this.animateMovement(PenguinEntityAnimations.PENGUIN_WALK, limbAngle, limbDistance, 7F, 7F);
+                this.animateMovement(PenguinAnimations.WALKING, limbAngle, limbDistance, 7F, 7F);
             }
         }
 
-        this.updateAnimation(penguin.idleState, PenguinEntityAnimations.PENGUIN_IDLE, ageInTicks);
-        this.updateAnimation(penguin.slideState, PenguinEntityAnimations.PENGUIN_SLIDE, ageInTicks);
-        this.updateAnimation(penguin.fallingState, PenguinEntityAnimations.PENGUIN_SLIDE, ageInTicks);
-        this.updateAnimation(penguin.swimState, PenguinEntityAnimations.PENGUIN_SWIM, ageInTicks);
-        this.updateAnimation(penguin.danceState, PenguinEntityAnimations.PENGUIN_DANCE, ageInTicks);
+        this.updateAnimation(penguin.standingState, PenguinAnimations.STANDING, ageInTicks);
+        this.updateAnimation(penguin.slidingState, PenguinAnimations.SLIDING, ageInTicks);
+        this.updateAnimation(penguin.slidingTransitionState, PenguinAnimations.SLIDING, ageInTicks);
+        this.updateAnimation(penguin.swimmingState, PenguinAnimations.SWIMMING, ageInTicks);
+        this.updateAnimation(penguin.dancingState, PenguinAnimations.DANCING, ageInTicks);
     }
 
     private void updateHeadRotation(boolean swimming, float headYaw, float headPitch) {

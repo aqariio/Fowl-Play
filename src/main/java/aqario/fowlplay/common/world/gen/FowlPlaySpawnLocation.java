@@ -4,7 +4,8 @@ import net.minecraft.entity.SpawnRestriction;
 
 public enum FowlPlaySpawnLocation {
     GROUND,
-    SEMIAQUATIC;
+    SEMIAQUATIC,
+    AQUATIC;
 
     public SpawnRestriction.Location location;
 }

@@ -1,9 +1,9 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
-import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
-import aqario.fowlplay.common.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.FowlPlaySoundEvents;
+import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
+import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
@@ -13,7 +13,6 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.network.DebugInfoSender;
@@ -26,10 +25,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class RobinEntity extends FlyingBirdEntity implements VariantHolder<RobinEntity.Variant> {
     private static final TrackedData<String> VARIANT = DataTracker.registerData(RobinEntity.class, TrackedDataHandlerRegistry.STRING);
-    public final AnimationState idleState = new AnimationState();
-    public final AnimationState glideState = new AnimationState();
-    public final AnimationState flapState = new AnimationState();
-    public final AnimationState floatState = new AnimationState();
+    public final AnimationState standingState = new AnimationState();
+    public final AnimationState glidingState = new AnimationState();
+    public final AnimationState flappingState = new AnimationState();
+    public final AnimationState floatingState = new AnimationState();
 
     public RobinEntity(EntityType<? extends RobinEntity> entityType, World world) {
         super(entityType, world);
@@ -98,11 +97,6 @@ public class RobinEntity extends FlyingBirdEntity implements VariantHolder<Robin
     }
 
     @Override
-    public SoundEvent getEatSound(ItemStack stack) {
-        return SoundEvents.ENTITY_PARROT_EAT;
-    }
-
-    @Override
     public int getFlapFrequency() {
         return 7;
     }
@@ -110,9 +104,9 @@ public class RobinEntity extends FlyingBirdEntity implements VariantHolder<Robin
     @Override
     public void tick() {
         if (this.getWorld().isClient()) {
-            this.idleState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
-            this.flapState.setRunning(this.isFlying(), this.age);
-            this.floatState.setRunning(this.isInsideWaterOrBubbleColumn(), this.age);
+            this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
+            this.flappingState.setRunning(this.isFlying(), this.age);
+            this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
         }
 
         super.tick();
@@ -129,6 +123,11 @@ public class RobinEntity extends FlyingBirdEntity implements VariantHolder<Robin
         }
 
         return bl;
+    }
+
+    @Override
+    public float getWaterline() {
+        return 0.45F;
     }
 
     @Override
@@ -177,12 +176,6 @@ public class RobinEntity extends FlyingBirdEntity implements VariantHolder<Robin
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         return FowlPlaySoundEvents.ENTITY_ROBIN_HURT;
-    }
-
-    @Nullable
-    @Override
-    protected SoundEvent getDeathSound() {
-        return null;
     }
 
     @Override

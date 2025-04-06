@@ -1,8 +1,10 @@
 {
+  "replace": false,
   "values": [
     "fowlplay:blue_jay",
     "fowlplay:cardinal",
     "fowlplay:chickadee",
+    "fowlplay:crow",
     "fowlplay:raven",
     "fowlplay:robin",
     "fowlplay:sparrow"

@@ -1,8 +1,8 @@
 package aqario.fowlplay.client.model;
 
-import aqario.fowlplay.client.render.animation.BlueJayEntityAnimations;
-import aqario.fowlplay.common.FowlPlay;
+import aqario.fowlplay.client.render.animation.BlueJayAnimations;
 import aqario.fowlplay.common.entity.BlueJayEntity;
+import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
@@ -95,12 +95,12 @@ public class BlueJayEntityModel extends FlyingBirdEntityModel<BlueJayEntity> {
             this.rightWing.visible = true;
         }
         if (!blueJay.isFlying() && !blueJay.isInsideWaterOrBubbleColumn()) {
-            this.animateMovement(BlueJayEntityAnimations.BLUE_JAY_WALK, limbAngle, limbDistance, 6F, 6F);
+            this.animateMovement(BlueJayAnimations.WALKING, limbAngle, limbDistance, 6F, 6F);
         }
-        this.updateAnimation(blueJay.idleState, BlueJayEntityAnimations.BLUE_JAY_IDLE, ageInTicks);
-        this.updateAnimation(blueJay.floatState, BlueJayEntityAnimations.BLUE_JAY_FLOAT, ageInTicks);
-        this.updateAnimation(blueJay.glideState, BlueJayEntityAnimations.BLUE_JAY_GLIDE, ageInTicks);
-        this.updateAnimation(blueJay.flapState, BlueJayEntityAnimations.BLUE_JAY_FLAP, ageInTicks);
+        this.updateAnimation(blueJay.standingState, BlueJayAnimations.STANDING, ageInTicks);
+        this.updateAnimation(blueJay.floatingState, BlueJayAnimations.FLOATING, ageInTicks);
+        this.updateAnimation(blueJay.glidingState, BlueJayAnimations.GLIDING, ageInTicks);
+        this.updateAnimation(blueJay.flappingState, BlueJayAnimations.FLAPPING, ageInTicks);
     }
 
     private void updateHeadRotation(float headYaw, float headPitch) {

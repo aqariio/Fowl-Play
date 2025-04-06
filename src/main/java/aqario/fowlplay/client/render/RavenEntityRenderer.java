@@ -2,8 +2,8 @@ package aqario.fowlplay.client.render;
 
 import aqario.fowlplay.client.model.RavenEntityModel;
 import aqario.fowlplay.client.render.feature.BirdHeldItemFeatureRenderer;
-import aqario.fowlplay.common.FowlPlay;
 import aqario.fowlplay.common.entity.RavenEntity;
+import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;

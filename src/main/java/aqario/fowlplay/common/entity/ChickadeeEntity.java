@@ -1,18 +1,15 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
-import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
-import aqario.fowlplay.common.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.FowlPlaySoundEvents;
+import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
+import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
-import net.minecraft.entity.AnimationState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
@@ -23,10 +20,10 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class ChickadeeEntity extends FlyingBirdEntity {
-    public final AnimationState idleState = new AnimationState();
-    public final AnimationState glideState = new AnimationState();
-    public final AnimationState flapState = new AnimationState();
-    public final AnimationState floatState = new AnimationState();
+    public final AnimationState standingState = new AnimationState();
+    public final AnimationState glidingState = new AnimationState();
+    public final AnimationState flappingState = new AnimationState();
+    public final AnimationState floatingState = new AnimationState();
 
     public ChickadeeEntity(EntityType<? extends ChickadeeEntity> entityType, World world) {
         super(entityType, world);
@@ -36,6 +33,11 @@ public class ChickadeeEntity extends FlyingBirdEntity {
         this.setPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, -1.0f);
         this.setPathfindingPenalty(PathNodeType.COCOA, -1.0f);
         this.setPathfindingPenalty(PathNodeType.FENCE, -1.0f);
+    }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 0.4f;
     }
 
     @Nullable
@@ -60,11 +62,6 @@ public class ChickadeeEntity extends FlyingBirdEntity {
     }
 
     @Override
-    public SoundEvent getEatSound(ItemStack stack) {
-        return SoundEvents.ENTITY_PARROT_EAT;
-    }
-
-    @Override
     public int getFlapFrequency() {
         return 7;
     }
@@ -72,9 +69,9 @@ public class ChickadeeEntity extends FlyingBirdEntity {
     @Override
     public void tick() {
         if (this.getWorld().isClient()) {
-            this.idleState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
-            this.flapState.setRunning(this.isFlying(), this.age);
-            this.floatState.setRunning(this.isInsideWaterOrBubbleColumn(), this.age);
+            this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
+            this.flappingState.setRunning(this.isFlying(), this.age);
+            this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
         }
 
         super.tick();
@@ -91,6 +88,11 @@ public class ChickadeeEntity extends FlyingBirdEntity {
         }
 
         return bl;
+    }
+
+    @Override
+    public float getWaterline() {
+        return 0.35F;
     }
 
     @Override
@@ -139,12 +141,6 @@ public class ChickadeeEntity extends FlyingBirdEntity {
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         return FowlPlaySoundEvents.ENTITY_CHICKADEE_HURT;
-    }
-
-    @Nullable
-    @Override
-    protected SoundEvent getDeathSound() {
-        return null;
     }
 
     @Override

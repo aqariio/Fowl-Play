@@ -1,8 +1,8 @@
 package aqario.fowlplay.client.model;
 
-import aqario.fowlplay.client.render.animation.ChickenEntityAnimations;
-import aqario.fowlplay.common.FowlPlay;
+import aqario.fowlplay.client.render.animation.ChickenAnimations;
 import aqario.fowlplay.common.util.ChickenAnimationStates;
+import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
@@ -98,11 +98,11 @@ public class CustomChickenEntityModel extends SinglePartEntityModel<ChickenEntit
         }
 
         if (chicken.isOnGround() && !chicken.isInsideWaterOrBubbleColumn()) {
-            this.animateMovement(ChickenEntityAnimations.CHICKEN_WALK, limbSwing, limbSwingAmount, 3F, 3F);
+            this.animateMovement(ChickenAnimations.WALKING, limbSwing, limbSwingAmount, 3F, 3F);
         }
-        this.updateAnimation(((ChickenAnimationStates) chicken).fowlplay$getIdleState(), ChickenEntityAnimations.CHICKEN_IDLE, ageInTicks);
-        this.updateAnimation(((ChickenAnimationStates) chicken).fowlplay$getFlapState(), ChickenEntityAnimations.CHICKEN_FLAP, ageInTicks);
-        this.updateAnimation(((ChickenAnimationStates) chicken).fowlplay$getFloatState(), ChickenEntityAnimations.CHICKEN_FLOAT, ageInTicks);
+        this.updateAnimation(((ChickenAnimationStates) chicken).fowlplay$getStandingState(), ChickenAnimations.STANDING, ageInTicks);
+        this.updateAnimation(((ChickenAnimationStates) chicken).fowlplay$getFlappingState(), ChickenAnimations.FLAPPING, ageInTicks);
+        this.updateAnimation(((ChickenAnimationStates) chicken).fowlplay$getFloatingState(), ChickenAnimations.FLOATING, ageInTicks);
     }
 
     private void updateHeadRotation(float headYaw, float headPitch) {

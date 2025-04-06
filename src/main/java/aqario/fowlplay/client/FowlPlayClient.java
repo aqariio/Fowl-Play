@@ -3,7 +3,7 @@ package aqario.fowlplay.client;
 import aqario.fowlplay.client.model.*;
 import aqario.fowlplay.client.render.*;
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.FowlPlayEntityType;
+import aqario.fowlplay.core.FowlPlayEntityType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -21,6 +21,9 @@ public class FowlPlayClient implements ClientModInitializer {
 
         EntityModelLayerRegistry.registerModelLayer(ChickadeeEntityModel.MODEL_LAYER, ChickadeeEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(FowlPlayEntityType.CHICKADEE, ChickadeeEntityRenderer::new);
+
+        EntityModelLayerRegistry.registerModelLayer(CrowEntityModel.MODEL_LAYER, CrowEntityModel::getTexturedModelData);
+        EntityRendererRegistry.register(FowlPlayEntityType.CROW, CrowEntityRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(DuckEntityModel.MODEL_LAYER, DuckEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(FowlPlayEntityType.DUCK, DuckEntityRenderer::new);

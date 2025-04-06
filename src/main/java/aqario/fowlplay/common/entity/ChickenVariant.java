@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.entity;
 
-import aqario.fowlplay.common.registry.FowlPlayRegistries;
+import aqario.fowlplay.core.FowlPlayRegistries;
 import net.minecraft.registry.Registry;
 
 public record ChickenVariant(String id) {

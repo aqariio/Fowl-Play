@@ -1,8 +1,8 @@
 package aqario.fowlplay.client.model;
 
-import aqario.fowlplay.client.render.animation.DuckEntityAnimations;
-import aqario.fowlplay.common.FowlPlay;
+import aqario.fowlplay.client.render.animation.DuckAnimations;
 import aqario.fowlplay.common.entity.DuckEntity;
+import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
@@ -95,12 +95,12 @@ public class DuckEntityModel extends FlyingBirdEntityModel<DuckEntity> {
             this.rightWing.visible = true;
         }
         if (!duck.isFlying() && !duck.isInsideWaterOrBubbleColumn()) {
-            this.animateMovement(DuckEntityAnimations.DUCK_WALK, limbAngle, limbDistance, 4F, 4F);
+            this.animateMovement(DuckAnimations.WALKING, limbAngle, limbDistance, 4F, 4F);
         }
-        this.updateAnimation(duck.idleState, DuckEntityAnimations.DUCK_IDLE, ageInTicks);
-        this.updateAnimation(duck.floatState, DuckEntityAnimations.DUCK_FLOAT, ageInTicks);
-        this.updateAnimation(duck.glideState, DuckEntityAnimations.DUCK_GLIDE, ageInTicks);
-        this.updateAnimation(duck.flapState, DuckEntityAnimations.DUCK_FLAP, ageInTicks);
+        this.updateAnimation(duck.standingState, DuckAnimations.STANDING, ageInTicks);
+        this.updateAnimation(duck.floatingState, DuckAnimations.FLOATING, ageInTicks);
+        this.updateAnimation(duck.glidingState, DuckAnimations.GLIDING, ageInTicks);
+        this.updateAnimation(duck.flappingState, DuckAnimations.FLAPPING, ageInTicks);
     }
 
     private void updateHeadRotation(float headYaw, float headPitch) {

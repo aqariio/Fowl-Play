@@ -3,12 +3,11 @@ package aqario.fowlplay.common.entity;
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.control.BirdFlightMoveControl;
 import aqario.fowlplay.common.entity.ai.control.BirdFloatMoveControl;
-import aqario.fowlplay.common.entity.ai.pathing.BirdNavigation;
-import aqario.fowlplay.common.entity.data.FowlPlayTrackedDataHandlerRegistry;
-import aqario.fowlplay.common.registry.FowlPlayRegistries;
-import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
-import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
-import aqario.fowlplay.common.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.FowlPlayRegistries;
+import aqario.fowlplay.core.FowlPlaySoundEvents;
+import aqario.fowlplay.core.FowlPlayTrackedDataHandlerRegistry;
+import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
+import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
@@ -22,7 +21,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.network.DebugInfoSender;
@@ -30,22 +28,21 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class DuckEntity extends TrustingBirdEntity implements VariantHolder<DuckVariant>, Aquatic, Flocking {
+public class DuckEntity extends TrustingBirdEntity implements VariantHolder<DuckVariant>, Flocking {
     private static final TrackedData<DuckVariant> VARIANT = DataTracker.registerData(
         DuckEntity.class,
         FowlPlayTrackedDataHandlerRegistry.DUCK_VARIANT
     );
-    public final AnimationState idleState = new AnimationState();
-    public final AnimationState glideState = new AnimationState();
-    public final AnimationState flapState = new AnimationState();
-    public final AnimationState floatState = new AnimationState();
+    public final AnimationState standingState = new AnimationState();
+    public final AnimationState glidingState = new AnimationState();
+    public final AnimationState flappingState = new AnimationState();
+    public final AnimationState floatingState = new AnimationState();
 
     public DuckEntity(EntityType<? extends DuckEntity> entityType, World world) {
         super(entityType, world);
@@ -86,12 +83,8 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
     }
 
     @Override
-    protected BirdNavigation getFlightNavigation() {
-        BirdNavigation birdNavigation = new BirdNavigation(this, this.getWorld());
-        birdNavigation.setCanPathThroughDoors(false);
-        birdNavigation.setCanEnterOpenDoors(true);
-        birdNavigation.setCanSwim(true);
-        return birdNavigation;
+    protected boolean canSwim() {
+        return true;
     }
 
     @Override
@@ -178,16 +171,11 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
     }
 
     @Override
-    public SoundEvent getEatSound(ItemStack stack) {
-        return SoundEvents.ENTITY_PARROT_EAT;
-    }
-
-    @Override
     public void tick() {
         if (this.getWorld().isClient()) {
-            this.idleState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
-            this.flapState.setRunning(this.isFlying(), this.age);
-            this.floatState.setRunning(this.isInsideWaterOrBubbleColumn(), this.age);
+            this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
+            this.flappingState.setRunning(this.isFlying(), this.age);
+            this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
         }
 
         super.tick();
@@ -218,12 +206,6 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         return FowlPlaySoundEvents.ENTITY_DUCK_HURT;
-    }
-
-    @Nullable
-    @Override
-    protected SoundEvent getDeathSound() {
-        return null;
     }
 
     @Override
@@ -260,15 +242,8 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
     }
 
     @Override
-    public float getMaxWaterHeight() {
+    public float getWaterline() {
         return 0.35F;
-    }
-
-    @Override
-    public boolean isFloating() {
-        BlockPos blockPos = BlockPos.ofFloored(this.getX(), this.getY() + this.getMaxWaterHeight(), this.getZ());
-        double waterHeight = this.getBlockPos().getY() + this.getWorld().getFluidState(blockPos).getHeight(this.getWorld(), blockPos);
-        return this.isSubmergedInWater() || waterHeight > this.getY() + this.getMaxWaterHeight();
     }
 
     @Override

@@ -1,8 +1,8 @@
 package aqario.fowlplay.client.model;
 
-import aqario.fowlplay.client.render.animation.HawkEntityAnimations;
-import aqario.fowlplay.common.FowlPlay;
+import aqario.fowlplay.client.render.animation.HawkAnimations;
 import aqario.fowlplay.common.entity.HawkEntity;
+import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
@@ -105,12 +105,12 @@ public class HawkEntityModel extends FlyingBirdEntityModel<HawkEntity> {
             this.rightWing.visible = true;
         }
         if (!hawk.isFlying() && !hawk.isInsideWaterOrBubbleColumn()) {
-            this.animateMovement(HawkEntityAnimations.HAWK_WALK, limbAngle, limbDistance, 2.5F, 4F);
+            this.animateMovement(HawkAnimations.WALKING, limbAngle, limbDistance, 2.5F, 4F);
         }
-        this.updateAnimation(hawk.idleState, HawkEntityAnimations.HAWK_IDLE, ageInTicks);
-        this.updateAnimation(hawk.floatState, HawkEntityAnimations.HAWK_FLOAT, ageInTicks);
-        this.updateAnimation(hawk.glideState, HawkEntityAnimations.HAWK_GLIDE, ageInTicks);
-        this.updateAnimation(hawk.flapState, HawkEntityAnimations.HAWK_FLAP, ageInTicks);
+        this.updateAnimation(hawk.standingState, HawkAnimations.STANDING, ageInTicks);
+        this.updateAnimation(hawk.floatingState, HawkAnimations.FLOATING, ageInTicks);
+        this.updateAnimation(hawk.glidingState, HawkAnimations.GLIDING, ageInTicks);
+        this.updateAnimation(hawk.flappingState, HawkAnimations.FLAPPING, ageInTicks);
     }
 
     private void updateHeadRotation(float headYaw, float headPitch) {

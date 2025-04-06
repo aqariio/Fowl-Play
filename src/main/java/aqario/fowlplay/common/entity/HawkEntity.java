@@ -2,13 +2,11 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.control.BirdFlightMoveControl;
-import aqario.fowlplay.common.sound.FowlPlaySoundEvents;
-import aqario.fowlplay.common.tags.FowlPlayEntityTypeTags;
-import aqario.fowlplay.common.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.FowlPlaySoundEvents;
+import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
+import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
-import net.minecraft.entity.AnimationState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -17,7 +15,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
@@ -30,15 +27,20 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class HawkEntity extends TrustingBirdEntity {
-    public final AnimationState idleState = new AnimationState();
-    public final AnimationState glideState = new AnimationState();
-    public final AnimationState flapState = new AnimationState();
-    public final AnimationState floatState = new AnimationState();
+    public final AnimationState standingState = new AnimationState();
+    public final AnimationState glidingState = new AnimationState();
+    public final AnimationState flappingState = new AnimationState();
+    public final AnimationState floatingState = new AnimationState();
     private int timeSinceLastFlap = this.getFlapFrequency();
     private int flapTime = 0;
 
     public HawkEntity(EntityType<? extends HawkEntity> entityType, World world) {
         super(entityType, world);
+    }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 0.7f;
     }
 
     @Override
@@ -105,11 +107,6 @@ public class HawkEntity extends TrustingBirdEntity {
     }
 
     @Override
-    public SoundEvent getEatSound(ItemStack stack) {
-        return SoundEvents.ENTITY_PARROT_EAT;
-    }
-
-    @Override
     public boolean canHaveStatusEffect(StatusEffectInstance effect) {
         return effect.getEffectType() != StatusEffects.HUNGER && super.canHaveStatusEffect(effect);
     }
@@ -117,7 +114,7 @@ public class HawkEntity extends TrustingBirdEntity {
     @Override
     public void tick() {
         if (this.getWorld().isClient()) {
-            this.idleState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
+            this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
             if (this.isFlying()) {
                 if (this.timeSinceLastFlap > this.getFlapFrequency()) {
                     this.timeSinceLastFlap = 0;
@@ -125,26 +122,31 @@ public class HawkEntity extends TrustingBirdEntity {
                 }
                 else if (this.flapTime > 0 && this.flapTime < 60) {
                     this.flapTime++;
-                    this.glideState.stop();
-                    this.flapState.startIfNotRunning(this.age);
+                    this.glidingState.stop();
+                    this.flappingState.startIfNotRunning(this.age);
                 }
                 else {
                     this.timeSinceLastFlap++;
                     this.flapTime = 0;
-                    this.flapState.stop();
-                    this.glideState.startIfNotRunning(this.age);
+                    this.flappingState.stop();
+                    this.glidingState.startIfNotRunning(this.age);
                 }
             }
             else {
                 this.timeSinceLastFlap = this.getFlapFrequency();
                 this.flapTime = 0;
-                this.flapState.stop();
-                this.glideState.stop();
+                this.flappingState.stop();
+                this.glidingState.stop();
             }
-            this.floatState.setRunning(this.isInsideWaterOrBubbleColumn(), this.age);
+            this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
         }
 
         super.tick();
+    }
+
+    @Override
+    public float getWaterline() {
+        return 0.5F;
     }
 
     @Override
@@ -177,12 +179,6 @@ public class HawkEntity extends TrustingBirdEntity {
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         return FowlPlaySoundEvents.ENTITY_HAWK_HURT;
-    }
-
-    @Nullable
-    @Override
-    protected SoundEvent getDeathSound() {
-        return null;
     }
 
     @Override

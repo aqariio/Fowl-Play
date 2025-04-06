@@ -1,10 +1,13 @@
 {
+  "replace": false,
   "values": [
-    "minecraft:blue_ice",
-    "minecraft:ice",
-    "minecraft:packed_ice",
-    "minecraft:powder_snow",
-    "minecraft:snow",
-    "minecraft:snow_block"
+    {
+      "id": "#minecraft:ice",
+      "required": false
+    },
+    {
+      "id": "#minecraft:snow",
+      "required": false
+    }
   ]
 }

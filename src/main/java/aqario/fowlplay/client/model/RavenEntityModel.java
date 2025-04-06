@@ -1,8 +1,8 @@
 package aqario.fowlplay.client.model;
 
-import aqario.fowlplay.client.render.animation.RavenEntityAnimations;
-import aqario.fowlplay.common.FowlPlay;
+import aqario.fowlplay.client.render.animation.RavenAnimations;
 import aqario.fowlplay.common.entity.RavenEntity;
+import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
@@ -104,12 +104,12 @@ public class RavenEntityModel extends FlyingBirdEntityModel<RavenEntity> {
             this.rightWing.visible = true;
         }
         if (!raven.isFlying() && !raven.isInsideWaterOrBubbleColumn()) {
-            this.animateMovement(RavenEntityAnimations.RAVEN_WALK, limbAngle, limbDistance, 2.5F, 4F);
+            this.animateMovement(RavenAnimations.WALKING, limbAngle, limbDistance, 2.5F, 4F);
         }
-        this.updateAnimation(raven.idleState, RavenEntityAnimations.RAVEN_IDLE, ageInTicks);
-        this.updateAnimation(raven.floatState, RavenEntityAnimations.RAVEN_FLOAT, ageInTicks);
-        this.updateAnimation(raven.glideState, RavenEntityAnimations.RAVEN_GLIDE, ageInTicks);
-        this.updateAnimation(raven.flapState, RavenEntityAnimations.RAVEN_FLAP, ageInTicks);
+        this.updateAnimation(raven.standingState, RavenAnimations.STANDING, ageInTicks);
+        this.updateAnimation(raven.floatingState, RavenAnimations.FLOATING, ageInTicks);
+        this.updateAnimation(raven.glidingState, RavenAnimations.GLIDING, ageInTicks);
+        this.updateAnimation(raven.flappingState, RavenAnimations.FLAPPING, ageInTicks);
     }
 
     private void updateHeadRotation(float headYaw, float headPitch) {

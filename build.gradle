@@ -66,12 +66,32 @@ fabricApi {
     configureDataGeneration()
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/${project.archives_base_name}.accesswidener")
+}
+
 processResources {
     inputs.property "version", project.version
+    inputs.property "loader_version", project.loader_version
+    inputs.property "fabric_version", project.fabric_version
+    inputs.property "yacl_version", project.yacl_version
 
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
+    filesMatching(["fabric.mod.json", "META-INF/mods.toml"]) {
+        expand(
+            "version": project.version,
+            "loader_version": project.loader_version,
+            "fabric_version": project.fabric_version,
+            "yacl_version": project.yacl_version
+        )
     }
+}
+
+tasks.register("cleanGenerated", Delete) {
+    delete file("src/main/generated")
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.dependsOn tasks.named("cleanGenerated")
 }
 
 tasks.withType(JavaCompile).configureEach {

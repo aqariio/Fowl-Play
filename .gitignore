@@ -5,9 +5,10 @@ out/
 classes/
 logs/
 
-# Quilt Loom
+# Fabric Loom
 remappedSrc/
 run/
+src/main/generated/
 
 # Eclipse
 *.launch

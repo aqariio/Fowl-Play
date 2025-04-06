@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.config;
 
-import aqario.fowlplay.common.FowlPlay;
+import aqario.fowlplay.core.FowlPlay;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
@@ -65,6 +65,15 @@ public class YACLIntegration {
                         defaults.chickadeeSongVolume,
                         () -> config.chickadeeSongVolume,
                         val -> config.chickadeeSongVolume = val
+                    ))
+                    .group(createSoundGroup(
+                        "entity.fowlplay.crow",
+                        defaults.crowCallVolume,
+                        () -> config.crowCallVolume,
+                        val -> config.crowCallVolume = val,
+                        0,
+                        null,
+                        null
                     ))
                     .group(createSoundGroup(
                         "entity.fowlplay.duck",
@@ -177,6 +186,18 @@ public class YACLIntegration {
                         defaults.chickadeeMaxGroupSize,
                         () -> config.chickadeeMaxGroupSize,
                         val -> config.chickadeeMaxGroupSize = val
+                    ))
+                    .group(createSpawningGroup(
+                        "entity.fowlplay.crow",
+                        defaults.crowSpawnWeight,
+                        () -> config.crowSpawnWeight,
+                        val -> config.crowSpawnWeight = val,
+                        defaults.crowMinGroupSize,
+                        () -> config.crowMinGroupSize,
+                        val -> config.crowMinGroupSize = val,
+                        defaults.crowMaxGroupSize,
+                        () -> config.crowMaxGroupSize,
+                        val -> config.crowMaxGroupSize = val
                     ))
                     .group(createSpawningGroup(
                         "entity.fowlplay.duck",

@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.entity;
 
-import aqario.fowlplay.common.entity.data.FowlPlayTrackedDataHandlerRegistry;
+import aqario.fowlplay.core.FowlPlayTrackedDataHandlerRegistry;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -11,8 +11,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -51,12 +49,11 @@ public abstract class TrustingBirdEntity extends FlyingBirdEntity {
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        if (!nbt.contains("trusted")) {
-            return;
-        }
-        NbtList list = (NbtList) nbt.get("trusted");
-        if (list != null) {
-            list.forEach(element -> this.addTrustedUuid(NbtHelper.toUuid(element)));
+        if (nbt.contains("trusted")) {
+            NbtList list = (NbtList) nbt.get("trusted");
+            if (list != null) {
+                list.forEach(element -> this.addTrustedUuid(NbtHelper.toUuid(element)));
+            }
         }
     }
 
@@ -67,32 +64,17 @@ public abstract class TrustingBirdEntity extends FlyingBirdEntity {
         if (thrower != null && !this.trustsUuid(thrower)) {
             if (this.random.nextInt(3) == 0) {
                 this.addTrustedUuid(thrower);
-                this.getWorld().sendEntityStatus(this, EntityStatuses.ADD_POSITIVE_PLAYER_REACTION_PARTICLES);
+                this.getWorld().sendEntityStatus(this, EntityStatuses.ADD_VILLAGER_HAPPY_PARTICLES);
             }
-            else {
-                this.getWorld().sendEntityStatus(this, EntityStatuses.ADD_NEGATIVE_PLAYER_REACTION_PARTICLES);
-            }
-        }
-    }
-
-    protected void showEmoteParticle(boolean positive) {
-        ParticleEffect particleEffect = positive ? ParticleTypes.HEART : ParticleTypes.SMOKE;
-
-        for (int i = 0; i < 7; ++i) {
-            double d = this.random.nextGaussian() * 0.02;
-            double e = this.random.nextGaussian() * 0.02;
-            double f = this.random.nextGaussian() * 0.02;
-            this.getWorld().addParticle(particleEffect, this.getParticleX(1.0), this.getRandomBodyY() + 0.5, this.getParticleZ(1.0), d, e, f);
         }
     }
 
     @Override
     public void handleStatus(byte status) {
-        if (status == EntityStatuses.ADD_POSITIVE_PLAYER_REACTION_PARTICLES) {
-            this.showEmoteParticle(true);
-        }
-        else if (status == EntityStatuses.ADD_NEGATIVE_PLAYER_REACTION_PARTICLES) {
-            this.showEmoteParticle(false);
+        if (status == EntityStatuses.ADD_VILLAGER_HAPPY_PARTICLES) {
+            if (this.happyTicksRemaining == 0) {
+                this.happyTicksRemaining = 20;
+            }
         }
         else {
             super.handleStatus(status);
@@ -102,8 +84,8 @@ public abstract class TrustingBirdEntity extends FlyingBirdEntity {
     @Override
     public void tick() {
         super.tick();
-        if (!this.isPersistent() && !this.getTrustedUuids().isEmpty()) {
-            this.setPersistent();
+        if (this.isAmbient() && !this.getTrustedUuids().isEmpty()) {
+            this.setAmbient(false);
         }
     }
 

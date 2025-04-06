@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.entity.ai.brain.sensor;
 
-import aqario.fowlplay.common.entity.ai.brain.FowlPlayMemoryModuleType;
+import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.ai.brain.Brain;

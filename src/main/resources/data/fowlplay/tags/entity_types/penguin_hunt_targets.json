@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     "minecraft:tropical_fish",
     "minecraft:salmon",
@@ -7,27 +8,7 @@
     "minecraft:glow_squid",
     "minecraft:tadpole",
     {
-      "id": "fishofthieves:splashtail",
-      "required": false
-    },
-    {
-      "id": "fishofthieves:pondie",
-      "required": false
-    },
-    {
       "id": "fishofthieves:ancientscale",
-      "required": false
-    },
-    {
-      "id": "fishofthieves:plentifin",
-      "required": false
-    },
-    {
-      "id": "fishofthieves:wildsplash",
-      "required": false
-    },
-    {
-      "id": "fishofthieves:devilfish",
       "required": false
     },
     {
@@ -35,7 +16,27 @@
       "required": false
     },
     {
+      "id": "fishofthieves:devilfish",
+      "required": false
+    },
+    {
+      "id": "fishofthieves:plentifin",
+      "required": false
+    },
+    {
+      "id": "fishofthieves:pondie",
+      "required": false
+    },
+    {
+      "id": "fishofthieves:splashtail",
+      "required": false
+    },
+    {
       "id": "fishofthieves:stormfish",
+      "required": false
+    },
+    {
+      "id": "fishofthieves:wildsplash",
       "required": false
     }
   ]

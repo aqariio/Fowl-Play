@@ -1,7 +1,16 @@
 {
+  "replace": false,
   "values": [
     {
       "id": "#natures_spirit:is_wetland",
+      "required": false
+    },
+    {
+      "id": "#c:is_river",
+      "required": false
+    },
+    {
+      "id": "#c:is_swamp",
       "required": false
     },
     {
@@ -13,11 +22,51 @@
       "required": false
     },
     {
-      "id": "#c:is_river",
+      "id": "#natures_spirit:is_autumn",
       "required": false
     },
     {
-      "id": "#c:is_swamp",
+      "id": "#natures_spirit:is_cold",
+      "required": false
+    },
+    {
+      "id": "#natures_spirit:is_cypress",
+      "required": false
+    },
+    {
+      "id": "#natures_spirit:is_frontier",
+      "required": false
+    },
+    {
+      "id": "#c:forest",
+      "required": false
+    },
+    {
+      "id": "#c:is_forest",
+      "required": false
+    },
+    {
+      "id": "#c:is_tree/coniferous",
+      "required": false
+    },
+    {
+      "id": "#c:is_tree/deciduous",
+      "required": false
+    },
+    {
+      "id": "#c:is_tree_coniferous",
+      "required": false
+    },
+    {
+      "id": "#c:is_tree_deciduous",
+      "required": false
+    },
+    {
+      "id": "#c:tree_coniferous",
+      "required": false
+    },
+    {
+      "id": "#c:tree_deciduous",
       "required": false
     }
   ]

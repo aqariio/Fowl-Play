@@ -52,12 +52,13 @@ public class PenguinEntityModel extends BirdEntityModel<PenguinEntity> {
     @Override
     public void setAngles(PenguinEntity penguin, float limbAngle, float limbDistance, float ageInTicks, float headYaw, float headPitch) {
         this.getPart().traverse().forEach(ModelPart::resetTransform);
-        if (!penguin.isSliding()) {
-            this.updateHeadRotation(penguin.isInsideWaterOrBubbleColumn(), headYaw, headPitch);
-
-            if (!penguin.isInsideWaterOrBubbleColumn()) {
-                this.animateMovement(PenguinAnimations.WALKING, limbAngle, limbDistance, 7F, 7F);
-            }
+        if (penguin.isSwimming()) {
+            this.root.yaw = headYaw * (float) (Math.PI / 180.0);
+            this.root.pitch = headPitch * (float) (Math.PI / 180.0);
+        }
+        if (!penguin.isSwimming()) {
+            this.updateHeadRotation(headYaw, headPitch);
+            this.animateMovement(PenguinAnimations.WALKING, limbAngle, limbDistance, 7F, 7F);
         }
         this.updateAnimation(penguin.standingState, PenguinAnimations.STANDING, ageInTicks);
         this.updateAnimation(penguin.slidingState, PenguinAnimations.SLIDING, ageInTicks);
@@ -67,16 +68,10 @@ public class PenguinEntityModel extends BirdEntityModel<PenguinEntity> {
         this.updateAnimation(penguin.dancingState, PenguinAnimations.DANCING, ageInTicks);
     }
 
-    private void updateHeadRotation(boolean swimming, float headYaw, float headPitch) {
-        if (swimming) {
-            this.root.yaw = headYaw * (float) (Math.PI / 180.0);
-            this.root.pitch = headPitch * (float) (Math.PI / 180.0);
-        }
-        else {
-            headYaw = MathHelper.clamp(headYaw, -75.0F, 75.0F);
-            headPitch = MathHelper.clamp(headPitch, -45.0F, 45.0F);
-            this.neck.yaw = headYaw * (float) (Math.PI / 180.0);
-            this.neck.pitch = headPitch * (float) (Math.PI / 180.0);
-        }
+    private void updateHeadRotation(float headYaw, float headPitch) {
+        headYaw = MathHelper.clamp(headYaw, -75.0F, 75.0F);
+        headPitch = MathHelper.clamp(headPitch, -45.0F, 45.0F);
+        this.neck.yaw = headYaw * (float) (Math.PI / 180.0);
+        this.neck.pitch = headPitch * (float) (Math.PI / 180.0);
     }
 }

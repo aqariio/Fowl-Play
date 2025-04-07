@@ -58,7 +58,9 @@ public class PenguinEntityModel extends BirdEntityModel<PenguinEntity> {
         }
         if (!penguin.isSwimming()) {
             this.updateHeadRotation(headYaw, headPitch);
-            this.animateMovement(PenguinAnimations.WALKING, limbAngle, limbDistance, 7F, 7F);
+            if (!penguin.isSliding()) {
+                this.animateMovement(PenguinAnimations.WALKING, limbAngle, limbDistance, 7F, 7F);
+            }
         }
         this.updateAnimation(penguin.standingState, PenguinAnimations.STANDING, ageInTicks);
         this.updateAnimation(penguin.slidingState, PenguinAnimations.SLIDING, ageInTicks);

@@ -60,10 +60,10 @@ public class BabyPenguinEntityModel extends PenguinEntityModel {
                 this.animateMovement(PenguinAnimations.WALKING, limbAngle, limbDistance, 7F, 7F);
             }
         }
-
         this.updateAnimation(penguin.standingState, PenguinAnimations.STANDING, ageInTicks);
         this.updateAnimation(penguin.slidingState, PenguinAnimations.SLIDING, ageInTicks);
-        this.updateAnimation(penguin.slidingTransitionState, PenguinAnimations.SLIDING, ageInTicks);
+        this.updateAnimation(penguin.slidingTransitionState, PenguinAnimations.SLIDING_TRANSITION, ageInTicks, 1.0F);
+        this.updateAnimation(penguin.standingTransitionState, PenguinAnimations.STANDING_TRANSITION, ageInTicks, 1.0F);
         this.updateAnimation(penguin.swimmingState, PenguinAnimations.SWIMMING, ageInTicks);
         this.updateAnimation(penguin.dancingState, PenguinAnimations.DANCING, ageInTicks);
     }

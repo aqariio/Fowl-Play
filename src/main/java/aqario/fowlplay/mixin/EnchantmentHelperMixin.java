@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class EnchantmentHelperMixin {
     // unfortunately, water movement speed is not an attribute in 1.20
     @Inject(at = @At(value = "HEAD"), method = "getDepthStrider", cancellable = true)
-    private static void getDepthStrider(LivingEntity entity, CallbackInfoReturnable<Integer> cir) {
+    private static void fowlplay$modifyWaterSpeed(LivingEntity entity, CallbackInfoReturnable<Integer> cir) {
         if (entity instanceof PenguinEntity) {
             cir.setReturnValue(3);
             return;

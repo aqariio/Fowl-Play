@@ -48,8 +48,16 @@ public class SpawnHelperMixin {
         return false;
     }
 
-    @Inject(method = "canSpawn(Lnet/minecraft/entity/SpawnRestriction$Location;Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/EntityType;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/BlockPos;down()Lnet/minecraft/util/math/BlockPos;"), cancellable = true)
-    private static void addCustomSpawnLocationChecks(SpawnRestriction.Location location, WorldView world, BlockPos pos, @Nullable EntityType<?> entityType, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "canSpawn(Lnet/minecraft/entity/SpawnRestriction$Location;Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/EntityType;)Z", at = @At("HEAD"), cancellable = true)
+    private static void fowlplay$addCustomSpawnLocationChecks(SpawnRestriction.Location location, WorldView world, BlockPos pos, @Nullable EntityType<?> entityType, CallbackInfoReturnable<Boolean> cir) {
+        if (location == SpawnRestriction.Location.NO_RESTRICTIONS) {
+            cir.setReturnValue(true);
+            return;
+        }
+        if (entityType == null || !world.getWorldBorder().contains(pos)) {
+            cir.setReturnValue(false);
+            return;
+        }
         if (location == FowlPlaySpawnLocation.GROUND.location) {
             cir.setReturnValue(spawnsOnGround(world, pos, entityType));
             return;
@@ -81,7 +89,7 @@ public class SpawnHelperMixin {
     }
 
     @Inject(method = "spawnEntitiesInChunk(Lnet/minecraft/entity/SpawnGroup;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/chunk/WorldChunk;Lnet/minecraft/world/SpawnHelper$Checker;Lnet/minecraft/world/SpawnHelper$Runner;)V", at = @At("HEAD"), cancellable = true)
-    private static void spawnEntitiesInChunk(SpawnGroup group, ServerWorld world, WorldChunk chunk, SpawnHelper.Checker checker, SpawnHelper.Runner runner, CallbackInfo ci) {
+    private static void fowlplay$spawnEntitiesInChunk(SpawnGroup group, ServerWorld world, WorldChunk chunk, SpawnHelper.Checker checker, SpawnHelper.Runner runner, CallbackInfo ci) {
         if (group == FowlPlaySpawnGroup.BIRD.spawnGroup && world.getLevelProperties().getTime() % 20L != 0L) {
             ci.cancel();
         }

@@ -12,9 +12,8 @@ public final class FowlPlayEntityTypeTags {
     public static final TagKey<EntityType<?>> CARDINAL_AVOIDS = create("cardinal_avoids");
     public static final TagKey<EntityType<?>> CHICKADEE_AVOIDS = create("chickadee_avoids");
     public static final TagKey<EntityType<?>> CROW_AVOIDS = create("crow_avoids");
+    public static final TagKey<EntityType<?>> CROW_ATTACK_TARGETS = create("crow_attack_targets");
     public static final TagKey<EntityType<?>> DUCK_AVOIDS = create("duck_avoids");
-    public static final TagKey<EntityType<?>> DUCK_BABY_HUNT_TARGETS = create("duck_baby_hunt_targets");
-    public static final TagKey<EntityType<?>> DUCK_HUNT_TARGETS = create("duck_hunt_targets");
     public static final TagKey<EntityType<?>> FLIGHTLESS = create("flightless");
     public static final TagKey<EntityType<?>> GULL_AVOIDS = create("gull_avoids");
     public static final TagKey<EntityType<?>> GULL_BABY_HUNT_TARGETS = create("gull_baby_hunt_targets");

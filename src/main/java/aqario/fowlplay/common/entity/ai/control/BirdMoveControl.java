@@ -1,6 +1,7 @@
 package aqario.fowlplay.common.entity.ai.control;
 
 import aqario.fowlplay.common.entity.BirdEntity;
+import aqario.fowlplay.common.entity.FlyingBirdEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -21,6 +22,16 @@ public class BirdMoveControl extends MoveControl {
 
     @Override
     public void tick() {
+        if (this.bird instanceof FlyingBirdEntity flyingBird && flyingBird.isFlying()) {
+            this.tickFlying();
+        }
+        else {
+//            this.tickWalking();
+            super.tick();
+        }
+    }
+
+    private void tickWalking() {
         if (this.state == State.MOVE_TO) {
             this.state = State.WAIT;
             Vec3d distance = new Vec3d(this.targetX - this.bird.getX(), this.targetY - this.bird.getY(), this.targetZ - this.bird.getZ());
@@ -64,5 +75,42 @@ public class BirdMoveControl extends MoveControl {
         else {
             this.bird.setForwardSpeed(0.0F);
         }
+    }
+
+    private void tickFlying() {
+        FlyingBirdEntity flyingBird = (FlyingBirdEntity) this.bird;
+        this.state = State.MOVE_TO;
+
+        // distance to target
+        Vec3d distance = new Vec3d(this.targetX - flyingBird.getX(), this.targetY - flyingBird.getY(), this.targetZ - flyingBird.getZ());
+        double squaredDistance = distance.lengthSquared();
+        if (squaredDistance < 2.5000003E-7F) {
+            flyingBird.setForwardSpeed(0.0F);
+            return;
+        }
+
+        // yaw
+        float yaw = (float) (MathHelper.atan2(distance.z, distance.x) * 180.0F / (float) Math.PI) - 90.0F;
+        flyingBird.setYaw(this.wrapDegrees(flyingBird.getYaw(), yaw, flyingBird.getMaxYawChange()));
+        flyingBird.bodyYaw = flyingBird.getYaw();
+        flyingBird.headYaw = flyingBird.getYaw();
+
+        // speed
+        float speed = (float) (this.speed * flyingBird.getAttributeValue(EntityAttributes.GENERIC_FLYING_SPEED));
+        flyingBird.setMovementSpeed(speed);
+        double horizontalDistance = Math.sqrt(distance.x * distance.x + distance.z * distance.z);
+
+        // pitch
+        if (Math.abs(distance.y) > 1.0E-5F || Math.abs(horizontalDistance) > 1.0E-5F) {
+            float pitch = -(float) (MathHelper.atan2(distance.y, horizontalDistance) * 180.0F / Math.PI);
+            pitch = MathHelper.clamp(MathHelper.wrapDegrees(pitch), -flyingBird.getMaxLookPitchChange(), flyingBird.getMaxLookPitchChange());
+            flyingBird.setPitch(this.wrapDegrees(flyingBird.getPitch(), pitch, flyingBird.getMaxPitchChange()));
+        }
+
+        // pitch to movement
+        float x = MathHelper.cos(flyingBird.getPitch() * (float) (Math.PI / 180.0));
+        float y = MathHelper.sin(flyingBird.getPitch() * (float) (Math.PI / 180.0));
+        flyingBird.forwardSpeed = x * speed;
+        flyingBird.upwardSpeed = -y * speed;
     }
 }

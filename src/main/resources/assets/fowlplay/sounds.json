@@ -83,13 +83,16 @@
   "entity.crow.call": {
     "sounds": [
       "fowlplay:mob/crow/call1",
-      "fowlplay:mob/crow/call2"
+      "fowlplay:mob/crow/call2",
+      "fowlplay:mob/crow/call3",
+      "fowlplay:mob/crow/call4"
     ],
     "subtitle": "subtitles.entity.crow.call"
   },
   "entity.crow.hurt": {
     "sounds": [
-      "fowlplay:mob/crow/call1"
+      "fowlplay:mob/crow/hurt1",
+      "fowlplay:mob/crow/hurt2"
     ],
     "subtitle": "subtitles.entity.crow.hurt"
   },
@@ -155,12 +158,6 @@
       "fowlplay:mob/penguin/call3"
     ],
     "subtitle": "subtitles.entity.penguin.call"
-  },
-  "entity.penguin.death": {
-    "sounds": [
-      "fowlplay:mob/penguin/hurt"
-    ],
-    "subtitle": "subtitles.entity.penguin.death"
   },
   "entity.penguin.hurt": {
     "sounds": [

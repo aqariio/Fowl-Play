@@ -1,7 +1,7 @@
 package aqario.fowlplay.core;
 
+import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.registry.Registries;
@@ -14,7 +14,7 @@ public final class FowlPlaySensorType {
     public static final SensorType<NearestVisibleAdultsSensor> NEARBY_ADULTS = register("nearest_adults",
         NearestVisibleAdultsSensor::new
     );
-    public static final SensorType<NearbyLivingEntitiesSensor<LivingEntity>> NEARBY_LIVING_ENTITIES = register(
+    public static final SensorType<NearbyLivingEntitiesSensor<BirdEntity>> NEARBY_LIVING_ENTITIES = register(
         "nearby_living_entities", NearbyLivingEntitiesSensor::new
     );
     public static final SensorType<TemptingPlayerSensor> TEMPTING_PLAYER = register("tempting_player",

@@ -184,7 +184,7 @@ public class DuckBrain {
                     new RandomTask<>(
                         ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
                         ImmutableList.of(
-                            Pair.of(FlyTask.create(Birds.FLY_SPEED, 24, 16), 1)
+                            Pair.of(TargetlessFlyTask.create(Birds.FLY_SPEED, 24, 16), 1)
                         )
                     )
                 )

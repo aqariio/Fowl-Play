@@ -1,8 +1,8 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
+import aqario.fowlplay.common.entity.ai.pathing.FlightTargeting;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.entity.ai.NoPenaltyTargeting;
 import net.minecraft.entity.ai.brain.*;
 import net.minecraft.entity.ai.brain.task.MultiTickTask;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
@@ -37,9 +37,7 @@ public class WalkToTargetTask extends MultiTickTask<MobEntity> {
                 MemoryModuleType.PATH,
                 MemoryModuleState.VALUE_ABSENT,
                 MemoryModuleType.WALK_TARGET,
-                MemoryModuleState.VALUE_PRESENT,
-                FowlPlayMemoryModuleType.TELEPORT_TARGET,
-                MemoryModuleState.VALUE_ABSENT
+                MemoryModuleState.VALUE_PRESENT
             ),
             minRunTime,
             maxRunTime
@@ -52,6 +50,9 @@ public class WalkToTargetTask extends MultiTickTask<MobEntity> {
             return false;
         }
         Brain<?> brain = entity.getBrain();
+        if (brain.isMemoryInState(FowlPlayMemoryModuleType.TELEPORT_TARGET, MemoryModuleState.VALUE_PRESENT)) {
+            return false;
+        }
         WalkTarget walkTarget = brain.getOptionalRegisteredMemory(MemoryModuleType.WALK_TARGET).get();
         boolean reachedTarget = hasReached(entity, walkTarget);
         if (!reachedTarget && this.hasFinishedPath(entity, walkTarget, world.getTime())) {
@@ -97,11 +98,14 @@ public class WalkToTargetTask extends MultiTickTask<MobEntity> {
     protected void keepRunning(ServerWorld world, MobEntity entity, long l) {
         Path path = entity.getNavigation().getCurrentPath();
         Brain<?> brain = entity.getBrain();
+        // forget path, go straight to destination
+//        if (path != null) {
+//            path.setCurrentNodeIndex(path.getLength() - 1);
+//        }
         if (this.path != path) {
             this.path = path;
             brain.remember(MemoryModuleType.PATH, path);
         }
-
         if (path != null && this.lookTargetPos != null) {
             WalkTarget walkTarget = brain.getOptionalRegisteredMemory(MemoryModuleType.WALK_TARGET).get();
             if (walkTarget.getLookTarget().getBlockPos().getSquaredDistance(this.lookTargetPos) > 4.0 && this.hasFinishedPath(entity, walkTarget, world.getTime())) {
@@ -118,32 +122,31 @@ public class WalkToTargetTask extends MultiTickTask<MobEntity> {
         Brain<?> brain = entity.getBrain();
         if (hasReached(entity, walkTarget)) {
             brain.forget(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
+            return false;
         }
-        else {
-            boolean bl = this.path != null && this.path.reachesTarget();
-            if (bl) {
-                brain.forget(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
-            }
-            else if (!brain.hasMemoryModule(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE)) {
-                brain.remember(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, time);
-            }
 
-            if (this.path != null) {
-                return true;
-            }
+        boolean bl = this.path != null && this.path.reachesTarget();
+        if (bl) {
+            brain.forget(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
+        }
+        else if (!brain.hasMemoryModule(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE)) {
+            brain.remember(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, time);
+        }
 
-            Vec3d target = NoPenaltyTargeting.findTo(
-                (PathAwareEntity) entity,
-                24,
-                16,
-                Vec3d.ofBottomCenter(targetPos),
-                (float) (Math.PI / 4)
-            );
+        if (this.path != null) {
+            return true;
+        }
 
-            if (target != null) {
-                this.path = entity.getNavigation().findPathTo(target.x, target.y, target.z, 0);
-                return this.path != null;
-            }
+        Vec3d target = FlightTargeting.findTo(
+            (PathAwareEntity) entity,
+            24,
+            16,
+            Vec3d.ofBottomCenter(targetPos)
+        );
+
+        if (target != null) {
+            this.path = entity.getNavigation().findPathTo(target.x, target.y, target.z, 0);
+            return this.path != null;
         }
 
         return false;

@@ -15,7 +15,6 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -203,12 +202,6 @@ public class RobinEntity extends FlyingBirdEntity implements VariantHolder<Robin
         RobinBrain.reset(this);
         this.getWorld().getProfiler().pop();
         super.mobTick();
-    }
-
-    @Override
-    protected void sendAiDebugData() {
-        super.sendAiDebugData();
-        DebugInfoSender.sendBrainDebugData(this);
     }
 
     public enum Variant {

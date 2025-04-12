@@ -37,22 +37,19 @@ public class MoveAwayFromTargetTask {
                         return false;
                     }
                     Vec3d entityPos = entity.getPos();
-                    Vec3d targetPos = targetPositionGetter.apply(instance.getValue(targetType));
-                    if (!entityPos.isInRange(targetPos, entity.getFleeRange())) {
-                        return false;
-                    }
+                    Vec3d fleeTargetPos = targetPositionGetter.apply(instance.getValue(targetType));
                     if (optional.isPresent() && optional.get().getSpeed() == entitySpeedGetter.apply(entity)) {
                         Vec3d vec3d3 = optional.get().getLookTarget().getPos().subtract(entityPos);
-                        Vec3d vec3d4 = targetPos.subtract(entityPos);
-                        if (vec3d3.dotProduct(vec3d4) < 0.0) {
+                        Vec3d distanceVec = fleeTargetPos.subtract(entityPos);
+                        if (vec3d3.dotProduct(distanceVec) < 0.0) {
                             return false;
                         }
                     }
 
                     for (int j = 0; j < 10; j++) {
-                        Vec3d vec3d4 = FuzzyTargeting.findFrom(entity, 16, 16, targetPos);
-                        if (vec3d4 != null) {
-                            walkTarget.remember(new WalkTarget(vec3d4, entitySpeedGetter.apply(entity), 0));
+                        Vec3d vec3d = FuzzyTargeting.findFrom(entity, 16, 16, fleeTargetPos);
+                        if (vec3d != null) {
+                            walkTarget.remember(new WalkTarget(vec3d, entitySpeedGetter.apply(entity), 0));
                             break;
                         }
                     }

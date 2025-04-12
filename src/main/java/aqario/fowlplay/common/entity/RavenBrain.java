@@ -124,7 +124,7 @@ public class RavenBrain {
                 AvoidTask.run(),
                 PickupFoodTask.run(Birds::canPickupFood),
                 new LookAroundTask(45, 90),
-                new WanderAroundTask(),
+                new WalkToTargetTask(),
                 new TemptationCooldownTask(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
                 new TemptationCooldownTask(MemoryModuleType.GAZE_COOLDOWN_TICKS)
             )
@@ -182,8 +182,8 @@ public class RavenBrain {
                     new RandomTask<>(
                         ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
                         ImmutableList.of(
-                            Pair.of(FlyTask.perch(Birds.FLY_SPEED), 5),
-                            Pair.of(FlyTask.create(Birds.FLY_SPEED, 24, 16), 1)
+                            Pair.of(TargetlessFlyTask.perch(Birds.FLY_SPEED), 5),
+                            Pair.of(TargetlessFlyTask.create(Birds.FLY_SPEED, 24, 16), 1)
                         )
                     )
                 )

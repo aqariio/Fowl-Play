@@ -3,6 +3,7 @@ package aqario.fowlplay.common.entity;
 import aqario.fowlplay.common.entity.ai.control.BirdBodyControl;
 import aqario.fowlplay.common.entity.ai.control.BirdLookControl;
 import aqario.fowlplay.common.sound.FowlPlaySoundCategory;
+import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.MemoryModuleState;
@@ -19,6 +20,7 @@ import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.tag.FluidTags;
+import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -159,6 +161,11 @@ public abstract class BirdEntity extends AnimalEntity {
         return this.getFood().test(stack)/* && !this.isSleeping()*/;
     }
 
+    // how far the bird can see in blocks
+    public int getLookDistance() {
+        return 32;
+    }
+
     public abstract Ingredient getFood();
 
     public boolean canHunt(LivingEntity target) {
@@ -173,8 +180,17 @@ public abstract class BirdEntity extends AnimalEntity {
         return false;
     }
 
-    public int getFleeRange() {
-        return 10;
+    public int getFleeRange(LivingEntity target) {
+        return Birds.notFlightless(target) ? 32 : 10;
+    }
+
+    public boolean hasLowHealth() {
+        return this.getHealth() <= this.getMaxHealth() / 2;
+    }
+
+    @Override
+    public boolean canTarget(LivingEntity target) {
+        return super.canTarget(target) && this.canAttack(target);
     }
 
     @Override
@@ -366,5 +382,11 @@ public abstract class BirdEntity extends AnimalEntity {
     @Override
     public float getSoundPitch() {
         return (this.random.nextFloat() - this.random.nextFloat()) * 0.05F + 1.0F;
+    }
+
+    @Override
+    protected void sendAiDebugData() {
+        super.sendAiDebugData();
+        DebugInfoSender.sendBrainDebugData(this);
     }
 }

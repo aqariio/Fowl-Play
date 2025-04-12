@@ -31,7 +31,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.ActionResult;
@@ -614,11 +613,5 @@ public class PenguinEntity extends BirdEntity {
         PenguinBrain.reset(this);
         this.getWorld().getProfiler().pop();
         super.mobTick();
-    }
-
-    @Override
-    protected void sendAiDebugData() {
-        super.sendAiDebugData();
-        DebugInfoSender.sendBrainDebugData(this);
     }
 }

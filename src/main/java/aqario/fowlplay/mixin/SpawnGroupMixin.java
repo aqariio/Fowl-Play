@@ -24,12 +24,12 @@ public class SpawnGroupMixin {
     private static SpawnGroup[] field_6301;
 
     @Unique
-    private static SpawnGroup createSpawnGroup(String enumname, int ordinal, FowlPlaySpawnGroup spawnGroup) {
+    private static SpawnGroup fowlplay$createSpawnGroup(String enumname, int ordinal, FowlPlaySpawnGroup spawnGroup) {
         return ((SpawnGroup) (Object) new SpawnGroupMixin(enumname, ordinal, spawnGroup.name, spawnGroup.spawnCap, spawnGroup.peaceful, spawnGroup.rare, spawnGroup.immediateDespawnRange));
     }
 
     @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/SpawnGroup;field_6301:[Lnet/minecraft/entity/SpawnGroup;", shift = At.Shift.AFTER))
-    private static void addGroups(CallbackInfo ci) {
+    private static void fowlplay$addGroups(CallbackInfo ci) {
         int vanillaSpawnGroupsLength = field_6301.length;
         FowlPlaySpawnGroup[] groups = FowlPlaySpawnGroup.values();
         field_6301 = Arrays.copyOf(field_6301, vanillaSpawnGroupsLength + groups.length);
@@ -37,7 +37,7 @@ public class SpawnGroupMixin {
         for (int i = 0; i < groups.length; i++) {
             int pos = vanillaSpawnGroupsLength + i;
             FowlPlaySpawnGroup spawnGroup = groups[i];
-            spawnGroup.spawnGroup = field_6301[pos] = createSpawnGroup(spawnGroup.name(), pos, spawnGroup);
+            spawnGroup.spawnGroup = field_6301[pos] = fowlplay$createSpawnGroup(spawnGroup.name(), pos, spawnGroup);
         }
     }
 }

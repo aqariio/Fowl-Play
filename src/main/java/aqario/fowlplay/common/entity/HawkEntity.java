@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.ai.control.BirdFlightMoveControl;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
@@ -16,7 +15,6 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -53,12 +51,17 @@ public class HawkEntity extends TrustingBirdEntity {
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 15.0f)
             .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.225f)
-            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.27f);
+            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.24f);
     }
 
     @Override
-    protected BirdFlightMoveControl getFlightMoveControl() {
-        return new BirdFlightMoveControl(this, 15, 10);
+    public int getMaxPitchChange() {
+        return 15;
+    }
+
+    @Override
+    public int getMaxYawChange() {
+        return 15;
     }
 
     @Override
@@ -90,7 +93,13 @@ public class HawkEntity extends TrustingBirdEntity {
     }
 
     @Override
+    public int getLookDistance() {
+        return 48;
+    }
+
+    @Override
     public boolean shouldAvoid(LivingEntity entity) {
+        // TODO: avoid if the target has hurt this entity and the target is not an attack target
         return entity.getType().isIn(FowlPlayEntityTypeTags.HAWK_AVOIDS);
     }
 
@@ -102,6 +111,9 @@ public class HawkEntity extends TrustingBirdEntity {
 
     @Override
     public boolean canAttack(LivingEntity target) {
+        if (this.hasLowHealth()) {
+            return false;
+        }
         Optional<LivingEntity> hurtBy = this.getBrain().getOptionalRegisteredMemory(MemoryModuleType.HURT_BY_ENTITY);
         return hurtBy.isPresent() && hurtBy.get().equals(target);
     }
@@ -206,11 +218,5 @@ public class HawkEntity extends TrustingBirdEntity {
         HawkBrain.reset(this);
         this.getWorld().getProfiler().pop();
         super.mobTick();
-    }
-
-    @Override
-    protected void sendAiDebugData() {
-        super.sendAiDebugData();
-        DebugInfoSender.sendBrainDebugData(this);
     }
 }

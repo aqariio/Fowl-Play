@@ -52,7 +52,7 @@ public final class Birds {
         ItemEntity wantedItem = brain.getOptionalMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM).get();
         Optional<LivingEntity> avoidTarget = visibleMobs.get().stream(entity -> true)
             .filter(entity -> shouldAvoid(brain, bird, entity))
-            .filter(entity -> entity.isInRange(wantedItem, bird.getFleeRange()))
+            .filter(entity -> entity.isInRange(wantedItem, bird.getFleeRange(entity)))
             .findFirst();
 
         return !bird.getFood().test(bird.getMainHandStack()) && avoidTarget.isEmpty();

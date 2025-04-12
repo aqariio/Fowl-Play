@@ -24,12 +24,12 @@ public class SoundCategoryMixin {
     private static SoundCategory[] field_15255;
 
     @Unique
-    private static SoundCategory createSoundCategory(String enumname, int ordinal, FowlPlaySoundCategory soundCategory) {
+    private static SoundCategory fowlplay$createSoundCategory(String enumname, int ordinal, FowlPlaySoundCategory soundCategory) {
         return ((SoundCategory) (Object) new SoundCategoryMixin(enumname, ordinal, soundCategory.name));
     }
 
     @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/sound/SoundCategory;field_15255:[Lnet/minecraft/sound/SoundCategory;", shift = At.Shift.AFTER))
-    private static void addCategories(CallbackInfo ci) {
+    private static void fowlplay$addCategories(CallbackInfo ci) {
         int vanillaSoundCategorysLength = field_15255.length;
         FowlPlaySoundCategory[] groups = FowlPlaySoundCategory.values();
         field_15255 = Arrays.copyOf(field_15255, vanillaSoundCategorysLength + groups.length);
@@ -37,7 +37,7 @@ public class SoundCategoryMixin {
         for (int i = 0; i < groups.length; i++) {
             int pos = vanillaSoundCategorysLength + i;
             FowlPlaySoundCategory soundCategory = groups[i];
-            soundCategory.soundCategory = field_15255[pos] = createSoundCategory(soundCategory.name(), pos, soundCategory);
+            soundCategory.soundCategory = field_15255[pos] = fowlplay$createSoundCategory(soundCategory.name(), pos, soundCategory);
         }
     }
 }

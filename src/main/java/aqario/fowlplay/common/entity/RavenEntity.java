@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.ai.control.BirdFlightMoveControl;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
@@ -9,13 +8,13 @@ import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
+import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -49,14 +48,14 @@ public class RavenEntity extends TrustingBirdEntity {
     public static DefaultAttributeContainer.Builder createRavenAttributes() {
         return FlyingBirdEntity.createFlyingBirdAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0f)
-            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0f)
+            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.225f)
             .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.24f);
     }
 
     @Override
-    protected BirdFlightMoveControl getFlightMoveControl() {
-        return new BirdFlightMoveControl(this, 15, 10);
+    public int getMaxYawChange() {
+        return 18;
     }
 
     @Override
@@ -110,10 +109,14 @@ public class RavenEntity extends TrustingBirdEntity {
 
     @Override
     public boolean canAttack(LivingEntity target) {
-        if (!target.getType().isIn(FowlPlayEntityTypeTags.RAVEN_ATTACK_TARGETS)) {
+        if (this.hasLowHealth()) {
             return false;
         }
         Brain<RavenEntity> brain = this.getBrain();
+        Optional<LivingEntity> hurtBy = this.getBrain().getOptionalRegisteredMemory(MemoryModuleType.HURT_BY_ENTITY);
+        if (!target.getType().isIn(FowlPlayEntityTypeTags.RAVEN_ATTACK_TARGETS) && (hurtBy.isEmpty() || !hurtBy.get().equals(target))) {
+            return false;
+        }
         Optional<List<? extends PassiveEntity>> nearbyAdults = brain.getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS);
         return nearbyAdults.filter(passiveEntities -> passiveEntities.size() >= 2).isPresent();
     }
@@ -196,11 +199,5 @@ public class RavenEntity extends TrustingBirdEntity {
         RavenBrain.reset(this);
         this.getWorld().getProfiler().pop();
         super.mobTick();
-    }
-
-    @Override
-    protected void sendAiDebugData() {
-        super.sendAiDebugData();
-        DebugInfoSender.sendBrainDebugData(this);
     }
 }

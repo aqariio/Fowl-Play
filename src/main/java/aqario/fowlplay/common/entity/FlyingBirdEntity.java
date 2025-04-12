@@ -1,9 +1,9 @@
 package aqario.fowlplay.common.entity;
 
-import aqario.fowlplay.common.entity.ai.control.BirdFlightMoveControl;
 import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;
 import aqario.fowlplay.common.entity.ai.pathing.FlightNavigation;
 import aqario.fowlplay.core.tags.FowlPlayBlockTags;
+import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.entity.EntityType;
@@ -28,20 +28,22 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
 
 public abstract class FlyingBirdEntity extends BirdEntity {
     private static final TrackedData<Boolean> FLYING = DataTracker.registerData(FlyingBirdEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    private boolean isFlightMoveControl;
+    private boolean isFlightNavigation;
     private float prevRoll;
     private float visualRoll;
     public int timeFlying = 0;
     private static final int ROLL_FACTOR = 4;
-    private static final float MIN_HEALTH_TO_FLY = 2.0F;
+    private static final float MIN_HEALTH_TO_FLY = 1.5F;
     private static final int MIN_FLIGHT_TIME = 15;
 
     protected FlyingBirdEntity(EntityType<? extends BirdEntity> entityType, World world) {
         super(entityType, world);
-        this.setMoveControl(false);
+        this.moveControl = this.getBirdMoveControl();
+        this.setNavigation(false);
     }
 
     public static DefaultAttributeContainer.Builder createFlyingBirdAttributes() {
@@ -88,7 +90,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
 
     @Override
     protected EntityNavigation createNavigation(World world) {
-        this.setMoveControl(this.isFlying());
+        this.setNavigation(this.isFlying());
         return this.navigation;
     }
 
@@ -128,8 +130,8 @@ public abstract class FlyingBirdEntity extends BirdEntity {
                 this.timeFlying = 0;
                 this.setNoGravity(false);
             }
-            if (this.isFlying() != this.isFlightMoveControl) {
-                this.setMoveControl(this.isFlying());
+            if (this.isFlying() != this.isFlightNavigation) {
+                this.setNavigation(this.isFlying());
             }
         }
         this.prevRoll = this.visualRoll;
@@ -151,16 +153,12 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         return tickDelta == 1.0F ? this.visualRoll : MathHelper.lerp(tickDelta, this.prevRoll, this.visualRoll);
     }
 
-    protected MoveControl getLandMoveControl() {
+    protected MoveControl getBirdMoveControl() {
         return new BirdMoveControl(this);
     }
 
     protected EntityNavigation getLandNavigation() {
         return new MobNavigation(this, this.getWorld());
-    }
-
-    protected BirdFlightMoveControl getFlightMoveControl() {
-        return new BirdFlightMoveControl(this, 20, 15);
     }
 
     protected FlightNavigation getFlightNavigation() {
@@ -171,21 +169,48 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         return navigation;
     }
 
+    public int getMaxPitchChange() {
+        return 20;
+    }
+
+    public int getMaxYawChange() {
+        return 20;
+    }
+
     protected boolean canSwim() {
         return false;
     }
 
-    public void setMoveControl(boolean isFlying) {
+    public void setNavigation(boolean isFlying) {
         if (isFlying) {
-            this.moveControl = this.getFlightMoveControl();
             this.navigation = this.getFlightNavigation();
-            this.isFlightMoveControl = true;
+            this.isFlightNavigation = true;
         }
         else {
-            this.moveControl = this.getLandMoveControl();
             this.navigation = this.getLandNavigation();
-            this.isFlightMoveControl = false;
+            this.isFlightNavigation = false;
         }
+    }
+
+    @Override
+    public float getPathfindingFavor(BlockPos pos, WorldView world) {
+        float perch = this.getType().isIn(FowlPlayEntityTypeTags.PASSERINES) && world.getBlockState(pos.down()).isIn(FowlPlayBlockTags.PERCHES) ? 1.0F : 0.0F;
+        float withinView = this.isWithinView(pos, 10.0F) ? 100.0F : 0.0F;
+        return perch + withinView;
+    }
+
+    public boolean isWithinView(BlockPos pos, float angle) {
+        Vec3d target = Vec3d.ofCenter(pos);
+        // bird to target
+        Vec3d targetVec = target.subtract(this.getPos());
+        targetVec = targetVec.normalize();
+
+        Vec3d lookVec = this.getRotationVec(1.0F);
+        float dotProduct = (float) lookVec.dotProduct(targetVec);
+
+        // if dot product >= cosine of max angle the angle is within the cone
+        float cosMaxAngle = MathHelper.cos(angle);
+        return dotProduct >= cosMaxAngle;
     }
 
     @Override
@@ -221,12 +246,12 @@ public abstract class FlyingBirdEntity extends BirdEntity {
 
     public void startFlying() {
         this.setFlying(true);
-        this.setMoveControl(true);
+        this.setNavigation(true);
     }
 
     public void stopFlying() {
         this.setFlying(false);
-        this.setMoveControl(false);
+        this.setNavigation(false);
         this.getNavigation().stop();
     }
 

@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.ai.control.BirdFlightMoveControl;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
@@ -12,7 +11,6 @@ import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -44,11 +42,6 @@ public class SparrowEntity extends FlyingBirdEntity implements Flocking {
         return 0.475f;
     }
 
-    @Override
-    protected BirdFlightMoveControl getFlightMoveControl() {
-        return new BirdFlightMoveControl(this, 15, 15);
-    }
-
     @Nullable
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
@@ -68,11 +61,6 @@ public class SparrowEntity extends FlyingBirdEntity implements Flocking {
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
         return entity.getType().isIn(FowlPlayEntityTypeTags.SPARROW_AVOIDS);
-    }
-
-    @Override
-    public int getFleeRange() {
-        return 7;
     }
 
     @Override
@@ -204,12 +192,6 @@ public class SparrowEntity extends FlyingBirdEntity implements Flocking {
         SparrowBrain.reset(this);
         this.getWorld().getProfiler().pop();
         super.mobTick();
-    }
-
-    @Override
-    protected void sendAiDebugData() {
-        super.sendAiDebugData();
-        DebugInfoSender.sendBrainDebugData(this);
     }
 
     @Override

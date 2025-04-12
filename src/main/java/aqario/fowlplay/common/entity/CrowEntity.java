@@ -1,26 +1,29 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.ai.control.BirdFlightMoveControl;
+import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
+import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
 
 public class CrowEntity extends TrustingBirdEntity {
     public final AnimationState standingState = new AnimationState();
@@ -40,7 +43,7 @@ public class CrowEntity extends TrustingBirdEntity {
     public static DefaultAttributeContainer.Builder createCrowAttributes() {
         return FlyingBirdEntity.createFlyingBirdAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 8.0f)
-            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 0.5f)
+            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.225f)
             .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.22f);
     }
@@ -51,8 +54,8 @@ public class CrowEntity extends TrustingBirdEntity {
     }
 
     @Override
-    protected BirdFlightMoveControl getFlightMoveControl() {
-        return new BirdFlightMoveControl(this, 15, 10);
+    public int getMaxYawChange() {
+        return 18;
     }
 
     @Override
@@ -96,6 +99,20 @@ public class CrowEntity extends TrustingBirdEntity {
 
     public Ingredient getFood() {
         return Ingredient.fromTag(FowlPlayItemTags.CROW_FOOD);
+    }
+
+    @Override
+    public boolean canAttack(LivingEntity target) {
+        if (this.hasLowHealth()) {
+            return false;
+        }
+        Brain<CrowEntity> brain = this.getBrain();
+        Optional<LivingEntity> hurtBy = this.getBrain().getOptionalRegisteredMemory(MemoryModuleType.HURT_BY_ENTITY);
+        if (!target.getType().isIn(FowlPlayEntityTypeTags.CROW_ATTACK_TARGETS) && (hurtBy.isEmpty() || !hurtBy.get().equals(target))) {
+            return false;
+        }
+        Optional<List<? extends PassiveEntity>> nearbyAdults = brain.getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS);
+        return nearbyAdults.filter(passiveEntities -> passiveEntities.size() >= 4).isPresent();
     }
 
     @Override
@@ -176,11 +193,5 @@ public class CrowEntity extends TrustingBirdEntity {
         CrowBrain.reset(this);
         this.getWorld().getProfiler().pop();
         super.mobTick();
-    }
-
-    @Override
-    protected void sendAiDebugData() {
-        super.sendAiDebugData();
-        DebugInfoSender.sendBrainDebugData(this);
     }
 }

@@ -167,7 +167,7 @@ public class SparrowBrain {
                     new RandomTask<>(
                         ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
                         ImmutableList.of(
-                            Pair.of(FlyTask.perch(Birds.FLY_SPEED), 1)
+                            Pair.of(TargetlessFlyTask.perch(Birds.FLY_SPEED), 1)
                         )
                     )
                 )

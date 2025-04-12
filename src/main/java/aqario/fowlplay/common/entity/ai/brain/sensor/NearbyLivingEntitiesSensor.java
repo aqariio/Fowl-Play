@@ -1,5 +1,6 @@
 package aqario.fowlplay.common.entity.ai.brain.sensor;
 
+import aqario.fowlplay.common.entity.BirdEntity;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Brain;
@@ -13,10 +14,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-public class NearbyLivingEntitiesSensor<T extends LivingEntity> extends Sensor<T> {
+public class NearbyLivingEntitiesSensor<T extends BirdEntity> extends Sensor<T> {
     @Override
     protected void sense(ServerWorld world, T entity) {
-        Box box = entity.getBoundingBox().expand(this.horizontalRadius(), this.verticalRadius(), this.horizontalRadius());
+        Box box = entity.getBoundingBox().expand(this.horizontalRadius(entity), this.verticalRadius(entity), this.horizontalRadius(entity));
         List<LivingEntity> list = world.getEntitiesByClass(LivingEntity.class, box, living -> living != entity && living.isAlive());
         list.sort(Comparator.comparingDouble(entity::squaredDistanceTo));
         Brain<?> brain = entity.getBrain();
@@ -24,12 +25,12 @@ public class NearbyLivingEntitiesSensor<T extends LivingEntity> extends Sensor<T
         brain.remember(MemoryModuleType.VISIBLE_MOBS, new LivingTargetCache(entity, list));
     }
 
-    protected int horizontalRadius() {
-        return 32;
+    protected int horizontalRadius(T entity) {
+        return entity.getLookDistance();
     }
 
-    protected int verticalRadius() {
-        return 32;
+    protected int verticalRadius(T entity) {
+        return entity.getLookDistance();
     }
 
     @Override

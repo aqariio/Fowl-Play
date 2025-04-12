@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.ai.control.BirdFlightMoveControl;
 import aqario.fowlplay.common.entity.ai.control.BirdFloatMoveControl;
 import aqario.fowlplay.core.FowlPlayRegistries;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
@@ -23,7 +22,6 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -60,13 +58,18 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
     }
 
     @Override
-    protected MoveControl getLandMoveControl() {
+    protected MoveControl getBirdMoveControl() {
         return new BirdFloatMoveControl(this);
     }
 
     @Override
-    protected BirdFlightMoveControl getFlightMoveControl() {
-        return new BirdFlightMoveControl(this, 15, 10);
+    public int getMaxPitchChange() {
+        return 15;
+    }
+
+    @Override
+    public int getMaxYawChange() {
+        return 15;
     }
 
     @Override
@@ -160,12 +163,6 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
     }
 
     @Override
-    public boolean canHunt(LivingEntity target) {
-        return target.getType().isIn(FowlPlayEntityTypeTags.DUCK_HUNT_TARGETS) ||
-            (target.getType().isIn(FowlPlayEntityTypeTags.DUCK_BABY_HUNT_TARGETS) && target.isBaby());
-    }
-
-    @Override
     public boolean shouldAvoid(LivingEntity entity) {
         return entity.getType().isIn(FowlPlayEntityTypeTags.DUCK_AVOIDS);
     }
@@ -233,12 +230,6 @@ public class DuckEntity extends TrustingBirdEntity implements VariantHolder<Duck
         DuckBrain.reset(this);
         this.getWorld().getProfiler().pop();
         super.mobTick();
-    }
-
-    @Override
-    protected void sendAiDebugData() {
-        super.sendAiDebugData();
-        DebugInfoSender.sendBrainDebugData(this);
     }
 
     @Override

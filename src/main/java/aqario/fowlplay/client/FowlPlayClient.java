@@ -1,7 +1,7 @@
 package aqario.fowlplay.client;
 
-import aqario.fowlplay.client.model.*;
-import aqario.fowlplay.client.render.*;
+import aqario.fowlplay.client.render.entity.*;
+import aqario.fowlplay.client.render.entity.model.*;
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.core.FowlPlayEntityType;
 import net.fabricmc.api.ClientModInitializer;
@@ -13,6 +13,10 @@ import net.minecraft.entity.EntityType;
 public class FowlPlayClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        registerEntityRenderers();
+    }
+
+    public static void registerEntityRenderers() {
         EntityModelLayerRegistry.registerModelLayer(BlueJayEntityModel.MODEL_LAYER, BlueJayEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(FowlPlayEntityType.BLUE_JAY, BlueJayEntityRenderer::new);
 

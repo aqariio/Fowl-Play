@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.ai.control.BirdFlightMoveControl;
 import aqario.fowlplay.common.entity.ai.control.BirdFloatMoveControl;
 import aqario.fowlplay.core.FowlPlayRegistries;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
@@ -23,7 +22,6 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -60,13 +58,18 @@ public class GullEntity extends TrustingBirdEntity implements VariantHolder<Gull
     }
 
     @Override
-    protected MoveControl getLandMoveControl() {
+    protected MoveControl getBirdMoveControl() {
         return new BirdFloatMoveControl(this);
     }
 
     @Override
-    protected BirdFlightMoveControl getFlightMoveControl() {
-        return new BirdFlightMoveControl(this, 15, 10);
+    public int getMaxPitchChange() {
+        return 15;
+    }
+
+    @Override
+    public int getMaxYawChange() {
+        return 15;
     }
 
     @Override
@@ -171,11 +174,6 @@ public class GullEntity extends TrustingBirdEntity implements VariantHolder<Gull
     }
 
     @Override
-    public int getFleeRange() {
-        return this.getTrustedUuids().isEmpty() ? super.getFleeRange() : 6;
-    }
-
-    @Override
     public void tick() {
         if (this.getWorld().isClient()) {
             this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
@@ -249,12 +247,6 @@ public class GullEntity extends TrustingBirdEntity implements VariantHolder<Gull
         GullBrain.reset(this);
         this.getWorld().getProfiler().pop();
         super.mobTick();
-    }
-
-    @Override
-    protected void sendAiDebugData() {
-        super.sendAiDebugData();
-        DebugInfoSender.sendBrainDebugData(this);
     }
 
     @Override

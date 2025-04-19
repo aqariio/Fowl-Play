@@ -3,8 +3,7 @@ import java.util.function.BiConsumer
 import java.util.function.Consumer
 import java.util.function.Predicate
 
-// Baseline code. Minimal edits necessary.
-// TODO acknowledge that you add plugins here.
+// add plugins here
 plugins {
     `maven-publish`
     kotlin("jvm") version "1.9.22"
@@ -13,8 +12,7 @@ plugins {
     //id("dev.kikugie.j52j") // Recommended by kiku if using swaps in json5.
     id("me.modmuss50.mod-publish-plugin")
 }
-// Leave this alone unless adding more dependencies.
-// TODO acknowledge that you add dependency repositories here.
+// add dependency repositories here
 repositories {
     mavenCentral()
     exclusiveContent {
@@ -142,7 +140,7 @@ class Env {
     val isApi = project.parent!!.name == "api"
     val type = if(isFabric) EnvType.FABRIC else if(isForge) EnvType.FORGE else EnvType.NEOFORGE
 
-    // TODO: if MC requires higher JVMs in future updates change this controller.
+    // TODO: if MC requires higher JVMs in future updates change this controller
     val javaVer = if(atMost("1.16.5")) 8 else if(atMost("1.20.4")) 17 else 21
     val yarnVersion = property("deps.mappings.yarn.version").toString()
     val yarnPatchVersion = property("deps.mappings.yarn_patch.version").toString()
@@ -234,7 +232,7 @@ class APISource(
 /**
  * APIs with hardcoded support for convenience. These are optional.
  */
-//TODO add any hardcoded apis here. Hardcoded APIs should be used in most if not all your versions.
+// TODO: add hardcoded apis here. Hardcoded APIs should be used in most if not all your versions.
 val apis = arrayListOf(
     APISource(
         DepType.API,
@@ -249,8 +247,7 @@ val apis = arrayListOf(
         APIModInfo("architectury", "architectury-api"),
         "${if(env.atLeast("1.18.0")) "dev.architectury" else "me.shedaniel"}:architectury-${env.loader}",
         optionalVersionProperty("deps.api.architectury")
-    )
-    { src ->
+    ) { src ->
         src.versionRange.isPresent
     }
 )
@@ -307,8 +304,8 @@ class ModMixins {
         return out
     }
 }
-//TODO acknowledge this controller and the relevant API tokens if you intend to auto-publish (HIGHLY RECOMMENDED)
-//TODO acknowledge that with high version count Modrinth will probably rate limit you. If this is the case you should email them to ask for assistance.
+// TODO: auto publish api tokens
+// with high version count Modrinth will probably rate limit you. If this is the case you should email them to ask for assistance.
 /**
  * Controls publishing. For publishing to work dryRunMode must be false.
  * Modrinth and Curseforge project tokens are publicly accessible, so it is safe to include them in files.
@@ -480,7 +477,7 @@ val mod = ModProperties()
 val modFabric = ModFabric()
 val modMixins = ModMixins()
 val dynamics = SpecialMultiversionedConstants()
-//TODO: change this if you want your upload version format to be different (this is a highly recommended format)
+// change this if you want your upload version format to be different (this is a highly recommended format)
 version = "${mod.version}+${env.mcVersion.min}+${env.loader}"
 group = property("group").toString()
 // Adds both optional and required dependencies to stonecutter version checking.
@@ -495,7 +492,7 @@ apis.forEach { src ->
         }
     }
 }
-//TODO: Add more stonecutter consts here.
+// Add more stonecutter consts here
 stonecutter.const("fabric", env.isFabric)
 stonecutter.const("forge", env.isForge)
 stonecutter.const("neoforge", env.isNeo)
@@ -526,7 +523,6 @@ base { archivesName.set(env.archivesBaseName) }
 
 dependencies {
     minecraft("com.mojang:minecraft:${env.mcVersion.min}")
-    // TODO do you really want to use yarn though? Like what convenience does it even give you smh?
 //    mappings(loom.officialMojangMappings())
     if(env.isFabric) {
         mappings("net.fabricmc:yarn:${env.yarnVersion}:v2")
@@ -581,7 +577,7 @@ java {
 /**
  * Replaces the normal copy task and post-processes the files.
  * Effectively renames datapack directories due to depluralization past 1.20.4.
- * TODO: acknowledge that you should not pluralize the directories listed in targets.
+ * DO NOT pluralize the directories listed in targets.
  */
 abstract class ProcessResourcesExtension : ProcessResources() {
     @get:Input
@@ -653,7 +649,7 @@ tasks.processResources {
         filesMatching(str) { expand(map) }
     }
 }
-//TODO: Enable auto-publishing.
+//TODO: get auto publishing to work
 publishMods {
     file = tasks.remapJar.get().archiveFile
     additionalFiles.from(tasks.remapSourcesJar.get().archiveFile)
@@ -719,11 +715,12 @@ publishMods {
         }
     }*/
 }
-// TODO Disable if not uploading to a maven
+/**
+ * maven upload
+ */
 /*
 publishing {
     repositories {
-        // TODO this is an example of how I recommend you do this.
         if(modPublish.mavenURL.isPresent) {
             maven {
                 url = uri(modPublish.mavenURL.get())

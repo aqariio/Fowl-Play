@@ -7,8 +7,6 @@ import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.network.s2c.DebugBirdCustomPayload;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayEntityType;
-import io.github.flemmli97.debugutils.api.RegisterDebugRenderers;
-import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -16,15 +14,13 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
 
-@SuppressWarnings("unused")
-public class FowlPlayClient implements ClientModInitializer {
+public class FowlPlayClient {
     public static boolean DEBUG_BIRD = false;
 
-    @Override
-    public void onInitializeClient() {
+    public static void init() {
         registerEntityRenderers();
 
-        if (FowlPlay.isDebugUtilsLoaded()) {
+        if(FowlPlay.isDebugUtilsLoaded()) {
             Identifier debugBirdId = Identifier.of(FowlPlay.ID, "debug/bird");
             RegisterDebugRenderers.registerCustomDebugRenderer(debugBirdId, BirdDebugRenderer.INSTANCE);
             RegisterDebugRenderers.registerServerToggle(debugBirdId);
@@ -75,7 +71,7 @@ public class FowlPlayClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(SparrowEntityModel.MODEL_LAYER, SparrowEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(FowlPlayEntityType.SPARROW, SparrowEntityRenderer::new);
 
-        if (FowlPlayConfig.getInstance().customChickenModel) {
+        if(FowlPlayConfig.getInstance().customChickenModel) {
             EntityModelLayerRegistry.registerModelLayer(CustomChickenEntityModel.MODEL_LAYER, CustomChickenEntityModel::getTexturedModelData);
             EntityModelLayerRegistry.registerModelLayer(CustomBabyChickenEntityModel.MODEL_LAYER, CustomBabyChickenEntityModel::getTexturedModelData);
             EntityRendererRegistry.register(EntityType.CHICKEN, CustomChickenEntityRenderer::new);

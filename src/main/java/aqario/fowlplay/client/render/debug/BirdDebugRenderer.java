@@ -41,7 +41,7 @@ public class BirdDebugRenderer implements DebugRenderer.Renderer {
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
-        if (!FowlPlayClient.DEBUG_BIRD) {
+        if(!FowlPlayClient.DEBUG_BIRD) {
             return;
         }
         this.removeRemovedBirds();
@@ -70,7 +70,7 @@ public class BirdDebugRenderer implements DebugRenderer.Renderer {
 
     private void draw(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double x, double y, double z) {
         this.birds.values().forEach(brain -> {
-            if (this.isClose(brain)) {
+            if(this.isClose(brain)) {
                 this.drawBirdData(matrices, vertexConsumers, brain, x, y, z);
             }
         });
@@ -103,7 +103,7 @@ public class BirdDebugRenderer implements DebugRenderer.Renderer {
         );
         i++;
 
-        if (!birdData.inventory().isEmpty()) {
+        if(!birdData.inventory().isEmpty()) {
             drawString(matrices, vertexConsumers, birdData.pos(), i, birdData.inventory(), -98404, 0.02F);
         }
 
@@ -113,7 +113,7 @@ public class BirdDebugRenderer implements DebugRenderer.Renderer {
     private void drawPath(
         MatrixStack matrices, VertexConsumerProvider vertexConsumers, DebugBirdCustomPayload.BirdData birdData, double cameraX, double cameraY, double cameraZ
     ) {
-        if (birdData.path() != null) {
+        if(birdData.path() != null) {
             PathfindingDebugRenderer.drawPath(matrices, vertexConsumers, birdData.path(), 0.5F, false, false, cameraX, cameraY, cameraZ);
         }
     }

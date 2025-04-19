@@ -1,56 +1,32 @@
 {
   "schemaVersion": 1,
-  "id": "fowlplay",
+  "id": "${id}",
   "version": "${version}",
-  "name": "Fowl Play",
-  "description": "Just smile and wave, boys. Smile and wave.",
+  "name": "${name}",
+  "description": "${description}",
   "authors": [
-    "aqario"
-  ],
-  "contributors": [
-    "Penguin60",
-    "Disketaa",
-    "owen233666"
+    "${authors}"
   ],
   "contact": {
-    "homepage": "https://modrinth.com/mod/fowlplay",
-    "sources": "https://github.com/aqariio/Fowl-Play",
-    "issues": "https://github.com/aqariio/Fowl-Play/issues"
+    "homepage": "${website}",
+    "sources": "${source_url}",
+    "issues": "${issue_tracker}"
   },
-  "license": "MIT",
-  "icon": "assets/fowlplay/icon.png",
+  "license": "${license}",
+  "icon": "${icon}",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "aqario.fowlplay.core.FowlPlay"
+      "${fabric_common_entry}"
     ],
     "client": [
-      "aqario.fowlplay.client.FowlPlayClient"
-    ],
-    "fabric-datagen": [
-      "aqario.fowlplay.datagen.FowlPlayDataGen"
-    ],
-    "modmenu": [
-      "aqario.fowlplay.common.config.ModMenuIntegration"
+      "${fabric_client_entry}"
     ]
   },
-  "accessWidener": "fowlplay.accesswidener",
-  "mixins": [
-    "fowlplay.mixins.json",
-    {
-      "config": "fowlplay.client.mixins.json",
-      "environment": "client"
-    }
-  ],
-  "depends": {
-    "fabricloader": ">=${loader_version}",
-    "minecraft": ">=1.21",
-    "fabric-api": ">=${fabric_version}"
-  },
-  "breaks": {
-    "yet_another_config_lib_v3": "<${yacl_version}"
-  },
-  "suggests": {
-    "yet_another_config_lib_v3": ">=${yacl_version}"
-  }
+  ${
+  mixin_field
+}
+${
+  dependencies_field
+}
 }

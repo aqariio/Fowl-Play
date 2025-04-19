@@ -1,7 +1,8 @@
 {
   "required": true,
-  "package": "aqario.fowlplay.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "package": "aqario.fowlplay.mixin.common",
+  "compatibilityLevel": "JAVA_${java_ver}",
   "mixins": [
     "AbstractBlockStateMixin",
     "ChickenEntityMixin",
@@ -14,6 +15,8 @@
     "SpawnGroupMixin",
     "SpawnHelperMixin",
     "WallBlockMixin"
+  ],
+  "client": [
   ],
   "injectors": {
     "defaultRequire": 1

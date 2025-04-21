@@ -153,7 +153,7 @@ public class GullBrain {
                         ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
                         ImmutableList.of(
                             Pair.of(TaskTriggerer.runIf(
-                                Predicate.not(Birds::isPerching),
+                                Predicate.not(Birds::isPerched),
                                 StrollTask.create(Birds.WALK_SPEED)
                             ), 4),
                             Pair.of(TaskTriggerer.predicate(Entity::isInsideWaterOrBubbleColumn), 3),

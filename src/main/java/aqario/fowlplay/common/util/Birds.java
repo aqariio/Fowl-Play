@@ -16,6 +16,7 @@ import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -50,16 +51,16 @@ public final class Birds {
             return false;
         }
         ItemEntity wantedItem = brain.getOptionalMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM).get();
-        Optional<LivingEntity> avoidTarget = visibleMobs.get().stream(entity -> true)
+        List<LivingEntity> avoidTargets = visibleMobs.get().stream(entity -> true)
             .filter(entity -> shouldAvoid(brain, bird, entity))
             .filter(entity -> entity.isInRange(wantedItem, bird.getFleeRange(entity)))
-            .findFirst();
+            .toList();
 
-        return !bird.getFood().test(bird.getMainHandStack()) && avoidTarget.isEmpty();
+        return !bird.getFood().test(bird.getMainHandStack()) && avoidTargets.isEmpty();
     }
 
     public static boolean shouldAvoid(Brain<?> brain, BirdEntity bird, LivingEntity target) {
-        if (!bird.shouldAvoid(target)) {
+        if (!bird.shouldAvoid(target) && !shouldAvoidAttacker(brain, target)) {
             return false;
         }
         if (!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(target)) {
@@ -72,11 +73,17 @@ public final class Birds {
         if (attackTarget != null && attackTarget.isPresent() && attackTarget.get().equals(target)) {
             return false;
         }
-        return true;
+        return !bird.canAttack(target);
     }
 
-    public static boolean isPerching(BirdEntity entity) {
-        return entity.getWorld().getBlockState(entity.getBlockPos().down()).isIn(FowlPlayBlockTags.PERCHES);
+    public static boolean shouldAvoidAttacker(Brain<?> brain, LivingEntity attacker) {
+        Optional<LivingEntity> hurtBy = brain.getOptionalMemory(MemoryModuleType.HURT_BY_ENTITY);
+        return hurtBy != null && hurtBy.isPresent() && hurtBy.get().equals(attacker);
+    }
+
+    public static boolean isPerched(BirdEntity entity) {
+        return entity.getWorld().getBlockState(entity.getBlockPos()).isIn(FowlPlayBlockTags.PERCHES)
+            || entity.getWorld().getBlockState(entity.getBlockPos().down()).isIn(FowlPlayBlockTags.PERCHES);
     }
 
     public static boolean noFoodInRange(BirdEntity bird) {

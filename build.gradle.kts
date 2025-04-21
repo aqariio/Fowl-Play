@@ -1,7 +1,21 @@
+import org.gradle.api.tasks.Input
 import java.util.Optional
 import java.util.function.BiConsumer
 import java.util.function.Consumer
 import java.util.function.Predicate
+import kotlin.collections.ArrayList
+import kotlin.collections.List
+import kotlin.collections.arrayListOf
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.forEach
+import kotlin.collections.mapOf
+import kotlin.collections.withIndex
+import kotlin.text.isEmpty
+import kotlin.text.isNotEmpty
+import kotlin.text.lowercase
+import kotlin.text.split
+import kotlin.text.startsWith
 
 // add plugins here
 plugins {
@@ -27,6 +41,9 @@ repositories {
     maven("https://maven.architectury.dev/")
     maven("https://modmaven.dev/")
     maven("https://panel.ryuutech.com/nexus/repository/maven-releases/")
+    maven("https://gitlab.com/api/v4/projects/21830712/packages/maven")
+    maven("https://maven.terraformersmc.com/releases")
+    maven("https://maven.isxander.dev/releases")
 }
 
 fun bool(str: String): Boolean {

@@ -1,7 +1,7 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.entity.*;
-import net.fabricmc.loader.api.FabricLoader;
+import dev.architectury.platform.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,23 +12,11 @@ public class FowlPlay {
     private static final String DEBUG_UTILS_ID = "debugutils";
 
     public static boolean isYACLLoaded() {
-        //? if fabric {
-        return FabricLoader.getInstance().isModLoaded(YACL_ID);
-        //?} else if forge {
-        /*return ModList.get().isLoaded(YACL_ID);
-         *///?} else if neoforge {
-        /*return ModList.get().isLoaded(YACL_ID);
-         *///?}
+        return Platform.isModLoaded(YACL_ID);
     }
 
     public static boolean isDebugUtilsLoaded() {
-        //? if fabric {
-        return FabricLoader.getInstance().isModLoaded(DEBUG_UTILS_ID);
-        //?} else if forge {
-        /*return ModList.get().isLoaded(DEBUG_UTILS_ID);
-         *///?} else if neoforge {
-        /*return ModList.get().isLoaded(DEBUG_UTILS_ID);
-         *///?}
+        return Platform.isModLoaded(DEBUG_UTILS_ID);
     }
 
     public static void init() {

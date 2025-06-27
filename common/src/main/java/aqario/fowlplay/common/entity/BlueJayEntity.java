@@ -14,9 +14,7 @@ import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.entity.AnimationState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.MemoryModuleState;
@@ -72,6 +70,11 @@ public class BlueJayEntity extends FlyingBirdEntity implements SmartBrainOwner<B
     }
 
     @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 0.475f;
+    }
+
+    @Override
     public Ingredient getFood() {
         return Ingredient.fromTag(FowlPlayItemTags.BLUE_JAY_FOOD);
     }
@@ -94,7 +97,7 @@ public class BlueJayEntity extends FlyingBirdEntity implements SmartBrainOwner<B
 
     @Override
     public void tick() {
-        if (this.getWorld().isClient()) {
+        if(this.getWorld().isClient()) {
             this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
             this.flappingState.setRunning(this.isFlying(), this.age);
             this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);

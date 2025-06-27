@@ -4,7 +4,6 @@ pluginManagement {
         maven { url "https://maven.fabricmc.net/" }
         maven { url "https://maven.quiltmc.org/" }
         maven { url "https://files.minecraftforge.net/maven/" }
-        maven { url "https://maven.neoforged.net/releases/" }
         mavenCentral()
         gradlePluginPortal()
     }
@@ -14,4 +13,4 @@ rootProject.name = 'fowlplay'
 
 include 'common'
 include 'fabric'
-include 'neoforge'
+include 'forge'

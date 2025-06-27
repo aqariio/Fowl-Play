@@ -3,7 +3,7 @@ package aqario.fowlplay.core;
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.common.util.EntityTypeBuilder;
-import aqario.fowlplay.common.world.gen.CustomSpawnLocations;
+import aqario.fowlplay.common.world.gen.CustomSpawnLocation;
 import aqario.fowlplay.core.platform.PlatformHelper;
 import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
 import dev.architectury.registry.level.biome.BiomeModifications;
@@ -11,7 +11,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.SpawnSettings;
@@ -26,12 +25,11 @@ public final class FowlPlayEntityType {
             )
             .attributes(BlueJayEntity::createFlyingBirdAttributes)
             .spawnRestriction(
-                CustomSpawnLocations.GROUND,
+                CustomSpawnLocation.GROUND.location,
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
             .dimensions(0.4f, 0.55f)
-            .eyeHeight(0.475f)
     );
 
     public static final Supplier<EntityType<CardinalEntity>> CARDINAL = register("cardinal",
@@ -41,12 +39,11 @@ public final class FowlPlayEntityType {
             )
             .attributes(CardinalEntity::createFlyingBirdAttributes)
             .spawnRestriction(
-                CustomSpawnLocations.GROUND,
+                CustomSpawnLocation.GROUND.location,
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
             .dimensions(0.4f, 0.55f)
-            .eyeHeight(0.475f)
     );
 
     public static final Supplier<EntityType<ChickadeeEntity>> CHICKADEE = register("chickadee",
@@ -56,12 +53,11 @@ public final class FowlPlayEntityType {
             )
             .attributes(ChickadeeEntity::createFlyingBirdAttributes)
             .spawnRestriction(
-                CustomSpawnLocations.GROUND,
+                CustomSpawnLocation.GROUND.location,
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
             .dimensions(0.3f, 0.45f)
-            .eyeHeight(0.4f)
     );
 
     public static final Supplier<EntityType<CrowEntity>> CROW = register("crow",
@@ -71,12 +67,11 @@ public final class FowlPlayEntityType {
             )
             .attributes(CrowEntity::createCrowAttributes)
             .spawnRestriction(
-                CustomSpawnLocations.GROUND,
+                CustomSpawnLocation.GROUND.location,
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
             .dimensions(0.5f, 0.6f)
-            .eyeHeight(0.55f)
     );
 
     public static final Supplier<EntityType<DuckEntity>> DUCK = register("duck",
@@ -86,12 +81,11 @@ public final class FowlPlayEntityType {
             )
             .attributes(DuckEntity::createDuckAttributes)
             .spawnRestriction(
-                CustomSpawnLocations.AQUATIC,
+                CustomSpawnLocation.AQUATIC.location,
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 FlyingBirdEntity::canSpawnWaterfowl
             )
             .dimensions(0.6f, 0.8f)
-            .eyeHeight(0.7f)
     );
 
     public static final Supplier<EntityType<GullEntity>> GULL = register("gull",
@@ -101,12 +95,11 @@ public final class FowlPlayEntityType {
             )
             .attributes(GullEntity::createGullAttributes)
             .spawnRestriction(
-                CustomSpawnLocations.SEMIAQUATIC,
+                CustomSpawnLocation.SEMIAQUATIC.location,
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 FlyingBirdEntity::canSpawnShorebirds
             )
             .dimensions(0.6f, 0.8f)
-            .eyeHeight(0.7f)
     );
 
     public static final Supplier<EntityType<HawkEntity>> HAWK = register("hawk",
@@ -116,12 +109,11 @@ public final class FowlPlayEntityType {
             )
             .attributes(HawkEntity::createHawkAttributes)
             .spawnRestriction(
-                CustomSpawnLocations.GROUND,
+                CustomSpawnLocation.GROUND.location,
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
             .dimensions(0.6f, 0.8f)
-            .eyeHeight(0.7f)
     );
 
     public static final Supplier<EntityType<PenguinEntity>> PENGUIN = register("penguin",
@@ -131,13 +123,11 @@ public final class FowlPlayEntityType {
             )
             .attributes(PenguinEntity::createPenguinAttributes)
             .spawnRestriction(
-                CustomSpawnLocations.SEMIAQUATIC,
+                CustomSpawnLocation.SEMIAQUATIC.location,
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 PenguinEntity::canSpawnPenguins
             )
             .dimensions(0.5f, 1.4f)
-            .eyeHeight(1.35f)
-            .passengerAttachments(new Vec3d(0, 0.75, -0.1))
     );
 
     public static final Supplier<EntityType<PigeonEntity>> PIGEON = register("pigeon",
@@ -147,12 +137,11 @@ public final class FowlPlayEntityType {
             )
             .attributes(PigeonEntity::createPigeonAttributes)
             .spawnRestriction(
-                CustomSpawnLocations.GROUND,
+                CustomSpawnLocation.GROUND.location,
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnShorebirds
             )
             .dimensions(0.5f, 0.6f)
-            .eyeHeight(0.5f)
     );
 
     public static final Supplier<EntityType<RavenEntity>> RAVEN = register("raven",
@@ -162,12 +151,11 @@ public final class FowlPlayEntityType {
             )
             .attributes(RavenEntity::createRavenAttributes)
             .spawnRestriction(
-                CustomSpawnLocations.GROUND,
+                CustomSpawnLocation.GROUND.location,
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
             .dimensions(0.6f, 0.8f)
-            .eyeHeight(0.7f)
     );
 
     public static final Supplier<EntityType<RobinEntity>> ROBIN = register("robin",
@@ -177,12 +165,11 @@ public final class FowlPlayEntityType {
             )
             .attributes(RobinEntity::createFlyingBirdAttributes)
             .spawnRestriction(
-                CustomSpawnLocations.GROUND,
+                CustomSpawnLocation.GROUND.location,
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
             .dimensions(0.4f, 0.55f)
-            .eyeHeight(0.475f)
     );
 
     public static final Supplier<EntityType<SparrowEntity>> SPARROW = register("sparrow",
@@ -192,12 +179,11 @@ public final class FowlPlayEntityType {
             )
             .attributes(SparrowEntity::createFlyingBirdAttributes)
             .spawnRestriction(
-                CustomSpawnLocations.GROUND,
+                CustomSpawnLocation.GROUND.location,
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
             .dimensions(0.3f, 0.45f)
-            .eyeHeight(0.4f)
     );
 
     private static <T extends Entity> Supplier<EntityType<T>> register(String id, EntityTypeBuilder<T> builder) {

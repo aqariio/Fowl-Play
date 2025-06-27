@@ -2,7 +2,7 @@ package aqario.fowlplay.client.particle;
 
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.SimpleParticleType;
+import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 
@@ -32,16 +32,16 @@ public class SmallBubbleParticle extends SpriteBillboardParticle {
         this.prevPosX = this.x;
         this.prevPosY = this.y;
         this.prevPosZ = this.z;
-        if (!this.dead && !this.world.getFluidState(BlockPos.ofFloored(this.x, this.y, this.z)).isIn(FluidTags.WATER)) {
+        if(!this.dead && !this.world.getFluidState(BlockPos.ofFloored(this.x, this.y, this.z)).isIn(FluidTags.WATER)) {
             this.shouldPop = true;
         }
-        if (this.age++ >= this.maxAge) {
+        if(this.age++ >= this.maxAge) {
             this.shouldPop = true;
         }
         else {
             this.velocityY = this.velocityY - 0.04 * (double) this.gravityStrength;
             this.move(this.velocityX, this.velocityY, this.velocityZ);
-            if (this.ascending && this.y == this.prevPosY) {
+            if(this.ascending && this.y == this.prevPosY) {
                 this.velocityX *= 1.1;
                 this.velocityZ *= 1.1;
             }
@@ -49,15 +49,15 @@ public class SmallBubbleParticle extends SpriteBillboardParticle {
             this.velocityX = this.velocityX * (double) this.velocityMultiplier;
             this.velocityY = this.velocityY * (double) this.velocityMultiplier;
             this.velocityZ = this.velocityZ * (double) this.velocityMultiplier;
-            if (this.onGround) {
+            if(this.onGround) {
                 this.velocityX *= 0.7F;
                 this.velocityZ *= 0.7F;
             }
         }
-        if (this.shouldPop && this.popAge++ >= this.maxPopAge) {
+        if(this.shouldPop && this.popAge++ >= this.maxPopAge) {
             this.markDead();
         }
-        if (!this.dead) {
+        if(!this.dead) {
             this.setSprite(spriteProvider.getSprite(this.popAge, this.maxPopAge));
         }
     }
@@ -67,7 +67,7 @@ public class SmallBubbleParticle extends SpriteBillboardParticle {
         return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
     }
 
-    public static class Factory implements ParticleFactory<SimpleParticleType> {
+    public static class Factory implements ParticleFactory<DefaultParticleType> {
         private final SpriteProvider spriteProvider;
 
         public Factory(SpriteProvider spriteProvider) {
@@ -75,7 +75,7 @@ public class SmallBubbleParticle extends SpriteBillboardParticle {
         }
 
         @Override
-        public Particle createParticle(SimpleParticleType simpleParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(DefaultParticleType particleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
             return new SmallBubbleParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
         }
     }

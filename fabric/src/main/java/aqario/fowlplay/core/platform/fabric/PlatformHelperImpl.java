@@ -3,7 +3,6 @@ package aqario.fowlplay.core.platform.fabric;
 import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;
-import aqario.fowlplay.core.FowlPlayRegistryKeys;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
@@ -22,9 +21,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.SpawnEggItem;
+import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
-import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -36,22 +35,21 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class PlatformHelperImpl {
-    @SuppressWarnings("unchecked")
-    public static <T> void registerVariant(String id, RegistryKey<T> key, Supplier<T> variant) {
-        if(key.isOf(FowlPlayRegistryKeys.CHICKEN_VARIANT)) {
-            Registry.register(FowlPlayRegistries.CHICKEN_VARIANT, (RegistryKey<ChickenVariant>) key, (ChickenVariant) variant.get());
+    public static <T> void registerVariant(String id, Supplier<T> variant) {
+        if(variant.get() instanceof ChickenVariant v) {
+            Registry.register(FowlPlayRegistries.CHICKEN_VARIANT, id, v);
         }
-        else if(key.isOf(FowlPlayRegistryKeys.DUCK_VARIANT)) {
-            Registry.register(FowlPlayRegistries.DUCK_VARIANT, (RegistryKey<DuckVariant>) key, (DuckVariant) variant.get());
+        else if(variant.get() instanceof DuckVariant v) {
+            Registry.register(FowlPlayRegistries.DUCK_VARIANT, id, v);
         }
-        else if(key.isOf(FowlPlayRegistryKeys.GULL_VARIANT)) {
-            Registry.register(FowlPlayRegistries.GULL_VARIANT, (RegistryKey<GullVariant>) key, (GullVariant) variant.get());
+        else if(variant.get() instanceof GullVariant v) {
+            Registry.register(FowlPlayRegistries.GULL_VARIANT, id, v);
         }
-        else if(key.isOf(FowlPlayRegistryKeys.PIGEON_VARIANT)) {
-            Registry.register(FowlPlayRegistries.PIGEON_VARIANT, (RegistryKey<PigeonVariant>) key, (PigeonVariant) variant.get());
+        else if(variant.get() instanceof PigeonVariant v) {
+            Registry.register(FowlPlayRegistries.PIGEON_VARIANT, id, v);
         }
-        else if(key.isOf(FowlPlayRegistryKeys.SPARROW_VARIANT)) {
-            Registry.register(FowlPlayRegistries.SPARROW_VARIANT, (RegistryKey<SparrowVariant>) key, (SparrowVariant) variant.get());
+        else if(variant.get() instanceof SparrowVariant v) {
+            Registry.register(FowlPlayRegistries.SPARROW_VARIANT, id, v);
         }
     }
 
@@ -80,8 +78,8 @@ public class PlatformHelperImpl {
         return () -> registry;
     }
 
-    public static Supplier<SimpleParticleType> registerParticleType(String id, Supplier<SimpleParticleType> particleType) {
-        SimpleParticleType registry = Registry.register(Registries.PARTICLE_TYPE, Identifier.of(FowlPlay.ID, id), particleType.get());
+    public static Supplier<DefaultParticleType> registerParticleType(String id, Supplier<DefaultParticleType> particleType) {
+        DefaultParticleType registry = Registry.register(Registries.PARTICLE_TYPE, Identifier.of(FowlPlay.ID, id), particleType.get());
         return () -> registry;
     }
 

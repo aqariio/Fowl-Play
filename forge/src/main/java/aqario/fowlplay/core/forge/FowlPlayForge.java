@@ -1,37 +1,37 @@
-package aqario.fowlplay.core.neoforge;
+package aqario.fowlplay.core.forge;
 
-import aqario.fowlplay.client.neoforge.FowlPlayNeoForgeClient;
+import aqario.fowlplay.client.neoforge.FowlPlayForgeClient;
 import aqario.fowlplay.common.integration.YACLIntegration;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayItems;
-import aqario.fowlplay.core.platform.neoforge.PlatformHelperImpl;
+import aqario.fowlplay.core.platform.forge.PlatformHelperImpl;
 import net.minecraft.item.ItemGroups;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModLoadingContext;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.registries.NewRegistryEvent;
 
 @Mod(FowlPlay.ID)
-public final class FowlPlayNeoForge {
-    public FowlPlayNeoForge(ModContainer mod, IEventBus modBus) {
-        IEventBus bus = NeoForge.EVENT_BUS;
+public final class FowlPlayForge {
+    public FowlPlayForge(ModContainer mod, IEventBus modBus) {
+        IEventBus bus = MinecraftForge.EVENT_BUS;
 
         FowlPlay.init();
 
         if(FMLEnvironment.dist == Dist.CLIENT) {
-            FowlPlayNeoForgeClient.init(modBus);
+            FowlPlayForgeClient.init(modBus);
         }
 
-        modBus.addListener(FowlPlayNeoForge::onNewRegistry);
-        modBus.addListener(FowlPlayNeoForge::onSetup);
-        modBus.addListener(FowlPlayNeoForge::onAddItemGroupEntries);
+        modBus.addListener(FowlPlayForge::onNewRegistry);
+        modBus.addListener(FowlPlayForge::onSetup);
+        modBus.addListener(FowlPlayForge::onAddItemGroupEntries);
 
         PlatformHelperImpl.CHICKEN_VARIANTS.register(modBus);
         PlatformHelperImpl.DUCK_VARIANTS.register(modBus);
@@ -46,14 +46,17 @@ public final class FowlPlayNeoForge {
         PlatformHelperImpl.SENSOR_TYPES.register(modBus);
         PlatformHelperImpl.SOUND_EVENTS.register(modBus);
         PlatformHelperImpl.TRACKED_DATA_HANDLERS.register(modBus);
-        ModLoadingContext.get().getActiveContainer().registerExtensionPoint(
-            IConfigScreenFactory.class, (client, parent) -> YACLIntegration.createScreen(parent)
+        ModLoadingContext.get().getContainer().registerExtensionPoint(
+            ConfigScreenHandler.ConfigScreenFactory.class,
+            () -> new ConfigScreenHandler.ConfigScreenFactory(
+                (client, screen) -> YACLIntegration.createScreen(screen)
+            )
         );
     }
 
     private static void onNewRegistry(NewRegistryEvent event) {
         FowlPlay.earlyInit();
-        PlatformHelperImpl.REGISTRIES.forEach(event::register);
+        PlatformHelperImpl.REGISTRIES.forEach(event::create);
     }
 
     private static void onSetup(FMLCommonSetupEvent event) {

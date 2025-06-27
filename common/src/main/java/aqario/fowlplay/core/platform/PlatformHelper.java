@@ -12,9 +12,9 @@ import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
-import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.sound.SoundEvent;
@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 
 public class PlatformHelper {
     @ExpectPlatform
-    public static <T> void registerVariant(String id, RegistryKey<T> key, Supplier<T> variant) {
+    public static <T> T registerVariant(String id, Supplier<T> variant) {
         throw new AssertionError();
     }
 
@@ -53,7 +53,7 @@ public class PlatformHelper {
     }
 
     @ExpectPlatform
-    public static Supplier<SimpleParticleType> registerParticleType(String id, Supplier<SimpleParticleType> particleType) {
+    public static Supplier<DefaultParticleType> registerParticleType(String id, Supplier<DefaultParticleType> particleType) {
         throw new AssertionError();
     }
 

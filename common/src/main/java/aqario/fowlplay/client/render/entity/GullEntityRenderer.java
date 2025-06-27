@@ -20,6 +20,6 @@ public class GullEntityRenderer extends MobEntityRenderer<GullEntity, GullEntity
 
     @Override
     public Identifier getTexture(GullEntity gull) {
-        return gull.getVariant().value().texture();
+        return gull.getVariant().texture();
     }
 }

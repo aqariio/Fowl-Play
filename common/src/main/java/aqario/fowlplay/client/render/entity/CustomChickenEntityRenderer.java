@@ -10,7 +10,6 @@ import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.VariantHolder;
 import net.minecraft.entity.passive.ChickenEntity;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 
 import java.util.Map;
@@ -35,7 +34,7 @@ public class CustomChickenEntityRenderer extends MobEntityRenderer<ChickenEntity
     @Override
     public void render(ChickenEntity chicken, float f, float g, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int i) {
         this.model = this.models.get(chicken.isBaby());
-        if (chicken.isBaby()) {
+        if(chicken.isBaby()) {
             matrices.scale(0.8F, 0.8F, 0.8F);
         }
         super.render(chicken, f, g, matrices, vertexConsumers, i);
@@ -45,7 +44,7 @@ public class CustomChickenEntityRenderer extends MobEntityRenderer<ChickenEntity
     @Override
     public Identifier getTexture(ChickenEntity chicken) {
         return chicken.isBaby()
-            ? Identifier.of(FowlPlay.ID, "textures/entity/chicken/" + ((VariantHolder<RegistryEntry<ChickenVariant>>) chicken).getVariant().value().id() + "_baby_chicken.png")
-            : Identifier.of(FowlPlay.ID, "textures/entity/chicken/" + ((VariantHolder<RegistryEntry<ChickenVariant>>) chicken).getVariant().value().id() + "_chicken.png");
+            ? Identifier.of(FowlPlay.ID, "textures/entity/chicken/" + ((VariantHolder<ChickenVariant>) chicken).getVariant().id() + "_baby_chicken.png")
+            : Identifier.of(FowlPlay.ID, "textures/entity/chicken/" + ((VariantHolder<ChickenVariant>) chicken).getVariant().id() + "_chicken.png");
     }
 }

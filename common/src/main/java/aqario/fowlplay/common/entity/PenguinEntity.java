@@ -106,6 +106,11 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
     }
 
     @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 1.35f;
+    }
+
+    @Override
     protected float getOffGroundSpeed() {
         return this.isInsideWaterOrBubbleColumn() ? this.getMovementSpeed() : super.getOffGroundSpeed();
     }

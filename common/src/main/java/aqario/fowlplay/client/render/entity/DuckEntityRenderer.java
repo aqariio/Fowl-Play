@@ -25,9 +25,9 @@ public class DuckEntityRenderer extends MobEntityRenderer<DuckEntity, DuckEntity
     @Override
     public Identifier getTexture(DuckEntity duck) {
         String string = Formatting.strip(duck.getName().getString());
-        if ("Quackers".equals(string)) {
+        if("Quackers".equals(string)) {
             return QUACKERS_TEXTURE;
         }
-        return duck.getVariant().value().texture();
+        return duck.getVariant().texture();
     }
 }

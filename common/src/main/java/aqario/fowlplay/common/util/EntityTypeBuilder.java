@@ -13,7 +13,6 @@ import net.minecraft.resource.featuretoggle.FeatureFlag;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,15 +26,13 @@ public class EntityTypeBuilder<T extends Entity> {
     private boolean summonable = true;
     private boolean fireImmune;
     private boolean spawnableFarFromPlayer;
-    private int maxTrackingRange = 5;
-    private int trackingTickInterval = 3;
+    private int maxTrackDistance = 5;
+    private int trackTickInterval = 3;
     private EntityDimensions dimensions = EntityDimensions.changing(0.6F, 1.8F);
-    private float spawnBoxScale = 1.0F;
-    private EntityAttachments.Builder attachments = EntityAttachments.builder();
     private FeatureSet requiredFeatures;
     @Nullable
     private Supplier<DefaultAttributeContainer.Builder> attributeBuilder;
-    private SpawnLocation location;
+    private SpawnRestriction.Location location;
     private Heightmap.Type heightmap;
     private SpawnRestriction.SpawnPredicate<T> spawnPredicate;
 
@@ -56,54 +53,6 @@ public class EntityTypeBuilder<T extends Entity> {
 
     public EntityTypeBuilder<T> dimensions(float width, float height) {
         this.dimensions = EntityDimensions.changing(width, height);
-        return this;
-    }
-
-    public EntityTypeBuilder<T> spawnBoxScale(float spawnBoxScale) {
-        this.spawnBoxScale = spawnBoxScale;
-        return this;
-    }
-
-    public EntityTypeBuilder<T> eyeHeight(float eyeHeight) {
-        this.dimensions = this.dimensions.withEyeHeight(eyeHeight);
-        return this;
-    }
-
-    public EntityTypeBuilder<T> passengerAttachments(float... offsetYs) {
-        for(float f : offsetYs) {
-            this.attachments = this.attachments.add(EntityAttachmentType.PASSENGER, 0.0F, f, 0.0F);
-        }
-
-        return this;
-    }
-
-    public EntityTypeBuilder<T> passengerAttachments(Vec3d... passengerAttachments) {
-        for(Vec3d vec3d : passengerAttachments) {
-            this.attachments = this.attachments.add(EntityAttachmentType.PASSENGER, vec3d);
-        }
-
-        return this;
-    }
-
-    public EntityTypeBuilder<T> vehicleAttachment(Vec3d vehicleAttachment) {
-        return this.attachment(EntityAttachmentType.VEHICLE, vehicleAttachment);
-    }
-
-    public EntityTypeBuilder<T> vehicleAttachment(float offsetY) {
-        return this.attachment(EntityAttachmentType.VEHICLE, 0.0F, -offsetY, 0.0F);
-    }
-
-    public EntityTypeBuilder<T> nameTagAttachment(float offsetY) {
-        return this.attachment(EntityAttachmentType.NAME_TAG, 0.0F, offsetY, 0.0F);
-    }
-
-    public EntityTypeBuilder<T> attachment(EntityAttachmentType type, float offsetX, float offsetY, float offsetZ) {
-        this.attachments = this.attachments.add(type, offsetX, offsetY, offsetZ);
-        return this;
-    }
-
-    public EntityTypeBuilder<T> attachment(EntityAttachmentType type, Vec3d offset) {
-        this.attachments = this.attachments.add(type, offset);
         return this;
     }
 
@@ -133,12 +82,12 @@ public class EntityTypeBuilder<T extends Entity> {
     }
 
     public EntityTypeBuilder<T> maxTrackingRange(int maxTrackingRange) {
-        this.maxTrackingRange = maxTrackingRange;
+        this.maxTrackDistance = maxTrackingRange;
         return this;
     }
 
     public EntityTypeBuilder<T> trackingTickInterval(int trackingTickInterval) {
-        this.trackingTickInterval = trackingTickInterval;
+        this.trackTickInterval = trackingTickInterval;
         return this;
     }
 
@@ -152,7 +101,7 @@ public class EntityTypeBuilder<T extends Entity> {
         return this;
     }
 
-    public EntityTypeBuilder<T> spawnRestriction(SpawnLocation location, Heightmap.Type heightmap, SpawnRestriction.SpawnPredicate<T> spawnPredicate) {
+    public EntityTypeBuilder<T> spawnRestriction(SpawnRestriction.Location location, Heightmap.Type heightmap, SpawnRestriction.SpawnPredicate<T> spawnPredicate) {
         this.location = location;
         this.heightmap = heightmap;
         this.spawnPredicate = spawnPredicate;
@@ -172,15 +121,14 @@ public class EntityTypeBuilder<T extends Entity> {
         EntityType<T> type = new EntityType<>(
             this.factory,
             this.spawnGroup,
+            this.spawnableFarFromPlayer,
             this.saveable,
             this.summonable,
             this.fireImmune,
-            this.spawnableFarFromPlayer,
             this.canSpawnInside,
-            this.dimensions.withAttachments(this.attachments),
-            this.spawnBoxScale,
-            this.maxTrackingRange,
-            this.trackingTickInterval,
+            this.dimensions,
+            this.maxTrackDistance,
+            this.trackTickInterval,
             this.requiredFeatures
         );
 

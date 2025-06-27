@@ -1,40 +1,17 @@
 package aqario.fowlplay.client;
 
-import aqario.fowlplay.client.render.debug.BirdDebugRenderer;
 import aqario.fowlplay.client.render.entity.*;
 import aqario.fowlplay.client.render.entity.model.*;
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.network.s2c.DebugBirdCustomPayload;
-import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayEntityType;
 import com.google.common.base.Suppliers;
-import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.client.level.entity.EntityModelLayerRegistry;
 import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
-import io.github.flemmli97.debugutils.api.RegisterDebugRenderers;
 import net.minecraft.entity.EntityType;
-import net.minecraft.util.Identifier;
 
 @SuppressWarnings("unused")
 public class FowlPlayClient {
-    public static boolean DEBUG_BIRD = false;
-
     public static void init() {
-        if(FowlPlay.isDebugUtilsLoaded()) {
-            Identifier debugBirdId = Identifier.of(FowlPlay.ID, "debug/bird");
-            RegisterDebugRenderers.registerCustomDebugRenderer(debugBirdId, BirdDebugRenderer.INSTANCE);
-            RegisterDebugRenderers.registerServerToggle(debugBirdId);
-            RegisterDebugRenderers.registerClientHandler(debugBirdId, b -> FowlPlayClient.DEBUG_BIRD = b);
-
-//            NetworkManager.registerS2CPayloadType(DebugBirdCustomPayload.ID, DebugBirdCustomPayload.CODEC);
-            NetworkManager.registerReceiver(
-                NetworkManager.Side.S2C,
-                DebugBirdCustomPayload.ID,
-                DebugBirdCustomPayload.CODEC,
-                (payload, context) ->
-                    DebugBirdCustomPayload.onReceive(payload)
-            );
-        }
     }
 
     public static void registerModelLayers() {

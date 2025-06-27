@@ -104,6 +104,11 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
     }
 
     @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 0.5f;
+    }
+
+    @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
         FowlPlayRegistries.PIGEON_VARIANT.getRandom(world.getRandom()).ifPresent(this::setVariant);
         return super.initialize(world, difficulty, spawnReason, entityData);

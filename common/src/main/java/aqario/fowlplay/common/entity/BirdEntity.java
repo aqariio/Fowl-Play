@@ -2,11 +2,9 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.entity.ai.control.BirdBodyControl;
 import aqario.fowlplay.common.entity.ai.control.BirdLookControl;
-import aqario.fowlplay.common.network.FowlPlayDebugInfoSender;
 import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.control.BodyControl;
@@ -53,14 +51,14 @@ public abstract class BirdEntity extends AnimalEntity {
     }
 
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         this.setYaw(world.getRandom().nextFloat() * 360.0F);
         this.setBodyYaw(this.getYaw());
         this.setHeadYaw(this.getYaw());
-        if (this.getType().getSpawnGroup() == CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup) {
+        if(this.getType().getSpawnGroup() == CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup) {
             this.setAmbient(true);
         }
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
     @Override
@@ -72,7 +70,7 @@ public abstract class BirdEntity extends AnimalEntity {
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        if (nbt.contains("ambient")) {
+        if(nbt.contains("ambient")) {
             this.setAmbient(nbt.getBoolean("ambient"));
         }
         else {
@@ -101,8 +99,8 @@ public abstract class BirdEntity extends AnimalEntity {
 
     @Override
     public boolean canEquip(ItemStack stack) {
-        EquipmentSlot equipmentSlot = this.getPreferredEquipmentSlot(stack);
-        if (!this.getEquippedStack(equipmentSlot).isEmpty()) {
+        EquipmentSlot equipmentSlot = getPreferredEquipmentSlot(stack);
+        if(!this.getEquippedStack(equipmentSlot).isEmpty()) {
             return false;
         }
         return equipmentSlot == EquipmentSlot.MAINHAND && super.canEquip(stack);
@@ -121,8 +119,8 @@ public abstract class BirdEntity extends AnimalEntity {
 
     private void dropWithoutDelay(ItemStack stack, Entity thrower) {
         ItemEntity item = new ItemEntity(this.getWorld(), this.getX(), this.getY(), this.getZ(), stack);
-        if (thrower != null) {
-            item.setThrower(thrower);
+        if(thrower != null) {
+            item.setThrower(thrower.getUuid());
         }
         this.getWorld().spawnEntity(item);
     }
@@ -131,9 +129,9 @@ public abstract class BirdEntity extends AnimalEntity {
     protected void loot(ItemEntity item) {
         Entity thrower = item.getOwner();
         ItemStack stack = item.getStack();
-        if (this.canPickupItem(stack)) {
+        if(this.canPickupItem(stack)) {
             int i = stack.getCount();
-            if (i > 1) {
+            if(i > 1) {
                 this.dropWithoutDelay(stack.split(i - 1), thrower);
             }
             this.dropStack(this.getEquippedStack(EquipmentSlot.MAINHAND));
@@ -143,7 +141,7 @@ public abstract class BirdEntity extends AnimalEntity {
             this.sendPickup(item, stack.getCount());
             item.discard();
             this.eatingTime = 0;
-            if (this.getBrain().isMemoryInState(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryModuleState.VALUE_PRESENT)) {
+            if(this.getBrain().isMemoryInState(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryModuleState.VALUE_PRESENT)) {
                 this.getBrain().forget(FowlPlayMemoryModuleType.SEES_FOOD.get());
             }
         }
@@ -190,19 +188,19 @@ public abstract class BirdEntity extends AnimalEntity {
     @Override
     public void tickMovement() {
         super.tickMovement();
-        if (!this.getWorld().isClient && this.isAlive()) {
+        if(!this.getWorld().isClient && this.isAlive()) {
             ++this.eatingTime;
             ItemStack stack = this.getEquippedStack(EquipmentSlot.MAINHAND);
-            if (this.canEat(stack)) {
-                if ((this.eatingTime > 40 && this.random.nextFloat() < 0.05f) || this.eatingTime > 200) {
-                    if (stack.getItem().getComponents().contains(DataComponentTypes.FOOD)) {
-                        this.heal(stack.getItem().getComponents().get(DataComponentTypes.FOOD).nutrition());
+            if(this.canEat(stack)) {
+                if((this.eatingTime > 40 && this.random.nextFloat() < 0.05f) || this.eatingTime > 200) {
+                    if(stack.getItem().isFood()) {
+                        this.heal(stack.getItem().getFoodComponent().getHunger());
                     }
                     else {
                         stack.decrement(1);
                     }
                     ItemStack usedStack = stack.finishUsing(this.getWorld(), this);
-                    if (!usedStack.isEmpty()) {
+                    if(!usedStack.isEmpty()) {
                         this.equipStack(EquipmentSlot.MAINHAND, usedStack);
                     }
                     this.playSound(this.getEatSound(stack), 1.0f, 1.0f);
@@ -210,13 +208,13 @@ public abstract class BirdEntity extends AnimalEntity {
                     this.eatingTime = 0;
                     return;
                 }
-                if (this.eatingTime > 20 && this.random.nextFloat() < 0.05f) {
+                if(this.eatingTime > 20 && this.random.nextFloat() < 0.05f) {
                     this.playSound(this.getEatSound(stack), 1.0f, 1.0f);
                     this.getWorld().sendEntityStatus(this, EntityStatuses.CREATE_EATING_PARTICLES);
                 }
             }
-            else if (!stack.isEmpty() && !this.getFood().test(stack)) {
-                if (this.random.nextFloat() < 0.1f) {
+            else if(!stack.isEmpty() && !this.getFood().test(stack)) {
+                if(this.random.nextFloat() < 0.1f) {
                     this.dropStack(this.getEquippedStack(EquipmentSlot.MAINHAND));
                     this.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
                 }
@@ -226,10 +224,10 @@ public abstract class BirdEntity extends AnimalEntity {
 
     @Override
     public void handleStatus(byte status) {
-        if (status == EntityStatuses.CREATE_EATING_PARTICLES) {
+        if(status == EntityStatuses.CREATE_EATING_PARTICLES) {
             ItemStack food = this.getEquippedStack(EquipmentSlot.MAINHAND);
-            if (!food.isEmpty()) {
-                for (int i = 0; i < 8; i++) {
+            if(!food.isEmpty()) {
+                for(int i = 0; i < 8; i++) {
                     Vec3d vec3d = new Vec3d(((double) this.random.nextFloat() - 0.5) * 0.1, Math.random() * 0.1 + 0.1, 0.0)
                         .rotateX(-this.getPitch() * (float) (Math.PI / 180.0))
                         .rotateY(-this.getYaw() * (float) (Math.PI / 180.0));
@@ -254,15 +252,15 @@ public abstract class BirdEntity extends AnimalEntity {
     public void baseTick() {
         super.baseTick();
         this.getWorld().getProfiler().push("birdBaseTick");
-        if (this.isAlive() && this.random.nextInt(1000) < this.callChance++) {
+        if(this.isAlive() && this.random.nextInt(1000) < this.callChance++) {
             this.resetCallDelay();
-            if (this.canCall()) {
+            if(this.canCall()) {
                 this.playCallSound();
             }
         }
-        else if (this.isAlive() && this.random.nextInt(1000) < this.songChance++) {
+        else if(this.isAlive() && this.random.nextInt(1000) < this.songChance++) {
             this.resetSongDelay();
-            if (this.canSing()) {
+            if(this.canSing()) {
                 this.playSongSound();
             }
         }
@@ -272,7 +270,7 @@ public abstract class BirdEntity extends AnimalEntity {
 
     @Override
     public void tick() {
-        if (this.getWorld().isClient()) {
+        if(this.getWorld().isClient()) {
             this.updateAnimations();
         }
         super.tick();
@@ -307,14 +305,14 @@ public abstract class BirdEntity extends AnimalEntity {
 
     public final void playCallSound() {
         SoundEvent call = this.getCallSound();
-        if (call != null) {
+        if(call != null) {
             this.playSound(call, this.getCallVolume(), this.getSoundPitch());
         }
     }
 
     public final void playSongSound() {
         SoundEvent song = this.getSongSound();
-        if (song != null) {
+        if(song != null) {
             this.playSound(song, this.getSongVolume(), this.getSoundPitch());
         }
     }
@@ -324,7 +322,7 @@ public abstract class BirdEntity extends AnimalEntity {
         this.resetCallDelay();
         this.resetSongDelay();
         SoundEvent hurt = this.getHurtSound(damageSource);
-        if (hurt != null) {
+        if(hurt != null) {
             this.playSound(hurt, this.getCallVolume(), this.getSoundPitch());
         }
     }
@@ -406,6 +404,5 @@ public abstract class BirdEntity extends AnimalEntity {
     protected void sendAiDebugData() {
         super.sendAiDebugData();
         DebugInfoSender.sendBrainDebugData(this);
-        FowlPlayDebugInfoSender.sendBirdDebugData(this);
     }
 }

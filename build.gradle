@@ -30,8 +30,8 @@ subprojects {
 
     repositories {
         maven {
-            name = 'NeoForged'
-            url = 'https://maven.neoforged.net/releases'
+            name = 'Forge'
+            url = 'https://maven.minecraftforge.net/'
         }
         maven {
             name = 'Kotlin for Forge'
@@ -78,7 +78,7 @@ subprojects {
             "version"            : project.version,
             fabric_loader_version: rootProject.fabric_loader_version,
             fabric_api_version   : rootProject.fabric_api_version,
-            "neoforge_version"   : rootProject.neoforge_version,
+            "forge_version"      : rootProject.forge_version,
             "sbl_version"        : rootProject.sbl_version,
             "yacl_version"       : rootProject.yacl_version
         ]
@@ -87,7 +87,7 @@ subprojects {
             inputs.property(key, value)
         }
 
-        filesMatching(["fabric.mod.json", "META-INF/neoforge.mods.toml"]) {
+        filesMatching(["fabric.mod.json", "META-INF/mods.toml"]) {
             expand(properties)
         }
     }
@@ -101,7 +101,7 @@ subprojects {
     }
 
     tasks.withType(JavaCompile).configureEach {
-        it.options.release = 21
+        it.options.release = 17
     }
 
     java {
@@ -110,8 +110,8 @@ subprojects {
         // If you remove this line, sources will not be generated.
         withSourcesJar()
 
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
 // If you plan to use a different file for the license, don't forget to change the file name here!

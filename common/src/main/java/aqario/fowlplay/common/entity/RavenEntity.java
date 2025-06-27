@@ -15,9 +15,7 @@ import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.entity.AnimationState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.MemoryModuleState;
@@ -87,6 +85,11 @@ public class RavenEntity extends TrustingBirdEntity implements SmartBrainOwner<R
             .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.225f)
             .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.24f);
+    }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 0.7f;
     }
 
     @Override

@@ -94,6 +94,11 @@ public class GullEntity extends TrustingBirdEntity implements SmartBrainOwner<Gu
     }
 
     @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 0.7f;
+    }
+
+    @Override
     protected MoveControl getBirdMoveControl() {
         return new BirdFloatMoveControl(this);
     }

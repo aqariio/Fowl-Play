@@ -2,6 +2,7 @@ package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
+import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.brain.Brain;
@@ -11,14 +12,14 @@ import net.minecraft.entity.ai.pathing.LandPathNodeMaker;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.util.math.BlockPos;
 import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
-import net.tslat.smartbrainlib.object.MemoryTest;
 import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 
 public class TeleportToTargetTask extends ExtendedBehaviour<BirdEntity> {
-    private static final MemoryTest MEMORIES = MemoryTest.builder(1)
-        .hasMemory(FowlPlayMemoryModuleType.TELEPORT_TARGET.get());
+    private static final List<Pair<MemoryModuleType<?>, MemoryModuleState>> MEMORIES = ImmutableList.of(
+        Pair.of(FowlPlayMemoryModuleType.TELEPORT_TARGET.get(), MemoryModuleState.REGISTERED)
+    );
 
     @Override
     protected List<Pair<MemoryModuleType<?>, MemoryModuleState>> getMemoryRequirements() {
@@ -33,24 +34,24 @@ public class TeleportToTargetTask extends ExtendedBehaviour<BirdEntity> {
     @Override
     protected void tick(BirdEntity entity) {
         Brain<?> brain = entity.getBrain();
-        if (this.tryTeleport(entity, brain)) {
+        if(this.tryTeleport(entity, brain)) {
             BrainUtils.clearMemory(brain, FowlPlayMemoryModuleType.TELEPORT_TARGET.get());
         }
     }
 
     private boolean tryTeleport(BirdEntity entity, Brain<?> brain) {
-        if (!BrainUtils.hasMemory(brain, FowlPlayMemoryModuleType.TELEPORT_TARGET.get())) {
+        if(!BrainUtils.hasMemory(brain, FowlPlayMemoryModuleType.TELEPORT_TARGET.get())) {
             return false;
         }
         Entity target = BrainUtils.getMemory(brain, FowlPlayMemoryModuleType.TELEPORT_TARGET.get()).entity();
         BlockPos pos = target.getBlockPos();
 
-        for (int i = 0; i < 10; i++) {
+        for(int i = 0; i < 10; i++) {
             int j = entity.getRandom().nextBetween(-3, 3);
             int k = entity.getRandom().nextBetween(-3, 3);
-            if (Math.abs(j) >= 2 || Math.abs(k) >= 2) {
+            if(Math.abs(j) >= 2 || Math.abs(k) >= 2) {
                 int l = entity.getRandom().nextBetween(-1, 1);
-                if (this.tryTeleportTo(entity, pos.getX() + j, pos.getY() + l, pos.getZ() + k)) {
+                if(this.tryTeleportTo(entity, pos.getX() + j, pos.getY() + l, pos.getZ() + k)) {
                     return true;
                 }
             }
@@ -60,7 +61,7 @@ public class TeleportToTargetTask extends ExtendedBehaviour<BirdEntity> {
     }
 
     private boolean tryTeleportTo(BirdEntity entity, int x, int y, int z) {
-        if (!this.canTeleportTo(entity, new BlockPos(x, y, z))) {
+        if(!this.canTeleportTo(entity, new BlockPos(x, y, z))) {
             return false;
         }
 
@@ -70,8 +71,8 @@ public class TeleportToTargetTask extends ExtendedBehaviour<BirdEntity> {
     }
 
     private boolean canTeleportTo(BirdEntity entity, BlockPos pos) {
-        PathNodeType pathNodeType = LandPathNodeMaker.getLandNodeType(entity, pos.mutableCopy());
-        if (pathNodeType != PathNodeType.WALKABLE) {
+        PathNodeType pathNodeType = LandPathNodeMaker.getLandNodeType(entity.getWorld(), pos.mutableCopy());
+        if(pathNodeType != PathNodeType.WALKABLE) {
             return false;
         }
         BlockPos distance = pos.subtract(entity.getBlockPos());

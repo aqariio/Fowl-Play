@@ -3,14 +3,16 @@ package aqario.fowlplay.datagen;
 import aqario.fowlplay.core.tags.FowlPlayBlockTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.util.Identifier;
 
 import java.util.concurrent.CompletableFuture;
 
 public class FowlPlayBlockTagGen extends FabricTagProvider.BlockTagProvider {
+    private static final Identifier STONES = Identifier.of("c", "stones");
+
     public FowlPlayBlockTagGen(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
         super(output, registriesFuture);
     }
@@ -35,12 +37,12 @@ public class FowlPlayBlockTagGen extends FabricTagProvider.BlockTagProvider {
         this.getOrCreateTagBuilder(FowlPlayBlockTags.SHOREBIRDS_SPAWNABLE_ON)
             .addOptionalTag(BlockTags.DIRT)
             .addOptionalTag(BlockTags.SAND)
-            .addOptionalTag(ConventionalBlockTags.STONES)
+            .addOptionalTag(STONES)
             .add(Blocks.GRAVEL);
         this.getOrCreateTagBuilder(FowlPlayBlockTags.WATERFOWL_SPAWNABLE_ON)
             .addOptionalTag(BlockTags.DIRT)
             .addOptionalTag(BlockTags.SAND)
-            .addOptionalTag(ConventionalBlockTags.STONES)
+            .addOptionalTag(STONES)
             .add(Blocks.GRAVEL);
     }
 }

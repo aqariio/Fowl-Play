@@ -3,16 +3,17 @@ package aqario.fowlplay.datagen;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 
 import java.util.concurrent.CompletableFuture;
 
-@SuppressWarnings("deprecation")
 public class FowlPlayItemTagGen extends FabricTagProvider.ItemTagProvider {
     private static final Identifier WORM = Identifier.of("angling", "worm");
+    private static final Identifier RAW_MEAT_FOODS = Identifier.of("c", "foods/raw_meat");
+    private static final Identifier RAW_MEATS_FOODS = Identifier.of("c", "foods/raw_meats");
 
     public FowlPlayItemTagGen(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture) {
         super(output, completableFuture);
@@ -77,8 +78,8 @@ public class FowlPlayItemTagGen extends FabricTagProvider.ItemTagProvider {
         this.getOrCreateTagBuilder(FowlPlayItemTags.HAWK_FOOD)
             .add(Items.EGG)
             .add(Items.TURTLE_EGG)
-            .addOptionalTag(ConventionalItemTags.RAW_MEAT_FOODS)
-            .addOptionalTag(ConventionalItemTags.RAW_MEATS_FOODS);
+            .addOptionalTag(RAW_MEAT_FOODS)
+            .addOptionalTag(RAW_MEATS_FOODS);
         this.getOrCreateTagBuilder(FowlPlayItemTags.PENGUIN_FOOD)
             .add(Items.COD)
             .add(Items.SALMON)

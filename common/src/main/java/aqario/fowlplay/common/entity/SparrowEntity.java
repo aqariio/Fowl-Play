@@ -119,24 +119,24 @@ public class SparrowEntity extends FlyingBirdEntity implements SmartBrainOwner<S
     @Override
     protected void updateAnimations() {
         // on land
-        if (!this.isFlying() && !this.isInsideWaterOrBubbleColumn()) {
-            if (this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {
+        if(!this.isFlying() && !this.isInsideWaterOrBubbleColumn()) {
+            if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {
                 this.resetIdleAnimationDelay();
                 this.standingState.stop();
                 this.preeningState.stop();
                 this.scratchingState.stop();
-                if (this.getRandom().nextFloat() < 0.75f) {
+                if(this.getRandom().nextFloat() < 0.75f) {
                     this.preeningState.start(this.age);
                 }
                 else {
                     this.scratchingState.start(this.age);
                 }
             }
-            else if (this.isMoving()) {
+            else if(this.isMoving()) {
                 this.preeningState.stop();
                 this.scratchingState.stop();
             }
-            if (!(this.preeningState.isRunning() || this.scratchingState.isRunning())) {
+            if(!(this.preeningState.isRunning() || this.scratchingState.isRunning())) {
                 this.standingState.startIfNotRunning(this.age);
             }
             else {
@@ -149,12 +149,12 @@ public class SparrowEntity extends FlyingBirdEntity implements SmartBrainOwner<S
             this.scratchingState.stop();
         }
         // flying
-        if (this.isFlying()) {
-            if (this.timeSinceLastFlap >= this.getFlapFrequency()) {
+        if(this.isFlying()) {
+            if(this.timeSinceLastFlap >= this.getFlapFrequency()) {
                 this.timeSinceLastFlap = 0;
                 this.flapTime++;
             }
-            else if (this.flapTime >= 0 && this.flapTime < FLAP_DURATION) {
+            else if(this.flapTime >= 0 && this.flapTime < FLAP_DURATION) {
                 this.flapTime++;
                 this.glidingState.stop();
                 this.flappingState.startIfNotRunning(this.age);

@@ -33,7 +33,7 @@ dependencies {
     }
 
     // Forge
-    forge "net.minecraftforge:forge:$rootProject.forge_version"
+    forge "net.minecraftforge:forge:1.20.1-$rootProject.forge_version"
 
     // Architectury
     modImplementation("dev.architectury:architectury-forge:${rootProject.architectury_version}")

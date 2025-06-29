@@ -24,7 +24,6 @@ import net.minecraft.entity.ai.brain.task.LookTargetUtil;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
@@ -97,15 +96,9 @@ public class RavenEntity extends TrustingBirdEntity implements SmartBrainOwner<R
         return 18;
     }
 
-    @Nullable
     @Override
-    public LivingEntity getTarget() {
-        return this.getTargetInBrain();
-    }
-
-    @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
+    protected void initDataTracker() {
+        super.initDataTracker();
     }
 
     @Override
@@ -141,12 +134,12 @@ public class RavenEntity extends TrustingBirdEntity implements SmartBrainOwner<R
 
     @Override
     public boolean shouldAttack(LivingEntity target) {
-        if (this.hasLowHealth()) {
+        if(this.hasLowHealth()) {
             return false;
         }
         Brain<?> brain = this.getBrain();
         Optional<LivingEntity> hurtBy = this.getBrain().getOptionalRegisteredMemory(MemoryModuleType.HURT_BY_ENTITY);
-        if (!target.getType().isIn(FowlPlayEntityTypeTags.RAVEN_ATTACK_TARGETS) && (hurtBy.isEmpty() || !hurtBy.get().equals(target))) {
+        if(!target.getType().isIn(FowlPlayEntityTypeTags.RAVEN_ATTACK_TARGETS) && (hurtBy.isEmpty() || !hurtBy.get().equals(target))) {
             return false;
         }
         Optional<List<? extends PassiveEntity>> nearbyAdults = brain.getOptionalRegisteredMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS.get());
@@ -160,7 +153,7 @@ public class RavenEntity extends TrustingBirdEntity implements SmartBrainOwner<R
 
     @Override
     public void tick() {
-        if (this.getWorld().isClient()) {
+        if(this.getWorld().isClient()) {
             this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
             this.glidingState.setRunning(this.isFlying(), this.age);
             this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
@@ -387,7 +380,7 @@ public class RavenEntity extends TrustingBirdEntity implements SmartBrainOwner<R
         Brain<?> brain = this.getBrain();
         Activity activity = brain.getFirstPossibleNonCoreActivity().orElse(null);
         this.tickBrain(this);
-        if (activity == Activity.FIGHT && brain.getFirstPossibleNonCoreActivity().orElse(null) != Activity.FIGHT) {
+        if(activity == Activity.FIGHT && brain.getFirstPossibleNonCoreActivity().orElse(null) != Activity.FIGHT) {
             brain.remember(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, 2400L);
         }
         super.mobTick();

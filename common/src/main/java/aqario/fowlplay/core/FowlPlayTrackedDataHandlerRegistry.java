@@ -3,37 +3,38 @@ package aqario.fowlplay.core;
 import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.core.platform.PlatformHelper;
 import net.minecraft.entity.data.TrackedDataHandler;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Uuids;
+import net.minecraft.network.PacketByteBuf;
 
 import java.util.List;
 import java.util.UUID;
 
 public final class FowlPlayTrackedDataHandlerRegistry {
-    public static final TrackedDataHandler<RegistryEntry<ChickenVariant>> CHICKEN_VARIANT = register(
+    public static final TrackedDataHandler<ChickenVariant> CHICKEN_VARIANT = register(
         "chicken_variant",
-        TrackedDataHandler.create(ChickenVariant.PACKET_CODEC)
+        TrackedDataHandler.of(FowlPlayRegistries.CHICKEN_VARIANT)
     );
-    public static final TrackedDataHandler<RegistryEntry<DuckVariant>> DUCK_VARIANT = register(
+    public static final TrackedDataHandler<DuckVariant> DUCK_VARIANT = register(
         "duck_variant",
-        TrackedDataHandler.create(DuckVariant.PACKET_CODEC)
+        TrackedDataHandler.of(FowlPlayRegistries.DUCK_VARIANT)
     );
-    public static final TrackedDataHandler<RegistryEntry<GullVariant>> GULL_VARIANT = register(
+    public static final TrackedDataHandler<GullVariant> GULL_VARIANT = register(
         "gull_variant",
-        TrackedDataHandler.create(GullVariant.PACKET_CODEC)
+        TrackedDataHandler.of(FowlPlayRegistries.GULL_VARIANT)
     );
-    public static final TrackedDataHandler<RegistryEntry<PigeonVariant>> PIGEON_VARIANT = register(
+    public static final TrackedDataHandler<PigeonVariant> PIGEON_VARIANT = register(
         "pigeon_variant",
-        TrackedDataHandler.create(PigeonVariant.PACKET_CODEC)
+        TrackedDataHandler.of(FowlPlayRegistries.PIGEON_VARIANT)
     );
-    public static final TrackedDataHandler<RegistryEntry<SparrowVariant>> SPARROW_VARIANT = register(
+    public static final TrackedDataHandler<SparrowVariant> SPARROW_VARIANT = register(
         "sparrow_variant",
-        TrackedDataHandler.create(SparrowVariant.PACKET_CODEC)
+        TrackedDataHandler.of(FowlPlayRegistries.SPARROW_VARIANT)
     );
     public static final TrackedDataHandler<List<UUID>> UUID_LIST = register(
         "uuid_list",
-        TrackedDataHandler.create(Uuids.PACKET_CODEC.collect(PacketCodecs.toList()))
+        TrackedDataHandler.of(
+            (buf, list) -> buf.writeCollection(list, PacketByteBuf::writeUuid),
+            (buf) -> buf.readList(PacketByteBuf::readUuid)
+        )
     );
 
     private static <T> TrackedDataHandler<T> register(String id, TrackedDataHandler<T> handler) {

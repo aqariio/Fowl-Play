@@ -35,7 +35,7 @@ public class TargetlessFlyTask {
                 Pair.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT)
             ),
             (bird, brain) -> {
-                if (!predicate.test(bird)) {
+                if(!predicate.test(bird)) {
                     return false;
                 }
                 Optional<Vec3d> target = Optional.ofNullable(targetGetter.apply(bird));
@@ -50,7 +50,7 @@ public class TargetlessFlyTask {
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         BlockPos.Mutable mutable2 = new BlockPos.Mutable();
 
-        for (BlockPos targetPos : BlockPos.iterate(
+        for(BlockPos targetPos : BlockPos.iterate(
             MathHelper.floor(entity.getX() - 12.0),
             MathHelper.floor(entity.getY() + 4.0),
             MathHelper.floor(entity.getZ() - 12.0),
@@ -58,11 +58,11 @@ public class TargetlessFlyTask {
             MathHelper.floor(entity.getY() + 20.0),
             MathHelper.floor(entity.getZ() + 12.0)
         )) {
-            if (!entityPos.equals(targetPos)) {
+            if(!entityPos.equals(targetPos)) {
                 BlockState state = entity.getWorld().getBlockState(mutable2.set(targetPos, Direction.DOWN));
                 boolean validBlock = state.isIn(FowlPlayBlockTags.PERCHES);
-                if (validBlock && entity.getWorld().isAir(targetPos)
-                    && (entity.getBoundingBox().getLengthY() <= 1
+                if(validBlock && entity.getWorld().isAir(targetPos)
+                    && (entity.getBoundingBox().getYLength() <= 1
                     || entity.getWorld().isAir(mutable.set(targetPos, Direction.UP)))
                 ) {
                     return Vec3d.ofBottomCenter(targetPos);

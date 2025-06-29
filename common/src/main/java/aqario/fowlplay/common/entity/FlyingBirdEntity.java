@@ -84,9 +84,9 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(FLYING, false);
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(FLYING, false);
     }
 
     @Override

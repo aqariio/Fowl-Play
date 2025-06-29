@@ -52,7 +52,6 @@ import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import net.minecraft.world.event.GameEvent;
 import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
@@ -107,7 +106,12 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
 
     @Override
     protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
-        return 1.35f;
+        return this.getPose() == EntityPose.LONG_JUMPING || this.getPose() == EntityPose.SWIMMING ? 0.4f : 1.35f;
+    }
+
+    @Override
+    public EntityGroup getGroup() {
+        return EntityGroup.AQUATIC;
     }
 
     @Override
@@ -117,7 +121,7 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
 
     @Override
     public float getMovementSpeed() {
-        return this.getPose() == EntityPose.SLIDING ? super.getMovementSpeed() * 1.5F : super.getMovementSpeed();
+        return this.getPose() == EntityPose.LONG_JUMPING ? super.getMovementSpeed() * 1.5F : super.getMovementSpeed();
     }
 
     protected void setMoveControl(boolean isSwimming) {
@@ -147,16 +151,10 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
         return new AmphibiousSwimNavigation(this, world);
     }
 
-    @Nullable
     @Override
-    public LivingEntity getTarget() {
-        return this.getTargetInBrain();
-    }
-
-    @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         this.initLastPoseTick(world.toServerWorld().getTime());
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
     @Nullable
@@ -189,8 +187,7 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
         return BirdEntity.createBirdAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 16.0f)
             .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0f)
-            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.145f)
-            .add(EntityAttributes.GENERIC_WATER_MOVEMENT_EFFICIENCY, 1.0f);
+            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.145f);
     }
 
     @Override
@@ -216,9 +213,9 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(LAST_POSE_TICK, LAST_POSE_CHANGE_TICKS);
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(LAST_POSE_TICK, LAST_POSE_CHANGE_TICKS);
     }
 
     @Override
@@ -232,7 +229,7 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
         super.readCustomDataFromNbt(nbt);
         long l = nbt.getLong("lastPoseTick");
         if(l < LAST_POSE_CHANGE_TICKS) {
-            this.setPose(EntityPose.SLIDING);
+            this.setPose(EntityPose.LONG_JUMPING);
         }
 
         this.setLastPoseTick(l);
@@ -268,7 +265,7 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
             this.setPose(EntityPose.SWIMMING);
         }
         else if(this.isSliding()) {
-            this.setPose(EntityPose.SLIDING);
+            this.setPose(EntityPose.LONG_JUMPING);
         }
         else {
             this.setPose(EntityPose.STANDING);
@@ -281,7 +278,7 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
             this.getWorld().addParticle(
                 FowlPlayParticleTypes.SMALL_BUBBLE.get(),
                 this.getX() + (this.random.nextFloat() * 0.75F - 0.375F),
-                (this.getY() + this.getBoundingBox().getLengthY() / 2) + (this.random.nextFloat() * 0.75F - 0.375F),
+                (this.getY() + this.getBoundingBox().getYLength() / 2) + (this.random.nextFloat() * 0.75F - 0.375F),
                 this.getZ() + (this.random.nextFloat() * 0.75F - 0.375F),
                 velocity.x,
                 velocity.y,
@@ -356,8 +353,7 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
 
     public void startSliding() {
         if(!this.isSliding()) {
-            this.setPose(EntityPose.SLIDING);
-            this.emitGameEvent(GameEvent.ENTITY_ACTION);
+            this.setPose(EntityPose.LONG_JUMPING);
             this.setLastPoseTick(-this.getWorld().getTime());
         }
     }
@@ -365,20 +361,17 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
     public void stopSliding() {
         if(this.isSliding()) {
             this.setPose(EntityPose.STANDING);
-            this.emitGameEvent(GameEvent.ENTITY_ACTION);
             this.setLastPoseTick(this.getWorld().getTime());
         }
     }
 
     public void setStanding() {
         this.setPose(EntityPose.STANDING);
-        this.emitGameEvent(GameEvent.ENTITY_ACTION);
         this.initLastPoseTick(this.getWorld().getTime());
     }
 
     public void setSliding() {
-        this.setPose(EntityPose.SLIDING);
-        this.emitGameEvent(GameEvent.ENTITY_ACTION);
+        this.setPose(EntityPose.LONG_JUMPING);
         this.setLastPoseTick(-Math.max(LAST_POSE_CHANGE_TICKS, this.getWorld().getTime() - SLIDING_TRANSITION_TICKS - 1L));
     }
 
@@ -414,11 +407,31 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
     }
 
     @Override
+    protected void updatePassengerPosition(Entity passenger, PositionUpdater positionUpdater) {
+        if(!this.hasPassenger(passenger)) {
+            return;
+        }
+        float g = (float) ((this.isRemoved() ? 0.01F : this.getMountedHeightOffset()) + passenger.getHeightOffset());
+        Vec3d vec3d = new Vec3d(this.getMountedXOffset(), 0.0, 0.0).rotateY(-this.getYaw() * (float) (Math.PI / 180.0) - (float) (Math.PI / 2));
+        passenger.setPosition(this.getX() + vec3d.x, this.getY() + (double) g, this.getZ() + vec3d.z);
+        super.updatePassengerPosition(passenger, positionUpdater);
+    }
+
+    @Override
+    public double getMountedHeightOffset() {
+        return 0.0;
+    }
+
+    public double getMountedXOffset() {
+        return -0.1;
+    }
+
+    @Override
     public Vec3d updatePassengerForDismount(LivingEntity passenger) {
         Vec3d vec3d = getPassengerDismountOffset(this.getWidth() * MathHelper.SQUARE_ROOT_OF_TWO, passenger.getWidth(), passenger.getYaw());
         double d = this.getX() + vec3d.x;
         double e = this.getZ() + vec3d.z;
-        BlockPos blockPos = new BlockPos((int) d, (int) this.getAttackBox().maxY, (int) e);
+        BlockPos blockPos = new BlockPos((int) d, (int) this.getBoundingBox().maxY, (int) e);
         BlockPos blockPos2 = blockPos.down();
         if(!this.getWorld().isWater(blockPos2)) {
             List<Vec3d> list = Lists.newArrayList();
@@ -447,7 +460,7 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
 
     @Override
     public float getStepHeight() {
-        return this.getPose() == EntityPose.SLIDING ? 1.1F : super.getStepHeight();
+        return this.getPose() == EntityPose.LONG_JUMPING ? 1.1F : super.getStepHeight();
     }
 
     @Override
@@ -456,9 +469,9 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
     }
 
     @Override
-    public EntityDimensions getBaseDimensions(EntityPose pose) {
-        EntityDimensions dimensions = super.getBaseDimensions(pose);
-        return pose == EntityPose.SLIDING || pose == EntityPose.SWIMMING ? dimensions.scaled(1.0F, 0.35F) : dimensions;
+    public EntityDimensions getDimensions(EntityPose pose) {
+        EntityDimensions dimensions = super.getDimensions(pose);
+        return pose == EntityPose.LONG_JUMPING || pose == EntityPose.SWIMMING ? dimensions.scaled(1.0F, 0.35F) : dimensions;
     }
 
     @Override
@@ -574,7 +587,7 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
 
     @Override
     protected int computeFallDamage(float fallDistance, float damageMultiplier) {
-        if(this.getPose() == EntityPose.SLIDING) {
+        if(this.getPose() == EntityPose.LONG_JUMPING) {
             return (super.computeFallDamage(fallDistance, damageMultiplier) - 3) / 2;
         }
         return super.computeFallDamage(fallDistance, damageMultiplier);

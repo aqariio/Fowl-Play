@@ -20,6 +20,7 @@ import net.minecraftforge.registries.NewRegistryEvent;
 
 @Mod(FowlPlay.ID)
 public final class FowlPlayForge {
+    @SuppressWarnings("removal")
     public FowlPlayForge(ModContainer mod, IEventBus modBus) {
         IEventBus bus = MinecraftForge.EVENT_BUS;
 
@@ -56,7 +57,6 @@ public final class FowlPlayForge {
 
     private static void onNewRegistry(NewRegistryEvent event) {
         FowlPlay.earlyInit();
-        PlatformHelperImpl.REGISTRIES.forEach(event::create);
     }
 
     private static void onSetup(FMLCommonSetupEvent event) {

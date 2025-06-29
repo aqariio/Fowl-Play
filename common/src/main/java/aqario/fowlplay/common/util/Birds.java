@@ -83,7 +83,7 @@ public final class Birds {
 
     public static <T extends BirdEntity> void alertOthers(T bird, LivingEntity attacker) {
         getNearbyVisibleAdults(bird).forEach(other -> {
-            if (attacker instanceof PlayerEntity) {
+            if(attacker instanceof PlayerEntity) {
                 other.getBrain().remember(FowlPlayMemoryModuleType.CANNOT_PICKUP_FOOD.get(), true, CANNOT_PICKUP_FOOD_TICKS);
             }
             startAvoiding((BirdEntity) other, attacker);
@@ -105,21 +105,21 @@ public final class Birds {
 
     public static boolean canPickupFood(BirdEntity bird) {
         Brain<?> brain = bird.getBrain();
-        if (!BrainUtils.hasMemory(brain, SBLMemoryTypes.NEARBY_ITEMS.get())) {
+        if(!BrainUtils.hasMemory(brain, SBLMemoryTypes.NEARBY_ITEMS.get())) {
             return false;
         }
         List<ItemEntity> foodItems = BrainUtils.getMemory(brain, SBLMemoryTypes.NEARBY_ITEMS.get());
         assert foodItems != null;
-        if (foodItems.isEmpty() || bird.getFood().test(bird.getMainHandStack())) {
+        if(foodItems.isEmpty() || bird.getFood().test(bird.getMainHandStack())) {
             return false;
         }
         Optional<LivingTargetCache> visibleMobs = brain.getOptionalMemory(MemoryModuleType.VISIBLE_MOBS);
-        if (visibleMobs == null || visibleMobs.isEmpty()) {
+        if(visibleMobs == null || visibleMobs.isEmpty()) {
             return false;
         }
         List<LivingEntity> avoidTargets = visibleMobs.get().stream(entity -> true)
             .filter(entity -> shouldAvoid(bird, entity))
-            .filter(entity -> entity.isInRange(foodItems.getFirst(), bird.getFleeRange(entity)))
+            .filter(entity -> entity.isInRange(foodItems.get(0), bird.getFleeRange(entity)))
             .toList();
 
         return avoidTargets.isEmpty();
@@ -127,17 +127,17 @@ public final class Birds {
 
     public static boolean shouldAvoid(BirdEntity bird, LivingEntity target) {
         Brain<?> brain = bird.getBrain();
-        if (!bird.shouldAvoid(target) && !shouldAvoidAttacker(brain, target)) {
+        if(!bird.shouldAvoid(target) && !shouldAvoidAttacker(brain, target)) {
             return false;
         }
-        if (!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(target)) {
+        if(!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(target)) {
             return false;
         }
-        if (target instanceof PlayerEntity player && bird instanceof TrustingBirdEntity trusting && trusting.trusts(player)) {
+        if(target instanceof PlayerEntity player && bird instanceof TrustingBirdEntity trusting && trusting.trusts(player)) {
             return false;
         }
         Optional<LivingEntity> attackTarget = brain.getOptionalMemory(MemoryModuleType.ATTACK_TARGET);
-        if (attackTarget != null && attackTarget.isPresent() && attackTarget.get().equals(target)) {
+        if(attackTarget != null && attackTarget.isPresent() && attackTarget.get().equals(target)) {
             return false;
         }
         return !bird.shouldAttack(target);

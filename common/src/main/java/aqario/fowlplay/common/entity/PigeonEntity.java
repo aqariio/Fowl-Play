@@ -13,7 +13,6 @@ import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.Brain;
@@ -35,8 +34,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -78,12 +75,12 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<PigeonEntity>, VariantHolder<RegistryEntry<PigeonVariant>>, Flocking {
+public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<PigeonEntity>, VariantHolder<PigeonVariant>, Flocking {
     private static final TrackedData<Optional<UUID>> RECIPIENT = DataTracker.registerData(
         PigeonEntity.class,
         TrackedDataHandlerRegistry.OPTIONAL_UUID
     );
-    private static final TrackedData<RegistryEntry<PigeonVariant>> VARIANT = DataTracker.registerData(
+    private static final TrackedData<PigeonVariant> VARIANT = DataTracker.registerData(
         PigeonEntity.class,
         FowlPlayTrackedDataHandlerRegistry.PIGEON_VARIANT
     );
@@ -109,9 +106,11 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
     }
 
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
-        FowlPlayRegistries.PIGEON_VARIANT.getRandom(world.getRandom()).ifPresent(this::setVariant);
-        return super.initialize(world, difficulty, spawnReason, entityData);
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+        FowlPlayRegistries.PIGEON_VARIANT
+            .getRandom(world.getRandom())
+            .ifPresent(variant -> this.setVariant(variant.value()));
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
     @Override
@@ -121,26 +120,26 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(RECIPIENT, Optional.empty());
-        builder.add(VARIANT, FowlPlayRegistries.PIGEON_VARIANT.entryOf(PigeonVariant.BANDED));
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(RECIPIENT, Optional.empty());
+        this.dataTracker.startTracking(VARIANT, PigeonVariant.BANDED);
     }
 
     @Override
-    public RegistryEntry<PigeonVariant> getVariant() {
+    public PigeonVariant getVariant() {
         return this.dataTracker.get(VARIANT);
     }
 
     @Override
-    public void setVariant(RegistryEntry<PigeonVariant> variant) {
+    public void setVariant(PigeonVariant variant) {
         this.dataTracker.set(VARIANT, variant);
     }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.putString("variant", this.getVariant().getKey().orElse(PigeonVariant.BANDED).getValue().toString());
+        nbt.putString("variant", FowlPlayRegistries.PIGEON_VARIANT.getId(this.getVariant()).toString());
         if(this.getRecipientUuid() != null) {
             nbt.putUuid("recipient", this.getRecipientUuid());
         }
@@ -149,11 +148,10 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        Optional.ofNullable(Identifier.tryParse(nbt.getString("variant")))
-            .map(variant -> RegistryKey.of(FowlPlayRegistryKeys.PIGEON_VARIANT, variant))
-            .flatMap(FowlPlayRegistries.PIGEON_VARIANT::getEntry)
-            .ifPresent(this::setVariant);
-
+        PigeonVariant variant = FowlPlayRegistries.PIGEON_VARIANT.get(Identifier.tryParse(nbt.getString("variant")));
+        if(variant != null) {
+            this.setVariant(variant);
+        }
         if(nbt.containsUuid("recipient")) {
             this.setRecipientUuid(nbt.getUuid("recipient"));
         }
@@ -205,7 +203,7 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
         ItemStack bundleStack = this.getStackInHand(Hand.OFF_HAND);
 
         // Equip bundle
-        if(bundleStack.isEmpty() && playerStack.getItem() instanceof BundleItem && playerStack.getComponents().contains(DataComponentTypes.CUSTOM_NAME) && this.isTamed()) {
+        if(bundleStack.isEmpty() && playerStack.getItem() instanceof BundleItem && playerStack.hasCustomName() && this.isTamed()) {
             if(!this.getWorld().isClient) {
                 this.setStackInHand(Hand.OFF_HAND, playerStack);
                 player.setStackInHand(hand, ItemStack.EMPTY);
@@ -260,7 +258,7 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
 
     @Override
     public boolean canEquip(ItemStack stack) {
-        EquipmentSlot equipmentSlot = this.getPreferredEquipmentSlot(stack);
+        EquipmentSlot equipmentSlot = getPreferredEquipmentSlot(stack);
         if(!this.getEquippedStack(equipmentSlot).isEmpty()) {
             return false;
         }
@@ -324,7 +322,7 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
             return false;
         }
         List<PlayerEntity> list = this.getWorld()
-            .getEntitiesByClass(PlayerEntity.class, this.getAttackBox().expand(16.0, 16.0, 16.0), EntityPredicates.EXCEPT_SPECTATOR);
+            .getEntitiesByClass(PlayerEntity.class, this.getBoundingBox().expand(16.0, 16.0, 16.0), EntityPredicates.EXCEPT_SPECTATOR);
         if(list.isEmpty()) {
             return false;
         }
@@ -587,7 +585,7 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
         ItemStack stack = this.getEquippedStack(EquipmentSlot.OFFHAND);
         ServerPlayerEntity recipient = this.getServer().getPlayerManager().getPlayer(stack.getName().getString());
 
-        if(!(stack.getItem() instanceof BundleItem) || !stack.getComponents().contains(DataComponentTypes.CUSTOM_NAME) || recipient == null || recipient.getUuid() == null) {
+        if(!(stack.getItem() instanceof BundleItem) || !stack.hasCustomName() || recipient == null || recipient.getUuid() == null) {
             this.setRecipientUuid(null);
             return;
         }

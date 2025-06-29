@@ -17,28 +17,28 @@ displayURL = "https://modrinth.com/mod/fowlplay"
 
 [[dependencies.fowlplay]]
 modId = "minecraft"
-type = "required"
-versionRange = "[1.21,)"
+mandatory = true
+versionRange = "[1.20,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.fowlplay]]
-modId = "neoforge"
-type = "required"
-versionRange = "[${neoforge_version},)"
+modId = "forge"
+mandatory = true
+versionRange = "[${forge_version},)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.fowlplay]]
 modId = "smartbrainlib"
-type = "required"
+mandatory = true
 versionRange = "[${sbl_version},)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.fowlplay]]
 modId = "yet_another_config_lib_v3"
-type = "required"
+mandatory = true
 versionRange = "[${yacl_version},)"
 ordering = "NONE"
 side = "BOTH"

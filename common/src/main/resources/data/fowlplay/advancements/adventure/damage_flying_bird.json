@@ -28,14 +28,16 @@
     }
   },
   "display": {
+    "announce_to_chat": true,
     "description": {
       "translate": "advancements.adventure.damage_flying_bird.description"
     },
     "frame": "challenge",
+    "hidden": false,
     "icon": {
-      "count": 1,
-      "id": "minecraft:spectral_arrow"
+      "item": "minecraft:spectral_arrow"
     },
+    "show_toast": true,
     "title": {
       "translate": "advancements.adventure.damage_flying_bird.title"
     }
@@ -47,5 +49,6 @@
   ],
   "rewards": {
     "experience": 50
-  }
+  },
+  "sends_telemetry_event": false
 }

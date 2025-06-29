@@ -32,8 +32,6 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -70,11 +68,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Predicate;
 
-public class DuckEntity extends TrustingBirdEntity implements SmartBrainOwner<DuckEntity>, VariantHolder<RegistryEntry<DuckVariant>>, Flocking {
-    private static final TrackedData<RegistryEntry<DuckVariant>> VARIANT = DataTracker.registerData(
+public class DuckEntity extends TrustingBirdEntity implements SmartBrainOwner<DuckEntity>, VariantHolder<DuckVariant>, Flocking {
+    private static final TrackedData<DuckVariant> VARIANT = DataTracker.registerData(
         DuckEntity.class,
         FowlPlayTrackedDataHandlerRegistry.DUCK_VARIANT
     );
@@ -119,9 +116,11 @@ public class DuckEntity extends TrustingBirdEntity implements SmartBrainOwner<Du
     }
 
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
-        FowlPlayRegistries.DUCK_VARIANT.getRandom(world.getRandom()).ifPresent(this::setVariant);
-        return super.initialize(world, difficulty, spawnReason, entityData);
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+        FowlPlayRegistries.DUCK_VARIANT
+            .getRandom(world.getRandom())
+            .ifPresent(variant -> this.setVariant(variant.value()));
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
     @Override
@@ -139,45 +138,38 @@ public class DuckEntity extends TrustingBirdEntity implements SmartBrainOwner<Du
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0f)
             .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.225f)
-            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.22f)
-            .add(EntityAttributes.GENERIC_WATER_MOVEMENT_EFFICIENCY, 0.5f);
-    }
-
-    @Nullable
-    @Override
-    public LivingEntity getTarget() {
-        return this.getTargetInBrain();
+            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.22f);
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(VARIANT, FowlPlayRegistries.DUCK_VARIANT.entryOf(DuckVariant.GREEN_HEADED));
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(VARIANT, DuckVariant.GREEN_HEADED);
     }
 
     @Override
-    public RegistryEntry<DuckVariant> getVariant() {
+    public DuckVariant getVariant() {
         return this.dataTracker.get(VARIANT);
     }
 
     @Override
-    public void setVariant(RegistryEntry<DuckVariant> variant) {
+    public void setVariant(DuckVariant variant) {
         this.dataTracker.set(VARIANT, variant);
     }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.putString("variant", this.getVariant().getKey().orElse(DuckVariant.GREEN_HEADED).getValue().toString());
+        nbt.putString("variant", FowlPlayRegistries.DUCK_VARIANT.getId(this.getVariant()).toString());
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        Optional.ofNullable(Identifier.tryParse(nbt.getString("variant")))
-            .map(variant -> RegistryKey.of(FowlPlayRegistryKeys.DUCK_VARIANT, variant))
-            .flatMap(FowlPlayRegistries.DUCK_VARIANT::getEntry)
-            .ifPresent(this::setVariant);
+        DuckVariant variant = FowlPlayRegistries.DUCK_VARIANT.get(Identifier.tryParse(nbt.getString("variant")));
+        if(variant != null) {
+            this.setVariant(variant);
+        }
     }
 
     @Override
@@ -202,7 +194,7 @@ public class DuckEntity extends TrustingBirdEntity implements SmartBrainOwner<Du
 
     @Override
     public void tick() {
-        if (this.getWorld().isClient()) {
+        if(this.getWorld().isClient()) {
             this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
             this.flappingState.setRunning(this.isFlying(), this.age);
             this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
@@ -427,7 +419,7 @@ public class DuckEntity extends TrustingBirdEntity implements SmartBrainOwner<Du
         Brain<?> brain = this.getBrain();
         Activity activity = brain.getFirstPossibleNonCoreActivity().orElse(null);
         this.tickBrain(this);
-        if (activity == Activity.FIGHT && brain.getFirstPossibleNonCoreActivity().orElse(null) != Activity.FIGHT) {
+        if(activity == Activity.FIGHT && brain.getFirstPossibleNonCoreActivity().orElse(null) != Activity.FIGHT) {
             brain.remember(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, 2400L);
         }
         super.mobTick();

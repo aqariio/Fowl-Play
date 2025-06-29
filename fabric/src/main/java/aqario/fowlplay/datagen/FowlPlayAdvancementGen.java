@@ -5,10 +5,8 @@ import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancement.Advancement;
-import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.AdvancementFrame;
 import net.minecraft.advancement.AdvancementRewards;
-import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.advancement.criterion.ImpossibleCriterion;
 import net.minecraft.advancement.criterion.PlayerHurtEntityCriterion;
 import net.minecraft.item.Items;
@@ -18,22 +16,19 @@ import net.minecraft.predicate.NbtPredicate;
 import net.minecraft.predicate.TagPredicate;
 import net.minecraft.predicate.entity.DamageSourcePredicate;
 import net.minecraft.predicate.entity.EntityPredicate;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class FowlPlayAdvancementGen extends FabricAdvancementProvider {
-    protected FowlPlayAdvancementGen(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
-        super(output, registryLookup);
+    protected FowlPlayAdvancementGen(FabricDataOutput output) {
+        super(output);
     }
 
     @Override
-    public void generateAdvancement(RegistryWrapper.WrapperLookup wrapperLookup, Consumer<AdvancementEntry> exporter) {
+    public void generateAdvancement(Consumer<Advancement> exporter) {
         NbtCompound flying = new NbtCompound();
         flying.putBoolean("flying", true);
 
@@ -54,10 +49,10 @@ public class FowlPlayAdvancementGen extends FabricAdvancementProvider {
                 "hit_flying_bird",
                 PlayerHurtEntityCriterion.Conditions.create(
                     DamagePredicate.Builder.create().type(DamageSourcePredicate.Builder.create().tag(TagPredicate.expected(DamageTypeTags.IS_PROJECTILE))),
-                    Optional.of(EntityPredicate.Builder.create().type(FowlPlayEntityTypeTags.BIRDS).nbt(new NbtPredicate(flying)).build())
+                    EntityPredicate.Builder.create().type(FowlPlayEntityTypeTags.BIRDS).nbt(new NbtPredicate(flying)).build()
                 )
             )
-            .build(exporter, Identifier.of(FowlPlay.ID, "adventure/damage_flying_bird").toString());
+            .build(exporter, new Identifier(FowlPlay.ID, "adventure/damage_flying_bird").toString());
 
         Advancement.Builder.createUntelemetered()
             .parent(advancement("adventure/root"))
@@ -73,16 +68,16 @@ public class FowlPlayAdvancementGen extends FabricAdvancementProvider {
             )
             .criterion(
                 "fall_with_penguin",
-                Criteria.IMPOSSIBLE.create(new ImpossibleCriterion.Conditions())
+                new ImpossibleCriterion.Conditions()
             )
-            .build(exporter, Identifier.of(FowlPlay.ID, "adventure/fly_penguin").toString());
+            .build(exporter, new Identifier(FowlPlay.ID, "adventure/fly_penguin").toString());
     }
 
-    private static AdvancementEntry advancement(String id) {
-        return advancement(Identifier.ofVanilla(id));
+    private static Advancement advancement(String id) {
+        return advancement(new Identifier(id));
     }
 
-    private static AdvancementEntry advancement(Identifier id) {
+    private static Advancement advancement(Identifier id) {
         return Advancement.Builder.create().build(id);
     }
 }

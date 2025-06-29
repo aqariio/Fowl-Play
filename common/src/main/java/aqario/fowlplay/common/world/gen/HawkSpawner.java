@@ -15,31 +15,31 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.SpawnHelper;
-import net.minecraft.world.spawner.SpecialSpawner;
+import net.minecraft.world.spawner.Spawner;
 
 import java.util.List;
 
-public class HawkSpawner implements SpecialSpawner {
+public class HawkSpawner implements Spawner {
     private static final int SPAWN_COOLDOWN = 7200;
     private static final int MAX_SPAWN_HEIGHT = 48;
     private int cooldown;
 
     @Override
     public int spawn(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals) {
-        if (!spawnAnimals
+        if(!spawnAnimals
             || !world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING)
             || FowlPlayConfig.getInstance().hawkSpawnWeight <= 0
         ) {
             return 0;
         }
         this.cooldown--;
-        if (this.cooldown > 0) {
+        if(this.cooldown > 0) {
             return 0;
         }
         Random random = world.random;
         this.cooldown = SPAWN_COOLDOWN + (random.nextInt(60) - random.nextInt(60)) * 20;
         PlayerEntity player = world.getRandomAlivePlayer();
-        if (player == null || player.isSpectator()) {
+        if(player == null || player.isSpectator()) {
             return 0;
         }
         BlockPos playerPos = player.getBlockPos();
@@ -49,24 +49,24 @@ public class HawkSpawner implements SpecialSpawner {
             .south(-10 + random.nextInt(21));
         BlockState block = world.getBlockState(spawnPos);
         FluidState fluid = world.getFluidState(spawnPos);
-        if (SpawnHelper.isClearForSpawn(world, spawnPos, block, fluid, FowlPlayEntityType.HAWK.get())
+        if(SpawnHelper.isClearForSpawn(world, spawnPos, block, fluid, FowlPlayEntityType.HAWK.get())
             && world.getBiome(spawnPos).isIn(FowlPlayBiomeTags.SPAWNS_HAWKS)
         ) {
-            if (spawnPos.getY() - world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, spawnPos.getX(), spawnPos.getZ()) > MAX_SPAWN_HEIGHT) {
+            if(spawnPos.getY() - world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, spawnPos.getX(), spawnPos.getZ()) > MAX_SPAWN_HEIGHT) {
                 return 0;
             }
             List<HawkEntity> nearbyHawks = world.getNonSpectatingEntities(
                 HawkEntity.class,
                 new Box(spawnPos).expand(72, 48, 72)
             );
-            if (!nearbyHawks.isEmpty()) {
+            if(!nearbyHawks.isEmpty()) {
                 return 0;
             }
             HawkEntity hawk = FowlPlayEntityType.HAWK.get().create(world);
-            if (hawk == null) {
+            if(hawk == null) {
                 return 0;
             }
-            hawk.initialize(world, world.getLocalDifficulty(spawnPos), SpawnReason.NATURAL, null);
+            hawk.initialize(world, world.getLocalDifficulty(spawnPos), SpawnReason.NATURAL, null, null);
             hawk.refreshPositionAndAngles(spawnPos, 0.0F, 0.0F);
             world.spawnEntityAndPassengers(hawk);
             return 1;

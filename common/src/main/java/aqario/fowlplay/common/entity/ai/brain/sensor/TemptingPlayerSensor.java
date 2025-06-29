@@ -33,7 +33,7 @@ public class TemptingPlayerSensor extends Sensor<BirdEntity> {
             .sorted(Comparator.comparingDouble(bird::squaredDistanceTo))
             .collect(Collectors.toList());
         if (!list.isEmpty()) {
-            PlayerEntity player = list.getFirst();
+            PlayerEntity player = list.get(0);
             brain.remember(MemoryModuleType.TEMPTING_PLAYER, player);
         }
         else {

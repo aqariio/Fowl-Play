@@ -35,7 +35,7 @@ public class FowlPlayEntityTypeTagGen extends FabricTagProvider.EntityTypeTagPro
             .add(EntityType.CHICKEN)
             .add(EntityType.PARROT);
         Registries.ENTITY_TYPE.forEach((type) -> {
-            if (Registries.ENTITY_TYPE.getId(type).getNamespace().equals(FowlPlay.ID)) {
+            if(Registries.ENTITY_TYPE.getId(type).getNamespace().equals(FowlPlay.ID)) {
                 builder.add(type);
             }
         });
@@ -155,9 +155,6 @@ public class FowlPlayEntityTypeTagGen extends FabricTagProvider.EntityTypeTagPro
             .add(FowlPlayEntityType.HAWK.get());
 
         // Vanilla entity tags
-        this.getOrCreateTagBuilder(EntityTypeTags.AQUATIC)
-            .setReplace(false)
-            .add(FowlPlayEntityType.PENGUIN.get());
         this.getOrCreateTagBuilder(EntityTypeTags.FREEZE_IMMUNE_ENTITY_TYPES)
             .setReplace(false)
             .add(FowlPlayEntityType.PENGUIN.get());

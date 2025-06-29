@@ -22,6 +22,6 @@ public class PigeonEntityRenderer extends MobEntityRenderer<PigeonEntity, Pigeon
 
     @Override
     public Identifier getTexture(PigeonEntity pigeon) {
-        return pigeon.value().texture();
+        return pigeon.getVariant().texture();
     }
 }

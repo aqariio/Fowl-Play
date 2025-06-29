@@ -30,15 +30,15 @@ public abstract class TrustingBirdEntity extends FlyingBirdEntity {
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(TRUSTED, new ArrayList<>());
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(TRUSTED, new ArrayList<>());
     }
 
     protected NbtList toNbtList(List<UUID> uuids) {
         NbtList nbtList = new NbtList();
 
-        for (UUID uuid : uuids) {
+        for(UUID uuid : uuids) {
             nbtList.add(NbtHelper.fromUuid(uuid));
         }
 
@@ -54,9 +54,9 @@ public abstract class TrustingBirdEntity extends FlyingBirdEntity {
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        if (nbt.contains("trusted")) {
+        if(nbt.contains("trusted")) {
             NbtList list = (NbtList) nbt.get("trusted");
-            if (list != null) {
+            if(list != null) {
                 list.forEach(element -> this.addTrustedUuid(NbtHelper.toUuid(element)));
             }
         }
@@ -66,8 +66,8 @@ public abstract class TrustingBirdEntity extends FlyingBirdEntity {
     protected void loot(ItemEntity item) {
         super.loot(item);
         UUID thrower = item.getOwner() != null ? item.getOwner().getUuid() : null;
-        if (thrower != null && !this.trustsUuid(thrower)) {
-            if (this.random.nextInt(3) == 0) {
+        if(thrower != null && !this.trustsUuid(thrower)) {
+            if(this.random.nextInt(3) == 0) {
                 this.addTrustedUuid(thrower);
                 this.getWorld().sendEntityStatus(this, EntityStatuses.ADD_VILLAGER_HAPPY_PARTICLES);
             }
@@ -76,8 +76,8 @@ public abstract class TrustingBirdEntity extends FlyingBirdEntity {
 
     @Override
     public void handleStatus(byte status) {
-        if (status == EntityStatuses.ADD_VILLAGER_HAPPY_PARTICLES) {
-            if (this.happyTicksRemaining == 0) {
+        if(status == EntityStatuses.ADD_VILLAGER_HAPPY_PARTICLES) {
+            if(this.happyTicksRemaining == 0) {
                 this.happyTicksRemaining = 20;
             }
         }
@@ -89,7 +89,7 @@ public abstract class TrustingBirdEntity extends FlyingBirdEntity {
     @Override
     public void tick() {
         super.tick();
-        if (this.isAmbient() && !this.getTrustedUuids().isEmpty()) {
+        if(this.isAmbient() && !this.getTrustedUuids().isEmpty()) {
             this.setAmbient(false);
         }
     }
@@ -117,7 +117,7 @@ public abstract class TrustingBirdEntity extends FlyingBirdEntity {
     public List<PlayerEntity> getTrusted() {
         List<UUID> uuids = this.getTrustedUuids();
         List<PlayerEntity> entities = new ArrayList<>();
-        for (UUID uuid : uuids) {
+        for(UUID uuid : uuids) {
             entities.add(this.getWorld().getPlayerByUuid(uuid));
         }
         return entities;

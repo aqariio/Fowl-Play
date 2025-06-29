@@ -1,8 +1,10 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.PenguinEntity;
+import com.google.common.collect.ImmutableList;
+import com.mojang.datafixers.util.Pair;
+import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.tslat.smartbrainlib.object.MemoryTest;
 
 /**
  * A collection of tasks that control the sliding behavior of penguins.
@@ -10,10 +12,11 @@ import net.tslat.smartbrainlib.object.MemoryTest;
 public class SlideControlTask {
     public static <E extends PenguinEntity> SingleTickBehaviour<E> startSliding() {
         return new SingleTickBehaviour<>(
-            MemoryTest.builder(1)
-                .usesMemory(MemoryModuleType.WALK_TARGET),
+            ImmutableList.of(
+                Pair.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_PRESENT)
+            ),
             (bird, brain) -> {
-                if (!bird.isSliding() && bird.canStartSliding()) {
+                if(!bird.isSliding() && bird.canStartSliding()) {
                     bird.startSliding();
                     return true;
                 }
@@ -24,10 +27,11 @@ public class SlideControlTask {
 
     public static <E extends PenguinEntity> SingleTickBehaviour<E> stopSliding() {
         return new SingleTickBehaviour<>(
-            MemoryTest.builder(1)
-                .usesMemory(MemoryModuleType.WALK_TARGET),
+            ImmutableList.of(
+                Pair.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_PRESENT)
+            ),
             (bird, brain) -> {
-                if (bird.isSliding()) {
+                if(bird.isSliding()) {
                     bird.stopSliding();
                     return true;
                 }
@@ -38,13 +42,14 @@ public class SlideControlTask {
 
     public static <E extends PenguinEntity> SingleTickBehaviour<E> toggleSliding(int seconds) {
         return new SingleTickBehaviour<>(
-            MemoryTest.builder(1)
-                .usesMemory(MemoryModuleType.WALK_TARGET),
+            ImmutableList.of(
+                Pair.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_PRESENT)
+            ),
             (bird, brain) -> {
-                if ((!bird.canStartSliding() && !bird.isSliding()) || bird.getLastPoseTickDelta() < (long) seconds * 20) {
+                if((!bird.canStartSliding() && !bird.isSliding()) || bird.getLastPoseTickDelta() < (long) seconds * 20) {
                     return false;
                 }
-                if (bird.isSliding()) {
+                if(bird.isSliding()) {
                     bird.stopSliding();
                 }
                 else {

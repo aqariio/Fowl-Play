@@ -80,30 +80,29 @@ public class PlatformHelperImpl {
         ForgeRegistries.SOUND_EVENTS,
         FowlPlay.ID
     );
-    public static final DeferredRegister<?> REGISTRIES = DeferredRegister.create(
-    );
     public static final DeferredRegister<TrackedDataHandler<?>> TRACKED_DATA_HANDLERS = DeferredRegister.create(
         ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS,
         FowlPlay.ID
     );
 
     @SuppressWarnings("unchecked")
-    public static <T> T registerVariant(String id, RegistryKey<T> key, Supplier<T> variant) {
+    public static <T> T registerVariant(String id, Supplier<T> variant) {
         if(variant.get() instanceof ChickenVariant) {
             return (T) CHICKEN_VARIANTS.register(id, (Supplier<ChickenVariant>) variant).get();
         }
         else if(variant.get() instanceof DuckVariant) {
-            DUCK_VARIANTS.register(id, (Supplier<DuckVariant>) variant);
+            return (T) DUCK_VARIANTS.register(id, (Supplier<DuckVariant>) variant).get();
         }
         else if(variant.get() instanceof GullVariant) {
-            GULL_VARIANTS.register(id, (Supplier<GullVariant>) variant);
+            return (T) GULL_VARIANTS.register(id, (Supplier<GullVariant>) variant).get();
         }
         else if(variant.get() instanceof PigeonVariant) {
-            PIGEON_VARIANTS.register(id, (Supplier<PigeonVariant>) variant);
+            return (T) PIGEON_VARIANTS.register(id, (Supplier<PigeonVariant>) variant).get();
         }
         else if(variant.get() instanceof SparrowVariant) {
-            SPARROW_VARIANTS.register(id, (Supplier<SparrowVariant>) variant);
+            return (T) SPARROW_VARIANTS.register(id, (Supplier<SparrowVariant>) variant).get();
         }
+        return null;
     }
 
     public static Supplier<Activity> registerActivity(String id, Supplier<Activity> activity) {
@@ -141,13 +140,29 @@ public class PlatformHelperImpl {
         return SOUND_EVENTS.register(id, soundEvent);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> Registry<T> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
         RegistryBuilder<T> builder = new RegistryBuilder<>();
+        builder.setName(registryKey.getValue());
         if(!sync) {
             builder.disableSync();
         }
-        REGISTRIES.makeRegistry(() -> builder);
-        return registry;
+        if(registryKey.equals(FowlPlayRegistryKeys.CHICKEN_VARIANT)) {
+            return (Registry<T>) CHICKEN_VARIANTS.makeRegistry(() -> (RegistryBuilder<ChickenVariant>) builder).get();
+        }
+        else if(registryKey.equals(FowlPlayRegistryKeys.DUCK_VARIANT)) {
+            return (Registry<T>) DUCK_VARIANTS.makeRegistry(() -> (RegistryBuilder<DuckVariant>) builder).get();
+        }
+        else if(registryKey.equals(FowlPlayRegistryKeys.GULL_VARIANT)) {
+            return (Registry<T>) GULL_VARIANTS.makeRegistry(() -> (RegistryBuilder<GullVariant>) builder).get();
+        }
+        else if(registryKey.equals(FowlPlayRegistryKeys.PIGEON_VARIANT)) {
+            return (Registry<T>) PIGEON_VARIANTS.makeRegistry(() -> (RegistryBuilder<PigeonVariant>) builder).get();
+        }
+        else if(registryKey.equals(FowlPlayRegistryKeys.SPARROW_VARIANT)) {
+            return (Registry<T>) SPARROW_VARIANTS.makeRegistry(() -> (RegistryBuilder<SparrowVariant>) builder).get();
+        }
+        return null;
     }
 
     public static <T> void registerTrackedDataHandler(String id, TrackedDataHandler<T> handler) {

@@ -3,19 +3,22 @@ package aqario.fowlplay.common.entity.ai.brain.task;
 import aqario.fowlplay.common.entity.PigeonEntity;
 import aqario.fowlplay.common.entity.ai.brain.TeleportTarget;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
+import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.*;
 import net.minecraft.server.world.ServerWorld;
 import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
-import net.tslat.smartbrainlib.object.MemoryTest;
 import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 
 public class FollowOwnerTask extends ExtendedBehaviour<PigeonEntity> {
-    private static final MemoryTest MEMORIES = MemoryTest.builder(3)
-        .usesMemories(FowlPlayMemoryModuleType.TELEPORT_TARGET.get(), MemoryModuleType.LOOK_TARGET, MemoryModuleType.WALK_TARGET);
+    private static final List<Pair<MemoryModuleType<?>, MemoryModuleState>> MEMORIES = ImmutableList.of(
+        Pair.of(FowlPlayMemoryModuleType.TELEPORT_TARGET.get(), MemoryModuleState.VALUE_PRESENT),
+        Pair.of(MemoryModuleType.LOOK_TARGET, MemoryModuleState.VALUE_PRESENT),
+        Pair.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_PRESENT)
+    );
     private LivingEntity owner;
     private final float speed;
     private int updateCountdownTicks;
@@ -36,19 +39,19 @@ public class FollowOwnerTask extends ExtendedBehaviour<PigeonEntity> {
     @Override
     protected boolean shouldRun(ServerWorld world, PigeonEntity pigeon) {
         LivingEntity owner = pigeon.getOwner();
-        if (owner == null) {
+        if(owner == null) {
             return false;
         }
-        if (owner.isSpectator()) {
+        if(owner.isSpectator()) {
             return false;
         }
-        if (pigeon.isSitting()) {
+        if(pigeon.isSitting()) {
             return false;
         }
-        if (pigeon.squaredDistanceTo(owner) < this.minDistance * this.minDistance) {
+        if(pigeon.squaredDistanceTo(owner) < this.minDistance * this.minDistance) {
             return false;
         }
-        if (pigeon.getRecipientUuid() != null) {
+        if(pigeon.getRecipientUuid() != null) {
             return false;
         }
         this.owner = owner;
@@ -57,13 +60,13 @@ public class FollowOwnerTask extends ExtendedBehaviour<PigeonEntity> {
 
     @Override
     protected boolean shouldKeepRunning(PigeonEntity pigeon) {
-        if (pigeon.getRecipientUuid() != null) {
+        if(pigeon.getRecipientUuid() != null) {
             return false;
         }
-        if (pigeon.getNavigation().isIdle()) {
+        if(pigeon.getNavigation().isIdle()) {
             return false;
         }
-        if (pigeon.isSitting()) {
+        if(pigeon.isSitting()) {
             return false;
         }
 
@@ -74,10 +77,10 @@ public class FollowOwnerTask extends ExtendedBehaviour<PigeonEntity> {
     protected void tick(PigeonEntity pigeon) {
         Brain<?> brain = pigeon.getBrain();
         BrainUtils.setMemory(brain, MemoryModuleType.LOOK_TARGET, new EntityLookTarget(this.owner, true));
-        if (--this.updateCountdownTicks <= 0) {
+        if(--this.updateCountdownTicks <= 0) {
             this.updateCountdownTicks = 20;
-            if (!pigeon.isLeashed() && !pigeon.hasVehicle()) {
-                if (pigeon.squaredDistanceTo(this.owner) >= 144.0) {
+            if(!pigeon.isLeashed() && !pigeon.hasVehicle()) {
+                if(pigeon.squaredDistanceTo(this.owner) >= 144.0) {
                     BrainUtils.setMemory(brain, FowlPlayMemoryModuleType.TELEPORT_TARGET.get(), new TeleportTarget(this.owner));
                 }
                 else {

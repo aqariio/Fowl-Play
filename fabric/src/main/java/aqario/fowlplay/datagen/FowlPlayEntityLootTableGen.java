@@ -9,26 +9,21 @@ import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.function.EnchantedCountIncreaseLootFunction;
+import net.minecraft.loot.function.LootingEnchantLootFunction;
 import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.util.Identifier;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
 public class FowlPlayEntityLootTableGen extends SimpleFabricLootTableProvider {
-    private final CompletableFuture<RegistryWrapper.WrapperLookup> registryLookupFuture;
-
-    public FowlPlayEntityLootTableGen(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
-        super(output, registryLookup, LootContextTypes.ENTITY);
-        this.registryLookupFuture = registryLookup;
+    public FowlPlayEntityLootTableGen(FabricDataOutput output) {
+        super(output, LootContextTypes.ENTITY);
     }
 
     @Override
-    public void accept(BiConsumer<RegistryKey<LootTable>, LootTable.Builder> exporter) {
+    public void accept(BiConsumer<Identifier, LootTable.Builder> exporter) {
         this.registerBird(exporter, FowlPlayEntityType.BLUE_JAY.get());
         this.registerBird(exporter, FowlPlayEntityType.CARDINAL.get());
         this.registerBird(exporter, FowlPlayEntityType.CHICKADEE.get());
@@ -43,7 +38,7 @@ public class FowlPlayEntityLootTableGen extends SimpleFabricLootTableProvider {
         this.registerBird(exporter, FowlPlayEntityType.SPARROW.get());
     }
 
-    private void registerBird(BiConsumer<RegistryKey<LootTable>, LootTable.Builder> exporter, EntityType<?> type) {
+    private void registerBird(BiConsumer<Identifier, LootTable.Builder> exporter, EntityType<?> type) {
         this.register(
             exporter,
             type,
@@ -54,14 +49,14 @@ public class FowlPlayEntityLootTableGen extends SimpleFabricLootTableProvider {
                         .with(
                             ItemEntry.builder(Items.FEATHER)
                                 .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0F, 2.0F)))
-                                .apply(EnchantedCountIncreaseLootFunction.builder(this.registryLookupFuture.join(), UniformLootNumberProvider.create(0.0F, 1.0F)))
+                                .apply(LootingEnchantLootFunction.builder(UniformLootNumberProvider.create(0.0F, 1.0F)))
                         )
                 )
-                .randomSequenceId(type.getLootTableId().getValue())
+                .randomSequenceId(type.getLootTableId())
         );
     }
 
-    private void register(BiConsumer<RegistryKey<LootTable>, LootTable.Builder> exporter, EntityType<?> type, LootTable.Builder builder) {
+    private void register(BiConsumer<Identifier, LootTable.Builder> exporter, EntityType<?> type, LootTable.Builder builder) {
         exporter.accept(type.getLootTableId(), builder);
     }
 }

@@ -33,10 +33,10 @@ public class GoToNearestWantedItemTask {
                 assert wantedItems != null;
                 if (!BrainUtils.hasMemory(brain, MemoryModuleType.ITEM_PICKUP_COOLDOWN_TICKS)
                     && startPredicate.test(bird)
-                    && wantedItems.getFirst().isInRange(bird, radius)
-                    && bird.getWorld().getWorldBorder().contains(wantedItems.getFirst().getBlockPos())) {
-                    WalkTarget newWalkTarget = new WalkTarget(new EntityLookTarget(wantedItems.getFirst(), false), entitySpeedGetter.apply(bird), 0);
-                    BrainUtils.setMemory(brain, MemoryModuleType.LOOK_TARGET, new EntityLookTarget(wantedItems.getFirst(), true));
+                    && wantedItems.get(0).isInRange(bird, radius)
+                    && bird.getWorld().getWorldBorder().contains(wantedItems.get(0).getBlockPos())) {
+                    WalkTarget newWalkTarget = new WalkTarget(new EntityLookTarget(wantedItems.get(0), false), entitySpeedGetter.apply(bird), 0);
+                    BrainUtils.setMemory(brain, MemoryModuleType.LOOK_TARGET, new EntityLookTarget(wantedItems.get(0), true));
                     BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, newWalkTarget);
                     return true;
                 }

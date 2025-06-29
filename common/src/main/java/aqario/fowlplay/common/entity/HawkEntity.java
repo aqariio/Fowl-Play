@@ -24,7 +24,6 @@ import net.minecraft.entity.ai.brain.task.LookTargetUtil;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.PassiveEntity;
@@ -107,15 +106,9 @@ public class HawkEntity extends TrustingBirdEntity implements SmartBrainOwner<Ha
         return 15;
     }
 
-    @Nullable
     @Override
-    public LivingEntity getTarget() {
-        return this.getTargetInBrain();
-    }
-
-    @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
+    protected void initDataTracker() {
+        super.initDataTracker();
     }
 
     @Override
@@ -157,7 +150,7 @@ public class HawkEntity extends TrustingBirdEntity implements SmartBrainOwner<Ha
 
     @Override
     public boolean shouldAttack(LivingEntity target) {
-        if (this.hasLowHealth()) {
+        if(this.hasLowHealth()) {
             return false;
         }
         Optional<LivingEntity> hurtBy = this.getBrain().getOptionalRegisteredMemory(MemoryModuleType.HURT_BY_ENTITY);
@@ -166,20 +159,20 @@ public class HawkEntity extends TrustingBirdEntity implements SmartBrainOwner<Ha
 
     @Override
     public boolean canHaveStatusEffect(StatusEffectInstance effect) {
-        return !effect.equals(StatusEffects.HUNGER) && super.canHaveStatusEffect(effect);
+        return effect.getEffectType() != StatusEffects.HUNGER && super.canHaveStatusEffect(effect);
     }
 
     @Override
     public void tick() {
-        if (this.getWorld().isClient()) {
+        if(this.getWorld().isClient()) {
             this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
             this.glidingState.setRunning(this.isFlying(), this.age);
-            if (this.isFlying()) {
-                if (this.timeSinceLastFlap > this.getFlapFrequency()) {
+            if(this.isFlying()) {
+                if(this.timeSinceLastFlap > this.getFlapFrequency()) {
                     this.timeSinceLastFlap = 0;
                     this.flapTime++;
                 }
-                else if (this.isFlapping()) {
+                else if(this.isFlapping()) {
                     this.flapTime++;
                 }
                 else {
@@ -417,7 +410,7 @@ public class HawkEntity extends TrustingBirdEntity implements SmartBrainOwner<Ha
         Brain<?> brain = this.getBrain();
         Activity activity = brain.getFirstPossibleNonCoreActivity().orElse(null);
         this.tickBrain(this);
-        if (activity == Activity.FIGHT && brain.getFirstPossibleNonCoreActivity().orElse(null) != Activity.FIGHT) {
+        if(activity == Activity.FIGHT && brain.getFirstPossibleNonCoreActivity().orElse(null) != Activity.FIGHT) {
             brain.remember(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, 2400L);
         }
         super.mobTick();

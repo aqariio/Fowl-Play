@@ -50,7 +50,7 @@ public class FlightNavigation extends MobNavigation {
 
     @Override
     protected boolean isAtValidPosition() {
-        return this.canSwim() && this.entity.isInFluid() || !this.entity.hasVehicle();
+        return this.canSwim() && this.isInLiquid() || !this.entity.hasVehicle();
     }
 
     @Override
@@ -71,17 +71,17 @@ public class FlightNavigation extends MobNavigation {
     @Override
     public void tick() {
         this.tickCount++;
-        if (this.inRecalculationCooldown) {
+        if(this.inRecalculationCooldown) {
             this.recalculatePath();
         }
 
-        if (!this.isIdle()) {
-            if (this.isAtValidPosition()) {
+        if(!this.isIdle()) {
+            if(this.isAtValidPosition()) {
                 this.continueFollowingPath();
             }
-            else if (this.currentPath != null && !this.currentPath.isFinished()) {
+            else if(this.currentPath != null && !this.currentPath.isFinished()) {
                 Vec3d vec3d = this.currentPath.getNodePosition(this.entity);
-                if (this.entity.getBlockX() == MathHelper.floor(vec3d.x)
+                if(this.entity.getBlockX() == MathHelper.floor(vec3d.x)
                     && this.entity.getBlockY() == MathHelper.floor(vec3d.y)
                     && this.entity.getBlockZ() == MathHelper.floor(vec3d.z)) {
                     this.currentPath.next();
@@ -89,7 +89,7 @@ public class FlightNavigation extends MobNavigation {
             }
 
             DebugInfoSender.sendPathfindingData(this.world, this.entity, this.currentPath, this.nodeReachProximity);
-            if (!this.isIdle()) {
+            if(!this.isIdle()) {
                 Vec3d vec3d = this.currentPath.getNodePosition(this.entity);
                 this.entity.getMoveControl().moveTo(vec3d.x, vec3d.y, vec3d.z, this.speed);
             }
@@ -105,7 +105,7 @@ public class FlightNavigation extends MobNavigation {
 //        double y = Math.abs(this.bird.getY() - (double) vec3i.getY() + 0.5);
 //        double z = Math.abs(this.bird.getZ() - ((double) vec3i.getZ() + 0.5));
 //        boolean reachedNode = x < this.nodeReachProximity && z < this.nodeReachProximity && y < this.nodeReachProximity;
-        if (this.canJumpToNext(this.currentPath.getCurrentNode().type) && this.shouldJumpToNextNode(pos)) {
+        if(this.canJumpToNext(this.currentPath.getCurrentNode().type) && this.shouldJumpToNextNode(pos)) {
             this.currentPath.setCurrentNodeIndex(this.currentPath.getCurrentNodeIndex() + NODE_DISTANCE);
         }
 

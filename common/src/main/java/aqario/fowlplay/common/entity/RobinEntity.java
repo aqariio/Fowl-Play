@@ -82,9 +82,9 @@ public class RobinEntity extends FlyingBirdEntity implements SmartBrainOwner<Rob
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(VARIANT, /*Util.getRandom(Variant.VARIANTS, random).toString()*/ Variant.AMERICAN.toString());
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(VARIANT, /*Util.getRandom(Variant.VARIANTS, random).toString()*/ Variant.AMERICAN.toString());
     }
 
     @Override
@@ -106,7 +106,7 @@ public class RobinEntity extends FlyingBirdEntity implements SmartBrainOwner<Rob
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        if (nbt.contains("variant")) {
+        if(nbt.contains("variant")) {
             this.setVariant(Variant.valueOf(nbt.getString("variant")));
         }
     }
@@ -139,7 +139,7 @@ public class RobinEntity extends FlyingBirdEntity implements SmartBrainOwner<Rob
 
     @Override
     public void tick() {
-        if (this.getWorld().isClient()) {
+        if(this.getWorld().isClient()) {
             this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
             this.flappingState.setRunning(this.isFlying(), this.age);
             this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);

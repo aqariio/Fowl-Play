@@ -46,7 +46,7 @@ public abstract class LivingEntityMixin extends Entity {
     private void fowlplay$stepDownwards(PlayerEntity player, Vec3d input, CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
         if(entity instanceof PenguinEntity penguin && penguin.getControllingPassenger() instanceof PlayerEntity && penguin.shouldStepDown()) {
-            entity.addVelocityInternal(new Vec3d(0, -0.5, 0));
+            entity.addVelocity(new Vec3d(0, -0.5, 0));
         }
     }
 }

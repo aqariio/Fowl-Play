@@ -87,7 +87,7 @@ public class FowlPlaySoundDefinitionsGen extends SoundDefinitionsProvider {
     private void addVariousVanilla(SoundEvent soundEvent, String location, int start, int end) {
         SoundDefinition definition = SoundDefinition.builder();
         for (int i = start; i <= end; i++) {
-            definition.with(sound(Identifier.ofVanilla(location + i)));
+            definition.with(sound(new Identifier(location + i)));
         }
         definition.subtitle("subtitles." + soundEvent.getId().getPath());
         this.add(soundEvent, definition);
@@ -99,7 +99,7 @@ public class FowlPlaySoundDefinitionsGen extends SoundDefinitionsProvider {
 
     private void addVanilla(SoundEvent soundEvent, String location) {
         SoundDefinition definition = SoundDefinition.builder()
-            .with(sound(Identifier.ofVanilla(location)))
+            .with(sound(new Identifier(location)))
             .subtitle("subtitles." + soundEvent.getId().getPath());
         this.add(soundEvent, definition);
     }

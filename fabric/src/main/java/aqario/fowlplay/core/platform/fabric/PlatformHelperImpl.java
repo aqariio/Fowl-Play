@@ -35,22 +35,24 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class PlatformHelperImpl {
-    public static <T> void registerVariant(String id, Supplier<T> variant) {
+    @SuppressWarnings("unchecked")
+    public static <T> T registerVariant(String id, Supplier<T> variant) {
         if(variant.get() instanceof ChickenVariant v) {
-            Registry.register(FowlPlayRegistries.CHICKEN_VARIANT, id, v);
+            return (T) Registry.register(FowlPlayRegistries.CHICKEN_VARIANT, id, v);
         }
         else if(variant.get() instanceof DuckVariant v) {
-            Registry.register(FowlPlayRegistries.DUCK_VARIANT, id, v);
+            return (T) Registry.register(FowlPlayRegistries.DUCK_VARIANT, id, v);
         }
         else if(variant.get() instanceof GullVariant v) {
-            Registry.register(FowlPlayRegistries.GULL_VARIANT, id, v);
+            return (T) Registry.register(FowlPlayRegistries.GULL_VARIANT, id, v);
         }
         else if(variant.get() instanceof PigeonVariant v) {
-            Registry.register(FowlPlayRegistries.PIGEON_VARIANT, id, v);
+            return (T) Registry.register(FowlPlayRegistries.PIGEON_VARIANT, id, v);
         }
         else if(variant.get() instanceof SparrowVariant v) {
-            Registry.register(FowlPlayRegistries.SPARROW_VARIANT, id, v);
+            return (T) Registry.register(FowlPlayRegistries.SPARROW_VARIANT, id, v);
         }
+        return null;
     }
 
     public static Supplier<Activity> registerActivity(String id, Supplier<Activity> activity) {

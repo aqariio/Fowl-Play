@@ -1,6 +1,6 @@
 package aqario.fowlplay.core.forge;
 
-import aqario.fowlplay.client.neoforge.FowlPlayForgeClient;
+import aqario.fowlplay.client.forge.FowlPlayForgeClient;
 import aqario.fowlplay.common.integration.YACLIntegration;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayItems;

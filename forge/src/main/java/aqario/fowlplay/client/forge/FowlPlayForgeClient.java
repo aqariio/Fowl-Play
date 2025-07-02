@@ -1,4 +1,4 @@
-package aqario.fowlplay.client.neoforge;
+package aqario.fowlplay.client.forge;
 
 import aqario.fowlplay.client.FowlPlayClient;
 import aqario.fowlplay.client.particle.SmallBubbleParticle;

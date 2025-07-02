@@ -38,19 +38,24 @@ public class PlatformHelperImpl {
     @SuppressWarnings("unchecked")
     public static <T> Supplier<T> registerVariant(String id, Supplier<T> variant) {
         if(variant.get() instanceof ChickenVariant v) {
-            return () -> (T) Registry.register(FowlPlayRegistries.CHICKEN_VARIANT.get(), id, v);
+            T registry = (T) Registry.register(FowlPlayRegistries.CHICKEN_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
+            return () -> registry;
         }
         else if(variant.get() instanceof DuckVariant v) {
-            return () -> (T) Registry.register(FowlPlayRegistries.DUCK_VARIANT.get(), id, v);
+            T registry = (T) Registry.register(FowlPlayRegistries.DUCK_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
+            return () -> registry;
         }
         else if(variant.get() instanceof GullVariant v) {
-            return () -> (T) Registry.register(FowlPlayRegistries.GULL_VARIANT.get(), id, v);
+            T registry = (T) Registry.register(FowlPlayRegistries.GULL_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
+            return () -> registry;
         }
         else if(variant.get() instanceof PigeonVariant v) {
-            return () -> (T) Registry.register(FowlPlayRegistries.PIGEON_VARIANT.get(), id, v);
+            T registry = (T) Registry.register(FowlPlayRegistries.PIGEON_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
+            return () -> registry;
         }
         else if(variant.get() instanceof SparrowVariant v) {
-            return () -> (T) Registry.register(FowlPlayRegistries.SPARROW_VARIANT.get(), id, v);
+            T registry = (T) Registry.register(FowlPlayRegistries.SPARROW_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
+            return () -> registry;
         }
         return null;
     }
@@ -100,7 +105,8 @@ public class PlatformHelperImpl {
         if(sync) {
             builder.attribute(RegistryAttribute.SYNCED);
         }
-        return builder::buildAndRegister;
+        Registry<T> registry = builder.buildAndRegister();
+        return () -> registry;
     }
 
     public static <T> void registerTrackedDataHandler(String id, TrackedDataHandler<T> handler) {

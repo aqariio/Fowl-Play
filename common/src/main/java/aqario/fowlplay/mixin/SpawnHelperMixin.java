@@ -49,6 +49,10 @@ public class SpawnHelperMixin {
 
     @Inject(method = "canSpawn(Lnet/minecraft/entity/SpawnRestriction$Location;Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/EntityType;)Z", at = @At("HEAD"), cancellable = true)
     private static void fowlplay$addCustomSpawnLocationChecks(SpawnRestriction.Location location, WorldView world, BlockPos pos, @Nullable EntityType<?> entityType, CallbackInfoReturnable<Boolean> cir) {
+        if(location == null) {
+            cir.setReturnValue(false);
+            return;
+        }
         if(location == SpawnRestriction.Location.NO_RESTRICTIONS) {
             return;
         }

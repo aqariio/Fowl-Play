@@ -141,7 +141,7 @@ public class PlatformHelperImpl {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T, R extends Registry<ChickenVariant>> Supplier<R> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
+    public static <T> Supplier<Registry<T>> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
         RegistryBuilder<T> builder = RegistryBuilder.of(registryKey.getValue());
         if(!sync) {
             builder.disableSync();

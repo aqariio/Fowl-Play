@@ -4,6 +4,8 @@ import aqario.fowlplay.core.platform.PlatformHelper;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 
+import java.util.function.Supplier;
+
 public final class RegistryBuilder<T> {
     private final RegistryKey<Registry<T>> registryKey;
     private boolean sync = false;
@@ -21,7 +23,7 @@ public final class RegistryBuilder<T> {
         return this;
     }
 
-    public Registry<T> buildAndRegister() {
+    public Supplier<Registry<T>> buildAndRegister() {
         return PlatformHelper.registerRegistry(this.registryKey, this.sync);
     }
 }

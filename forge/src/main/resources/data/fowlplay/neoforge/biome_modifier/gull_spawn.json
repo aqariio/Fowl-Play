@@ -1,10 +1,14 @@
 {
-  "type": "neoforge:add_spawns",
+  "type": "forge:add_spawns",
   "biomes": "#fowlplay:spawns_gulls",
   "spawners": {
     "type": "fowlplay:gull",
     "weight": 5,
     "minCount": 3,
     "maxCount": 12
+  },
+  "spawn_cost": {
+    "energy_budget": 1,
+    "charge": 0.07
   }
 }

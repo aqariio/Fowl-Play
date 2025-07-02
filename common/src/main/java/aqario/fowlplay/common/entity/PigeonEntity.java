@@ -107,7 +107,7 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        FowlPlayRegistries.PIGEON_VARIANT
+        FowlPlayRegistries.PIGEON_VARIANT.get()
             .getRandom(world.getRandom())
             .ifPresent(variant -> this.setVariant(variant.value()));
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
@@ -123,7 +123,7 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(RECIPIENT, Optional.empty());
-        this.dataTracker.startTracking(VARIANT, PigeonVariant.BANDED);
+        this.dataTracker.startTracking(VARIANT, PigeonVariant.BANDED.get());
     }
 
     @Override
@@ -139,7 +139,7 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.putString("variant", FowlPlayRegistries.PIGEON_VARIANT.getId(this.getVariant()).toString());
+        nbt.putString("variant", FowlPlayRegistries.PIGEON_VARIANT.get().getId(this.getVariant()).toString());
         if(this.getRecipientUuid() != null) {
             nbt.putUuid("recipient", this.getRecipientUuid());
         }
@@ -148,7 +148,7 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        PigeonVariant variant = FowlPlayRegistries.PIGEON_VARIANT.get(Identifier.tryParse(nbt.getString("variant")));
+        PigeonVariant variant = FowlPlayRegistries.PIGEON_VARIANT.get().get(Identifier.tryParse(nbt.getString("variant")));
         if(variant != null) {
             this.setVariant(variant);
         }

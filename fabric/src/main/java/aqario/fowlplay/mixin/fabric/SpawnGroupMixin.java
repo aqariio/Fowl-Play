@@ -1,4 +1,4 @@
-package aqario.fowlplay.mixin;
+package aqario.fowlplay.mixin.fabric;
 
 import aqario.fowlplay.common.entity.CustomSpawnGroup;
 import net.minecraft.entity.SpawnGroup;

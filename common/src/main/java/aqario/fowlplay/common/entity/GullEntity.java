@@ -117,7 +117,7 @@ public class GullEntity extends TrustingBirdEntity implements SmartBrainOwner<Gu
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        FowlPlayRegistries.GULL_VARIANT
+        FowlPlayRegistries.GULL_VARIANT.get()
             .getRandom(world.getRandom())
             .ifPresent(variant -> this.setVariant(variant.value()));
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
@@ -144,7 +144,7 @@ public class GullEntity extends TrustingBirdEntity implements SmartBrainOwner<Gu
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.dataTracker.startTracking(VARIANT, GullVariant.HERRING);
+        this.dataTracker.startTracking(VARIANT, GullVariant.HERRING.get());
     }
 
     @Override
@@ -160,13 +160,13 @@ public class GullEntity extends TrustingBirdEntity implements SmartBrainOwner<Gu
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.putString("variant", FowlPlayRegistries.GULL_VARIANT.getId(this.getVariant()).toString());
+        nbt.putString("variant", FowlPlayRegistries.GULL_VARIANT.get().getId(this.getVariant()).toString());
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        GullVariant variant = FowlPlayRegistries.GULL_VARIANT.get(Identifier.tryParse(nbt.getString("variant")));
+        GullVariant variant = FowlPlayRegistries.GULL_VARIANT.get().get(Identifier.tryParse(nbt.getString("variant")));
         if(variant != null) {
             this.setVariant(variant);
         }

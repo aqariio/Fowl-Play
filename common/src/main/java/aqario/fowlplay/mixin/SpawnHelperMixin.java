@@ -6,7 +6,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnRestriction;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -51,40 +50,19 @@ public class SpawnHelperMixin {
     @Inject(method = "canSpawn(Lnet/minecraft/entity/SpawnRestriction$Location;Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/EntityType;)Z", at = @At("HEAD"), cancellable = true)
     private static void fowlplay$addCustomSpawnLocationChecks(SpawnRestriction.Location location, WorldView world, BlockPos pos, @Nullable EntityType<?> entityType, CallbackInfoReturnable<Boolean> cir) {
         if(location == SpawnRestriction.Location.NO_RESTRICTIONS) {
-            cir.setReturnValue(true);
             return;
         }
         if(entityType == null || !world.getWorldBorder().contains(pos)) {
-            cir.setReturnValue(false);
             return;
         }
         if(location == CustomSpawnLocation.GROUND.location) {
             cir.setReturnValue(fowlplay$spawnsOnGround(world, pos, entityType));
-            return;
         }
-        if(location == CustomSpawnLocation.SEMIAQUATIC.location) {
+        else if(location == CustomSpawnLocation.SEMIAQUATIC.location) {
             cir.setReturnValue(fowlplay$spawnsOnWater(world, pos, entityType) || fowlplay$spawnsOnGround(world, pos, entityType));
-            return;
         }
-        if(location == CustomSpawnLocation.AQUATIC.location) {
+        else if(location == CustomSpawnLocation.AQUATIC.location) {
             cir.setReturnValue(fowlplay$spawnsOnWater(world, pos, entityType));
-            return;
-        }
-        // reimplement vanilla checks so the switch statement doesn't have a stroke
-        BlockState blockState = world.getBlockState(pos);
-        FluidState fluidState = world.getFluidState(pos);
-        BlockPos blockPos = pos.up();
-        BlockPos blockPos2 = pos.down();
-        if(location == SpawnRestriction.Location.IN_WATER) {
-            cir.setReturnValue(fluidState.isIn(FluidTags.WATER) && !world.getBlockState(blockPos).isSolidBlock(world, blockPos));
-        }
-        else if(location == SpawnRestriction.Location.IN_LAVA) {
-            cir.setReturnValue(fluidState.isIn(FluidTags.LAVA));
-        }
-        else {
-            BlockState blockState2 = world.getBlockState(blockPos2);
-            cir.setReturnValue(blockState2.allowsSpawning(world, blockPos2, entityType) && SpawnHelper.isClearForSpawn(world, pos, blockState, fluidState, entityType)
-                && SpawnHelper.isClearForSpawn(world, blockPos, world.getBlockState(blockPos), world.getFluidState(blockPos), entityType));
         }
     }
 

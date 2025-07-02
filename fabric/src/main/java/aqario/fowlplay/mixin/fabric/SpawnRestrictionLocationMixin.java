@@ -1,4 +1,4 @@
-package aqario.fowlplay.mixin;
+package aqario.fowlplay.mixin.fabric;
 
 import aqario.fowlplay.common.world.gen.CustomSpawnLocation;
 import net.minecraft.entity.SpawnRestriction;

@@ -117,7 +117,7 @@ public class DuckEntity extends TrustingBirdEntity implements SmartBrainOwner<Du
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        FowlPlayRegistries.DUCK_VARIANT
+        FowlPlayRegistries.DUCK_VARIANT.get()
             .getRandom(world.getRandom())
             .ifPresent(variant -> this.setVariant(variant.value()));
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
@@ -144,7 +144,7 @@ public class DuckEntity extends TrustingBirdEntity implements SmartBrainOwner<Du
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.dataTracker.startTracking(VARIANT, DuckVariant.GREEN_HEADED);
+        this.dataTracker.startTracking(VARIANT, DuckVariant.GREEN_HEADED.get());
     }
 
     @Override
@@ -160,13 +160,13 @@ public class DuckEntity extends TrustingBirdEntity implements SmartBrainOwner<Du
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.putString("variant", FowlPlayRegistries.DUCK_VARIANT.getId(this.getVariant()).toString());
+        nbt.putString("variant", FowlPlayRegistries.DUCK_VARIANT.get().getId(this.getVariant()).toString());
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        DuckVariant variant = FowlPlayRegistries.DUCK_VARIANT.get(Identifier.tryParse(nbt.getString("variant")));
+        DuckVariant variant = FowlPlayRegistries.DUCK_VARIANT.get().get(Identifier.tryParse(nbt.getString("variant")));
         if(variant != null) {
             this.setVariant(variant);
         }

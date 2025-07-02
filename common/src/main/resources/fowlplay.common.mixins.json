@@ -9,9 +9,7 @@
     "FenceGateBlockMixin",
     "HorizontalConnectingBlockMixin",
     "PowderSnowBlockMixin",
-    "SpawnGroupMixin",
     "SpawnHelperMixin",
-    "SpawnRestrictionLocationMixin",
     "WallBlockMixin"
   ],
   "client": [

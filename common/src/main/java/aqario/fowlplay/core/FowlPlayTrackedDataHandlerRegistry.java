@@ -11,23 +11,23 @@ import java.util.UUID;
 public final class FowlPlayTrackedDataHandlerRegistry {
     public static final TrackedDataHandler<ChickenVariant> CHICKEN_VARIANT = register(
         "chicken_variant",
-        TrackedDataHandler.of(FowlPlayRegistries.CHICKEN_VARIANT)
+        TrackedDataHandler.of(FowlPlayRegistries.CHICKEN_VARIANT.get())
     );
     public static final TrackedDataHandler<DuckVariant> DUCK_VARIANT = register(
         "duck_variant",
-        TrackedDataHandler.of(FowlPlayRegistries.DUCK_VARIANT)
+        TrackedDataHandler.of(FowlPlayRegistries.DUCK_VARIANT.get())
     );
     public static final TrackedDataHandler<GullVariant> GULL_VARIANT = register(
         "gull_variant",
-        TrackedDataHandler.of(FowlPlayRegistries.GULL_VARIANT)
+        TrackedDataHandler.of(FowlPlayRegistries.GULL_VARIANT.get())
     );
     public static final TrackedDataHandler<PigeonVariant> PIGEON_VARIANT = register(
         "pigeon_variant",
-        TrackedDataHandler.of(FowlPlayRegistries.PIGEON_VARIANT)
+        TrackedDataHandler.of(FowlPlayRegistries.PIGEON_VARIANT.get())
     );
     public static final TrackedDataHandler<SparrowVariant> SPARROW_VARIANT = register(
         "sparrow_variant",
-        TrackedDataHandler.of(FowlPlayRegistries.SPARROW_VARIANT)
+        TrackedDataHandler.of(FowlPlayRegistries.SPARROW_VARIANT.get())
     );
     public static final TrackedDataHandler<List<UUID>> UUID_LIST = register(
         "uuid_list",

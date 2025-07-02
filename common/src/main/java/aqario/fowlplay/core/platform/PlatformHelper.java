@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 
 public class PlatformHelper {
     @ExpectPlatform
-    public static <T> T registerVariant(String id, Supplier<T> variant) {
+    public static <T> Supplier<T> registerVariant(String id, Supplier<T> variant) {
         throw new AssertionError();
     }
 
@@ -68,7 +68,7 @@ public class PlatformHelper {
     }
 
     @ExpectPlatform
-    public static <T> Registry<T> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
+    public static <T> Supplier<Registry<T>> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
         throw new AssertionError();
     }
 

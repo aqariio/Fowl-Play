@@ -86,21 +86,21 @@ public class PlatformHelperImpl {
     );
 
     @SuppressWarnings("unchecked")
-    public static <T> T registerVariant(String id, Supplier<T> variant) {
+    public static <T> Supplier<T> registerVariant(String id, Supplier<T> variant) {
         if(variant.get() instanceof ChickenVariant) {
-            return (T) CHICKEN_VARIANTS.register(id, (Supplier<ChickenVariant>) variant).get();
+            return (Supplier<T>) CHICKEN_VARIANTS.register(id, (Supplier<ChickenVariant>) variant);
         }
         else if(variant.get() instanceof DuckVariant) {
-            return (T) DUCK_VARIANTS.register(id, (Supplier<DuckVariant>) variant).get();
+            return (Supplier<T>) DUCK_VARIANTS.register(id, (Supplier<DuckVariant>) variant);
         }
         else if(variant.get() instanceof GullVariant) {
-            return (T) GULL_VARIANTS.register(id, (Supplier<GullVariant>) variant).get();
+            return (Supplier<T>) GULL_VARIANTS.register(id, (Supplier<GullVariant>) variant);
         }
         else if(variant.get() instanceof PigeonVariant) {
-            return (T) PIGEON_VARIANTS.register(id, (Supplier<PigeonVariant>) variant).get();
+            return (Supplier<T>) PIGEON_VARIANTS.register(id, (Supplier<PigeonVariant>) variant);
         }
         else if(variant.get() instanceof SparrowVariant) {
-            return (T) SPARROW_VARIANTS.register(id, (Supplier<SparrowVariant>) variant).get();
+            return (Supplier<T>) SPARROW_VARIANTS.register(id, (Supplier<SparrowVariant>) variant);
         }
         return null;
     }
@@ -141,26 +141,25 @@ public class PlatformHelperImpl {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Registry<T> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
-        RegistryBuilder<T> builder = new RegistryBuilder<>();
-        builder.setName(registryKey.getValue());
+    public static <T, R extends Registry<ChickenVariant>> Supplier<R> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
+        RegistryBuilder<T> builder = RegistryBuilder.of(registryKey.getValue());
         if(!sync) {
             builder.disableSync();
         }
         if(registryKey.equals(FowlPlayRegistryKeys.CHICKEN_VARIANT)) {
-            return (Registry<T>) CHICKEN_VARIANTS.makeRegistry(() -> (RegistryBuilder<ChickenVariant>) builder).get();
+            return CHICKEN_VARIANTS.makeRegistry(() -> (RegistryBuilder<ChickenVariant>) builder);
         }
         else if(registryKey.equals(FowlPlayRegistryKeys.DUCK_VARIANT)) {
-            return (Registry<T>) DUCK_VARIANTS.makeRegistry(() -> (RegistryBuilder<DuckVariant>) builder).get();
+            return (Supplier<Registry<T>>) DUCK_VARIANTS.makeRegistry(() -> (RegistryBuilder<DuckVariant>) builder);
         }
         else if(registryKey.equals(FowlPlayRegistryKeys.GULL_VARIANT)) {
-            return (Registry<T>) GULL_VARIANTS.makeRegistry(() -> (RegistryBuilder<GullVariant>) builder).get();
+            return (Supplier<Registry<T>>) GULL_VARIANTS.makeRegistry(() -> (RegistryBuilder<GullVariant>) builder);
         }
         else if(registryKey.equals(FowlPlayRegistryKeys.PIGEON_VARIANT)) {
-            return (Registry<T>) PIGEON_VARIANTS.makeRegistry(() -> (RegistryBuilder<PigeonVariant>) builder).get();
+            return (Supplier<Registry<T>>) PIGEON_VARIANTS.makeRegistry(() -> (RegistryBuilder<PigeonVariant>) builder);
         }
         else if(registryKey.equals(FowlPlayRegistryKeys.SPARROW_VARIANT)) {
-            return (Registry<T>) SPARROW_VARIANTS.makeRegistry(() -> (RegistryBuilder<SparrowVariant>) builder).get();
+            return (Supplier<Registry<T>>) SPARROW_VARIANTS.makeRegistry(() -> (RegistryBuilder<SparrowVariant>) builder);
         }
         return null;
     }

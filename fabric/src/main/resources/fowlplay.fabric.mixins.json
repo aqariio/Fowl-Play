@@ -4,7 +4,9 @@
   "package": "aqario.fowlplay.mixin.fabric",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "SpawnGroupMixin",
+    "SpawnRestrictionLocationMixin"
   ],
   "client": [
   ],

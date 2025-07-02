@@ -4,7 +4,9 @@
   "package": "aqario.fowlplay.mixin.forge",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "SpawnGroupMixin",
+    "SpawnRestrictionLocationMixin"
   ],
   "client": [
   ],

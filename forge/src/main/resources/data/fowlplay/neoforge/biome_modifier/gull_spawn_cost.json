@@ -1,9 +1,0 @@
-{
-  "type": "neoforge:add_spawn_costs",
-  "biomes": "#fowlplay:spawns_gulls",
-  "entity_types": "fowlplay:gull",
-  "spawn_cost": {
-    "energy_budget": 1,
-    "charge": 0.07
-  }
-}

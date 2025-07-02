@@ -42,13 +42,13 @@ public abstract class ChickenEntityMixin extends AnimalEntity implements Variant
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         if(spawnReason == SpawnReason.BREEDING) {
-            this.setVariant(ChickenVariant.WHITE);
+            this.setVariant(ChickenVariant.WHITE.get());
         }
         else if(spawnReason == SpawnReason.CHUNK_GENERATION) {
-            this.setVariant(ChickenVariant.RED_JUNGLEFOWL);
+            this.setVariant(ChickenVariant.RED_JUNGLEFOWL.get());
         }
         else {
-            FowlPlayRegistries.CHICKEN_VARIANT
+            FowlPlayRegistries.CHICKEN_VARIANT.get()
                 .getRandom(world.getRandom())
                 .ifPresent(variant -> this.setVariant(variant.value()));
         }
@@ -68,12 +68,12 @@ public abstract class ChickenEntityMixin extends AnimalEntity implements Variant
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.dataTracker.startTracking(fowlplay$VARIANT, ChickenVariant.WHITE);
+        this.dataTracker.startTracking(fowlplay$VARIANT, ChickenVariant.WHITE.get());
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     private void fowlplay$readCustomVariant(NbtCompound nbt, CallbackInfo ci) {
-        ChickenVariant variant = FowlPlayRegistries.CHICKEN_VARIANT.get(Identifier.tryParse(nbt.getString("variant")));
+        ChickenVariant variant = FowlPlayRegistries.CHICKEN_VARIANT.get().get(Identifier.tryParse(nbt.getString("variant")));
         if(variant != null) {
             this.setVariant(variant);
         }
@@ -81,7 +81,7 @@ public abstract class ChickenEntityMixin extends AnimalEntity implements Variant
 
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
     private void fowlplay$writeCustomVariant(NbtCompound nbt, CallbackInfo ci) {
-        nbt.putString("variant", FowlPlayRegistries.CHICKEN_VARIANT.getId(this.getVariant()).toString());
+        nbt.putString("variant", FowlPlayRegistries.CHICKEN_VARIANT.get().getId(this.getVariant()).toString());
     }
 
     @Override

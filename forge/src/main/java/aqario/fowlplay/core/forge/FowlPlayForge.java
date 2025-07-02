@@ -11,7 +11,6 @@ import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -21,8 +20,8 @@ import net.minecraftforge.registries.NewRegistryEvent;
 @Mod(FowlPlay.ID)
 public final class FowlPlayForge {
     @SuppressWarnings("removal")
-    public FowlPlayForge(ModContainer mod, IEventBus modBus) {
-        IEventBus bus = MinecraftForge.EVENT_BUS;
+    public FowlPlayForge() {
+        IEventBus modBus = MinecraftForge.EVENT_BUS;
 
         FowlPlay.init();
 

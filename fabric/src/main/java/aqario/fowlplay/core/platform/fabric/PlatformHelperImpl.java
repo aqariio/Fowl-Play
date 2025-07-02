@@ -36,21 +36,21 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public class PlatformHelperImpl {
     @SuppressWarnings("unchecked")
-    public static <T> T registerVariant(String id, Supplier<T> variant) {
+    public static <T> Supplier<T> registerVariant(String id, Supplier<T> variant) {
         if(variant.get() instanceof ChickenVariant v) {
-            return (T) Registry.register(FowlPlayRegistries.CHICKEN_VARIANT, id, v);
+            return () -> (T) Registry.register(FowlPlayRegistries.CHICKEN_VARIANT.get(), id, v);
         }
         else if(variant.get() instanceof DuckVariant v) {
-            return (T) Registry.register(FowlPlayRegistries.DUCK_VARIANT, id, v);
+            return () -> (T) Registry.register(FowlPlayRegistries.DUCK_VARIANT.get(), id, v);
         }
         else if(variant.get() instanceof GullVariant v) {
-            return (T) Registry.register(FowlPlayRegistries.GULL_VARIANT, id, v);
+            return () -> (T) Registry.register(FowlPlayRegistries.GULL_VARIANT.get(), id, v);
         }
         else if(variant.get() instanceof PigeonVariant v) {
-            return (T) Registry.register(FowlPlayRegistries.PIGEON_VARIANT, id, v);
+            return () -> (T) Registry.register(FowlPlayRegistries.PIGEON_VARIANT.get(), id, v);
         }
         else if(variant.get() instanceof SparrowVariant v) {
-            return (T) Registry.register(FowlPlayRegistries.SPARROW_VARIANT, id, v);
+            return () -> (T) Registry.register(FowlPlayRegistries.SPARROW_VARIANT.get(), id, v);
         }
         return null;
     }
@@ -95,12 +95,12 @@ public class PlatformHelperImpl {
         return () -> registry;
     }
 
-    public static <T> Registry<T> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
+    public static <T> Supplier<Registry<T>> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
         FabricRegistryBuilder<T, SimpleRegistry<T>> builder = FabricRegistryBuilder.createSimple(registryKey);
         if(sync) {
             builder.attribute(RegistryAttribute.SYNCED);
         }
-        return builder.buildAndRegister();
+        return builder::buildAndRegister;
     }
 
     public static <T> void registerTrackedDataHandler(String id, TrackedDataHandler<T> handler) {

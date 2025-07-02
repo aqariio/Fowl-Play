@@ -1,5 +1,5 @@
 {
-  "type": "neoforge:add_spawns",
+  "type": "forge:add_spawns",
   "biomes": "#fowlplay:spawns_cardinals",
   "spawners": {
     "type": "fowlplay:cardinal",

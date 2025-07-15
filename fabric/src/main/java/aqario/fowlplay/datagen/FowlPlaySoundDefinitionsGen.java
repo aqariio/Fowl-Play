@@ -19,6 +19,7 @@ public class FowlPlaySoundDefinitionsGen extends SoundDefinitionsProvider {
     @Override
     public void generateSounds() {
         this.addVariousVanilla(FowlPlaySoundEvents.ENTITY_BIRD_EAT.get(), "mob/parrot/eat", 3);
+        this.addVariousVanilla(FowlPlaySoundEvents.ENTITY_BIRD_FLAP.get(), "mob/parrot/fly", 8);
 
         this.addVarious(FowlPlaySoundEvents.ENTITY_BLUE_JAY_CALL.get(), "mob/blue_jay/call", 6);
         this.addVarious(FowlPlaySoundEvents.ENTITY_BLUE_JAY_HURT.get(), "mob/blue_jay/call", 6);
@@ -51,6 +52,7 @@ public class FowlPlaySoundDefinitionsGen extends SoundDefinitionsProvider {
 
         this.addVarious(FowlPlaySoundEvents.ENTITY_PIGEON_CALL.get(), "mob/pigeon/call", 3);
         this.addVarious(FowlPlaySoundEvents.ENTITY_PIGEON_SONG.get(), "mob/pigeon/song", 1);
+        this.addVarious(FowlPlaySoundEvents.ENTITY_PIGEON_HURT.get(), "mob/pigeon/call", 3);
 
         this.addVarious(FowlPlaySoundEvents.ENTITY_RAVEN_CALL.get(), "mob/raven/call", 4);
         this.addVarious(FowlPlaySoundEvents.ENTITY_RAVEN_HURT.get(), "mob/raven/hurt", 2);

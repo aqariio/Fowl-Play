@@ -1,12 +1,10 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.BirdEntity;
-import com.google.common.collect.ImmutableList;
-import com.mojang.datafixers.util.Pair;
+import aqario.fowlplay.common.util.MemoryList;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.ai.brain.BlockPosLookTarget;
-import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.WalkTarget;
 import net.minecraft.registry.tag.FluidTags;
@@ -16,11 +14,14 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 public class GoToWaterTask {
     public static SingleTickBehaviour<BirdEntity> create(int range, float speed) {
         return new SingleTickBehaviour<>(
-            ImmutableList.of(
-                Pair.of(MemoryModuleType.ATTACK_TARGET, MemoryModuleState.VALUE_ABSENT),
-                Pair.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
-                Pair.of(MemoryModuleType.LOOK_TARGET, MemoryModuleState.VALUE_PRESENT)
-            ),
+            MemoryList.create(3)
+                .absent(
+                    MemoryModuleType.ATTACK_TARGET,
+                    MemoryModuleType.WALK_TARGET
+                )
+                .registered(
+                    MemoryModuleType.LOOK_TARGET
+                ),
             (bird, brain) -> {
                 if(bird.getWorld().getFluidState(bird.getBlockPos()).isIn(FluidTags.WATER)) {
                     return false;

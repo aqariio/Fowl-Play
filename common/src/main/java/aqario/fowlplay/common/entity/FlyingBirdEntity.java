@@ -1,8 +1,9 @@
 package aqario.fowlplay.common.entity;
 
-import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;
 import aqario.fowlplay.common.entity.ai.pathing.FlightNavigation;
+import aqario.fowlplay.common.entity.ai.pathing.GroundNavigation;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
+import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayBlockTags;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import net.minecraft.block.BlockState;
@@ -12,9 +13,7 @@ import net.minecraft.entity.MovementType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
-import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -33,6 +32,7 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.VisibleForTesting;
 
 public abstract class FlyingBirdEntity extends BirdEntity {
     private static final TrackedData<Boolean> FLYING = DataTracker.registerData(FlyingBirdEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -46,7 +46,6 @@ public abstract class FlyingBirdEntity extends BirdEntity {
 
     protected FlyingBirdEntity(EntityType<? extends BirdEntity> entityType, World world) {
         super(entityType, world);
-        this.moveControl = this.getBirdMoveControl();
         this.setNavigation(false);
     }
 
@@ -54,7 +53,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         return BirdEntity.createBirdAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 6.0f)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.28f)
-            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.25f);
+            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.235f);
     }
 
     @SuppressWarnings("unused")
@@ -99,7 +98,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         this.setFlying(nbt.getBoolean("flying"));
-        if (this.isFlying()) {
+        if(this.isFlying()) {
             this.getBrain().remember(FowlPlayMemoryModuleType.IS_FLYING.get(), Unit.INSTANCE);
         }
         else {
@@ -107,17 +106,26 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         }
     }
 
+    @Override
+    protected void addFlapEffects() {
+        this.playSound(FowlPlaySoundEvents.ENTITY_BIRD_FLAP.get(), this.getFlapVolume(), this.getFlapPitch());
+    }
+
     public abstract int getFlapFrequency();
+
+    public abstract float getFlapVolume();
+
+    public abstract float getFlapPitch();
 
     @Override
     public void tick() {
         super.tick();
-        if (!this.getWorld().isClient) {
-            if (this.isFlying()) {
+        if(!this.getWorld().isClient) {
+            if(this.isFlying()) {
                 this.timeFlying++;
                 this.setNoGravity(true);
                 this.fallDistance = 0.0F;
-                if (this.shouldStopFlying()) {
+                if(this.shouldStopFlying()) {
                     this.stopFlying();
                 }
             }
@@ -125,7 +133,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
                 this.timeFlying = 0;
                 this.setNoGravity(false);
             }
-            if (this.isFlying() != this.isFlightNavigation) {
+            if(this.isFlying() != this.isFlightNavigation) {
                 this.setNavigation(this.isFlying());
             }
         }
@@ -135,10 +143,10 @@ public abstract class FlyingBirdEntity extends BirdEntity {
 
     private float calculateRoll(float prevYaw, float currentYaw) {
         float difference = currentYaw - prevYaw;
-        if (difference >= 180.0F) {
+        if(difference >= 180.0F) {
             difference = 360.0F - difference;
         }
-        if (difference < -180.0F) {
+        if(difference < -180.0F) {
             difference = -(360.0F + difference);
         }
         return -difference * ROLL_FACTOR;
@@ -148,12 +156,8 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         return tickDelta == 1.0F ? this.visualRoll : MathHelper.lerp(tickDelta, this.prevRoll, this.visualRoll);
     }
 
-    protected MoveControl getBirdMoveControl() {
-        return new BirdMoveControl(this);
-    }
-
     protected EntityNavigation getLandNavigation() {
-        return new MobNavigation(this, this.getWorld());
+        return new GroundNavigation(this, this.getWorld());
     }
 
     protected FlightNavigation getFlightNavigation() {
@@ -177,9 +181,8 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     public void setNavigation(boolean isFlying) {
-        if (isFlying) {
+        if(isFlying) {
             this.navigation = this.getFlightNavigation();
-//            this.navigation = new SmoothFlyingPathNavigation(this, this.getWorld());
             this.isFlightNavigation = true;
         }
         else {
@@ -205,7 +208,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
 
     @Override
     protected void fall(double heightDifference, boolean onGround, BlockState landedState, BlockPos landedPosition) {
-        if (!this.isFlying()) {
+        if(!this.isFlying()) {
             super.fall(heightDifference, onGround, landedState, landedPosition);
         }
     }
@@ -215,10 +218,10 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     public boolean shouldStopFlying() {
-        if (this.isSubmergedInWater()) {
+        if(this.isSubmergedInWater()) {
             return true;
         }
-        if (this.timeFlying < MIN_FLIGHT_TIME) {
+        if(this.timeFlying < MIN_FLIGHT_TIME) {
             return false;
         }
         return this.isOnGround() || this.isBelowWaterline() || this.getHealth() < MIN_HEALTH_TO_FLY;
@@ -243,6 +246,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         return this.dataTracker.get(FLYING);
     }
 
+    @VisibleForTesting
     public void setFlying(boolean flying) {
         this.dataTracker.set(FLYING, flying);
     }
@@ -263,16 +267,16 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     public void updateLimbs(boolean flutter) {
         float yDelta = (float) (this.getY() - this.prevY);
         float posDelta;
-        if (!this.isFlying() || yDelta > 0) {
+        if(!this.isFlying() || yDelta > 0) {
             posDelta = (float) MathHelper.magnitude(this.getX() - this.prevX, 0.0, this.getZ() - this.prevZ);
         }
         else {
             posDelta = (float) MathHelper.magnitude(this.getX() - this.prevX, yDelta, this.getZ() - this.prevZ);
         }
         float speed;
-        if (this.isFlying()) {
+        if(this.isFlying()) {
             speed = Math.abs(1 - Math.min(posDelta * 0.8F, 1.0F));
-            if (yDelta > 0) {
+            if(yDelta > 0) {
                 speed = (float) Math.sqrt(speed * speed + yDelta * yDelta * 4.0F);
             }
         }
@@ -288,18 +292,18 @@ public abstract class FlyingBirdEntity extends BirdEntity {
 
     @Override
     public void travel(Vec3d movementInput) {
-        if (!this.isFlying()) {
+        if(!this.isFlying()) {
             super.travel(movementInput);
             return;
         }
 
-        if (this.isLogicalSideForUpdatingMovement()) {
-            if (this.isTouchingWater()) {
+        if(this.isLogicalSideForUpdatingMovement()) {
+            if(this.isTouchingWater()) {
                 this.updateVelocity(this.isBelowWaterline() ? 0.02F : this.getMovementSpeed(), movementInput);
                 this.move(MovementType.SELF, this.getVelocity());
                 this.setVelocity(this.getVelocity().multiply(0.8F));
             }
-            else if (this.isInLava()) {
+            else if(this.isInLava()) {
                 this.updateVelocity(0.02F, movementInput);
                 this.move(MovementType.SELF, this.getVelocity());
                 this.setVelocity(this.getVelocity().multiply(0.5));

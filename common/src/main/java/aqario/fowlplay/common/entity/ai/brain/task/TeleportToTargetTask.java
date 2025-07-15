@@ -1,8 +1,8 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.BirdEntity;
+import aqario.fowlplay.common.util.MemoryList;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
-import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.brain.Brain;
@@ -17,9 +17,8 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 import java.util.List;
 
 public class TeleportToTargetTask extends ExtendedBehaviour<BirdEntity> {
-    private static final List<Pair<MemoryModuleType<?>, MemoryModuleState>> MEMORIES = ImmutableList.of(
-        Pair.of(FowlPlayMemoryModuleType.TELEPORT_TARGET.get(), MemoryModuleState.REGISTERED)
-    );
+    private static final MemoryList MEMORIES = MemoryList.create(1)
+        .present(FowlPlayMemoryModuleType.TELEPORT_TARGET.get());
 
     @Override
     protected List<Pair<MemoryModuleType<?>, MemoryModuleState>> getMemoryRequirements() {
@@ -43,6 +42,7 @@ public class TeleportToTargetTask extends ExtendedBehaviour<BirdEntity> {
         if(!BrainUtils.hasMemory(brain, FowlPlayMemoryModuleType.TELEPORT_TARGET.get())) {
             return false;
         }
+        // noinspection ConstantConditions
         Entity target = BrainUtils.getMemory(brain, FowlPlayMemoryModuleType.TELEPORT_TARGET.get()).entity();
         BlockPos pos = target.getBlockPos();
 

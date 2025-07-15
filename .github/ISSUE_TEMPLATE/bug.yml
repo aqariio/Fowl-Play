@@ -1,50 +1,49 @@
 name: Bug / Crash Report
 description: Report a bug or crash
-title: "[Bug] "
 labels: [ "bug" ]
 assignees:
-  - aqariio
+    - aqariio
 body:
-  - type: markdown
-    attributes:
-      value: |
-        <br/>
-        
-        ### Before you create your bug report:
-        
-        1. Use the search function to confirm your issue doesn't already exist
-        2. Make sure you are on the latest version of the mod
-        
-        --------------------------------------------------
+    -   type: markdown
+        attributes:
+            value: |
+                <br/>
+                
+                ### Before you create your bug / crash report:
+                
+                1. Use the search function to make sure your issue or crash hasn't already been reported
+                2. Check if you are on the latest version of the mod
+                
+                --------------------------------------------------
 
-  - type: dropdown
-    id: version
-    attributes:
-      label: "Version"
-      options:
-        - 1.21.1 - Fabric
-        - 1.21.1 - NeoForge
-        - 1.20.1 - Fabric
-        - 1.20.1 - Forge
-      default: 0
-    validations:
-      required: true
+    -   type: dropdown
+        id: version
+        attributes:
+            label: "Version"
+            options:
+                - 1.21.1 - Fabric
+                - 1.21.1 - NeoForge
+                - 1.20.1 - Fabric
+                - 1.20.1 - Forge
+            default: 0
+        validations:
+            required: true
 
-  - type: markdown
-    attributes:
-      value: |
-        <br/>
-        
-        **Add a description**
-        
-        - Clearly describe what the issue is and how to reproduce it (if possible)
-        - Include the latest log if the issue causes a crash (found in <instance>/logs/latest.log)
-        - Screenshots and videos are very helpful!
+    -   type: markdown
+        attributes:
+            value: |
+                <br/>
+                
+                **Add a description**
+                
+                - Clearly describe what the issue is and how to reproduce it (if possible)
+                - Include the latest log if the issue causes a crash (found in <instance>/logs/latest.log)
+                - Screenshots and videos are very helpful!
 
-  - type: textarea
-    id: description
-    attributes:
-      label: "Description"
-      placeholder: "Describe your issue"
-    validations:
-      required: true
+    -   type: textarea
+        id: description
+        attributes:
+            label: "Description"
+            placeholder: "Describe your issue"
+        validations:
+            required: true

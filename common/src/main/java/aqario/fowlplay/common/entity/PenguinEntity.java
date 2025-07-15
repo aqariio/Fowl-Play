@@ -1,10 +1,10 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.ai.brain.sensor.AttackTargetSensor;
-import aqario.fowlplay.common.entity.ai.brain.sensor.AttackedSensor;
-import aqario.fowlplay.common.entity.ai.brain.sensor.NearbyAdultsSensor;
+import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.entity.ai.brain.task.*;
+import aqario.fowlplay.common.entity.ai.control.BirdAquaticMoveControl;
+import aqario.fowlplay.common.entity.ai.pathing.AmphibiousNavigation;
 import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.core.*;
 import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
@@ -22,10 +22,8 @@ import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.task.LookTargetUtil;
-import net.minecraft.entity.ai.control.AquaticMoveControl;
 import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.control.YawAdjustingLookControl;
-import net.minecraft.entity.ai.pathing.AmphibiousSwimNavigation;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -61,7 +59,6 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.BreedWithPartner;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.InvalidateMemory;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Panic;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowParent;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowTemptation;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
@@ -71,8 +68,10 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttack
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTarget;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
-import net.tslat.smartbrainlib.api.core.sensor.custom.NearbyItemsSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.*;
+import net.tslat.smartbrainlib.api.core.sensor.vanilla.InWaterSensor;
+import net.tslat.smartbrainlib.api.core.sensor.vanilla.ItemTemptingSensor;
+import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
+import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
 import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,7 +84,7 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
     private static final int STANDING_TRANSITION_TICKS = (int) (1.0F * 20);
     private static final long LAST_POSE_CHANGE_TICKS = 0L;
     public static final TrackedData<Long> LAST_POSE_TICK = DataTracker.registerData(PenguinEntity.class, TrackedDataHandlerRegistry.LONG);
-    private boolean isAquaticMoveControl;
+    private static final int SWIM_PARTICLE_COUNT = 15;
     public final AnimationState standingState = new AnimationState();
     public final AnimationState slidingState = new AnimationState();
     public final AnimationState slidingTransitionState = new AnimationState();
@@ -99,7 +98,6 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
 
     public PenguinEntity(EntityType<? extends PenguinEntity> entityType, World world) {
         super(entityType, world);
-        this.setMoveControl(false);
         this.setPathfindingPenalty(PathNodeType.WATER, 0.0f);
         this.lookControl = new YawAdjustingLookControl(this, 85);
     }
@@ -124,16 +122,9 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
         return this.getPose() == EntityPose.LONG_JUMPING ? super.getMovementSpeed() * 1.5F : super.getMovementSpeed();
     }
 
-    protected void setMoveControl(boolean isSwimming) {
-        // TODO: baby penguins should not be able to swim
-        if(isSwimming) {
-            this.moveControl = new AquaticMoveControl(this, 85, 15, 1.0F, 1.0F, true);
-            this.isAquaticMoveControl = true;
-        }
-        else {
-            this.moveControl = new MoveControl(this);
-            this.isAquaticMoveControl = false;
-        }
+    @Override
+    protected MoveControl createMoveControl() {
+        return new BirdAquaticMoveControl(this, 85, 15, 1.0F, 1.0F, true);
     }
 
     @Override
@@ -148,7 +139,7 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
 
     @Override
     protected EntityNavigation createNavigation(World world) {
-        return new AmphibiousSwimNavigation(this, world);
+        return new AmphibiousNavigation(this, this.getWorld());
     }
 
     @Override
@@ -249,11 +240,6 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
         if(this.isInsideWaterOrBubbleColumn() && !this.isSliding()) {
             this.setSliding();
         }
-        if(!this.getWorld().isClient()) {
-            if(this.isInsideWaterOrBubbleColumn() != this.isAquaticMoveControl) {
-                this.setMoveControl(this.isInsideWaterOrBubbleColumn());
-            }
-        }
 
         super.tick();
 
@@ -274,7 +260,7 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
 
     private void addSwimParticles() {
         Vec3d velocity = this.getRotationVector().negate().multiply(0.5);
-        for(int i = 0; i < 25; i++) {
+        for(int i = 0; i < SWIM_PARTICLE_COUNT; i++) {
             this.getWorld().addParticle(
                 FowlPlayParticleTypes.SMALL_BUBBLE.get(),
                 this.getX() + (this.random.nextFloat() * 0.75F - 0.375F),
@@ -629,15 +615,17 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
         return ObjectArrayList.of(
             new NearbyLivingEntitySensor<>(),
             new NearbyPlayersSensor<>(),
-            new NearbyItemsSensor<>(),
-            new NearbyAdultSensor<>(),
+            new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new ItemTemptingSensor<PenguinEntity>()
                 .temptedWith((entity, stack) -> this.getFood().test(stack)),
             new InWaterSensor<>(),
             new AttackedSensor<PenguinEntity>()
                 .setScanRate(bird -> 10),
-            new AttackTargetSensor<>()
+            new AvoidTargetSensor<PenguinEntity>()
+                .setScanRate(bird -> 10),
+            new AttackTargetSensor<PenguinEntity>()
+                .setScanRate(bird -> 10)
         );
     }
 
@@ -647,9 +635,7 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
         return new BrainActivityGroup<PenguinEntity>(Activity.CORE)
             .priority(0)
             .behaviours(
-                new BreatheAirTask(Birds.SWIM_SPEED),
-                new Panic<>(),
-                PickupFoodTask.run(Birds::canPickupFood),
+                new BreatheAirTask<>(),
                 new LookAtTarget<>()
                     .runFor(entity -> entity.getRandom().nextBetween(45, 90)),
                 new MoveToWalkTarget<>()
@@ -662,12 +648,12 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
         return new BrainActivityGroup<PenguinEntity>(Activity.IDLE)
             .priority(10)
             .behaviours(
-                SwimControlTask.startSwimming(),
+                SwimTasks.startSwimming(),
                 new BreedWithPartner<>(),
                 new FollowParent<>(),
-                FindLookTargetTask.create(EntityType.PLAYER, 32.0F),
+                SetEntityLookTargetTask.create(EntityType.PLAYER),
                 new FollowTemptation<>()
-                    .speedMod((entity, target) -> entity.isInsideWaterOrBubbleColumn() ? Birds.SWIM_SPEED : Birds.WALK_SPEED),
+                    .speedMod((entity, target) -> Birds.WALK_SPEED),
                 new FollowParent<>(),
                 new SetRandomLookTarget<>()
                     .lookTime(entity -> entity.getRandom().nextBetween(150, 250)),
@@ -677,12 +663,12 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
                     Pair.of(
                         new SetRandomWalkTarget<PenguinEntity>()
                             .speedModifier((entity, target) -> Birds.WALK_SPEED)
-                            .setRadius(16, 8)
+                            .setRadius(24, 12)
                             .startCondition(Predicate.not(Birds::isPerched)),
                         2
                     ),
                     Pair.of(
-                        SlideControlTask.toggleSliding(20),
+                        SlideTasks.toggleSliding(20),
                         5
                     ),
                     Pair.of(
@@ -691,12 +677,17 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
                         5
                     ),
                     Pair.of(
+                        SetWalkTargetToClosestAdult.create(Birds.STAY_NEAR_ENTITY_RANGE),
+                        2
+                    ),
+                    Pair.of(
                         PenguinSpecificTasks.goToWater(),
                         6
                     )
                 ).startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
             )
             .onlyStartWithMemoryStatus(MemoryModuleType.IS_IN_WATER, MemoryModuleState.VALUE_ABSENT)
+            .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.IS_AVOIDING.get(), MemoryModuleState.VALUE_ABSENT)
             .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryModuleState.VALUE_ABSENT)
             .onlyStartWithMemoryStatus(MemoryModuleType.ATTACK_TARGET, MemoryModuleState.VALUE_ABSENT);
     }
@@ -706,24 +697,39 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
         return new BrainActivityGroup<PenguinEntity>(Activity.SWIM)
             .priority(10)
             .behaviours(
-                SwimControlTask.stopSwimming(),
+                SwimTasks.stopSwimming(),
                 new FollowParent<>(),
                 new SetAttackTarget<PenguinEntity>()
                     .attackPredicate(Birds::canAquaticAttack),
                 new OneRandomBehaviour<>(
                     Pair.of(
-                        GoToLandTask.create(32, Birds.SWIM_SPEED),
+                        GoToLandTask.create(32, Birds.WALK_SPEED),
                         5
                     ),
                     Pair.of(
-                        PenguinSpecificTasks.swim(Birds.SWIM_SPEED),
+                        PenguinSpecificTasks.swim(),
                         2
                     )
                 ).startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
             )
             .onlyStartWithMemoryStatus(MemoryModuleType.IS_IN_WATER, MemoryModuleState.VALUE_PRESENT)
+            .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.IS_AVOIDING.get(), MemoryModuleState.VALUE_ABSENT)
             .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryModuleState.VALUE_ABSENT)
             .onlyStartWithMemoryStatus(MemoryModuleType.ATTACK_TARGET, MemoryModuleState.VALUE_ABSENT);
+    }
+
+    @SuppressWarnings("unchecked")
+    public BrainActivityGroup<? extends PenguinEntity> getAvoidTasks() {
+        return new BrainActivityGroup<PenguinEntity>(Activity.AVOID)
+            .priority(10)
+            .behaviours(
+                MoveAwayFromTargetTask.entity(
+                    MemoryModuleType.AVOID_TARGET,
+                    entity -> Birds.RUN_SPEED,
+                    true
+                )
+            )
+            .requireAndWipeMemoriesOnUse(FowlPlayMemoryModuleType.IS_AVOIDING.get());
     }
 
     @SuppressWarnings("unchecked")
@@ -731,17 +737,16 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
         return new BrainActivityGroup<PenguinEntity>(FowlPlayActivities.PICK_UP.get())
             .priority(10)
             .behaviours(
-                SlideControlTask.startSliding(),
-                GoToNearestWantedItemTask.create(
+                SlideTasks.startSliding(),
+                GoToNearestItemTask.create(
                     Birds::canPickupFood,
-                    entity -> entity.isInsideWaterOrBubbleColumn() ? Birds.SWIM_SPEED : Birds.RUN_SPEED,
+                    entity -> Birds.RUN_SPEED,
                     true,
                     Birds.ITEM_PICK_UP_RANGE
-                ),
-                new InvalidateMemory<PenguinEntity, Boolean>(FowlPlayMemoryModuleType.SEES_FOOD.get())
-                    .invalidateIf((entity, memory) -> !Birds.canPickupFood(entity))
+                )
             )
-            .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryModuleState.VALUE_PRESENT);
+            .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryModuleState.VALUE_PRESENT)
+            .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.IS_AVOIDING.get(), MemoryModuleState.VALUE_ABSENT);
     }
 
     @SuppressWarnings("unchecked")
@@ -751,9 +756,9 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
             .priority(10)
             .behaviours(
                 new InvalidateAttackTarget<>(),
-                SlideControlTask.startSliding(),
+                SlideTasks.startSliding(),
                 new SetWalkTargetToAttackTarget<>()
-                    .speedMod((entity, target) -> entity.isInsideWaterOrBubbleColumn() ? Birds.SWIM_SPEED : Birds.RUN_SPEED),
+                    .speedMod((entity, target) -> Birds.RUN_SPEED),
                 new AnimatableMeleeAttack<>(0),
                 new InvalidateMemory<PenguinEntity, LivingEntity>(MemoryModuleType.ATTACK_TARGET)
                     .invalidateIf((entity, memory) -> LookTargetUtil.hasBreedTarget(entity))
@@ -765,6 +770,7 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
     public Map<Activity, BrainActivityGroup<? extends PenguinEntity>> getAdditionalTasks() {
         Object2ObjectOpenHashMap<Activity, BrainActivityGroup<? extends PenguinEntity>> taskList = new Object2ObjectOpenHashMap<>();
         taskList.put(Activity.SWIM, this.getSwimTasks());
+        taskList.put(Activity.AVOID, this.getAvoidTasks());
         taskList.put(FowlPlayActivities.PICK_UP.get(), this.getPickupFoodTasks());
         return taskList;
     }
@@ -774,6 +780,7 @@ public class PenguinEntity extends BirdEntity implements SmartBrainOwner<Penguin
         return ObjectArrayList.of(
             Activity.IDLE,
             Activity.SWIM,
+            Activity.AVOID,
             FowlPlayActivities.PICK_UP.get(),
             Activity.FIGHT
         );

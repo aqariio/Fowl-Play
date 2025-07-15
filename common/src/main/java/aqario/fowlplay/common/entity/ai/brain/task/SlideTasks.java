@@ -1,20 +1,17 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.PenguinEntity;
-import com.google.common.collect.ImmutableList;
-import com.mojang.datafixers.util.Pair;
-import net.minecraft.entity.ai.brain.MemoryModuleState;
+import aqario.fowlplay.common.util.MemoryList;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 
 /**
  * A collection of tasks that control the sliding behavior of penguins.
  */
-public class SlideControlTask {
+public class SlideTasks {
     public static <E extends PenguinEntity> SingleTickBehaviour<E> startSliding() {
         return new SingleTickBehaviour<>(
-            ImmutableList.of(
-                Pair.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_PRESENT)
-            ),
+            MemoryList.create(1)
+                .registered(MemoryModuleType.WALK_TARGET),
             (bird, brain) -> {
                 if(!bird.isSliding() && bird.canStartSliding()) {
                     bird.startSliding();
@@ -27,9 +24,8 @@ public class SlideControlTask {
 
     public static <E extends PenguinEntity> SingleTickBehaviour<E> stopSliding() {
         return new SingleTickBehaviour<>(
-            ImmutableList.of(
-                Pair.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_PRESENT)
-            ),
+            MemoryList.create(1)
+                .registered(MemoryModuleType.WALK_TARGET),
             (bird, brain) -> {
                 if(bird.isSliding()) {
                     bird.stopSliding();
@@ -42,9 +38,8 @@ public class SlideControlTask {
 
     public static <E extends PenguinEntity> SingleTickBehaviour<E> toggleSliding(int seconds) {
         return new SingleTickBehaviour<>(
-            ImmutableList.of(
-                Pair.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_PRESENT)
-            ),
+            MemoryList.create(1)
+                .registered(MemoryModuleType.WALK_TARGET),
             (bird, brain) -> {
                 if((!bird.canStartSliding() && !bird.isSliding()) || bird.getLastPoseTickDelta() < (long) seconds * 20) {
                     return false;

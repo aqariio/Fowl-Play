@@ -2,10 +2,9 @@ package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.PenguinEntity;
 import aqario.fowlplay.common.util.Birds;
-import com.google.common.collect.ImmutableList;
+import aqario.fowlplay.common.util.MemoryList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.WalkTarget;
 import net.minecraft.entity.ai.brain.task.LookTargetUtil;
@@ -26,7 +25,7 @@ public class PenguinSpecificTasks {
     public static ExtendedBehaviour<PenguinEntity> goToWater() {
         return new SequentialBehaviour<>(
             Pair.of(
-                SlideControlTask.startSliding(),
+                SlideTasks.startSliding(),
                 1
             ),
             Pair.of(
@@ -39,21 +38,20 @@ public class PenguinSpecificTasks {
 
     private static final int[][] SWIM_DISTANCES = new int[][]{{31, 15}};
 
-    public static SingleTickBehaviour<PenguinEntity> swim(float speed) {
-        return swim(speed, PenguinSpecificTasks::findSwimTargetPos, Entity::isInsideWaterOrBubbleColumn);
+    public static SingleTickBehaviour<PenguinEntity> swim() {
+        return swim(PenguinSpecificTasks::findSwimTargetPos, Entity::isInsideWaterOrBubbleColumn);
     }
 
-    private static SingleTickBehaviour<PenguinEntity> swim(float speed, Function<PenguinEntity, Vec3d> targetGetter, Predicate<PenguinEntity> predicate) {
+    private static SingleTickBehaviour<PenguinEntity> swim(Function<PenguinEntity, Vec3d> targetGetter, Predicate<PenguinEntity> predicate) {
         return new SingleTickBehaviour<>(
-            ImmutableList.of(
-                Pair.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_PRESENT)
-            ),
+            MemoryList.create(1)
+                .absent(MemoryModuleType.WALK_TARGET),
             (bird, brain) -> {
                 if(!predicate.test(bird)) {
                     return false;
                 }
                 Optional<Vec3d> optional = Optional.ofNullable(targetGetter.apply(bird));
-                BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, optional.map(vec3d -> new WalkTarget(vec3d, speed, 0)).orElse(null));
+                BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, optional.map(vec3d -> new WalkTarget(vec3d, 1.0f, 0)).orElse(null));
                 return true;
             }
         );

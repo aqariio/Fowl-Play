@@ -2,31 +2,27 @@ package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.PigeonEntity;
 import aqario.fowlplay.common.entity.ai.brain.TeleportTarget;
+import aqario.fowlplay.common.util.MemoryList;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
-import com.google.common.collect.ImmutableList;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.ai.brain.EntityLookTarget;
-import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.WalkTarget;
 import net.minecraft.entity.player.PlayerEntity;
 import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class DeliverBundleTask {
-    public static <E extends PigeonEntity> SingleTickBehaviour<E> run(Predicate<E> startPredicate, Function<E, Float> entitySpeedGetter) {
+    public static <E extends PigeonEntity> SingleTickBehaviour<E> run(Function<E, Float> entitySpeedGetter) {
         return new SingleTickBehaviour<>(
-            ImmutableList.of(
-                Pair.of(FowlPlayMemoryModuleType.RECIPIENT.get(), MemoryModuleState.REGISTERED),
-                Pair.of(MemoryModuleType.LOOK_TARGET, MemoryModuleState.VALUE_PRESENT),
-                Pair.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_PRESENT),
-                Pair.of(FowlPlayMemoryModuleType.TELEPORT_TARGET.get(), MemoryModuleState.VALUE_PRESENT)
-            ),
+            MemoryList.create(4)
+                .present(FowlPlayMemoryModuleType.RECIPIENT.get())
+                .registered(MemoryModuleType.LOOK_TARGET)
+                .registered(MemoryModuleType.WALK_TARGET)
+                .registered(FowlPlayMemoryModuleType.TELEPORT_TARGET.get()),
             (bird, brain) -> {
                 PlayerEntity recipient = bird.getWorld().getPlayerByUuid(BrainUtils.getMemory(brain, FowlPlayMemoryModuleType.RECIPIENT.get()));
-                if(recipient != null && startPredicate.test(bird)) {
+                if(recipient != null) {
                     WalkTarget walkTarget = new WalkTarget(new EntityLookTarget(recipient, false), entitySpeedGetter.apply(bird), 0);
                     BrainUtils.setMemory(brain, MemoryModuleType.LOOK_TARGET, new EntityLookTarget(recipient, true));
                     BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, walkTarget);

@@ -2,6 +2,7 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.entity.ai.control.BirdBodyControl;
 import aqario.fowlplay.common.entity.ai.control.BirdLookControl;
+import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;
 import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
@@ -9,6 +10,7 @@ import aqario.fowlplay.core.platform.CustomSpawnGroup;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.control.BodyControl;
+import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -38,6 +40,7 @@ public abstract class BirdEntity extends AnimalEntity {
     protected BirdEntity(EntityType<? extends BirdEntity> entityType, World world) {
         super(entityType, world);
         this.setCanPickUpLoot(true);
+        this.moveControl = this.createMoveControl();
         this.lookControl = new BirdLookControl(this, 85);
         this.idleAnimationChance = this.random.nextInt(this.getIdleAnimationDelay()) - this.getIdleAnimationDelay();
         this.callChance = this.random.nextInt(this.getCallDelay()) - this.getCallDelay();
@@ -174,7 +177,7 @@ public abstract class BirdEntity extends AnimalEntity {
     }
 
     public int getFleeRange(LivingEntity target) {
-        return Birds.notFlightless(target) ? 32 : 10;
+        return Birds.notFlightless(target) ? 32 : 12;
     }
 
     public boolean hasLowHealth() {
@@ -195,6 +198,7 @@ public abstract class BirdEntity extends AnimalEntity {
             if(this.canEat(stack)) {
                 if((this.eatingTime > 40 && this.random.nextFloat() < 0.05f) || this.eatingTime > 200) {
                     if(stack.getItem().isFood()) {
+                        // noinspection ConstantConditions
                         this.heal(stack.getItem().getFoodComponent().getHunger());
                     }
                     else {
@@ -384,6 +388,10 @@ public abstract class BirdEntity extends AnimalEntity {
     @Override
     public int getMaxHeadRotation() {
         return 90;
+    }
+
+    protected MoveControl createMoveControl() {
+        return new BirdMoveControl(this);
     }
 
     @Override

@@ -4,6 +4,7 @@ import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.brain.sensor.AttackedSensor;
 import aqario.fowlplay.common.entity.ai.brain.sensor.AvoidTargetSensor;
 import aqario.fowlplay.common.entity.ai.brain.sensor.NearbyAdultsSensor;
+import aqario.fowlplay.common.entity.ai.brain.sensor.NearbyFoodSensor;
 import aqario.fowlplay.common.entity.ai.brain.task.*;
 import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.core.FowlPlayActivities;
@@ -33,17 +34,13 @@ import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.BreedWithPartner;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.InvalidateMemory;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Panic;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FloatToSurfaceOfFluid;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowParent;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTarget;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
-import net.tslat.smartbrainlib.api.core.sensor.custom.NearbyItemsSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.InWaterSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyAdultSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
 import net.tslat.smartbrainlib.util.BrainUtils;
@@ -96,14 +93,25 @@ public class BlueJayEntity extends FlyingBirdEntity implements SmartBrainOwner<B
     }
 
     @Override
-    public void tick() {
-        if(this.getWorld().isClient()) {
-            this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
-            this.flappingState.setRunning(this.isFlying(), this.age);
-            this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
-        }
+    protected void updateAnimations() {
+        this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
+        this.flappingState.setRunning(this.isFlying(), this.age);
+        this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
+    }
 
-        super.tick();
+    @Override
+    protected boolean isFlappingWings() {
+        return this.isFlying();
+    }
+
+    @Override
+    public float getFlapVolume() {
+        return 0.5f;
+    }
+
+    @Override
+    public float getFlapPitch() {
+        return 1.0f;
     }
 
     @Override
@@ -143,13 +151,13 @@ public class BlueJayEntity extends FlyingBirdEntity implements SmartBrainOwner<B
         return ObjectArrayList.of(
             new NearbyLivingEntitySensor<>(),
             new NearbyPlayersSensor<>(),
-            new NearbyItemsSensor<>(),
-            new NearbyAdultSensor<>(),
+            new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new InWaterSensor<>(),
             new AttackedSensor<BlueJayEntity>()
                 .setScanRate(bird -> 10),
-            new AvoidTargetSensor<>()
+            new AvoidTargetSensor<BlueJayEntity>()
+                .setScanRate(bird -> 10)
         );
     }
 
@@ -160,10 +168,7 @@ public class BlueJayEntity extends FlyingBirdEntity implements SmartBrainOwner<B
             .priority(0)
             .behaviours(
                 new FloatToSurfaceOfFluid<>(),
-                FlightControlTask.stopFalling(),
-                new Panic<>(),
-                AvoidTask.run(),
-                PickupFoodTask.run(Birds::canPickupFood),
+                FlightTasks.stopFalling(),
                 new LookAtTarget<>()
                     .runFor(entity -> entity.getRandom().nextBetween(45, 90)),
                 new MoveToWalkTarget<>()
@@ -178,15 +183,14 @@ public class BlueJayEntity extends FlyingBirdEntity implements SmartBrainOwner<B
             .behaviours(
                 new BreedWithPartner<>(),
                 new FollowParent<>(),
-                FindLookTargetTask.create(Birds::isPlayerHoldingFood, 32.0F),
-                SetWalkTargetToClosestAdult.create(Birds.STAY_NEAR_ENTITY_RANGE, Birds.WALK_SPEED),
+                SetEntityLookTargetTask.create(Birds::isPlayerHoldingFood),
                 new SetRandomLookTarget<>()
                     .lookTime(entity -> entity.getRandom().nextBetween(150, 250)),
                 new OneRandomBehaviour<>(
                     Pair.of(
                         new SetRandomWalkTarget<BlueJayEntity>()
                             .speedModifier((entity, target) -> Birds.WALK_SPEED)
-                            .setRadius(16, 8)
+                            .setRadius(24, 12)
                             .startCondition(Predicate.not(Birds::isPerched)),
                         4
                     ),
@@ -196,7 +200,7 @@ public class BlueJayEntity extends FlyingBirdEntity implements SmartBrainOwner<B
                         4
                     ),
                     Pair.of(
-                        FlightControlTask.startFlying(entity -> entity.getRandom().nextFloat() < 0.3F),
+                        SetWalkTargetToClosestAdult.create(Birds.STAY_NEAR_ENTITY_RANGE),
                         1
                     )
                 ).startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
@@ -211,10 +215,9 @@ public class BlueJayEntity extends FlyingBirdEntity implements SmartBrainOwner<B
         return new BrainActivityGroup<BlueJayEntity>(FowlPlayActivities.FLY.get())
             .priority(10)
             .behaviours(
-                SetWalkTargetToClosestAdult.create(Birds.STAY_NEAR_ENTITY_RANGE, Birds.FLY_SPEED),
                 new OneRandomBehaviour<>(
                     Pair.of(
-                        TargetlessFlyTask.perch(Birds.FLY_SPEED),
+                        TargetlessFlyTask.perch(Birds.WALK_SPEED),
                         1
                     )
                 ).startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
@@ -229,13 +232,11 @@ public class BlueJayEntity extends FlyingBirdEntity implements SmartBrainOwner<B
         return new BrainActivityGroup<BlueJayEntity>(Activity.AVOID)
             .priority(10)
             .behaviours(
-                FlightControlTask.startFlying(),
                 MoveAwayFromTargetTask.entity(
                     MemoryModuleType.AVOID_TARGET,
-                    entity -> entity.isFlying() ? Birds.FLY_SPEED : Birds.RUN_SPEED,
+                    entity -> Birds.RUN_SPEED,
                     true
-                ),
-                AvoidTask.forget()
+                )
             )
             .requireAndWipeMemoriesOnUse(FowlPlayMemoryModuleType.IS_AVOIDING.get());
     }
@@ -245,15 +246,12 @@ public class BlueJayEntity extends FlyingBirdEntity implements SmartBrainOwner<B
         return new BrainActivityGroup<BlueJayEntity>(FowlPlayActivities.PICK_UP.get())
             .priority(10)
             .behaviours(
-                FlightControlTask.startFlying(Birds::canPickupFood),
-                GoToNearestWantedItemTask.create(
+                GoToNearestItemTask.create(
                     Birds::canPickupFood,
-                    entity -> entity.isFlying() ? Birds.FLY_SPEED : Birds.RUN_SPEED,
+                    entity -> Birds.RUN_SPEED,
                     true,
                     Birds.ITEM_PICK_UP_RANGE
-                ),
-                new InvalidateMemory<BlueJayEntity, Boolean>(FowlPlayMemoryModuleType.SEES_FOOD.get())
-                    .invalidateIf((entity, memory) -> !Birds.canPickupFood(entity))
+                )
             )
             .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryModuleState.VALUE_PRESENT)
             .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.IS_AVOIDING.get(), MemoryModuleState.VALUE_ABSENT);

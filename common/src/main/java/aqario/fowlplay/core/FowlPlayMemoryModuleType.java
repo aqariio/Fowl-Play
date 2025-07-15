@@ -15,8 +15,8 @@ import java.util.function.Supplier;
 
 public final class FowlPlayMemoryModuleType {
     public static final Supplier<MemoryModuleType<List<? extends PassiveEntity>>> NEAREST_VISIBLE_ADULTS = register("nearest_visible_adults");
-    public static final Supplier<MemoryModuleType<Boolean>> SEES_FOOD = register("sees_food", Codec.BOOL);
-    public static final Supplier<MemoryModuleType<Boolean>> CANNOT_PICKUP_FOOD = register("cannot_eat_food", Codec.BOOL);
+    public static final Supplier<MemoryModuleType<Unit>> SEES_FOOD = register("sees_food", Codec.unit(Unit.INSTANCE));
+    public static final Supplier<MemoryModuleType<Boolean>> CANNOT_PICKUP_FOOD = register("cannot_pickup_food", Codec.BOOL);
     public static final Supplier<MemoryModuleType<Unit>> IS_FLYING = register("is_flying", Codec.unit(Unit.INSTANCE));
     public static final Supplier<MemoryModuleType<Unit>> IS_AVOIDING = register("is_avoiding", Codec.unit(Unit.INSTANCE));
     public static final Supplier<MemoryModuleType<TeleportTarget>> TELEPORT_TARGET = register("teleport_target");

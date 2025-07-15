@@ -11,9 +11,6 @@ public final class FowlPlaySensorType {
     public static final Supplier<SensorType<NearbyAdultsSensor<?>>> NEARBY_ADULTS = register("nearby_adults",
         NearbyAdultsSensor::new
     );
-    public static final Supplier<SensorType<TemptingPlayerSensor>> TEMPTING_PLAYER = register("tempting_player",
-        TemptingPlayerSensor::new
-    );
     public static final Supplier<SensorType<AttackedSensor<?>>> ATTACKED = register("attacked",
         AttackedSensor::new
     );

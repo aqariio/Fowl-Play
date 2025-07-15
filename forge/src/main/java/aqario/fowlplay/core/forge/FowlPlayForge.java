@@ -2,7 +2,6 @@ package aqario.fowlplay.core.forge;
 
 import aqario.fowlplay.client.forge.FowlPlayForgeClient;
 import aqario.fowlplay.common.entity.*;
-import aqario.fowlplay.common.integration.YACLIntegration;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayItems;
 import aqario.fowlplay.core.FowlPlayRegistries;
@@ -11,10 +10,8 @@ import aqario.fowlplay.core.platform.CommonRegistry;
 import aqario.fowlplay.core.platform.forge.PlatformHelperImpl;
 import net.minecraft.item.ItemGroups;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -52,13 +49,6 @@ public final class FowlPlayForge {
         PlatformHelperImpl.SOUND_EVENTS.register(modBus);
         PlatformHelperImpl.TRACKED_DATA_HANDLERS.register(modBus);
         FowlPlayBiomeModifiers.BIOME_MODIFIER_SERIALIZERS.register(modBus);
-
-        ModLoadingContext.get().getContainer().registerExtensionPoint(
-            ConfigScreenHandler.ConfigScreenFactory.class,
-            () -> new ConfigScreenHandler.ConfigScreenFactory(
-                (client, screen) -> YACLIntegration.createScreen(screen)
-            )
-        );
     }
 
     @SuppressWarnings("unchecked")

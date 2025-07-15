@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class ChooseDestinationTask {
+public class ChooseDestinationTasks {
     private static final int DEFAULT_HORIZONTAL_RADIUS = 64;
     private static final int DEFAULT_VERTICAL_RADIUS = 24;
     private static final int[][] RADII = new int[][]{{1, 1}, {3, 3}, {5, 5}, {6, 5}, {7, 7}, {64, 16}};
@@ -42,20 +42,21 @@ public class ChooseDestinationTask {
     }
 
     public static Task<BirdEntity> createDynamicRadius() {
-        return create(ChooseDestinationTask::findTargetPos, Entity::isInsideWaterOrBubbleColumn);
+        return create(ChooseDestinationTasks::findTargetPos, Entity::isInsideWaterOrBubbleColumn);
     }
 
     private static SingleTickTask<BirdEntity> create(Function<BirdEntity, Vec3d> targetGetter, Predicate<BirdEntity> shouldRun) {
         return TaskTriggerer.task(
-            context -> context.group(context.queryMemoryAbsent(MemoryModuleType.WALK_TARGET)).apply(context, walkTarget -> (world, bird, time) -> {
-                if (!shouldRun.test(bird)) {
+            context -> context.group(context.queryMemoryAbsent(MemoryModuleType.WALK_TARGET))
+                .apply(context, walkTarget -> (world, bird, time) -> {
+                if(!shouldRun.test(bird)) {
                     return false;
                 }
                 float speed;
-                if (bird instanceof FlyingBirdEntity flyingBird && flyingBird.isFlying()) {
-                    speed = Birds.FLY_SPEED;
+                if(bird instanceof FlyingBirdEntity flyingBird && flyingBird.isFlying()) {
+                    speed = Birds.WALK_SPEED;
                 }
-                else if (bird.isInsideWaterOrBubbleColumn()) {
+                else if(bird.isInsideWaterOrBubbleColumn()) {
                     speed = Birds.SWIM_SPEED;
                 }
                 else {
@@ -73,15 +74,15 @@ public class ChooseDestinationTask {
         Vec3d vec3d = null;
         Vec3d vec3d2 = null;
 
-        for (int[] is : RADII) {
-            if (vec3d == null) {
+        for(int[] is : RADII) {
+            if(vec3d == null) {
                 vec3d2 = LookTargetUtil.find(bird, is[0], is[1]);
             }
             else {
                 vec3d2 = bird.getPos().add(bird.getPos().relativize(vec3d).normalize().multiply(is[0], is[1], is[0]));
             }
 
-            if (vec3d2 == null || bird.getWorld().getFluidState(BlockPos.ofFloored(vec3d2)).isEmpty()) {
+            if(vec3d2 == null || bird.getWorld().getFluidState(BlockPos.ofFloored(vec3d2)).isEmpty()) {
                 return vec3d;
             }
 

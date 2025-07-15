@@ -2,18 +2,29 @@ package aqario.fowlplay.client.forge;
 
 import aqario.fowlplay.client.FowlPlayClient;
 import aqario.fowlplay.client.particle.SmallBubbleParticle;
+import aqario.fowlplay.common.integration.YACLIntegration;
 import aqario.fowlplay.core.FowlPlayParticleTypes;
+import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class FowlPlayForgeClient {
+    @SuppressWarnings("removal")
     public static void init(IEventBus modBus) {
         modBus.addListener(FowlPlayForgeClient::onClientSetup);
         modBus.addListener(FowlPlayForgeClient::onRegisterParticles);
         modBus.addListener(FowlPlayForgeClient::onRegisterEntityRenderers);
         modBus.addListener(FowlPlayForgeClient::onRegisterEntityLayers);
+
+        ModLoadingContext.get().getContainer().registerExtensionPoint(
+            ConfigScreenHandler.ConfigScreenFactory.class,
+            () -> new ConfigScreenHandler.ConfigScreenFactory(
+                (client, screen) -> YACLIntegration.createScreen(screen)
+            )
+        );
     }
 
     public static void onClientSetup(FMLClientSetupEvent event) {

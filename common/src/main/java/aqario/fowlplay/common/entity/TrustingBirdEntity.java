@@ -26,7 +26,7 @@ public abstract class TrustingBirdEntity extends FlyingBirdEntity {
 
     @Override
     public int getFleeRange(LivingEntity target) {
-        return this.getTrustedUuids().isEmpty() && target instanceof PlayerEntity ? 6 : super.getFleeRange(target);
+        return !this.getTrustedUuids().isEmpty() && target instanceof PlayerEntity ? 8 : super.getFleeRange(target);
     }
 
     @Override

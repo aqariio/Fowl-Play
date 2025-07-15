@@ -2,10 +2,9 @@ package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.ai.pathing.FlightTargeting;
+import aqario.fowlplay.common.util.MemoryList;
 import aqario.fowlplay.core.tags.FowlPlayBlockTags;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.WalkTarget;
 import net.minecraft.util.math.BlockPos;
@@ -15,7 +14,6 @@ import net.minecraft.util.math.Vec3d;
 import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -31,9 +29,8 @@ public class TargetlessFlyTask {
 
     private static SingleTickBehaviour<FlyingBirdEntity> create(float speed, Function<FlyingBirdEntity, Vec3d> targetGetter, Predicate<FlyingBirdEntity> predicate) {
         return new SingleTickBehaviour<>(
-            List.of(
-                Pair.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT)
-            ),
+            MemoryList.create(1)
+                .absent(MemoryModuleType.WALK_TARGET),
             (bird, brain) -> {
                 if(!predicate.test(bird)) {
                     return false;

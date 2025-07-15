@@ -7,6 +7,19 @@
     ],
     "subtitle": "subtitles.entity.bird.eat"
   },
+  "entity.bird.flap": {
+    "sounds": [
+      "mob/parrot/fly1",
+      "mob/parrot/fly2",
+      "mob/parrot/fly3",
+      "mob/parrot/fly4",
+      "mob/parrot/fly5",
+      "mob/parrot/fly6",
+      "mob/parrot/fly7",
+      "mob/parrot/fly8"
+    ],
+    "subtitle": "subtitles.entity.bird.flap"
+  },
   "entity.blue_jay.call": {
     "sounds": [
       "fowlplay:mob/blue_jay/call1",
@@ -196,6 +209,14 @@
       "fowlplay:mob/pigeon/call3"
     ],
     "subtitle": "subtitles.entity.pigeon.call"
+  },
+  "entity.pigeon.hurt": {
+    "sounds": [
+      "fowlplay:mob/pigeon/call1",
+      "fowlplay:mob/pigeon/call2",
+      "fowlplay:mob/pigeon/call3"
+    ],
+    "subtitle": "subtitles.entity.pigeon.hurt"
   },
   "entity.pigeon.song": {
     "sounds": [

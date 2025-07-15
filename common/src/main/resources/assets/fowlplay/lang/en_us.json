@@ -46,6 +46,7 @@
   "item.fowlplay.sparrow_spawn_egg": "Sparrow Spawn Egg",
   "soundCategory.birds": "Birds",
   "subtitles.entity.bird.eat": "Bird eats",
+  "subtitles.entity.bird.flap": "Wings flap",
   "subtitles.entity.blue_jay.call": "Blue Jay calls",
   "subtitles.entity.blue_jay.hurt": "Blue Jay hurts",
   "subtitles.entity.cardinal.call": "Cardinal chirps",
@@ -90,6 +91,6 @@
   "tag.item.fowlplay.raven_food": "Raven food",
   "tag.item.fowlplay.robin_food": "Robin food",
   "tag.item.fowlplay.sparrow_food": "Sparrow food",
-  "text.betterf3.line.bird_ambient": "Ambient Birds",
-  "text.betterf3.line.bird": "Birds"
+  "text.betterf3.line.ambient_birds": "Ambient Birds",
+  "text.betterf3.line.birds": "Birds"
 }

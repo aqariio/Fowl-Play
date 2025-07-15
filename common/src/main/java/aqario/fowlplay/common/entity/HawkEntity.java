@@ -1,10 +1,7 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.ai.brain.sensor.AttackTargetSensor;
-import aqario.fowlplay.common.entity.ai.brain.sensor.AttackedSensor;
-import aqario.fowlplay.common.entity.ai.brain.sensor.AvoidTargetSensor;
-import aqario.fowlplay.common.entity.ai.brain.sensor.NearbyAdultsSensor;
+import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.entity.ai.brain.task.*;
 import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.core.FowlPlayActivities;
@@ -31,7 +28,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.tslat.smartbrainlib.api.SmartBrainOwner;
@@ -43,7 +39,6 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.BreedWithPartner;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.InvalidateMemory;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Panic;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FloatToSurfaceOfFluid;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowParent;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
@@ -53,9 +48,7 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttack
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTarget;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
-import net.tslat.smartbrainlib.api.core.sensor.custom.NearbyItemsSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.InWaterSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyAdultSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
 import net.tslat.smartbrainlib.util.BrainUtils;
@@ -163,31 +156,27 @@ public class HawkEntity extends TrustingBirdEntity implements SmartBrainOwner<Ha
     }
 
     @Override
-    public void tick() {
-        if(this.getWorld().isClient()) {
-            this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
-            this.glidingState.setRunning(this.isFlying(), this.age);
-            if(this.isFlying()) {
-                if(this.timeSinceLastFlap > this.getFlapFrequency()) {
-                    this.timeSinceLastFlap = 0;
-                    this.flapTime++;
-                }
-                else if(this.isFlapping()) {
-                    this.flapTime++;
-                }
-                else {
-                    this.timeSinceLastFlap++;
-                    this.flapTime = 0;
-                }
+    public void updateAnimations() {
+        this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
+        this.glidingState.setRunning(this.isFlying(), this.age);
+        if(this.isFlying()) {
+            if(this.timeSinceLastFlap > this.getFlapFrequency()) {
+                this.timeSinceLastFlap = 0;
+                this.flapTime++;
+            }
+            else if(this.isFlapping()) {
+                this.flapTime++;
             }
             else {
-                this.timeSinceLastFlap = this.getFlapFrequency();
+                this.timeSinceLastFlap++;
                 this.flapTime = 0;
             }
-            this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
         }
-
-        super.tick();
+        else {
+            this.timeSinceLastFlap = this.getFlapFrequency();
+            this.flapTime = 0;
+        }
+        this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
     }
 
     private boolean isFlapping() {
@@ -195,13 +184,23 @@ public class HawkEntity extends TrustingBirdEntity implements SmartBrainOwner<Ha
     }
 
     @Override
-    public float getWaterline() {
-        return 0.5F;
+    protected boolean isFlappingWings() {
+        return this.isFlying();
     }
 
     @Override
-    protected void addFlapEffects() {
-        this.playSound(SoundEvents.ENTITY_PARROT_FLY, 0.15f, 1.0f);
+    public float getFlapVolume() {
+        return 0.8f;
+    }
+
+    @Override
+    public float getFlapPitch() {
+        return 0.6f;
+    }
+
+    @Override
+    public float getWaterline() {
+        return 0.5F;
     }
 
     @Override
@@ -241,14 +240,15 @@ public class HawkEntity extends TrustingBirdEntity implements SmartBrainOwner<Ha
         return ObjectArrayList.of(
             new NearbyLivingEntitySensor<>(),
             new NearbyPlayersSensor<>(),
-            new NearbyItemsSensor<>(),
-            new NearbyAdultSensor<>(),
+            new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new InWaterSensor<>(),
             new AttackedSensor<HawkEntity>()
                 .setScanRate(bird -> 10),
-            new AvoidTargetSensor<>(),
-            new AttackTargetSensor<>()
+            new AvoidTargetSensor<HawkEntity>()
+                .setScanRate(bird -> 10),
+            new AttackTargetSensor<HawkEntity>()
+                .setScanRate(bird -> 10)
         );
     }
 
@@ -260,10 +260,7 @@ public class HawkEntity extends TrustingBirdEntity implements SmartBrainOwner<Ha
             .behaviours(
                 new FloatToSurfaceOfFluid<>()
                     .riseChance(0.5F),
-                FlightControlTask.stopFalling(),
-                new Panic<>(),
-                AvoidTask.run(),
-                PickupFoodTask.run(Birds::canPickupFood),
+                FlightTasks.stopFalling(),
                 new LookAtTarget<>()
                     .runFor(entity -> entity.getRandom().nextBetween(45, 90)),
                 new MoveToWalkTarget<>()
@@ -278,7 +275,7 @@ public class HawkEntity extends TrustingBirdEntity implements SmartBrainOwner<Ha
             .behaviours(
                 new BreedWithPartner<>(),
                 new FollowParent<>(),
-                FindLookTargetTask.create(Birds::isPlayerHoldingFood, 32.0F),
+                SetEntityLookTargetTask.create(Birds::isPlayerHoldingFood),
                 new SetAttackTarget<HawkEntity>()
                     .attackPredicate(Birds::canAttack),
                 new SetRandomLookTarget<>()
@@ -287,7 +284,7 @@ public class HawkEntity extends TrustingBirdEntity implements SmartBrainOwner<Ha
                     Pair.of(
                         new SetRandomWalkTarget<HawkEntity>()
                             .speedModifier((entity, target) -> Birds.WALK_SPEED)
-                            .setRadius(16, 8)
+                            .setRadius(24, 12)
                             .startCondition(Predicate.not(Birds::isPerched)),
                         4
                     ),
@@ -295,11 +292,6 @@ public class HawkEntity extends TrustingBirdEntity implements SmartBrainOwner<Ha
                         new Idle<HawkEntity>()
                             .runFor(entity -> entity.getRandom().nextBetween(100, 300)),
                         4
-                    ),
-                    Pair.of(
-                        FlightControlTask.startFlying()
-                            .startCondition(entity -> entity.isInsideWaterOrBubbleColumn() || entity.getRandom().nextFloat() < 0.3F),
-                        1
                     )
                 ).startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
             )
@@ -318,11 +310,11 @@ public class HawkEntity extends TrustingBirdEntity implements SmartBrainOwner<Ha
                     .attackPredicate(Birds::canAttack),
                 new OneRandomBehaviour<>(
                     Pair.of(
-                        TargetlessFlyTask.perch(Birds.FLY_SPEED),
+                        TargetlessFlyTask.perch(Birds.WALK_SPEED),
                         5
                     ),
                     Pair.of(
-                        TargetlessFlyTask.create(Birds.FLY_SPEED, 24, 16),
+                        TargetlessFlyTask.create(Birds.WALK_SPEED, 24, 16),
                         1
                     )
                 ).startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
@@ -338,13 +330,11 @@ public class HawkEntity extends TrustingBirdEntity implements SmartBrainOwner<Ha
         return new BrainActivityGroup<HawkEntity>(Activity.AVOID)
             .priority(10)
             .behaviours(
-                FlightControlTask.startFlying(),
                 MoveAwayFromTargetTask.entity(
                     MemoryModuleType.AVOID_TARGET,
-                    entity -> entity.isFlying() ? Birds.FLY_SPEED : Birds.RUN_SPEED,
+                    entity -> Birds.RUN_SPEED,
                     true
-                ),
-                AvoidTask.forget()
+                )
             )
             .requireAndWipeMemoriesOnUse(FowlPlayMemoryModuleType.IS_AVOIDING.get());
     }
@@ -354,15 +344,12 @@ public class HawkEntity extends TrustingBirdEntity implements SmartBrainOwner<Ha
         return new BrainActivityGroup<HawkEntity>(FowlPlayActivities.PICK_UP.get())
             .priority(10)
             .behaviours(
-                FlightControlTask.startFlying(Birds::canPickupFood),
-                GoToNearestWantedItemTask.create(
+                GoToNearestItemTask.create(
                     Birds::canPickupFood,
-                    entity -> entity.isFlying() ? Birds.FLY_SPEED : Birds.RUN_SPEED,
+                    entity -> Birds.RUN_SPEED,
                     true,
                     Birds.ITEM_PICK_UP_RANGE
-                ),
-                new InvalidateMemory<HawkEntity, Boolean>(FowlPlayMemoryModuleType.SEES_FOOD.get())
-                    .invalidateIf((entity, memory) -> !Birds.canPickupFood(entity))
+                )
             )
             .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryModuleState.VALUE_PRESENT)
             .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.IS_AVOIDING.get(), MemoryModuleState.VALUE_ABSENT);
@@ -375,9 +362,9 @@ public class HawkEntity extends TrustingBirdEntity implements SmartBrainOwner<Ha
             .priority(10)
             .behaviours(
                 new InvalidateAttackTarget<>(),
-                FlightControlTask.startFlying(),
+                FlightTasks.startFlying(),
                 new SetWalkTargetToAttackTarget<>()
-                    .speedMod((entity, target) -> Birds.FLY_SPEED),
+                    .speedMod((entity, target) -> Birds.WALK_SPEED),
                 new AnimatableMeleeAttack<>(0),
                 new InvalidateMemory<HawkEntity, LivingEntity>(MemoryModuleType.ATTACK_TARGET)
                     .invalidateIf((entity, memory) -> LookTargetUtil.hasBreedTarget(entity))

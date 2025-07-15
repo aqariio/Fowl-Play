@@ -26,16 +26,16 @@ configurations {
 
 dependencies {
     // Mappings
-    mappings "net.fabricmc:yarn:${rootProject.yarn_mappings_version}:v2"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings_version}:v2"
 
     // Fabric Loader
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 
     // Fabric API
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
     // Architectury
-    modImplementation("dev.architectury:architectury-fabric:${rootProject.architectury_version}")
+    modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
 
     // Debug Utils
     modImplementation("io.github.flemmli97:debugutils:${project.debugutils_version}-fabric") {
@@ -43,18 +43,18 @@ dependencies {
     }
 
     // Fabric Language Kotlin
-    modRuntimeOnly("net.fabricmc:fabric-language-kotlin:${rootProject.fabric_language_kotlin_version}")
+    modRuntimeOnly("net.fabricmc:fabric-language-kotlin:${project.fabric_language_kotlin_version}")
 
     // Item Suggestions Not Require Mod Name
-    modRuntimeOnly("maven.modrinth:isnrmn:${rootProject.isnrmn_version}")
+    modRuntimeOnly("maven.modrinth:isnrmn:${project.isnrmn_version}")
 
     // Mod Menu
-    modImplementation("com.terraformersmc:modmenu:${rootProject.modmenu_version}") {
+    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
         transitive = false
     }
 
     // Observable
-    modRuntimeOnly("maven.modrinth:observable:${rootProject.observable_version}")
+    modRuntimeOnly("maven.modrinth:observable:${project.observable_version}")
 
     // Smart Brain Lib
     modImplementation("net.tslat.smartbrainlib:SmartBrainLib-fabric-${project.minecraft_version}:${project.sbl_version}")

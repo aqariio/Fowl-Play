@@ -1,8 +1,8 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
+import aqario.fowlplay.common.util.MemoryList;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
-import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.MemoryModuleState;
@@ -16,12 +16,15 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 import java.util.List;
 
 public class LeaderlessFlockTask extends ExtendedBehaviour<FlyingBirdEntity> {
-    private static final List<Pair<MemoryModuleType<?>, MemoryModuleState>> MEMORIES = ImmutableList.of(
-        Pair.of(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS.get(), MemoryModuleState.REGISTERED),
-        Pair.of(FowlPlayMemoryModuleType.IS_AVOIDING.get(), MemoryModuleState.VALUE_ABSENT),
-        Pair.of(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryModuleState.VALUE_ABSENT)
-    );
-    private static final int VIEW_RADIUS = 64;
+    private static final MemoryList MEMORIES = MemoryList.create(3)
+        .present(
+            FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS.get()
+        )
+        .absent(
+            FowlPlayMemoryModuleType.IS_AVOIDING.get(),
+            FowlPlayMemoryModuleType.SEES_FOOD.get()
+        );
+    private static final int VIEW_RADIUS = 24;
     public final int minFlockSize;
     public final float coherence;
     public final float alignment;
@@ -52,8 +55,8 @@ public class LeaderlessFlockTask extends ExtendedBehaviour<FlyingBirdEntity> {
             return false;
         }
         this.nearbyBirds = BrainUtils.getMemory(brain, FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS.get());
-        assert this.nearbyBirds != null;
-        this.nearbyBirds.removeIf(entity -> entity.squaredDistanceTo(bird) > VIEW_RADIUS * VIEW_RADIUS);
+        // noinspection ConstantConditions
+        this.nearbyBirds.removeIf(entity -> !entity.isInRange(bird, VIEW_RADIUS));
 
         return this.nearbyBirds.size() > this.minFlockSize;
     }

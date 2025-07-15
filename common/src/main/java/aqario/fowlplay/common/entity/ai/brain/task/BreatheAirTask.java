@@ -1,43 +1,62 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.BirdEntity;
-import com.google.common.collect.ImmutableMap;
+import aqario.fowlplay.common.util.MemoryList;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.WalkTarget;
-import net.minecraft.entity.ai.brain.task.MultiTickTask;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldView;
+import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
+import net.tslat.smartbrainlib.util.BrainUtils;
 
-public class BreatheAirTask extends MultiTickTask<BirdEntity> {
-    private final float speed;
+import java.util.List;
+import java.util.function.BiFunction;
 
-    public BreatheAirTask(float speed) {
-        super(ImmutableMap.of());
-        this.speed = speed;
+public class BreatheAirTask<E extends BirdEntity> extends ExtendedBehaviour<E> {
+    private static final MemoryList MEMORIES = MemoryList.create(1)
+        .registered(MemoryModuleType.WALK_TARGET);
+    protected BiFunction<E, Vec3d, Float> speedModifier = (entity, targetPos) -> 1f;
+
+    public BreatheAirTask<E> speedModifier(float modifier) {
+        return this.speedModifier((entity, targetPos) -> modifier);
+    }
+
+    public BreatheAirTask<E> speedModifier(BiFunction<E, Vec3d, Float> function) {
+        this.speedModifier = function;
+
+        return this;
     }
 
     @Override
-    protected boolean shouldRun(ServerWorld world, BirdEntity bird) {
+    protected List<Pair<MemoryModuleType<?>, MemoryModuleState>> getMemoryRequirements() {
+        return MEMORIES;
+    }
+
+    @Override
+    protected boolean shouldRun(ServerWorld world, E bird) {
+        return this.shouldKeepRunning(bird);
+    }
+
+    @Override
+    protected boolean shouldKeepRunning(E bird) {
         return bird.getAir() < 400;
     }
 
     @Override
-    protected boolean shouldKeepRunning(ServerWorld world, BirdEntity bird, long l) {
-        return this.shouldRun(world, bird);
+    protected void tick(E bird) {
+        Vec3d targetPos = this.findAir(bird);
+        BrainUtils.setMemory(bird, MemoryModuleType.WALK_TARGET, new WalkTarget(targetPos, this.speedModifier.apply(bird, targetPos), 0));
     }
 
-    @Override
-    protected void keepRunning(ServerWorld world, BirdEntity bird, long l) {
-        bird.getBrain().remember(MemoryModuleType.WALK_TARGET, new WalkTarget(this.findAir(bird), this.speed, 0));
-    }
-
-    private Vec3d findAir(BirdEntity bird) {
+    private Vec3d findAir(E bird) {
         Iterable<BlockPos> iterable = BlockPos.iterate(
             MathHelper.floor(bird.getX() - 1.0),
             bird.getBlockY(),

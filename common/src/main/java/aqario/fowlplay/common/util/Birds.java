@@ -15,6 +15,7 @@ import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.LivingTargetCache;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.task.LookTargetUtil;
+import net.minecraft.entity.ai.pathing.Path;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,12 +24,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
+import net.tslat.smartbrainlib.object.SquareRadius;
 import net.tslat.smartbrainlib.registry.SBLMemoryTypes;
 import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * A utility class for birds.
@@ -39,18 +40,55 @@ public final class Birds {
     public static final float FLY_SPEED = 2.0F;
     public static final float SWIM_SPEED = 4.0F;
     public static final int ITEM_PICK_UP_RANGE = 32;
-    public static final int WALK_RANGE = 16;
+    public static final SquareRadius WALK_RANGE = new SquareRadius(16, 8);
+    public static final SquareRadius FLY_AVOID_RANGE = new SquareRadius(6, 6);
     public static final int AVOID_TICKS = 160;
     public static final int CANNOT_PICKUP_FOOD_TICKS = 1200;
-    public static final UniformIntProvider FOLLOW_ADULT_RANGE = UniformIntProvider.create(5, 16);
     public static final UniformIntProvider STAY_NEAR_ENTITY_RANGE = UniformIntProvider.create(16, 32);
 
-    public static <E> Predicate<E> truePredicate() {
-        return e -> true;
+    public static void tryFlyingAlongPath(FlyingBirdEntity bird, Path path) {
+        // noinspection ConstantConditions
+        if(bird.canStartFlying()
+            && (shouldFlyToDestination(bird, path.getTarget().toCenterPos()) || shouldFlyFromAvoidTarget(bird))
+        ) {
+            bird.startFlying();
+        }
     }
 
-    public static boolean shouldFlyToTarget(FlyingBirdEntity bird, Vec3d target) {
-        return bird.getPos().squaredDistanceTo(target) > WALK_RANGE * WALK_RANGE;
+    public static boolean shouldFlyToDestination(FlyingBirdEntity bird, Vec3d target) {
+        Vec3d pos = bird.getPos();
+        double dx = target.x - pos.x;
+        double dy = target.y - pos.y;
+        double dz = target.z - pos.z;
+        double dxz2 = dx * dx + dz * dz;
+        double dy2 = dy * dy;
+        double xzRadius = WALK_RANGE.xzRadius();
+        double yRadius = WALK_RANGE.yRadius();
+        return dxz2 > xzRadius * xzRadius || dy2 > yRadius * yRadius;
+    }
+
+    public static boolean shouldFlyFromAvoidTarget(FlyingBirdEntity bird) {
+        Brain<?> brain = bird.getBrain();
+        if(!BrainUtils.hasMemory(brain, MemoryModuleType.AVOID_TARGET)
+            || !BrainUtils.hasMemory(brain, FowlPlayMemoryModuleType.IS_AVOIDING.get())
+        ) {
+            return false;
+        }
+        LivingEntity target = BrainUtils.getMemory(brain, MemoryModuleType.AVOID_TARGET);
+        // noinspection ConstantConditions
+        if((target.isSprinting() && !target.isSpectator()) || target.hasVehicle()) {
+            return true;
+        }
+        Vec3d pos = bird.getPos();
+        Vec3d targetPos = target.getPos();
+        double dx = targetPos.x - pos.x;
+        double dy = targetPos.y - pos.y;
+        double dz = targetPos.z - pos.z;
+        double dxz2 = dx * dx + dz * dz;
+        double dy2 = dy * dy;
+        double xzRadius = FLY_AVOID_RANGE.xzRadius();
+        double yRadius = FLY_AVOID_RANGE.yRadius();
+        return dxz2 <= xzRadius * xzRadius && dy2 <= yRadius * yRadius;
     }
 
     // angle is in radians
@@ -83,16 +121,13 @@ public final class Birds {
 
     public static <T extends BirdEntity> void alertOthers(T bird, LivingEntity attacker) {
         getNearbyVisibleAdults(bird).forEach(other -> {
+            Brain<?> brain = other.getBrain();
             if(attacker instanceof PlayerEntity) {
-                other.getBrain().remember(FowlPlayMemoryModuleType.CANNOT_PICKUP_FOOD.get(), true, CANNOT_PICKUP_FOOD_TICKS);
+                BrainUtils.setForgettableMemory(brain, FowlPlayMemoryModuleType.CANNOT_PICKUP_FOOD.get(), true, CANNOT_PICKUP_FOOD_TICKS);
             }
-            startAvoiding((BirdEntity) other, attacker);
+            BrainUtils.clearMemory(brain, MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
+            BrainUtils.setForgettableMemory(brain, MemoryModuleType.AVOID_TARGET, attacker, AVOID_TICKS);
         });
-    }
-
-    public static <T extends BirdEntity> void startAvoiding(T bird, LivingEntity target) {
-        bird.getBrain().forget(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
-        bird.getBrain().remember(MemoryModuleType.AVOID_TARGET, target, AVOID_TICKS);
     }
 
     public static <T extends BirdEntity> List<? extends PassiveEntity> getNearbyVisibleAdults(T bird) {
@@ -105,19 +140,22 @@ public final class Birds {
 
     public static boolean canPickupFood(BirdEntity bird) {
         Brain<?> brain = bird.getBrain();
+        if(BrainUtils.hasMemory(brain, FowlPlayMemoryModuleType.CANNOT_PICKUP_FOOD.get())) {
+            return false;
+        }
         if(!BrainUtils.hasMemory(brain, SBLMemoryTypes.NEARBY_ITEMS.get())) {
             return false;
         }
         List<ItemEntity> foodItems = BrainUtils.getMemory(brain, SBLMemoryTypes.NEARBY_ITEMS.get());
-        assert foodItems != null;
+        // noinspection ConstantConditions
         if(foodItems.isEmpty() || bird.getFood().test(bird.getMainHandStack())) {
             return false;
         }
-        Optional<LivingTargetCache> visibleMobs = brain.getOptionalMemory(MemoryModuleType.VISIBLE_MOBS);
-        if(visibleMobs == null || visibleMobs.isEmpty()) {
+        LivingTargetCache visibleMobs = BrainUtils.getMemory(brain, MemoryModuleType.VISIBLE_MOBS);
+        if(visibleMobs == null) {
             return false;
         }
-        List<LivingEntity> avoidTargets = visibleMobs.get().stream(entity -> true)
+        List<LivingEntity> avoidTargets = visibleMobs.stream(entity -> true)
             .filter(entity -> shouldAvoid(bird, entity))
             .filter(entity -> entity.isInRange(foodItems.get(0), bird.getFleeRange(entity)))
             .toList();
@@ -127,10 +165,7 @@ public final class Birds {
 
     public static boolean shouldAvoid(BirdEntity bird, LivingEntity target) {
         Brain<?> brain = bird.getBrain();
-        if(!bird.shouldAvoid(target) && !shouldAvoidAttacker(brain, target)) {
-            return false;
-        }
-        if(!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(target)) {
+        if(!(bird.shouldAvoid(target) && EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(target)) && !shouldAvoidAttacker(brain, target)) {
             return false;
         }
         if(target instanceof PlayerEntity player && bird instanceof TrustingBirdEntity trusting && trusting.trusts(player)) {
@@ -144,12 +179,8 @@ public final class Birds {
     }
 
     public static boolean shouldAvoidAttacker(Brain<?> brain, LivingEntity attacker) {
-        Optional<LivingEntity> hurtBy = brain.getOptionalMemory(MemoryModuleType.HURT_BY_ENTITY);
-        return hurtBy != null && hurtBy.isPresent() && hurtBy.get().equals(attacker);
-    }
-
-    public static Optional<? extends LivingEntity> getAttackTarget(BirdEntity bird) {
-        return LookTargetUtil.hasBreedTarget(bird) ? Optional.empty() : bird.getBrain().getOptionalRegisteredMemory(MemoryModuleType.NEAREST_ATTACKABLE);
+        LivingEntity hurtBy = BrainUtils.getMemory(brain, MemoryModuleType.HURT_BY_ENTITY);
+        return hurtBy != null && hurtBy.equals(attacker);
     }
 
     public static boolean canAttack(BirdEntity bird) {

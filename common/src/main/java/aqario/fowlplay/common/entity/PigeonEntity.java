@@ -1,11 +1,9 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.ai.brain.sensor.AttackedSensor;
-import aqario.fowlplay.common.entity.ai.brain.sensor.AvoidTargetSensor;
-import aqario.fowlplay.common.entity.ai.brain.sensor.NearbyAdultsSensor;
-import aqario.fowlplay.common.entity.ai.brain.sensor.PigeonSpecificSensor;
+import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.entity.ai.brain.task.*;
+import aqario.fowlplay.common.entity.ai.pathing.GroundNavigation;
 import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.core.*;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
@@ -19,7 +17,6 @@ import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
-import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -37,7 +34,6 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -50,20 +46,17 @@ import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
+import net.tslat.smartbrainlib.api.core.behaviour.SequentialBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.BreedWithPartner;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.InvalidateMemory;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Panic;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FloatToSurfaceOfFluid;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowParent;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTarget;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
-import net.tslat.smartbrainlib.api.core.sensor.custom.NearbyItemsSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.InWaterSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyAdultSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
 import net.tslat.smartbrainlib.util.BrainUtils;
@@ -190,11 +183,11 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
 
     @Override
     protected EntityNavigation getLandNavigation() {
-        MobNavigation mobNavigation = new MobNavigation(this, this.getWorld());
-        mobNavigation.setCanPathThroughDoors(false);
-        mobNavigation.setCanEnterOpenDoors(true);
-        mobNavigation.setCanSwim(false);
-        return mobNavigation;
+        GroundNavigation navigation = new GroundNavigation(this, this.getWorld());
+        navigation.setCanPathThroughDoors(false);
+        navigation.setCanEnterOpenDoors(true);
+        navigation.setCanSwim(false);
+        return navigation;
     }
 
     @Override
@@ -286,20 +279,26 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
     }
 
     @Override
-    public void tick() {
-        if(this.getWorld().isClient()) {
-            this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn() && !this.isInSittingPose(), this.age);
-            this.flappingState.setRunning(this.isFlying(), this.age);
-            this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
-            this.sittingState.setRunning(this.isInSittingPose(), this.age);
-        }
-
-        super.tick();
+    public void updateAnimations() {
+        this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn() && !this.isInSittingPose(), this.age);
+        this.flappingState.setRunning(this.isFlying(), this.age);
+        this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
+        this.sittingState.setRunning(this.isInSittingPose(), this.age);
     }
 
     @Override
-    protected void addFlapEffects() {
-        this.playSound(SoundEvents.ENTITY_PARROT_FLY, 0.15f, 1.0f);
+    protected boolean isFlappingWings() {
+        return this.isFlying();
+    }
+
+    @Override
+    public float getFlapVolume() {
+        return 0.65f;
+    }
+
+    @Override
+    public float getFlapPitch() {
+        return 0.9f;
     }
 
     @Nullable
@@ -359,7 +358,7 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return null;
+        return FowlPlaySoundEvents.ENTITY_PIGEON_HURT.get();
     }
 
     @Override
@@ -381,14 +380,15 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
         return ObjectArrayList.of(
             new NearbyLivingEntitySensor<>(),
             new NearbyPlayersSensor<>(),
-            new NearbyItemsSensor<>(),
-            new NearbyAdultSensor<>(),
+            new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new InWaterSensor<>(),
             new AttackedSensor<PigeonEntity>()
                 .setScanRate(bird -> 10),
-            new AvoidTargetSensor<>(),
+            new AvoidTargetSensor<PigeonEntity>()
+                .setScanRate(bird -> 10),
             new PigeonSpecificSensor()
+                .setScanRate(bird -> 10)
         );
     }
 
@@ -400,16 +400,14 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
             .behaviours(
                 new FloatToSurfaceOfFluid<>()
                     .riseChance(0.5F),
-                FlightControlTask.stopFalling(),
+                FlightTasks.stopFalling(),
                 new TeleportToTargetTask(),
-                new Panic<>(),
-                new FollowOwnerTask(Birds.WALK_SPEED, 5, 10),
-                AvoidTask.run(),
-                PickupFoodTask.<PigeonEntity>run(Birds::canPickupFood)
-                    .startCondition(pigeon -> !pigeon.isSitting() && pigeon.getRecipientUuid() == null),
+                new FollowOwnerTask(),
                 new LookAtTarget<>()
                     .runFor(entity -> entity.getRandom().nextBetween(45, 90)),
                 new MoveToWalkTarget<>()
+                    .startCondition(entity -> !BrainUtils.hasMemory(entity, FowlPlayMemoryModuleType.TELEPORT_TARGET.get()))
+                    .stopIf(entity -> BrainUtils.hasMemory(entity, FowlPlayMemoryModuleType.TELEPORT_TARGET.get()))
             );
     }
 
@@ -421,15 +419,14 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
             .behaviours(
                 new BreedWithPartner<>(),
                 new FollowParent<>(),
-                FindLookTargetTask.create(Birds::isPlayerHoldingFood, 32.0F),
-                SetWalkTargetToClosestAdult.create(Birds.STAY_NEAR_ENTITY_RANGE, Birds.WALK_SPEED),
+                SetEntityLookTargetTask.create(Birds::isPlayerHoldingFood),
                 new SetRandomLookTarget<>()
                     .lookTime(entity -> entity.getRandom().nextBetween(150, 250)),
                 new OneRandomBehaviour<>(
                     Pair.of(
                         new SetRandomWalkTarget<PigeonEntity>()
                             .speedModifier((entity, target) -> Birds.WALK_SPEED)
-                            .setRadius(16, 8)
+                            .setRadius(24, 12)
                             .startCondition(Predicate.not(Birds::isPerched)),
                         4
                     ),
@@ -439,7 +436,7 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
                         3
                     ),
                     Pair.of(
-                        FlightControlTask.<PigeonEntity>startFlying(entity -> !entity.isSitting() && entity.getRandom().nextFloat() < 0.1F),
+                        SetWalkTargetToClosestAdult.create(Birds.STAY_NEAR_ENTITY_RANGE),
                         1
                     )
                 ).startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
@@ -464,7 +461,7 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
                 ),
                 new OneRandomBehaviour<>(
                     Pair.of(
-                        TargetlessFlyTask.perch(Birds.FLY_SPEED),
+                        TargetlessFlyTask.perch(Birds.WALK_SPEED),
                         1
                     )
                 ).startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
@@ -480,10 +477,11 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
         return new BrainActivityGroup<PigeonEntity>(FowlPlayActivities.DELIVER.get())
             .priority(10)
             .behaviours(
-                FlightControlTask.<PigeonEntity>stopFlying()
+                FlightTasks.<PigeonEntity>stopFlying()
                     .startCondition(PigeonEntity::shouldStopFlyingToRecipient),
-                FlightControlTask.startFlying(PigeonEntity::shouldFlyToRecipient),
-                DeliverBundleTask.run(Birds.truePredicate(), pigeon -> pigeon.isFlying() ? Birds.FLY_SPEED : Birds.WALK_SPEED)
+                FlightTasks.<PigeonEntity>startFlying()
+                    .startCondition(PigeonEntity::shouldFlyToRecipient),
+                DeliverBundleTask.run(pigeon -> Birds.WALK_SPEED)
             )
             .requireAndWipeMemoriesOnUse(FowlPlayMemoryModuleType.RECIPIENT.get());
     }
@@ -493,13 +491,11 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
         return new BrainActivityGroup<PigeonEntity>(Activity.AVOID)
             .priority(10)
             .behaviours(
-                FlightControlTask.startFlying(),
                 MoveAwayFromTargetTask.entity(
                     MemoryModuleType.AVOID_TARGET,
-                    entity -> entity.isFlying() ? Birds.FLY_SPEED : Birds.RUN_SPEED,
+                    entity -> Birds.RUN_SPEED,
                     true
-                ),
-                AvoidTask.forget()
+                )
             )
             .requireAndWipeMemoriesOnUse(FowlPlayMemoryModuleType.IS_AVOIDING.get());
     }
@@ -509,15 +505,14 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
         return new BrainActivityGroup<PigeonEntity>(FowlPlayActivities.PICK_UP.get())
             .priority(10)
             .behaviours(
-                FlightControlTask.startFlying(pigeon -> !pigeon.isTamed() && Birds.canPickupFood(pigeon)),
-                GoToNearestWantedItemTask.create(
-                    Birds::canPickupFood,
-                    entity -> entity.isFlying() ? Birds.FLY_SPEED : Birds.RUN_SPEED,
-                    true,
-                    Birds.ITEM_PICK_UP_RANGE
-                ),
-                new InvalidateMemory<PigeonEntity, Boolean>(FowlPlayMemoryModuleType.SEES_FOOD.get())
-                    .invalidateIf((entity, memory) -> !Birds.canPickupFood(entity))
+                new SequentialBehaviour<PigeonEntity>(
+                    GoToNearestItemTask.create(
+                        Birds::canPickupFood,
+                        entity -> Birds.RUN_SPEED,
+                        true,
+                        Birds.ITEM_PICK_UP_RANGE
+                    )
+                ).startCondition(pigeon -> !pigeon.isSitting())
             )
             .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryModuleState.VALUE_PRESENT)
             .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.IS_AVOIDING.get(), MemoryModuleState.VALUE_ABSENT)

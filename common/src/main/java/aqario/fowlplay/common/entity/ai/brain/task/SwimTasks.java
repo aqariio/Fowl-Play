@@ -1,9 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.BirdEntity;
-import com.google.common.collect.ImmutableList;
-import com.mojang.datafixers.util.Pair;
-import net.minecraft.entity.ai.brain.MemoryModuleState;
+import aqario.fowlplay.common.util.MemoryList;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.util.Unit;
 import net.tslat.smartbrainlib.util.BrainUtils;
@@ -11,13 +9,12 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 /**
  * A collection of tasks that control the swimming behavior of birds.
  */
-public class SwimControlTask {
+public class SwimTasks {
     public static <E extends BirdEntity> SingleTickBehaviour<E> startSwimming() {
         return new SingleTickBehaviour<>(
-            ImmutableList.of(
-                Pair.of(MemoryModuleType.IS_IN_WATER, MemoryModuleState.VALUE_ABSENT),
-                Pair.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_PRESENT)
-            ),
+            MemoryList.create(2)
+                .absent(MemoryModuleType.IS_IN_WATER)
+                .registered(MemoryModuleType.WALK_TARGET),
             (bird, brain) -> {
                 if(bird.isInsideWaterOrBubbleColumn()) {
                     BrainUtils.setMemory(brain, MemoryModuleType.IS_IN_WATER, Unit.INSTANCE);
@@ -31,10 +28,9 @@ public class SwimControlTask {
 
     public static <E extends BirdEntity> SingleTickBehaviour<E> stopSwimming() {
         return new SingleTickBehaviour<>(
-            ImmutableList.of(
-                Pair.of(MemoryModuleType.IS_IN_WATER, MemoryModuleState.REGISTERED),
-                Pair.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_PRESENT)
-            ),
+            MemoryList.create(2)
+                .present(MemoryModuleType.IS_IN_WATER)
+                .registered(MemoryModuleType.WALK_TARGET),
             (bird, brain) -> {
                 if(!bird.isInsideWaterOrBubbleColumn()) {
                     BrainUtils.clearMemory(brain, MemoryModuleType.IS_IN_WATER);

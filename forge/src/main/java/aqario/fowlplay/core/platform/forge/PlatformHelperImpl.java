@@ -28,7 +28,6 @@ import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryBuilder;
 
 import java.util.function.Supplier;
 
@@ -143,28 +142,7 @@ public class PlatformHelperImpl {
         return SOUND_EVENTS.register(id, soundEvent);
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> Supplier<CommonRegistry<T>> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
-//        RegistryBuilder<T> builder = RegistryBuilder.of(registryKey.getValue());
-//        if(!sync) {
-//            builder.disableSync();
-//        }
-//        builder.setDefaultKey(Identifier.of(FowlPlay.ID, "default"));
-        if(registryKey.equals(FowlPlayRegistryKeys.CHICKEN_VARIANT)) {
-            return (Supplier<CommonRegistry<T>>) (Supplier<?>) CHICKEN_VARIANTS.makeRegistry(RegistryBuilder::new);
-        }
-        else if(registryKey.equals(FowlPlayRegistryKeys.DUCK_VARIANT)) {
-            return (Supplier<CommonRegistry<T>>) (Supplier<?>) DUCK_VARIANTS.makeRegistry(RegistryBuilder::new);
-        }
-        else if(registryKey.equals(FowlPlayRegistryKeys.GULL_VARIANT)) {
-            return (Supplier<CommonRegistry<T>>) (Supplier<?>) GULL_VARIANTS.makeRegistry(RegistryBuilder::new);
-        }
-        else if(registryKey.equals(FowlPlayRegistryKeys.PIGEON_VARIANT)) {
-            return (Supplier<CommonRegistry<T>>) (Supplier<?>) PIGEON_VARIANTS.makeRegistry(RegistryBuilder::new);
-        }
-        else if(registryKey.equals(FowlPlayRegistryKeys.SPARROW_VARIANT)) {
-            return (Supplier<CommonRegistry<T>>) (Supplier<?>) SPARROW_VARIANTS.makeRegistry(RegistryBuilder::new);
-        }
         return () -> null;
     }
 

@@ -14,6 +14,10 @@
       "required": false
     },
     {
+      "id": "#forge:is_cold/overworld",
+      "required": false
+    },
+    {
       "id": "#natures_spirit:is_cypress",
       "required": false
     },
@@ -43,6 +47,10 @@
     },
     {
       "id": "#c:is_tree/coniferous",
+      "required": false
+    },
+    {
+      "id": "#forge:is_coniferous",
       "required": false
     },
     {

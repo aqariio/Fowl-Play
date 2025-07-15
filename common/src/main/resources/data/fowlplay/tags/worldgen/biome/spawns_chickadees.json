@@ -10,6 +10,10 @@
       "required": false
     },
     {
+      "id": "#forge:is_cold/overworld",
+      "required": false
+    },
+    {
       "id": "#natures_spirit:is_frontier",
       "required": false
     },

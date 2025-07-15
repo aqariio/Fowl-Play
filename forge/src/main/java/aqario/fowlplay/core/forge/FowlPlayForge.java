@@ -1,36 +1,43 @@
 package aqario.fowlplay.core.forge;
 
 import aqario.fowlplay.client.forge.FowlPlayForgeClient;
+import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.common.integration.YACLIntegration;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayItems;
+import aqario.fowlplay.core.FowlPlayRegistries;
+import aqario.fowlplay.core.FowlPlayRegistryKeys;
+import aqario.fowlplay.core.platform.CommonRegistry;
 import aqario.fowlplay.core.platform.forge.PlatformHelperImpl;
 import net.minecraft.item.ItemGroups;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigScreenHandler;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.NewRegistryEvent;
+import net.minecraftforge.registries.RegisterEvent;
+import net.minecraftforge.registries.RegistryBuilder;
+
+import java.util.function.Supplier;
 
 @Mod(FowlPlay.ID)
 public final class FowlPlayForge {
     @SuppressWarnings("removal")
     public FowlPlayForge() {
-        IEventBus modBus = MinecraftForge.EVENT_BUS;
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+        System.out.println("Fowl Play Forge is initializing...");
 
-        FowlPlay.init();
 
         if(FMLEnvironment.dist == Dist.CLIENT) {
             FowlPlayForgeClient.init(modBus);
         }
 
         modBus.addListener(FowlPlayForge::onNewRegistry);
-        modBus.addListener(FowlPlayForge::onSetup);
+        modBus.addListener(FowlPlayForge::onRegister);
         modBus.addListener(FowlPlayForge::onAddItemGroupEntries);
 
         PlatformHelperImpl.CHICKEN_VARIANTS.register(modBus);
@@ -54,11 +61,18 @@ public final class FowlPlayForge {
         );
     }
 
+    @SuppressWarnings("unchecked")
     private static void onNewRegistry(NewRegistryEvent event) {
         FowlPlay.earlyInit();
+        FowlPlayRegistries.CHICKEN_VARIANT = (Supplier<CommonRegistry<ChickenVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.CHICKEN_VARIANT.getValue()));
+        FowlPlayRegistries.DUCK_VARIANT = (Supplier<CommonRegistry<DuckVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.DUCK_VARIANT.getValue()));
+        FowlPlayRegistries.GULL_VARIANT = (Supplier<CommonRegistry<GullVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.GULL_VARIANT.getValue()));
+        FowlPlayRegistries.PIGEON_VARIANT = (Supplier<CommonRegistry<PigeonVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.PIGEON_VARIANT.getValue()));
+        FowlPlayRegistries.SPARROW_VARIANT = (Supplier<CommonRegistry<SparrowVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.SPARROW_VARIANT.getValue()));
     }
 
-    private static void onSetup(FMLCommonSetupEvent event) {
+    private static void onRegister(RegisterEvent event) {
+        FowlPlay.init();
     }
 
     private static void onAddItemGroupEntries(BuildCreativeModeTabContentsEvent event) {

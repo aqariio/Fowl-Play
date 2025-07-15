@@ -71,6 +71,10 @@ sourceSets {
 }
 
 loom {
+    forge {
+        mixinConfig "fowlplay.common.mixins.json"
+        mixinConfig "fowlplay.forge.mixins.json"
+    }
     runs {
         data {
             data()

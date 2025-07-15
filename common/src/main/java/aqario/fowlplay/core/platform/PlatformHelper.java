@@ -12,6 +12,7 @@ import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
@@ -68,7 +69,7 @@ public class PlatformHelper {
     }
 
     @ExpectPlatform
-    public static <T> Supplier<Registry<T>> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
+    public static <T> Supplier<CommonRegistry<T>> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
         throw new AssertionError();
     }
 
@@ -84,6 +85,16 @@ public class PlatformHelper {
 
     @ExpectPlatform
     public static <T extends ParticleEffect> void registerParticleFactory(Supplier<ParticleType<T>> supplier, ParticleFactory<T> provider) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static <T> void writeRegistry(CommonRegistry<T> registry, T value, PacketByteBuf buf) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static <T> T readRegistry(CommonRegistry<T> registry, Class<T> clazz, PacketByteBuf buf) {
         throw new AssertionError();
     }
 }

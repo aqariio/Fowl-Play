@@ -2,11 +2,13 @@ package aqario.fowlplay.mixin.forge;
 
 import aqario.fowlplay.common.entity.CustomSpawnGroup;
 import net.minecraft.entity.SpawnGroup;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 
 // credit to hybrid aquatic for the code
@@ -18,10 +20,10 @@ public class SpawnGroupMixin {
     }
 
     // Vanilla Spawn Groups array
-    @Shadow
-    @Mutable
-    @Final
-    private static SpawnGroup[] field_6301;
+//    @Shadow
+//    @Mutable
+//    @Final
+//    private static SpawnGroup[] field_6301;
 
     @Unique
     private static SpawnGroup fowlplay$createSpawnGroup(String enumname, int ordinal, CustomSpawnGroup spawnGroup) {
@@ -30,14 +32,33 @@ public class SpawnGroupMixin {
 
     @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/SpawnGroup;field_6301:[Lnet/minecraft/entity/SpawnGroup;", shift = At.Shift.AFTER))
     private static void fowlplay$addCustomGroups(CallbackInfo ci) {
-        int vanillaSpawnGroupsLength = field_6301.length;
-        CustomSpawnGroup[] groups = CustomSpawnGroup.values();
-        field_6301 = Arrays.copyOf(field_6301, vanillaSpawnGroupsLength + groups.length);
+//        int vanillaSpawnGroupsLength = field_6301.length;
+//        CustomSpawnGroup[] groups = CustomSpawnGroup.values();
+//        field_6301 = Arrays.copyOf(field_6301, vanillaSpawnGroupsLength + groups.length);
+//
+//        for(int i = 0; i < groups.length; i++) {
+//            int pos = vanillaSpawnGroupsLength + i;
+//            CustomSpawnGroup spawnGroup = groups[i];
+//            spawnGroup.spawnGroup = field_6301[pos] = fowlplay$createSpawnGroup(spawnGroup.name(), pos, spawnGroup);
+//        }
+        try {
+            Field valuesField = SpawnGroup.class.getDeclaredField("field_6301");
+            valuesField.setAccessible(true);
+            SpawnGroup[] original = (SpawnGroup[]) valuesField.get(null);
+            int vanillaLength = original.length;
+            CustomSpawnGroup[] extraGroups = CustomSpawnGroup.values();
+            SpawnGroup[] newValues = Arrays.copyOf(original, vanillaLength + extraGroups.length);
 
-        for(int i = 0; i < groups.length; i++) {
-            int pos = vanillaSpawnGroupsLength + i;
-            CustomSpawnGroup spawnGroup = groups[i];
-            spawnGroup.spawnGroup = field_6301[pos] = fowlplay$createSpawnGroup(spawnGroup.name(), pos, spawnGroup);
+            for(int i = 0; i < extraGroups.length; ++i) {
+                int pos = vanillaLength + i;
+                CustomSpawnGroup group = extraGroups[i];
+                group.spawnGroup = newValues[pos] = fowlplay$createSpawnGroup(group.name(), pos, group);
+            }
+
+            valuesField.set(null, newValues);
+        }
+        catch(ReflectiveOperationException var9) {
+            throw new RuntimeException("Failed to extend SpawnGroup enum", var9);
         }
     }
 }

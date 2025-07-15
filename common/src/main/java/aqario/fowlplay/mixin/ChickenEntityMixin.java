@@ -49,8 +49,8 @@ public abstract class ChickenEntityMixin extends AnimalEntity implements Variant
         }
         else {
             FowlPlayRegistries.CHICKEN_VARIANT.get()
-                .getRandom(world.getRandom())
-                .ifPresent(variant -> this.setVariant(variant.value()));
+                .fowlplay$getRandom(world.getRandom())
+                .ifPresent(this::setVariant);
         }
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
@@ -73,7 +73,7 @@ public abstract class ChickenEntityMixin extends AnimalEntity implements Variant
 
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     private void fowlplay$readCustomVariant(NbtCompound nbt, CallbackInfo ci) {
-        ChickenVariant variant = FowlPlayRegistries.CHICKEN_VARIANT.get().get(Identifier.tryParse(nbt.getString("variant")));
+        ChickenVariant variant = FowlPlayRegistries.CHICKEN_VARIANT.get().fowlplay$get(Identifier.tryParse(nbt.getString("variant")));
         if(variant != null) {
             this.setVariant(variant);
         }
@@ -81,7 +81,7 @@ public abstract class ChickenEntityMixin extends AnimalEntity implements Variant
 
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
     private void fowlplay$writeCustomVariant(NbtCompound nbt, CallbackInfo ci) {
-        nbt.putString("variant", FowlPlayRegistries.CHICKEN_VARIANT.get().getId(this.getVariant()).toString());
+        nbt.putString("variant", FowlPlayRegistries.CHICKEN_VARIANT.get().fowlplay$getId(this.getVariant()).toString());
     }
 
     @Override

@@ -3,6 +3,7 @@ package aqario.fowlplay.core.platform.forge;
 import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistryKeys;
+import aqario.fowlplay.core.platform.CommonRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.entity.Entity;
@@ -16,6 +17,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
@@ -25,6 +27,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 
 import java.util.function.Supplier;
@@ -33,23 +36,23 @@ import java.util.function.Supplier;
 public class PlatformHelperImpl {
     public static final Object2ObjectOpenHashMap<Supplier<Item>, RegistryKey<ItemGroup>> ITEM_TO_GROUPS = new Object2ObjectOpenHashMap<>();
     public static final DeferredRegister<ChickenVariant> CHICKEN_VARIANTS = DeferredRegister.create(
-        FowlPlayRegistryKeys.CHICKEN_VARIANT,
+        FowlPlayRegistryKeys.CHICKEN_VARIANT.getValue(),
         FowlPlay.ID
     );
     public static final DeferredRegister<DuckVariant> DUCK_VARIANTS = DeferredRegister.create(
-        FowlPlayRegistryKeys.DUCK_VARIANT,
+        FowlPlayRegistryKeys.DUCK_VARIANT.getValue(),
         FowlPlay.ID
     );
     public static final DeferredRegister<GullVariant> GULL_VARIANTS = DeferredRegister.create(
-        FowlPlayRegistryKeys.GULL_VARIANT,
+        FowlPlayRegistryKeys.GULL_VARIANT.getValue(),
         FowlPlay.ID
     );
     public static final DeferredRegister<PigeonVariant> PIGEON_VARIANTS = DeferredRegister.create(
-        FowlPlayRegistryKeys.PIGEON_VARIANT,
+        FowlPlayRegistryKeys.PIGEON_VARIANT.getValue(),
         FowlPlay.ID
     );
     public static final DeferredRegister<SparrowVariant> SPARROW_VARIANTS = DeferredRegister.create(
-        FowlPlayRegistryKeys.SPARROW_VARIANT,
+        FowlPlayRegistryKeys.SPARROW_VARIANT.getValue(),
         FowlPlay.ID
     );
     public static final DeferredRegister<Activity> ACTIVITIES = DeferredRegister.create(
@@ -141,27 +144,30 @@ public class PlatformHelperImpl {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Supplier<Registry<T>> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
-        RegistryBuilder<T> builder = RegistryBuilder.of(registryKey.getValue());
-        if(!sync) {
-            builder.disableSync();
-        }
+    public static <T> Supplier<CommonRegistry<T>> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
+//        RegistryBuilder<T> builder = RegistryBuilder.of(registryKey.getValue());
+//        if(!sync) {
+//            builder.disableSync();
+//        }
+//        builder.setDefaultKey(Identifier.of(FowlPlay.ID, "default"));
+        System.out.println("making registries");
         if(registryKey.equals(FowlPlayRegistryKeys.CHICKEN_VARIANT)) {
-            return CHICKEN_VARIANTS.makeRegistry(() -> (RegistryBuilder<ChickenVariant>) builder);
+            System.out.println(registryKey.getValue());
+            return (Supplier<CommonRegistry<T>>) (Supplier<?>) CHICKEN_VARIANTS.makeRegistry(RegistryBuilder::new);
         }
         else if(registryKey.equals(FowlPlayRegistryKeys.DUCK_VARIANT)) {
-            return (Supplier<Registry<T>>) DUCK_VARIANTS.makeRegistry(() -> (RegistryBuilder<DuckVariant>) builder);
+            return (Supplier<CommonRegistry<T>>) (Supplier<?>) DUCK_VARIANTS.makeRegistry(RegistryBuilder::new);
         }
         else if(registryKey.equals(FowlPlayRegistryKeys.GULL_VARIANT)) {
-            return (Supplier<Registry<T>>) GULL_VARIANTS.makeRegistry(() -> (RegistryBuilder<GullVariant>) builder);
+            return (Supplier<CommonRegistry<T>>) (Supplier<?>) GULL_VARIANTS.makeRegistry(RegistryBuilder::new);
         }
         else if(registryKey.equals(FowlPlayRegistryKeys.PIGEON_VARIANT)) {
-            return (Supplier<Registry<T>>) PIGEON_VARIANTS.makeRegistry(() -> (RegistryBuilder<PigeonVariant>) builder);
+            return (Supplier<CommonRegistry<T>>) (Supplier<?>) PIGEON_VARIANTS.makeRegistry(RegistryBuilder::new);
         }
         else if(registryKey.equals(FowlPlayRegistryKeys.SPARROW_VARIANT)) {
-            return (Supplier<Registry<T>>) SPARROW_VARIANTS.makeRegistry(() -> (RegistryBuilder<SparrowVariant>) builder);
+            return (Supplier<CommonRegistry<T>>) (Supplier<?>) SPARROW_VARIANTS.makeRegistry(RegistryBuilder::new);
         }
-        return null;
+        return () -> null;
     }
 
     public static <T> void registerTrackedDataHandler(String id, TrackedDataHandler<T> handler) {
@@ -173,5 +179,14 @@ public class PlatformHelperImpl {
     }
 
     public static <T extends ParticleEffect> void registerParticleFactory(Supplier<ParticleType<T>> supplier, ParticleFactory<T> provider) {
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> void writeRegistry(CommonRegistry<T> registry, T value, PacketByteBuf buf) {
+        buf.writeRegistryId((IForgeRegistry<T>) registry, value);
+    }
+
+    public static <T> T readRegistry(CommonRegistry<T> registry, Class<T> clazz, PacketByteBuf buf) {
+        return buf.readRegistryIdSafe(clazz);
     }
 }

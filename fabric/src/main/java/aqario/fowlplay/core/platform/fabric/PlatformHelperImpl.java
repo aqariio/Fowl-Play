@@ -3,6 +3,7 @@ package aqario.fowlplay.core.platform.fabric;
 import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;
+import aqario.fowlplay.core.platform.CommonRegistry;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
@@ -21,6 +22,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.SpawnEggItem;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
@@ -38,23 +40,23 @@ public class PlatformHelperImpl {
     @SuppressWarnings("unchecked")
     public static <T> Supplier<T> registerVariant(String id, Supplier<T> variant) {
         if(variant.get() instanceof ChickenVariant v) {
-            T registry = (T) Registry.register(FowlPlayRegistries.CHICKEN_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
+            T registry = (T) Registry.register((Registry<ChickenVariant>) FowlPlayRegistries.CHICKEN_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
             return () -> registry;
         }
         else if(variant.get() instanceof DuckVariant v) {
-            T registry = (T) Registry.register(FowlPlayRegistries.DUCK_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
+            T registry = (T) Registry.register((Registry<DuckVariant>) FowlPlayRegistries.DUCK_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
             return () -> registry;
         }
         else if(variant.get() instanceof GullVariant v) {
-            T registry = (T) Registry.register(FowlPlayRegistries.GULL_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
+            T registry = (T) Registry.register((Registry<GullVariant>) FowlPlayRegistries.GULL_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
             return () -> registry;
         }
         else if(variant.get() instanceof PigeonVariant v) {
-            T registry = (T) Registry.register(FowlPlayRegistries.PIGEON_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
+            T registry = (T) Registry.register((Registry<PigeonVariant>) FowlPlayRegistries.PIGEON_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
             return () -> registry;
         }
         else if(variant.get() instanceof SparrowVariant v) {
-            T registry = (T) Registry.register(FowlPlayRegistries.SPARROW_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
+            T registry = (T) Registry.register((Registry<SparrowVariant>) FowlPlayRegistries.SPARROW_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
             return () -> registry;
         }
         return null;
@@ -100,13 +102,14 @@ public class PlatformHelperImpl {
         return () -> registry;
     }
 
-    public static <T> Supplier<Registry<T>> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
+    @SuppressWarnings("unchecked")
+    public static <T> Supplier<CommonRegistry<T>> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
         FabricRegistryBuilder<T, SimpleRegistry<T>> builder = FabricRegistryBuilder.createSimple(registryKey);
         if(sync) {
             builder.attribute(RegistryAttribute.SYNCED);
         }
         Registry<T> registry = builder.buildAndRegister();
-        return () -> registry;
+        return () -> (CommonRegistry<T>) registry;
     }
 
     public static <T> void registerTrackedDataHandler(String id, TrackedDataHandler<T> handler) {
@@ -121,5 +124,13 @@ public class PlatformHelperImpl {
 
     public static <T extends ParticleEffect> void registerParticleFactory(Supplier<ParticleType<T>> supplier, ParticleFactory<T> provider) {
         ParticleFactoryRegistry.getInstance().register(supplier.get(), provider);
+    }
+
+    public static <T> void writeRegistry(CommonRegistry<T> registry, T value, PacketByteBuf buf) {
+        buf.writeRegistryValue(registry.fowlplay$getRegistry(), value);
+    }
+
+    public static <T> T readRegistry(CommonRegistry<T> registry, Class<T> clazz, PacketByteBuf buf) {
+        return buf.readRegistryValue(registry.fowlplay$getRegistry());
     }
 }

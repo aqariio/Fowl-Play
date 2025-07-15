@@ -1,5 +1,6 @@
 package aqario.fowlplay.common.util;
 
+import aqario.fowlplay.core.platform.CommonRegistry;
 import aqario.fowlplay.core.platform.PlatformHelper;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -23,7 +24,7 @@ public final class RegistryBuilder<T> {
         return this;
     }
 
-    public Supplier<Registry<T>> buildAndRegister() {
+    public Supplier<CommonRegistry<T>> buildAndRegister() {
         return PlatformHelper.registerRegistry(this.registryKey, this.sync);
     }
 }

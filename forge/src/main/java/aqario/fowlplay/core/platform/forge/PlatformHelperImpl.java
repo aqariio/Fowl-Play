@@ -4,8 +4,13 @@ import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistryKeys;
 import aqario.fowlplay.core.platform.CommonRegistry;
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.particle.ParticleFactory;
+import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.brain.Activity;
@@ -86,22 +91,24 @@ public class PlatformHelperImpl {
         ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS,
         FowlPlay.ID
     );
+    public static final ObjectArrayList<Pair<EntityModelLayer, Supplier<TexturedModelData>>> MODEL_LAYERS = new ObjectArrayList<>();
+    public static final ObjectArrayList<Pair<Supplier<EntityType<?>>, EntityRendererFactory<?>>> ENTITY_RENDERERS = new ObjectArrayList<>();
 
     @SuppressWarnings("unchecked")
     public static <T> Supplier<T> registerVariant(String id, Supplier<T> variant) {
-        if(variant.get() instanceof ChickenVariant) {
+        if (variant.get() instanceof ChickenVariant) {
             return (Supplier<T>) CHICKEN_VARIANTS.register(id, (Supplier<ChickenVariant>) variant);
         }
-        else if(variant.get() instanceof DuckVariant) {
+        else if (variant.get() instanceof DuckVariant) {
             return (Supplier<T>) DUCK_VARIANTS.register(id, (Supplier<DuckVariant>) variant);
         }
-        else if(variant.get() instanceof GullVariant) {
+        else if (variant.get() instanceof GullVariant) {
             return (Supplier<T>) GULL_VARIANTS.register(id, (Supplier<GullVariant>) variant);
         }
-        else if(variant.get() instanceof PigeonVariant) {
+        else if (variant.get() instanceof PigeonVariant) {
             return (Supplier<T>) PIGEON_VARIANTS.register(id, (Supplier<PigeonVariant>) variant);
         }
-        else if(variant.get() instanceof SparrowVariant) {
+        else if (variant.get() instanceof SparrowVariant) {
             return (Supplier<T>) SPARROW_VARIANTS.register(id, (Supplier<SparrowVariant>) variant);
         }
         return null;
@@ -152,6 +159,15 @@ public class PlatformHelperImpl {
 
     public static void addItemToItemGroup(Supplier<Item> item, RegistryKey<ItemGroup> itemGroup) {
         ITEM_TO_GROUPS.put(item, itemGroup);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererFactory<T> provider) {
+        ENTITY_RENDERERS.add(Pair.of((Supplier<EntityType<?>>) (Supplier<?>) type, provider));
+    }
+
+    public static void registerModelLayer(EntityModelLayer location, Supplier<TexturedModelData> definition) {
+        MODEL_LAYERS.add(Pair.of(location, definition));
     }
 
     public static <T extends ParticleEffect> void registerParticleFactory(Supplier<ParticleType<T>> supplier, ParticleFactory<T> provider) {

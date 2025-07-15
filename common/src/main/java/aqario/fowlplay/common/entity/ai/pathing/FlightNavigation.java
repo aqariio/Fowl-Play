@@ -3,7 +3,10 @@ package aqario.fowlplay.common.entity.ai.pathing;
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.pathing.*;
+import net.minecraft.entity.ai.pathing.BirdPathNodeMaker;
+import net.minecraft.entity.ai.pathing.MobNavigation;
+import net.minecraft.entity.ai.pathing.Path;
+import net.minecraft.entity.ai.pathing.PathNodeNavigator;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.util.math.BlockPos;
@@ -57,22 +60,13 @@ public class FlightNavigation extends MobNavigation implements ExtendedNavigator
         if(path == null) {
             return null;
         }
-        // noinspection ConstantConditions
-        PathNode[] debugNodes = path.getDebugNodes();
-        PathNode[] debugSecondNodes = path.getDebugSecondNodes();
-        Set<TargetPathNode> debugTargetNodes = path.debugTargetNodes;
 
-        Path newPath = new Path(path.nodes, path.getTarget(), path.reachesTarget()) {
+        return new Path(path.nodes, path.getTarget(), path.reachesTarget()) {
             @Override
-            public Vec3d getNodePosition(Entity entity, int nodeIndex) {
+            public Vec3d getNodePosition(Entity entity1, int nodeIndex) {
                 return FlightNavigation.this.getEntityPosAtNode(nodeIndex);
             }
         };
-
-        if(debugNodes != null && debugSecondNodes != null && debugTargetNodes != null) {
-            newPath.setDebugInfo(debugNodes, debugSecondNodes, debugTargetNodes);
-        }
-        return newPath;
     }
 
     @Override

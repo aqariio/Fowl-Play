@@ -5,10 +5,15 @@ import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;
 import aqario.fowlplay.core.platform.CommonRegistry;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.particle.ParticleFactory;
+import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.brain.Activity;
@@ -120,6 +125,14 @@ public class PlatformHelperImpl {
         ItemGroupEvents.modifyEntriesEvent(itemGroup).register(entries ->
             entries.add(item)
         );
+    }
+
+    public static <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererFactory<T> provider) {
+        EntityRendererRegistry.register(type.get(), provider);
+    }
+
+    public static void registerModelLayer(EntityModelLayer location, Supplier<TexturedModelData> definition) {
+        EntityModelLayerRegistry.registerModelLayer(location, definition::get);
     }
 
     public static <T extends ParticleEffect> void registerParticleFactory(Supplier<ParticleType<T>> supplier, ParticleFactory<T> provider) {

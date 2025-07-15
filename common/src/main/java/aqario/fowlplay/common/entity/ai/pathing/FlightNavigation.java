@@ -136,6 +136,7 @@ public class FlightNavigation extends MobNavigation implements ExtendedNavigator
 
             DebugInfoSender.sendPathfindingData(this.world, this.getMob(), this.getCurrentPath(), 0.1f);
             if(!this.isIdle()) {
+                // noinspection ConstantConditions
                 Vec3d vec3d = this.currentPath.getNodePosition(this.entity);
                 this.entity.getMoveControl().moveTo(vec3d.x, vec3d.y, vec3d.z, this.speed);
             }

@@ -5,6 +5,7 @@ import aqario.fowlplay.common.entity.ai.control.BirdLookControl;
 import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
+import aqario.fowlplay.core.platform.CustomSpawnGroup;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.control.BodyControl;
@@ -55,7 +56,7 @@ public abstract class BirdEntity extends AnimalEntity {
         this.setYaw(world.getRandom().nextFloat() * 360.0F);
         this.setBodyYaw(this.getYaw());
         this.setHeadYaw(this.getYaw());
-        if(this.getType().getSpawnGroup() == CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup) {
+        if(this.getType().getSpawnGroup() == CustomSpawnGroup.ambientBirds()) {
             this.setAmbient(true);
         }
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
@@ -74,7 +75,7 @@ public abstract class BirdEntity extends AnimalEntity {
             this.setAmbient(nbt.getBoolean("ambient"));
         }
         else {
-            this.setAmbient(this.getType().getSpawnGroup() == CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup);
+            this.setAmbient(this.getType().getSpawnGroup() == CustomSpawnGroup.ambientBirds());
         }
     }
 

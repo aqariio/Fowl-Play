@@ -1,43 +1,70 @@
 package aqario.fowlplay.mixin.fabric;
 
-import aqario.fowlplay.common.world.gen.CustomSpawnLocation;
+import aqario.fowlplay.core.platform.CustomSpawnLocation;
+import aqario.fowlplay.core.platform.fabric.CustomSpawnLocationImpl;
 import net.minecraft.entity.SpawnRestriction;
-import org.spongepowered.asm.mixin.*;
+import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 // this is probably a bad idea
 @Mixin(SpawnRestriction.Location.class)
+@SuppressWarnings({"ShadowTarget", "InvokerTarget"})
 public class SpawnRestrictionLocationMixin {
-    @SuppressWarnings("unused")
-    SpawnRestrictionLocationMixin(String enumname, int ordinal) {
-        throw new AssertionError();
-    }
-
     // Vanilla Spawn Location array
     @Shadow
     @Mutable
     @Final
     private static SpawnRestriction.Location[] field_6319;
 
-    @Unique
-    private static SpawnRestriction.Location fowlplay$createLocation(String enumname, int ordinal) {
-        return ((SpawnRestriction.Location) (Object) new SpawnRestrictionLocationMixin(enumname, ordinal));
+    @Invoker("<init>")
+    public static SpawnRestriction.Location newLocation(String enumname, int ordinal) {
+        throw new AssertionError();
     }
 
-    @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/SpawnRestriction$Location;field_6319:[Lnet/minecraft/entity/SpawnRestriction$Location;", shift = At.Shift.AFTER))
+    @Inject(
+        method = "<clinit>",
+        at = @At(
+            value = "FIELD",
+            opcode = Opcodes.PUTSTATIC,
+            target = "Lnet/minecraft/entity/SpawnRestriction$Location;field_6319:[Lnet/minecraft/entity/SpawnRestriction$Location;",
+            shift = At.Shift.AFTER
+        )
+    )
     private static void fowlplay$addCustomLocations(CallbackInfo ci) {
-        int vanillaSpawnLocationsLength = field_6319.length;
-        CustomSpawnLocation[] locations = CustomSpawnLocation.values();
-        field_6319 = Arrays.copyOf(field_6319, vanillaSpawnLocationsLength + locations.length);
+        ArrayList<SpawnRestriction.Location> locations = new ArrayList<>(Arrays.asList(field_6319));
+        int vanillaLength = locations.get(locations.size() - 1).ordinal();
 
-        for(int i = 0; i < locations.length; i++) {
-            int pos = vanillaSpawnLocationsLength + i;
-            CustomSpawnLocation location = locations[i];
-            location.location = field_6319[pos] = fowlplay$createLocation(location.name(), pos);
-        }
+        SpawnRestriction.Location ground = newLocation(
+            CustomSpawnLocation.GROUND_INTERNAL_NAME,
+            vanillaLength + 1
+        );
+        CustomSpawnLocationImpl.GROUND = ground;
+        locations.add(ground);
+
+        SpawnRestriction.Location semiaquatic = newLocation(
+            CustomSpawnLocation.SEMIAQUATIC_INTERNAL_NAME,
+            vanillaLength + 2
+        );
+        CustomSpawnLocationImpl.SEMIAQUATIC = semiaquatic;
+        locations.add(semiaquatic);
+
+        SpawnRestriction.Location aquatic = newLocation(
+            CustomSpawnLocation.AQUATIC_INTERNAL_NAME,
+            vanillaLength + 3
+        );
+        CustomSpawnLocationImpl.AQUATIC = aquatic;
+        locations.add(aquatic);
+
+        field_6319 = locations.toArray(new SpawnRestriction.Location[0]);
     }
 }

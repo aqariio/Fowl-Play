@@ -150,9 +150,7 @@ public class PlatformHelperImpl {
 //            builder.disableSync();
 //        }
 //        builder.setDefaultKey(Identifier.of(FowlPlay.ID, "default"));
-        System.out.println("making registries");
         if(registryKey.equals(FowlPlayRegistryKeys.CHICKEN_VARIANT)) {
-            System.out.println(registryKey.getValue());
             return (Supplier<CommonRegistry<T>>) (Supplier<?>) CHICKEN_VARIANTS.makeRegistry(RegistryBuilder::new);
         }
         else if(registryKey.equals(FowlPlayRegistryKeys.DUCK_VARIANT)) {

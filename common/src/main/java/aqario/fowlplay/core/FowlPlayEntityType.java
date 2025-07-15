@@ -3,7 +3,8 @@ package aqario.fowlplay.core;
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.common.util.EntityTypeBuilder;
-import aqario.fowlplay.common.world.gen.CustomSpawnLocation;
+import aqario.fowlplay.core.platform.CustomSpawnGroup;
+import aqario.fowlplay.core.platform.CustomSpawnLocation;
 import aqario.fowlplay.core.platform.PlatformHelper;
 import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
 import dev.architectury.registry.level.biome.BiomeModifications;
@@ -21,11 +22,11 @@ public final class FowlPlayEntityType {
     public static final Supplier<EntityType<BlueJayEntity>> BLUE_JAY = register("blue_jay",
         EntityTypeBuilder.create(
                 BlueJayEntity::new,
-                CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup
+                CustomSpawnGroup.ambientBirds()
             )
             .attributes(BlueJayEntity::createFlyingBirdAttributes)
             .spawnRestriction(
-                CustomSpawnLocation.GROUND.location,
+                CustomSpawnLocation.ground(),
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
@@ -35,11 +36,11 @@ public final class FowlPlayEntityType {
     public static final Supplier<EntityType<CardinalEntity>> CARDINAL = register("cardinal",
         EntityTypeBuilder.create(
                 CardinalEntity::new,
-                CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup
+                CustomSpawnGroup.ambientBirds()
             )
             .attributes(CardinalEntity::createFlyingBirdAttributes)
             .spawnRestriction(
-                CustomSpawnLocation.GROUND.location,
+                CustomSpawnLocation.ground(),
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
@@ -49,11 +50,11 @@ public final class FowlPlayEntityType {
     public static final Supplier<EntityType<ChickadeeEntity>> CHICKADEE = register("chickadee",
         EntityTypeBuilder.create(
                 ChickadeeEntity::new,
-                CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup
+                CustomSpawnGroup.ambientBirds()
             )
             .attributes(ChickadeeEntity::createFlyingBirdAttributes)
             .spawnRestriction(
-                CustomSpawnLocation.GROUND.location,
+                CustomSpawnLocation.ground(),
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
@@ -63,11 +64,11 @@ public final class FowlPlayEntityType {
     public static final Supplier<EntityType<CrowEntity>> CROW = register("crow",
         EntityTypeBuilder.create(
                 CrowEntity::new,
-                CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup
+                CustomSpawnGroup.ambientBirds()
             )
             .attributes(CrowEntity::createCrowAttributes)
             .spawnRestriction(
-                CustomSpawnLocation.GROUND.location,
+                CustomSpawnLocation.ground(),
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
@@ -77,11 +78,11 @@ public final class FowlPlayEntityType {
     public static final Supplier<EntityType<DuckEntity>> DUCK = register("duck",
         EntityTypeBuilder.create(
                 DuckEntity::new,
-                CustomSpawnGroup.BIRDS.spawnGroup
+                CustomSpawnGroup.birds()
             )
             .attributes(DuckEntity::createDuckAttributes)
             .spawnRestriction(
-                CustomSpawnLocation.AQUATIC.location,
+                CustomSpawnLocation.aquatic(),
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 FlyingBirdEntity::canSpawnWaterfowl
             )
@@ -91,11 +92,11 @@ public final class FowlPlayEntityType {
     public static final Supplier<EntityType<GullEntity>> GULL = register("gull",
         EntityTypeBuilder.create(
                 GullEntity::new,
-                CustomSpawnGroup.BIRDS.spawnGroup
+                CustomSpawnGroup.birds()
             )
             .attributes(GullEntity::createGullAttributes)
             .spawnRestriction(
-                CustomSpawnLocation.SEMIAQUATIC.location,
+                CustomSpawnLocation.semiaquatic(),
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 FlyingBirdEntity::canSpawnShorebirds
             )
@@ -105,11 +106,11 @@ public final class FowlPlayEntityType {
     public static final Supplier<EntityType<HawkEntity>> HAWK = register("hawk",
         EntityTypeBuilder.create(
                 HawkEntity::new,
-                CustomSpawnGroup.BIRDS.spawnGroup
+                CustomSpawnGroup.birds()
             )
             .attributes(HawkEntity::createHawkAttributes)
             .spawnRestriction(
-                CustomSpawnLocation.GROUND.location,
+                CustomSpawnLocation.ground(),
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
@@ -123,7 +124,7 @@ public final class FowlPlayEntityType {
             )
             .attributes(PenguinEntity::createPenguinAttributes)
             .spawnRestriction(
-                CustomSpawnLocation.SEMIAQUATIC.location,
+                CustomSpawnLocation.semiaquatic(),
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 PenguinEntity::canSpawnPenguins
             )
@@ -133,11 +134,11 @@ public final class FowlPlayEntityType {
     public static final Supplier<EntityType<PigeonEntity>> PIGEON = register("pigeon",
         EntityTypeBuilder.create(
                 PigeonEntity::new,
-                CustomSpawnGroup.BIRDS.spawnGroup
+                CustomSpawnGroup.birds()
             )
             .attributes(PigeonEntity::createPigeonAttributes)
             .spawnRestriction(
-                CustomSpawnLocation.GROUND.location,
+                CustomSpawnLocation.ground(),
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnShorebirds
             )
@@ -147,11 +148,11 @@ public final class FowlPlayEntityType {
     public static final Supplier<EntityType<RavenEntity>> RAVEN = register("raven",
         EntityTypeBuilder.create(
                 RavenEntity::new,
-                CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup
+                CustomSpawnGroup.ambientBirds()
             )
             .attributes(RavenEntity::createRavenAttributes)
             .spawnRestriction(
-                CustomSpawnLocation.GROUND.location,
+                CustomSpawnLocation.ground(),
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
@@ -161,11 +162,11 @@ public final class FowlPlayEntityType {
     public static final Supplier<EntityType<RobinEntity>> ROBIN = register("robin",
         EntityTypeBuilder.create(
                 RobinEntity::new,
-                CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup
+                CustomSpawnGroup.ambientBirds()
             )
             .attributes(RobinEntity::createFlyingBirdAttributes)
             .spawnRestriction(
-                CustomSpawnLocation.GROUND.location,
+                CustomSpawnLocation.ground(),
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
@@ -175,11 +176,11 @@ public final class FowlPlayEntityType {
     public static final Supplier<EntityType<SparrowEntity>> SPARROW = register("sparrow",
         EntityTypeBuilder.create(
                 SparrowEntity::new,
-                CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup
+                CustomSpawnGroup.ambientBirds()
             )
             .attributes(SparrowEntity::createFlyingBirdAttributes)
             .spawnRestriction(
-                CustomSpawnLocation.GROUND.location,
+                CustomSpawnLocation.ground(),
                 Heightmap.Type.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
@@ -194,7 +195,7 @@ public final class FowlPlayEntityType {
         // Spawn Weights
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_BLUE_JAYS,
-            CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup,
+            CustomSpawnGroup.ambientBirds(),
             FowlPlayEntityType.BLUE_JAY,
             FowlPlayConfig.getInstance().blueJaySpawnWeight,
             FowlPlayConfig.getInstance().blueJayMinGroupSize,
@@ -202,7 +203,7 @@ public final class FowlPlayEntityType {
         );
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_CARDINALS,
-            CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup,
+            CustomSpawnGroup.ambientBirds(),
             FowlPlayEntityType.CARDINAL,
             FowlPlayConfig.getInstance().cardinalSpawnWeight,
             FowlPlayConfig.getInstance().cardinalMinGroupSize,
@@ -210,7 +211,7 @@ public final class FowlPlayEntityType {
         );
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_CHICKADEES,
-            CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup,
+            CustomSpawnGroup.ambientBirds(),
             FowlPlayEntityType.CHICKADEE,
             FowlPlayConfig.getInstance().chickadeeSpawnWeight,
             FowlPlayConfig.getInstance().chickadeeMinGroupSize,
@@ -218,7 +219,7 @@ public final class FowlPlayEntityType {
         );
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_CROWS,
-            CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup,
+            CustomSpawnGroup.ambientBirds(),
             FowlPlayEntityType.CROW,
             FowlPlayConfig.getInstance().crowSpawnWeight,
             FowlPlayConfig.getInstance().crowMinGroupSize,
@@ -226,7 +227,7 @@ public final class FowlPlayEntityType {
         );
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_DUCKS,
-            CustomSpawnGroup.BIRDS.spawnGroup,
+            CustomSpawnGroup.birds(),
             FowlPlayEntityType.DUCK,
             FowlPlayConfig.getInstance().duckSpawnWeight,
             FowlPlayConfig.getInstance().duckMinGroupSize,
@@ -234,7 +235,7 @@ public final class FowlPlayEntityType {
         );
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_GULLS,
-            CustomSpawnGroup.BIRDS.spawnGroup,
+            CustomSpawnGroup.birds(),
             FowlPlayEntityType.GULL,
             FowlPlayConfig.getInstance().gullSpawnWeight,
             FowlPlayConfig.getInstance().gullMinGroupSize,
@@ -258,7 +259,7 @@ public final class FowlPlayEntityType {
         );
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_PIGEONS,
-            CustomSpawnGroup.BIRDS.spawnGroup,
+            CustomSpawnGroup.birds(),
             FowlPlayEntityType.PIGEON,
             FowlPlayConfig.getInstance().pigeonSpawnWeight,
             FowlPlayConfig.getInstance().pigeonMinGroupSize,
@@ -266,7 +267,7 @@ public final class FowlPlayEntityType {
         );
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_RAVENS,
-            CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup,
+            CustomSpawnGroup.ambientBirds(),
             FowlPlayEntityType.RAVEN,
             FowlPlayConfig.getInstance().ravenSpawnWeight,
             FowlPlayConfig.getInstance().ravenMinGroupSize,
@@ -274,7 +275,7 @@ public final class FowlPlayEntityType {
         );
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_ROBINS,
-            CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup,
+            CustomSpawnGroup.ambientBirds(),
             FowlPlayEntityType.ROBIN,
             FowlPlayConfig.getInstance().robinSpawnWeight,
             FowlPlayConfig.getInstance().robinMinGroupSize,
@@ -282,7 +283,7 @@ public final class FowlPlayEntityType {
         );
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_SPARROWS,
-            CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup,
+            CustomSpawnGroup.ambientBirds(),
             FowlPlayEntityType.SPARROW,
             FowlPlayConfig.getInstance().sparrowSpawnWeight,
             FowlPlayConfig.getInstance().sparrowMinGroupSize,

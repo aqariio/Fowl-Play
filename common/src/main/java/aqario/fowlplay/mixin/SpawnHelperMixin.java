@@ -1,7 +1,7 @@
 package aqario.fowlplay.mixin;
 
-import aqario.fowlplay.common.entity.CustomSpawnGroup;
-import aqario.fowlplay.common.world.gen.CustomSpawnLocation;
+import aqario.fowlplay.core.platform.CustomSpawnGroup;
+import aqario.fowlplay.core.platform.CustomSpawnLocation;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -59,20 +59,20 @@ public class SpawnHelperMixin {
         if(entityType == null || !world.getWorldBorder().contains(pos)) {
             return;
         }
-        if(location == CustomSpawnLocation.GROUND.location) {
+        if(location == CustomSpawnLocation.ground()) {
             cir.setReturnValue(fowlplay$spawnsOnGround(world, pos, entityType));
         }
-        else if(location == CustomSpawnLocation.SEMIAQUATIC.location) {
+        else if(location == CustomSpawnLocation.semiaquatic()) {
             cir.setReturnValue(fowlplay$spawnsOnWater(world, pos, entityType) || fowlplay$spawnsOnGround(world, pos, entityType));
         }
-        else if(location == CustomSpawnLocation.AQUATIC.location) {
+        else if(location == CustomSpawnLocation.aquatic()) {
             cir.setReturnValue(fowlplay$spawnsOnWater(world, pos, entityType));
         }
     }
 
     @Inject(method = "spawnEntitiesInChunk(Lnet/minecraft/entity/SpawnGroup;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/chunk/WorldChunk;Lnet/minecraft/world/SpawnHelper$Checker;Lnet/minecraft/world/SpawnHelper$Runner;)V", at = @At("HEAD"), cancellable = true)
     private static void fowlplay$spawnEntitiesInChunk(SpawnGroup group, ServerWorld world, WorldChunk chunk, SpawnHelper.Checker checker, SpawnHelper.Runner runner, CallbackInfo ci) {
-        if(group == CustomSpawnGroup.BIRDS.spawnGroup && world.getLevelProperties().getTime() % 20L != 0L) {
+        if(group == CustomSpawnGroup.birds() && world.getLevelProperties().getTime() % 20L != 0L) {
             ci.cancel();
         }
     }

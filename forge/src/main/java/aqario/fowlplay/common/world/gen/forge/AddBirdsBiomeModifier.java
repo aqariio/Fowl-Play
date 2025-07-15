@@ -1,9 +1,9 @@
 package aqario.fowlplay.common.world.gen.forge;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.CustomSpawnGroup;
 import aqario.fowlplay.core.FowlPlayEntityType;
 import aqario.fowlplay.core.forge.FowlPlayBiomeModifiers;
+import aqario.fowlplay.core.platform.CustomSpawnGroup;
 import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
 import com.mojang.serialization.Codec;
 import net.minecraft.entity.EntityType;
@@ -26,7 +26,7 @@ public class AddBirdsBiomeModifier implements BiomeModifier {
             builder,
             biome,
             FowlPlayBiomeTags.SPAWNS_BLUE_JAYS,
-            CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup,
+            CustomSpawnGroup.ambientBirds(),
             FowlPlayEntityType.BLUE_JAY.get(),
             FowlPlayConfig.getInstance().blueJaySpawnWeight,
             FowlPlayConfig.getInstance().blueJayMinGroupSize,
@@ -36,7 +36,7 @@ public class AddBirdsBiomeModifier implements BiomeModifier {
             builder,
             biome,
             FowlPlayBiomeTags.SPAWNS_CARDINALS,
-            CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup,
+            CustomSpawnGroup.ambientBirds(),
             FowlPlayEntityType.CARDINAL.get(),
             FowlPlayConfig.getInstance().cardinalSpawnWeight,
             FowlPlayConfig.getInstance().cardinalMinGroupSize,
@@ -46,7 +46,7 @@ public class AddBirdsBiomeModifier implements BiomeModifier {
             builder,
             biome,
             FowlPlayBiomeTags.SPAWNS_CHICKADEES,
-            CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup,
+            CustomSpawnGroup.ambientBirds(),
             FowlPlayEntityType.CHICKADEE.get(),
             FowlPlayConfig.getInstance().chickadeeSpawnWeight,
             FowlPlayConfig.getInstance().chickadeeMinGroupSize,
@@ -56,7 +56,7 @@ public class AddBirdsBiomeModifier implements BiomeModifier {
             builder,
             biome,
             FowlPlayBiomeTags.SPAWNS_CROWS,
-            CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup,
+            CustomSpawnGroup.ambientBirds(),
             FowlPlayEntityType.CROW.get(),
             FowlPlayConfig.getInstance().crowSpawnWeight,
             FowlPlayConfig.getInstance().crowMinGroupSize,
@@ -66,7 +66,7 @@ public class AddBirdsBiomeModifier implements BiomeModifier {
             builder,
             biome,
             FowlPlayBiomeTags.SPAWNS_DUCKS,
-            CustomSpawnGroup.BIRDS.spawnGroup,
+            CustomSpawnGroup.birds(),
             FowlPlayEntityType.DUCK.get(),
             FowlPlayConfig.getInstance().duckSpawnWeight,
             FowlPlayConfig.getInstance().duckMinGroupSize,
@@ -76,7 +76,7 @@ public class AddBirdsBiomeModifier implements BiomeModifier {
             builder,
             biome,
             FowlPlayBiomeTags.SPAWNS_GULLS,
-            CustomSpawnGroup.BIRDS.spawnGroup,
+            CustomSpawnGroup.birds(),
             FowlPlayEntityType.GULL.get(),
             FowlPlayConfig.getInstance().gullSpawnWeight,
             FowlPlayConfig.getInstance().gullMinGroupSize,
@@ -106,7 +106,7 @@ public class AddBirdsBiomeModifier implements BiomeModifier {
             builder,
             biome,
             FowlPlayBiomeTags.SPAWNS_PIGEONS,
-            CustomSpawnGroup.BIRDS.spawnGroup,
+            CustomSpawnGroup.birds(),
             FowlPlayEntityType.PIGEON.get(),
             FowlPlayConfig.getInstance().pigeonSpawnWeight,
             FowlPlayConfig.getInstance().pigeonMinGroupSize,
@@ -116,7 +116,7 @@ public class AddBirdsBiomeModifier implements BiomeModifier {
             builder,
             biome,
             FowlPlayBiomeTags.SPAWNS_RAVENS,
-            CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup,
+            CustomSpawnGroup.ambientBirds(),
             FowlPlayEntityType.RAVEN.get(),
             FowlPlayConfig.getInstance().ravenSpawnWeight,
             FowlPlayConfig.getInstance().ravenMinGroupSize,
@@ -126,7 +126,7 @@ public class AddBirdsBiomeModifier implements BiomeModifier {
             builder,
             biome,
             FowlPlayBiomeTags.SPAWNS_ROBINS,
-            CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup,
+            CustomSpawnGroup.ambientBirds(),
             FowlPlayEntityType.ROBIN.get(),
             FowlPlayConfig.getInstance().robinSpawnWeight,
             FowlPlayConfig.getInstance().robinMinGroupSize,
@@ -136,7 +136,7 @@ public class AddBirdsBiomeModifier implements BiomeModifier {
             builder,
             biome,
             FowlPlayBiomeTags.SPAWNS_SPARROWS,
-            CustomSpawnGroup.AMBIENT_BIRDS.spawnGroup,
+            CustomSpawnGroup.ambientBirds(),
             FowlPlayEntityType.SPARROW.get(),
             FowlPlayConfig.getInstance().sparrowSpawnWeight,
             FowlPlayConfig.getInstance().sparrowMinGroupSize,

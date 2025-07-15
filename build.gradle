@@ -75,13 +75,13 @@ subprojects {
 
     processResources {
         Map<String, Object> properties = [
-            "version"             : project.version,
-            fabric_loader_version : rootProject.fabric_loader_version,
-            fabric_api_version    : rootProject.fabric_api_version,
-            "forge_version"       : rootProject.forge_version,
-            "architectury_version": rootProject.architectury_version,
-            "sbl_version"         : rootProject.sbl_version,
-            "yacl_version"        : rootProject.yacl_version
+            "version"              : project.version,
+            "fabric_loader_version": rootProject.fabric_loader_version,
+            "fabric_api_version"   : rootProject.fabric_api_version,
+            "forge_version"        : rootProject.forge_version,
+            "architectury_version" : rootProject.architectury_version,
+            "sbl_version"          : rootProject.sbl_version,
+            "yacl_version"         : rootProject.yacl_version
         ]
 
         properties.each { key, value ->

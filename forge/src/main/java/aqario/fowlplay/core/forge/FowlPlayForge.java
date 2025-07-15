@@ -29,8 +29,6 @@ public final class FowlPlayForge {
     @SuppressWarnings("removal")
     public FowlPlayForge() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
-        System.out.println("Fowl Play Forge is initializing...");
-
 
         if(FMLEnvironment.dist == Dist.CLIENT) {
             FowlPlayForgeClient.init(modBus);
@@ -53,6 +51,8 @@ public final class FowlPlayForge {
         PlatformHelperImpl.SENSOR_TYPES.register(modBus);
         PlatformHelperImpl.SOUND_EVENTS.register(modBus);
         PlatformHelperImpl.TRACKED_DATA_HANDLERS.register(modBus);
+        FowlPlayBiomeModifiers.BIOME_MODIFIER_SERIALIZERS.register(modBus);
+
         ModLoadingContext.get().getContainer().registerExtensionPoint(
             ConfigScreenHandler.ConfigScreenFactory.class,
             () -> new ConfigScreenHandler.ConfigScreenFactory(

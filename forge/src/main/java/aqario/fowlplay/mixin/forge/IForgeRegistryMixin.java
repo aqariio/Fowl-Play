@@ -1,8 +1,6 @@
 package aqario.fowlplay.mixin.forge;
 
 import aqario.fowlplay.core.platform.CommonRegistry;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.random.Random;
@@ -19,9 +17,6 @@ import java.util.Optional;
 @Mixin(IForgeRegistry.class)
 public interface IForgeRegistryMixin<V> extends CommonRegistry<V> {
     @Shadow
-    RegistryKey<Registry<V>> getRegistryKey();
-
-    @Shadow
     @NotNull
     Collection<V> getValues();
 
@@ -32,11 +27,6 @@ public interface IForgeRegistryMixin<V> extends CommonRegistry<V> {
     @Shadow
     @Nullable
     Identifier getKey(V value);
-
-    @Override
-    default RegistryKey<? extends Registry<V>> fowlplay$getKey() {
-        return this.getRegistryKey();
-    }
 
     @Override
     default V fowlplay$get(Identifier id) {

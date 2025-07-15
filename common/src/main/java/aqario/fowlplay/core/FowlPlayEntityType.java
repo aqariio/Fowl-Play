@@ -305,7 +305,6 @@ public final class FowlPlayEntityType {
     }
 
     // TODO: use biome property based spawning to more accurately reflect real life habitats
-    // doesn't work on neoforge apparently
     public static <T extends Entity> void addSpawn(TagKey<Biome> tag, SpawnGroup spawnGroup, Supplier<EntityType<T>> type, int weight, int minGroupSize, int maxGroupSize) {
         BiomeModifications.addProperties(
             context -> context.hasTag(tag),

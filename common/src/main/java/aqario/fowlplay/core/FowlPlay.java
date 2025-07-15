@@ -19,7 +19,6 @@ public class FowlPlay {
     public static void earlyInit() {
         Mod mod = Platform.getMod(ID);
         LOGGER.info("Loading {} {}", mod.getName(), mod.getVersion());
-        System.out.println("early init");
         FowlPlayConfig.load();
 
         FowlPlayRegistryKeys.init();
@@ -27,7 +26,6 @@ public class FowlPlay {
     }
 
     public static void init() {
-        System.out.println("common init");
         ChickenVariant.init();
         DuckVariant.init();
         GullVariant.init();

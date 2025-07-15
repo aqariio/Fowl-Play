@@ -126,11 +126,13 @@ public class PlatformHelperImpl {
         ParticleFactoryRegistry.getInstance().register(supplier.get(), provider);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> void writeRegistry(CommonRegistry<T> registry, T value, PacketByteBuf buf) {
-        buf.writeRegistryValue(registry.fowlplay$getRegistry(), value);
+        buf.writeRegistryValue((Registry<T>) registry, value);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T readRegistry(CommonRegistry<T> registry, Class<T> clazz, PacketByteBuf buf) {
-        return buf.readRegistryValue(registry.fowlplay$getRegistry());
+        return buf.readRegistryValue((Registry<T>) registry);
     }
 }

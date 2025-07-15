@@ -30,6 +30,13 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.fowlplay]]
+modId = "architectury"
+mandatory = true
+versionRange = "[${architectury_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.fowlplay]]
 modId = "smartbrainlib"
 mandatory = true
 versionRange = "[${sbl_version},)"

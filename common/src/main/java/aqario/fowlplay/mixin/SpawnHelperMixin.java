@@ -90,7 +90,7 @@ public class SpawnHelperMixin {
         )
     )
     private static int fowlplay$midairSpawning(BlockPos pos, SpawnGroup group, ServerWorld world) {
-        if((group == CustomSpawnGroup.birds() || group == CustomSpawnGroup.ambientBirds()) && world.getRandom().nextFloat() < 0.01F) {
+        if((group == CustomSpawnGroup.birds() || group == CustomSpawnGroup.ambientBirds()) && world.getRandom().nextFloat() < 0.01F && world.getLevelProperties().getTime() % 100L != 0L) {
             return pos.getY() + world.getRandom().nextBetween(32, 64);
         }
         return pos.getY();

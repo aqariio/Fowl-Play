@@ -21,7 +21,7 @@ subprojects {
     apply plugin: 'maven-publish'
 
     base {
-        archivesName = rootProject.archives_name
+        archivesName = rootProject.mod_id
     }
 
     repositories {

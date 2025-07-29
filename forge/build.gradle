@@ -13,15 +13,15 @@ loom {
     forge {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
-        mixinConfig "${project.archives_name}.common.mixins.json"
-        mixinConfig "${project.archives_name}.forge.mixins.json"
+        mixinConfig "${project.mod_id}.common.mixins.json"
+        mixinConfig "${project.mod_id}.forge.mixins.json"
 
         runs {
             all {}
 
             data {
                 data()
-                programArgs("--all", "--mod", "${project.archives_name}")
+                programArgs("--all", "--mod", "${project.mod_id}")
                 programArgs("--existing", project(":common").file("src/main/resources").absolutePath)
                 programArgs("--output", project(":common").file("src/main/generated/resources").absolutePath)
                 all {}
@@ -108,19 +108,5 @@ def generatedResources = file("src/generated")
 sourceSets {
     main {
         resources.srcDir generatedResources
-    }
-}
-
-loom {
-    forge {
-        mixinConfig "fowlplay.common.mixins.json"
-        mixinConfig "fowlplay.forge.mixins.json"
-    }
-    runs {
-        data {
-            data()
-            programArgs "--all", "--mod", "${project.archives_name}"
-            programArgs "--output", generatedResources.absolutePath
-        }
     }
 }

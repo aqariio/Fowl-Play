@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
+import net.minecraft.entity.ai.brain.Schedule;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.data.TrackedDataHandler;
@@ -62,6 +63,11 @@ public class PlatformHelper {
     }
 
     @ExpectPlatform
+    public static Supplier<Schedule> registerSchedule(String id, Supplier<Schedule> schedule) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
     public static <T extends Sensor<?>> Supplier<SensorType<T>> registerSensorType(String id, Supplier<SensorType<T>> sensorType) {
         throw new AssertionError();
     }
@@ -82,7 +88,7 @@ public class PlatformHelper {
     }
 
     @ExpectPlatform
-    public static void addItemToItemGroup(Item item, RegistryKey<ItemGroup> itemGroup) {
+    public static void addItemToItemGroup(Supplier<Item> item, RegistryKey<ItemGroup> itemGroup) {
         throw new AssertionError();
     }
 

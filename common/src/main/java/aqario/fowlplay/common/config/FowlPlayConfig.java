@@ -181,7 +181,7 @@ public class FowlPlayConfig {
     // Raven
 
     @SerialEntry
-    public int ravenSpawnWeight = 1;
+    public int ravenSpawnWeight = 2;
     @SerialEntry
     public int ravenMinGroupSize = 1;
     @SerialEntry

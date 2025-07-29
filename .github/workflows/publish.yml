@@ -1,0 +1,100 @@
+name: "Publish - 1.21.1"
+
+on:
+    workflow_dispatch:
+        inputs:
+            mod_loaders:
+                description: 'Mod loaders'
+                required: true
+                default: "['fabric', 'neoforge']"
+                type: string
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        name: Run build
+        timeout-minutes: 30
+        steps:
+            -   name: "Checkout repository"
+                uses: actions/checkout@v4
+                with:
+                    fetch-depth: 0
+
+            -   name: "Setup Java"
+                uses: actions/setup-java@v4
+                with:
+                    java-version: 21
+                    distribution: temurin
+
+            -   name: "Setup gradle"
+                uses: gradle/actions/setup-gradle@v4
+                with:
+                    cache-read-only: false
+                    gradle-version: wrapper
+
+            -   name: "Run build"
+                run: ./gradlew build
+
+    publish:
+        runs-on: ubuntu-latest
+        needs: build
+        name: Publish ${{ matrix.mod_loader }} 1.21.1
+        timeout-minutes: 60
+        permissions:
+            contents: write
+        strategy:
+            max-parallel: 2
+            fail-fast: false
+            matrix:
+                mod_loader: [ fabric, neoforge ]
+
+        steps:
+            -   name: "Checkout repository"
+                uses: actions/checkout@v4
+                with:
+                    fetch-depth: 0
+
+            -   name: "Setup Java"
+                uses: actions/setup-java@v4
+                with:
+                    java-version: 21
+                    distribution: temurin
+
+            -   name: "Setup gradle"
+                uses: gradle/actions/setup-gradle@v4
+                with:
+                    cache-read-only: true
+                    gradle-version: wrapper
+
+            -   name: "Run build"
+                run: ./gradlew ${{ matrix.mod_loader }}:build
+
+            -   name: Publish ${{ matrix.mod_loader }}
+                uses: Kir-Antipov/mc-publish@v3.3.0
+                with:
+                    curseforge-id: ${{ matrix.curseforge_project_id }}
+                    curseforge-token: ${{ secrets.CURSEFORGE_RELEASE_TOKEN }}
+
+                    modrinth-featured: true
+                    modrinth-id: ${{ matrix.modrinth_project_id }}
+                    modrinth-token: ${{ secrets.MODRINTH_RELEASE_TOKEN }}
+
+                    name: Fowl Play ${{ steps.gradle-properties.outputs.MOD_VERSION }}
+                    version: ${{ steps.gradle-properties.outputs.MOD_VERSION }}+${{ steps.gradle-properties.outputs.MINECRAFT_VERSION }}-${{ matrix.mod_loader }}
+                    loaders: ${{ join(matrix.supported_mod_loaders, ' ') }}
+                    game-versions: |
+                        ${{ steps.gradle-properties.outputs.MINECRAFT_VERSION }}
+                    changelog-file: CHANGELOG.md
+                    files: |
+                        ${{ matrix.mod_loader }}/versions/${{ matrix.version }}/build/libs/!(*-@(dev|dev-shadow|sources|javadoc)).jar
+    clear-cache:
+        needs: publish
+        runs-on: ubuntu-latest
+        name: "Clear cache"
+        timeout-minutes: 60
+        steps:
+            -   uses: MyAlbum/purge-cache@v2
+                with:
+                    accessed: true
+                    created: true
+                    max-age: 21600

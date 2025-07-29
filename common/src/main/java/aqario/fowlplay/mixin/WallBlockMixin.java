@@ -21,18 +21,22 @@ import java.util.Map;
 
 @Mixin(WallBlock.class)
 public class WallBlockMixin {
-    @Shadow @Final private Map<BlockState, VoxelShape> collisionShapeMap;
+    @Shadow
+    @Final
+    private Map<BlockState, VoxelShape> collisionShapeMap;
 
-    @Shadow @Final private Map<BlockState, VoxelShape> shapeMap;
+    @Shadow
+    @Final
+    private Map<BlockState, VoxelShape> shapeMap;
 
     @Inject(method = "getCollisionShape", at = @At(value = "RETURN"), cancellable = true)
-    private void fowlplay$lowerFenceGateHeight(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
-        if (context instanceof EntityShapeContext entityContext
+    private void fowlplay$lowerWallHeight(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
+        if(context instanceof EntityShapeContext entityContext
             && entityContext.getEntity() != null
             && Birds.notFlightless(entityContext.getEntity())
         ) {
             VoxelShape originalShape = this.collisionShapeMap.get(state);
-            if (originalShape.getMax(Direction.Axis.Y) > 1) {
+            if(originalShape.getMax(Direction.Axis.Y) > 1) {
                 cir.setReturnValue(VoxelShapes.cuboid(
                     originalShape.getMin(Direction.Axis.X),
                     originalShape.getMin(Direction.Axis.Y),

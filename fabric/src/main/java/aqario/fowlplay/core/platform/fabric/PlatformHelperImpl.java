@@ -4,6 +4,7 @@ import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;
 import aqario.fowlplay.core.platform.CommonRegistry;
+import aqario.fowlplay.core.platform.PlatformHelper;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -18,6 +19,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
+import net.minecraft.entity.ai.brain.Schedule;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.data.TrackedDataHandler;
@@ -79,7 +81,7 @@ public class PlatformHelperImpl {
 
     public static Supplier<Item> registerItem(String id, Supplier<Item> item, RegistryKey<ItemGroup> group) {
         Item registry = Registry.register(Registries.ITEM, Identifier.of(FowlPlay.ID, id), item.get());
-        addItemToItemGroup(registry, group);
+        PlatformHelper.addItemToItemGroup(() -> registry, group);
         return () -> registry;
     }
 
@@ -94,6 +96,11 @@ public class PlatformHelperImpl {
 
     public static Supplier<DefaultParticleType> registerParticleType(String id, Supplier<DefaultParticleType> particleType) {
         DefaultParticleType registry = Registry.register(Registries.PARTICLE_TYPE, Identifier.of(FowlPlay.ID, id), particleType.get());
+        return () -> registry;
+    }
+
+    public static Supplier<Schedule> registerSchedule(String id, Supplier<Schedule> schedule) {
+        Schedule registry = Registry.register(Registries.SCHEDULE, Identifier.of(FowlPlay.ID, id), schedule.get());
         return () -> registry;
     }
 
@@ -121,9 +128,9 @@ public class PlatformHelperImpl {
         TrackedDataHandlerRegistry.register(handler);
     }
 
-    public static void addItemToItemGroup(Item item, RegistryKey<ItemGroup> itemGroup) {
+    public static void addItemToItemGroup(Supplier<Item> item, RegistryKey<ItemGroup> itemGroup) {
         ItemGroupEvents.modifyEntriesEvent(itemGroup).register(entries ->
-            entries.add(item)
+            entries.add(item.get())
         );
     }
 

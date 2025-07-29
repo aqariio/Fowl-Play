@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.BirdEntity;
-import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.common.util.MemoryList;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import net.minecraft.entity.ai.brain.EntityLookTarget;
@@ -12,15 +11,10 @@ import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
-import java.util.function.Function;
 
 public class SetWalkTargetToClosestAdult {
-    public static SingleTickBehaviour<BirdEntity> create(UniformIntProvider executionRange) {
-        return create(executionRange, entity -> Birds.WALK_SPEED);
-    }
-
     @SuppressWarnings("unchecked")
-    public static SingleTickBehaviour<BirdEntity> create(UniformIntProvider executionRange, Function<BirdEntity, Float> speedGetter) {
+    public static SingleTickBehaviour<BirdEntity> create(UniformIntProvider executionRange) {
         return new SingleTickBehaviour<>(
             MemoryList.create(3)
                 .present(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS.get())
@@ -36,7 +30,7 @@ public class SetWalkTargetToClosestAdult {
                 if(bird.isInRange(nearest, executionRange.getMax() + 1)
                     && !bird.isInRange(nearest, executionRange.getMin())) {
                     WalkTarget newWalkTarget = new WalkTarget(
-                        new EntityLookTarget(nearest, false), speedGetter.apply(bird), executionRange.getMin() - 1
+                        new EntityLookTarget(nearest, false), 1.0F, executionRange.getMin() - 1
                     );
                     BrainUtils.setMemory(brain, MemoryModuleType.LOOK_TARGET, new EntityLookTarget(nearest, true));
                     BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, newWalkTarget);

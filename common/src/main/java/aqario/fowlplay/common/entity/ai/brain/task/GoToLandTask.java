@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.tslat.smartbrainlib.util.BrainUtils;
 
 public class GoToLandTask {
-    public static SingleTickBehaviour<BirdEntity> create(int range, float speed) {
+    public static SingleTickBehaviour<BirdEntity> create(int range) {
         return new SingleTickBehaviour<>(
             MemoryList.create(4)
                 .present(
@@ -48,7 +48,7 @@ public class GoToLandTask {
                 }
 
                 BrainUtils.setMemory(brain, MemoryModuleType.LOOK_TARGET, new BlockPosLookTarget(targetPos));
-                BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, new WalkTarget(new BlockPosLookTarget(targetPos), speed, 0));
+                BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, new WalkTarget(new BlockPosLookTarget(targetPos), 1.0F, 0));
                 return true;
             }
         );

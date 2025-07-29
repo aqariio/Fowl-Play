@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -70,10 +71,28 @@ public class SpawnHelperMixin {
         }
     }
 
-    @Inject(method = "spawnEntitiesInChunk(Lnet/minecraft/entity/SpawnGroup;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/chunk/WorldChunk;Lnet/minecraft/world/SpawnHelper$Checker;Lnet/minecraft/world/SpawnHelper$Runner;)V", at = @At("HEAD"), cancellable = true)
-    private static void fowlplay$spawnEntitiesInChunk(SpawnGroup group, ServerWorld world, WorldChunk chunk, SpawnHelper.Checker checker, SpawnHelper.Runner runner, CallbackInfo ci) {
+    @Inject(
+        method = "spawnEntitiesInChunk(Lnet/minecraft/entity/SpawnGroup;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/chunk/WorldChunk;Lnet/minecraft/world/SpawnHelper$Checker;Lnet/minecraft/world/SpawnHelper$Runner;)V",
+        at = @At("HEAD"),
+        cancellable = true
+    )
+    private static void fowlplay$reduceSpawningFrequency(SpawnGroup group, ServerWorld world, WorldChunk chunk, SpawnHelper.Checker checker, SpawnHelper.Runner runner, CallbackInfo ci) {
         if(group == CustomSpawnGroup.birds() && world.getLevelProperties().getTime() % 20L != 0L) {
             ci.cancel();
         }
+    }
+
+    @Redirect(
+        method = "spawnEntitiesInChunk(Lnet/minecraft/entity/SpawnGroup;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/chunk/Chunk;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/SpawnHelper$Checker;Lnet/minecraft/world/SpawnHelper$Runner;)V",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/util/math/BlockPos;getY()I"
+        )
+    )
+    private static int fowlplay$midairSpawning(BlockPos pos, SpawnGroup group, ServerWorld world) {
+        if((group == CustomSpawnGroup.birds() || group == CustomSpawnGroup.ambientBirds()) && world.getRandom().nextFloat() < 0.01F) {
+            return pos.getY() + world.getRandom().nextBetween(32, 64);
+        }
+        return pos.getY();
     }
 }

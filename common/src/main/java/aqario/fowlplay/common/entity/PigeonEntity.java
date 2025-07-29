@@ -100,9 +100,22 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        FowlPlayRegistries.PIGEON_VARIANT.get()
-            .fowlplay$getRandom(world.getRandom())
-            .ifPresent(this::setVariant);
+        float f = world.getRandom().nextFloat();
+        if(f < 0.5f) { // 50% chance for banded
+            this.setVariant(PigeonVariant.BANDED.get());
+        }
+        else if(f < 0.75f) { // 25% chance for checkered
+            this.setVariant(PigeonVariant.CHECKERED.get());
+        }
+        else if(f < 0.95f) { // 20% chance for gray
+            this.setVariant(PigeonVariant.GRAY.get());
+        }
+        else if(f < 0.99f) { // 4% chance for rusty
+            this.setVariant(PigeonVariant.RUSTY.get());
+        }
+        else { // 1% chance for white
+            this.setVariant(PigeonVariant.WHITE.get());
+        }
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
@@ -424,8 +437,13 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
                     .lookTime(entity -> entity.getRandom().nextBetween(150, 250)),
                 new OneRandomBehaviour<>(
                     Pair.of(
+                        TargetlessFlyTask.create(),
+                        1
+                    )
+                ).startCondition(entity -> entity.isFlying() && !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET)),
+                new OneRandomBehaviour<>(
+                    Pair.of(
                         new SetRandomWalkTarget<PigeonEntity>()
-                            .speedModifier((entity, target) -> Birds.WALK_SPEED)
                             .setRadius(24, 12)
                             .startCondition(Predicate.not(Birds::isPerched)),
                         4
@@ -439,17 +457,16 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
                         SetWalkTargetToClosestAdult.create(Birds.STAY_NEAR_ENTITY_RANGE),
                         1
                     )
-                ).startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
+                ).startCondition(entity -> !entity.isFlying() && !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
             )
-            .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.IS_FLYING.get(), MemoryModuleState.VALUE_ABSENT)
             .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.IS_AVOIDING.get(), MemoryModuleState.VALUE_ABSENT)
             .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryModuleState.VALUE_ABSENT)
             .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.RECIPIENT.get(), MemoryModuleState.VALUE_ABSENT);
     }
 
     @SuppressWarnings("unchecked")
-    public BrainActivityGroup<? extends PigeonEntity> getFlyTasks() {
-        return new BrainActivityGroup<PigeonEntity>(FowlPlayActivities.FLY.get())
+    public BrainActivityGroup<? extends PigeonEntity> getPerchTasks() {
+        return new BrainActivityGroup<PigeonEntity>(FowlPlayActivities.PERCH.get())
             .priority(10)
             .behaviours(
                 new LeaderlessFlockTask(
@@ -459,17 +476,22 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
                     0.05f,
                     3f
                 ),
+                TargetlessFlyTask.perch()
+                    .startCondition(entity -> !Birds.isPerched(entity) && !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET)),
                 new OneRandomBehaviour<>(
                     Pair.of(
-                        TargetlessFlyTask.perch(Birds.WALK_SPEED),
+                        new Idle<PigeonEntity>()
+                            .runFor(entity -> entity.getRandom().nextBetween(300, 1000)),
+                        8
+                    ),
+                    Pair.of(
+                        TargetlessFlyTask.perch(),
                         1
                     )
-                ).startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
+                ).startCondition(Birds::isPerched)
             )
-            .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.IS_FLYING.get(), MemoryModuleState.VALUE_PRESENT)
             .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.IS_AVOIDING.get(), MemoryModuleState.VALUE_ABSENT)
-            .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryModuleState.VALUE_ABSENT)
-            .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.RECIPIENT.get(), MemoryModuleState.VALUE_ABSENT);
+            .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryModuleState.VALUE_ABSENT);
     }
 
     @SuppressWarnings("unchecked")
@@ -481,7 +503,7 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
                     .startCondition(PigeonEntity::shouldStopFlyingToRecipient),
                 FlightTasks.<PigeonEntity>startFlying()
                     .startCondition(PigeonEntity::shouldFlyToRecipient),
-                DeliverBundleTask.run(pigeon -> Birds.WALK_SPEED)
+                DeliverBundleTask.run()
             )
             .requireAndWipeMemoriesOnUse(FowlPlayMemoryModuleType.RECIPIENT.get());
     }
@@ -493,7 +515,7 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
             .behaviours(
                 MoveAwayFromTargetTask.entity(
                     MemoryModuleType.AVOID_TARGET,
-                    entity -> Birds.RUN_SPEED,
+                    entity -> Birds.FAST_SPEED,
                     true
                 )
             )
@@ -508,7 +530,7 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
                 new SequentialBehaviour<PigeonEntity>(
                     GoToNearestItemTask.create(
                         Birds::canPickupFood,
-                        entity -> Birds.RUN_SPEED,
+                        entity -> Birds.FAST_SPEED,
                         true,
                         Birds.ITEM_PICK_UP_RANGE
                     )
@@ -522,7 +544,7 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
     @Override
     public Map<Activity, BrainActivityGroup<? extends PigeonEntity>> getAdditionalTasks() {
         Object2ObjectOpenHashMap<Activity, BrainActivityGroup<? extends PigeonEntity>> taskList = new Object2ObjectOpenHashMap<>();
-        taskList.put(FowlPlayActivities.FLY.get(), this.getFlyTasks());
+        taskList.put(FowlPlayActivities.PERCH.get(), this.getPerchTasks());
         taskList.put(FowlPlayActivities.DELIVER.get(), this.getDeliverTasks());
         taskList.put(Activity.AVOID, this.getAvoidTasks());
         taskList.put(FowlPlayActivities.PICK_UP.get(), this.getPickupFoodTasks());
@@ -532,11 +554,11 @@ public class PigeonEntity extends TameableBirdEntity implements SmartBrainOwner<
     @Override
     public List<Activity> getActivityPriorities() {
         return ObjectArrayList.of(
-            Activity.IDLE,
-            FowlPlayActivities.FLY.get(),
             FowlPlayActivities.DELIVER.get(),
             Activity.AVOID,
-            FowlPlayActivities.PICK_UP.get()
+            FowlPlayActivities.PICK_UP.get(),
+            FowlPlayActivities.PERCH.get(),
+            Activity.IDLE
         );
     }
 

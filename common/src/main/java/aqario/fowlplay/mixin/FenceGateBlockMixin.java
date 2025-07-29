@@ -29,11 +29,11 @@ public abstract class FenceGateBlockMixin extends HorizontalFacingBlock {
 
     @Inject(method = "getCollisionShape", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
     private void fowlplay$lowerFenceGateHeight(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
-        if (context instanceof EntityShapeContext entityContext
+        if(context instanceof EntityShapeContext entityContext
             && entityContext.getEntity() != null
             && Birds.notFlightless(entityContext.getEntity())
         ) {
-            switch (state.get(FACING).getAxis()) {
+            switch(state.get(FACING).getAxis()) {
                 case X -> cir.setReturnValue(VoxelShapes.cuboid(
                     X_AXIS_COLLISION_SHAPE.getMin(Direction.Axis.X),
                     X_AXIS_COLLISION_SHAPE.getMin(Direction.Axis.Y),

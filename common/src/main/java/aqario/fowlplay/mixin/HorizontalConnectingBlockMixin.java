@@ -26,13 +26,13 @@ public abstract class HorizontalConnectingBlockMixin {
     @Inject(method = "getCollisionShape", at = @At(value = "HEAD"), cancellable = true)
     private void fowlplay$lowerFenceHeight(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
         HorizontalConnectingBlock block = (HorizontalConnectingBlock) (Object) this;
-        if (block instanceof FenceBlock
+        if(block instanceof FenceBlock
             && context instanceof EntityShapeContext entityContext
             && entityContext.getEntity() != null
             && Birds.notFlightless(entityContext.getEntity())
         ) {
             VoxelShape originalShape = this.collisionShapes[this.getShapeIndex(state)];
-            if (originalShape.getMax(Direction.Axis.Y) > 1) {
+            if(originalShape.getMax(Direction.Axis.Y) > 1) {
                 cir.setReturnValue(VoxelShapes.cuboid(
                     originalShape.getMin(Direction.Axis.X),
                     originalShape.getMin(Direction.Axis.Y),

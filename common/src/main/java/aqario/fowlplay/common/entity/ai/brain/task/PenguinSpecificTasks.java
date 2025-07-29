@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.entity.ai.brain.task;
 
 import aqario.fowlplay.common.entity.PenguinEntity;
-import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.common.util.MemoryList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.Entity;
@@ -29,7 +28,7 @@ public class PenguinSpecificTasks {
                 1
             ),
             Pair.of(
-                GoToWaterTask.create(32, Birds.WALK_SPEED),
+                GoToWaterTask.create(32),
                 2
             )
 

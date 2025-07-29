@@ -2,8 +2,6 @@ package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.*;
-import aqario.fowlplay.common.world.gen.GullSpawner;
-import aqario.fowlplay.common.world.gen.HawkSpawner;
 import aqario.fowlplay.common.world.gen.PigeonSpawner;
 import aqario.fowlplay.common.world.gen.SparrowSpawner;
 import dev.architectury.event.events.common.TickEvent;
@@ -45,22 +43,10 @@ public class FowlPlay {
     }
 
     private static void initSpawners() {
-        GullSpawner gullSpawner = new GullSpawner();
-        HawkSpawner hawkSpawner = new HawkSpawner();
         PigeonSpawner pigeonSpawner = new PigeonSpawner();
         SparrowSpawner sparrowSpawner = new SparrowSpawner();
 
         TickEvent.SERVER_LEVEL_POST.register(world -> {
-            gullSpawner.spawn(
-                world,
-                world.getServer().isMonsterSpawningEnabled(),
-                world.getServer().shouldSpawnAnimals()
-            );
-            hawkSpawner.spawn(
-                world,
-                world.getServer().isMonsterSpawningEnabled(),
-                world.getServer().shouldSpawnAnimals()
-            );
             pigeonSpawner.spawn(
                 world,
                 world.getServer().isMonsterSpawningEnabled(),

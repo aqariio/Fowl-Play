@@ -16,27 +16,26 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class TargetlessFlyTask {
-    public static SingleTickBehaviour<FlyingBirdEntity> create(float speed, int horizontalRange, int verticalRange) {
-        return create(speed, (entity) -> FlightTargeting.find(entity, horizontalRange, verticalRange), (entity) -> true);
+    private static final int HORIZONTAL_RANGE = 24;
+    private static final int VERTICAL_RANGE = 16;
+
+    public static SingleTickBehaviour<FlyingBirdEntity> create() {
+        return create((entity) -> FlightTargeting.find(entity, HORIZONTAL_RANGE, VERTICAL_RANGE));
     }
 
-    public static SingleTickBehaviour<FlyingBirdEntity> perch(float speed) {
-        return create(speed, TargetlessFlyTask::findPerchPos, (entity) -> true);
+    public static SingleTickBehaviour<FlyingBirdEntity> perch() {
+        return create(TargetlessFlyTask::findPerchPos);
     }
 
-    private static SingleTickBehaviour<FlyingBirdEntity> create(float speed, Function<FlyingBirdEntity, Vec3d> targetGetter, Predicate<FlyingBirdEntity> predicate) {
+    private static SingleTickBehaviour<FlyingBirdEntity> create(Function<FlyingBirdEntity, Vec3d> targetGetter) {
         return new SingleTickBehaviour<>(
             MemoryList.create(1)
                 .absent(MemoryModuleType.WALK_TARGET),
             (bird, brain) -> {
-                if(!predicate.test(bird)) {
-                    return false;
-                }
                 Optional<Vec3d> target = Optional.ofNullable(targetGetter.apply(bird));
-                BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, target.map((vec3d) -> new WalkTarget(vec3d, speed, 0)).orElse(null));
+                BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, target.map((vec3d) -> new WalkTarget(vec3d, 1.0f, 0)).orElse(null));
                 return true;
             });
     }
@@ -67,6 +66,6 @@ public class TargetlessFlyTask {
             }
         }
 
-        return FlightTargeting.find(entity, 32, 16);
+        return FlightTargeting.find(entity, HORIZONTAL_RANGE, VERTICAL_RANGE);
     }
 }

@@ -4,6 +4,7 @@ import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistryKeys;
 import aqario.fowlplay.core.platform.CommonRegistry;
+import aqario.fowlplay.core.platform.PlatformHelper;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -15,6 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
+import net.minecraft.entity.ai.brain.Schedule;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.data.TrackedDataHandler;
@@ -79,6 +81,10 @@ public class PlatformHelperImpl {
         ForgeRegistries.PARTICLE_TYPES,
         FowlPlay.ID
     );
+    public static final DeferredRegister<Schedule> SCHEDULES = DeferredRegister.create(
+        ForgeRegistries.SCHEDULES,
+        FowlPlay.ID
+    );
     public static final DeferredRegister<SensorType<?>> SENSOR_TYPES = DeferredRegister.create(
         ForgeRegistries.SENSOR_TYPES,
         FowlPlay.ID
@@ -96,19 +102,19 @@ public class PlatformHelperImpl {
 
     @SuppressWarnings("unchecked")
     public static <T> Supplier<T> registerVariant(String id, Supplier<T> variant) {
-        if (variant.get() instanceof ChickenVariant) {
+        if(variant.get() instanceof ChickenVariant) {
             return (Supplier<T>) CHICKEN_VARIANTS.register(id, (Supplier<ChickenVariant>) variant);
         }
-        else if (variant.get() instanceof DuckVariant) {
+        else if(variant.get() instanceof DuckVariant) {
             return (Supplier<T>) DUCK_VARIANTS.register(id, (Supplier<DuckVariant>) variant);
         }
-        else if (variant.get() instanceof GullVariant) {
+        else if(variant.get() instanceof GullVariant) {
             return (Supplier<T>) GULL_VARIANTS.register(id, (Supplier<GullVariant>) variant);
         }
-        else if (variant.get() instanceof PigeonVariant) {
+        else if(variant.get() instanceof PigeonVariant) {
             return (Supplier<T>) PIGEON_VARIANTS.register(id, (Supplier<PigeonVariant>) variant);
         }
-        else if (variant.get() instanceof SparrowVariant) {
+        else if(variant.get() instanceof SparrowVariant) {
             return (Supplier<T>) SPARROW_VARIANTS.register(id, (Supplier<SparrowVariant>) variant);
         }
         return null;
@@ -125,7 +131,7 @@ public class PlatformHelperImpl {
     // TODO: Add items to group automatically
     public static Supplier<Item> registerItem(String id, Supplier<Item> item, RegistryKey<ItemGroup> group) {
         Supplier<Item> registry = ITEMS.register(id, item);
-//        addItemToItemGroup(registry, group);
+        PlatformHelper.addItemToItemGroup(registry, group);
         return registry;
     }
 
@@ -139,6 +145,10 @@ public class PlatformHelperImpl {
 
     public static Supplier<DefaultParticleType> registerParticleType(String id, Supplier<DefaultParticleType> particleType) {
         return PARTICLE_TYPES.register(id, particleType);
+    }
+
+    public static Supplier<Schedule> registerSchedule(String id, Supplier<Schedule> schedule) {
+        return SCHEDULES.register(id, schedule);
     }
 
     public static <T extends Sensor<?>> Supplier<SensorType<T>> registerSensorType(String id, Supplier<SensorType<T>> sensorType) {

@@ -22,6 +22,7 @@ public class AddBirdsBiomeModifier implements BiomeModifier {
             return;
         }
 
+        // Spawns
         addSpawn(
             builder,
             biome,
@@ -82,16 +83,16 @@ public class AddBirdsBiomeModifier implements BiomeModifier {
             FowlPlayConfig.getInstance().gullMinGroupSize,
             FowlPlayConfig.getInstance().gullMaxGroupSize
         );
-//        addSpawn(
-//        builder,
-//        biome,);(
-//            FowlPlayBiomeTags.SPAWNS_HAWKS,
-//            FowlPlaySpawnGroup.BIRD.spawnGroup,
-//            FowlPlayEntityType.HAWK.get(),
-//            FowlPlayConfig.getInstance().hawkSpawnWeight,
-//            FowlPlayConfig.getInstance().hawkMinGroupSize,
-//            FowlPlayConfig.getInstance().hawkMaxGroupSize
-//        );
+        addSpawn(
+            builder,
+            biome,
+            FowlPlayBiomeTags.SPAWNS_HAWKS,
+            CustomSpawnGroup.birds(),
+            FowlPlayEntityType.HAWK.get(),
+            FowlPlayConfig.getInstance().hawkSpawnWeight,
+            FowlPlayConfig.getInstance().hawkMinGroupSize,
+            FowlPlayConfig.getInstance().hawkMaxGroupSize
+        );
         addSpawn(
             builder,
             biome,

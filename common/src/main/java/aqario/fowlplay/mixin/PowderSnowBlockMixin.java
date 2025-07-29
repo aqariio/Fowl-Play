@@ -19,7 +19,7 @@ public class PowderSnowBlockMixin {
     @Inject(method = "getCollisionShape", at = @At("HEAD"), cancellable = true)
     private void fowlplay$changePowderSnowShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
         // this way the penguin can actually step up powder snow blocks instead of phasing into it when sliding
-        if (context instanceof EntityShapeContext ctx && ctx.getEntity() instanceof PenguinEntity penguin && penguin.isSliding()) {
+        if(context instanceof EntityShapeContext ctx && ctx.getEntity() instanceof PenguinEntity penguin && penguin.isSliding()) {
             cir.setReturnValue(VoxelShapes.fullCube());
         }
     }

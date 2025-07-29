@@ -2,7 +2,6 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.entity.ai.pathing.FlightNavigation;
 import aqario.fowlplay.common.entity.ai.pathing.GroundNavigation;
-import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayBlockTags;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
@@ -23,7 +22,6 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.Unit;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -32,6 +30,7 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import net.tslat.smartbrainlib.object.SquareRadius;
 import org.jetbrains.annotations.VisibleForTesting;
 
 public abstract class FlyingBirdEntity extends BirdEntity {
@@ -56,24 +55,36 @@ public abstract class FlyingBirdEntity extends BirdEntity {
             .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.235f);
     }
 
+    private static boolean hasSkyAccess(WorldAccess world, BlockPos pos) {
+        return world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()) <= pos.getY();
+    }
+
+    private static boolean isMidairSpawn(WorldAccess world, BlockPos pos) {
+        return world.getTopY(Heightmap.Type.WORLD_SURFACE, pos.getX(), pos.getZ()) <= pos.getY() - 32
+            && world.getBlockState(pos.down()).isAir();
+    }
+
     @SuppressWarnings("unused")
     public static boolean canSpawnPasserines(EntityType<? extends BirdEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()) <= pos.getY()
-            && world.getBlockState(pos.down()).getBlock() instanceof LeavesBlock
-            && world.getBlockState(pos.down()).get(Properties.DISTANCE_1_7) < 7;
+        return hasSkyAccess(world, pos)
+            && ((world.getBlockState(pos.down()).getBlock() instanceof LeavesBlock
+            && world.getBlockState(pos.down()).get(Properties.DISTANCE_1_7) < 7)
+            || isMidairSpawn(world, pos));
     }
 
     @SuppressWarnings("unused")
     public static boolean canSpawnShorebirds(EntityType<? extends BirdEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()) <= pos.getY()
+        return hasSkyAccess(world, pos)
             && (world.getBlockState(pos.down()).isIn(FowlPlayBlockTags.SHOREBIRDS_SPAWNABLE_ON)
-            || world.getFluidState(pos.down()).isIn(FluidTags.WATER));
+            || world.getFluidState(pos.down()).isIn(FluidTags.WATER)
+            || isMidairSpawn(world, pos));
     }
 
     @SuppressWarnings("unused")
     public static boolean canSpawnWaterfowl(EntityType<? extends BirdEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()) <= pos.getY()
-            && world.getFluidState(pos.down()).isIn(FluidTags.WATER);
+        return hasSkyAccess(world, pos)
+            && (world.getFluidState(pos.down()).isIn(FluidTags.WATER)
+            || isMidairSpawn(world, pos));
     }
 
     @Override
@@ -98,12 +109,6 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         this.setFlying(nbt.getBoolean("flying"));
-        if(this.isFlying()) {
-            this.getBrain().remember(FowlPlayMemoryModuleType.IS_FLYING.get(), Unit.INSTANCE);
-        }
-        else {
-            this.getBrain().forget(FowlPlayMemoryModuleType.IS_FLYING.get());
-        }
     }
 
     @Override
@@ -116,6 +121,11 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     public abstract float getFlapVolume();
 
     public abstract float getFlapPitch();
+
+    // range where the bird prefers walking over flying
+    public SquareRadius getWalkRange() {
+        return new SquareRadius(16, 8);
+    }
 
     @Override
     public void tick() {
@@ -230,7 +240,6 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     public void startFlying() {
         this.setFlying(true);
         this.setNavigation(true);
-        this.getBrain().remember(FowlPlayMemoryModuleType.IS_FLYING.get(), Unit.INSTANCE);
     }
 
     public void stopFlying() {
@@ -238,7 +247,6 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         this.setNavigation(false);
         this.getNavigation().stop();
         Brain<?> brain = this.getBrain();
-        brain.forget(FowlPlayMemoryModuleType.IS_FLYING.get());
         brain.forget(MemoryModuleType.WALK_TARGET);
     }
 

@@ -44,8 +44,8 @@
   "item.fowlplay.raven_spawn_egg": "渡鸦刷怪蛋",
   "item.fowlplay.robin_spawn_egg": "知更鸟刷怪蛋",
   "item.fowlplay.sparrow_spawn_egg": "麻雀刷怪蛋",
-  "soundCategory.birds": "Birds",
   "subtitles.entity.bird.eat": "Bird eats",
+  "subtitles.entity.bird.flap": "Wings flap",
   "subtitles.entity.blue_jay.call": "蓝松鸦叫声",
   "subtitles.entity.blue_jay.hurt": "蓝松鸦受伤",
   "subtitles.entity.cardinal.call": "红雀鸣叫",
@@ -90,6 +90,6 @@
   "tag.item.fowlplay.raven_food": "渡鸦食物",
   "tag.item.fowlplay.robin_food": "知更鸟食物",
   "tag.item.fowlplay.sparrow_food": "麻雀食物",
-  "text.betterf3.line.bird_ambient": "Ambient Birds",
-  "text.betterf3.line.bird": "Birds"
+  "text.betterf3.line.ambient_birds": "Ambient Birds",
+  "text.betterf3.line.birds": "Birds"
 }

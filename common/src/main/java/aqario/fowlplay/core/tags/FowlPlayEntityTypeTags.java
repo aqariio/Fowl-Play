@@ -30,8 +30,9 @@ public final class FowlPlayEntityTypeTags {
     public static final TagKey<EntityType<?>> RAVEN_BABY_HUNT_TARGETS = create("raven_baby_hunt_targets");
     public static final TagKey<EntityType<?>> RAVEN_HUNT_TARGETS = create("raven_hunt_targets");
     public static final TagKey<EntityType<?>> ROBIN_AVOIDS = create("robin_avoids");
-    public static final TagKey<EntityType<?>> SHOREBIRDS = create("shorebirds");
+    public static final TagKey<EntityType<?>> SEABIRDS = create("seabirds");
     public static final TagKey<EntityType<?>> SPARROW_AVOIDS = create("sparrow_avoids");
+    public static final TagKey<EntityType<?>> WATERBIRDS = create("waterbirds");
     public static final TagKey<EntityType<?>> WATERFOWL = create("waterfowl");
 
     private static TagKey<EntityType<?>> create(String id) {

@@ -10,10 +10,8 @@ import net.minecraft.entity.ai.brain.WalkTarget;
 import net.minecraft.entity.player.PlayerEntity;
 import net.tslat.smartbrainlib.util.BrainUtils;
 
-import java.util.function.Function;
-
 public class DeliverBundleTask {
-    public static <E extends PigeonEntity> SingleTickBehaviour<E> run(Function<E, Float> entitySpeedGetter) {
+    public static <E extends PigeonEntity> SingleTickBehaviour<E> run() {
         return new SingleTickBehaviour<>(
             MemoryList.create(4)
                 .present(FowlPlayMemoryModuleType.RECIPIENT.get())
@@ -23,7 +21,7 @@ public class DeliverBundleTask {
             (bird, brain) -> {
                 PlayerEntity recipient = bird.getWorld().getPlayerByUuid(BrainUtils.getMemory(brain, FowlPlayMemoryModuleType.RECIPIENT.get()));
                 if(recipient != null) {
-                    WalkTarget walkTarget = new WalkTarget(new EntityLookTarget(recipient, false), entitySpeedGetter.apply(bird), 0);
+                    WalkTarget walkTarget = new WalkTarget(new EntityLookTarget(recipient, false), 1.0F, 0);
                     BrainUtils.setMemory(brain, MemoryModuleType.LOOK_TARGET, new EntityLookTarget(recipient, true));
                     BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, walkTarget);
                     if(bird.getOwner() != null && bird.squaredDistanceTo(recipient) > 100 * 100 && bird.squaredDistanceTo(bird.getOwner()) > 16 * 16) {

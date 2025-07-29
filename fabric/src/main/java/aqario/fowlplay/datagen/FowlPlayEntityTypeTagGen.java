@@ -54,9 +54,15 @@ public class FowlPlayEntityTypeTagGen extends FabricTagProvider.EntityTypeTagPro
             .add(FowlPlayEntityType.ROBIN.get())
             .add(FowlPlayEntityType.SPARROW.get());
 
-        // Shorebirds
-        this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.SHOREBIRDS)
+        // Seabirds
+        this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.SEABIRDS)
             .add(FowlPlayEntityType.GULL.get());
+
+        // Waterbirds
+        this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.WATERBIRDS)
+            .add(FowlPlayEntityType.DUCK.get())
+            .add(FowlPlayEntityType.GULL.get())
+            .add(FowlPlayEntityType.PENGUIN.get());
 
         // Waterfowl
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.WATERFOWL)

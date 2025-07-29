@@ -241,14 +241,14 @@ public final class FowlPlayEntityType {
             FowlPlayConfig.getInstance().gullMinGroupSize,
             FowlPlayConfig.getInstance().gullMaxGroupSize
         );
-//        addSpawn();(
-//            FowlPlayBiomeTags.SPAWNS_HAWKS,
-//            FowlPlaySpawnGroup.BIRD.spawnGroup,
-//            FowlPlayEntityType.HAWK,
-//            FowlPlayConfig.getInstance().hawkSpawnWeight,
-//            FowlPlayConfig.getInstance().hawkMinGroupSize,
-//            FowlPlayConfig.getInstance().hawkMaxGroupSize
-//        );
+        addSpawn(
+            FowlPlayBiomeTags.SPAWNS_HAWKS,
+            CustomSpawnGroup.birds(),
+            FowlPlayEntityType.HAWK,
+            FowlPlayConfig.getInstance().hawkSpawnWeight,
+            FowlPlayConfig.getInstance().hawkMinGroupSize,
+            FowlPlayConfig.getInstance().hawkMaxGroupSize
+        );
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_PENGUINS,
             SpawnGroup.CREATURE,

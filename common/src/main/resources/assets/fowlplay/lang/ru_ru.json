@@ -44,8 +44,8 @@
   "item.fowlplay.raven_spawn_egg": "Яйцо призыва ворона",
   "item.fowlplay.robin_spawn_egg": "Яйцо призыва зарянки",
   "item.fowlplay.sparrow_spawn_egg": "Яйцо призыва воробья",
-  "soundCategory.birds": "Birds",
   "subtitles.entity.bird.eat": "Bird eats",
+  "subtitles.entity.bird.flap": "Wings flap",
   "subtitles.entity.blue_jay.call": "Голубая сойка щебечет",
   "subtitles.entity.blue_jay.hurt": "Голубая сойка ранена",
   "subtitles.entity.cardinal.call": "Красный кардинал щебечет",
@@ -90,6 +90,6 @@
   "tag.item.fowlplay.raven_food": "Еда воронов",
   "tag.item.fowlplay.robin_food": "Еда зарянок",
   "tag.item.fowlplay.sparrow_food": "Еда воробьёв",
-  "text.betterf3.line.bird_ambient": "Ambient Birds",
-  "text.betterf3.line.bird": "Birds"
+  "text.betterf3.line.ambient_birds": "Ambient Birds",
+  "text.betterf3.line.birds": "Birds"
 }

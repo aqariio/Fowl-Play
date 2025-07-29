@@ -36,15 +36,28 @@ dependencies {
     forge "net.minecraftforge:forge:1.20.1-$rootProject.forge_version"
 
     // Architectury
-    modImplementation("dev.architectury:architectury-forge:${rootProject.architectury_version}")
+    modImplementation("dev.architectury:architectury-forge:${rootProject.architectury_version}") {
+        transitive = false
+    }
+
+    // Cloth Config
+    modRuntimeOnly("me.shedaniel.cloth:cloth-config-forge:${project.cloth_config_version}")
 
     // Debug Utils
     modImplementation("io.github.flemmli97:debugutils:${project.debugutils_version}-forge") {
         transitive = false
     }
 
+    // NBT Autocomplete
+    modRuntimeOnly("maven.modrinth:nbt-autocomplete:${project.nbt_autocomplete_version}-forge,1.20.1")
+
     // Smart Brain Lib
-    modImplementation("net.tslat.smartbrainlib:SmartBrainLib-forge-${project.minecraft_version}:${project.sbl_version}")
+    modImplementation("net.tslat.smartbrainlib:SmartBrainLib-forge-${project.minecraft_version}:${project.sbl_version}") {
+        transitive = false
+    }
+
+    // Suggestion Tweaker
+    modRuntimeOnly("maven.modrinth:suggestion-tweaker:${project.suggestion_tweaker_version}+forge")
 
     // Yet Another Config Lib
     modImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}-forge")

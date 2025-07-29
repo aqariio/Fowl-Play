@@ -7,6 +7,29 @@ architectury {
     forge()
 }
 
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+
+    forge {
+        convertAccessWideners = true
+        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+        mixinConfig "${project.archives_name}.common.mixins.json"
+        mixinConfig "${project.archives_name}.forge.mixins.json"
+
+        runs {
+            all {}
+
+            data {
+                data()
+                programArgs("--all", "--mod", "${project.archives_name}")
+                programArgs("--existing", project(":common").file("src/main/resources").absolutePath)
+                programArgs("--output", project(":common").file("src/main/generated/resources").absolutePath)
+                all {}
+            }
+        }
+    }
+}
+
 configurations {
     common {
         canBeResolved = true
@@ -67,12 +90,17 @@ dependencies {
 }
 
 shadowJar {
+    exclude "fabric.mod.json"
+    exclude "architectury.common.json"
+
     configurations = [project.configurations.shadowBundle]
-    archiveClassifier = 'dev-shadow'
+    archiveClassifier.set("dev-shadow")
 }
 
 remapJar {
-    input.set shadowJar.archiveFile
+    inputFile.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveClassifier.set(null)
 }
 
 def generatedResources = file("src/generated")

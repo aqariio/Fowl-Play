@@ -20,10 +20,6 @@ subprojects {
     apply plugin: 'architectury-plugin'
     apply plugin: 'maven-publish'
 
-    loom {
-        accessWidenerPath = file("src/main/resources/${project.archives_name}.accesswidener")
-    }
-
     base {
         archivesName = rootProject.archives_name
     }

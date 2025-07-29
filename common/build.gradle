@@ -1,5 +1,9 @@
 architectury {
-    common rootProject.enabled_platforms.split(",")
+    common enabled_platforms.split(",")
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/${project.archives_name}.accesswidener")
 }
 
 dependencies {

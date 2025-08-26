@@ -21,7 +21,7 @@ public class GroundNavigation extends SmoothGroundNavigation {
 
     @Override
     protected PathNodeNavigator createPathNodeNavigator(int maxVisitedNodes) {
-        this.nodeMaker = new BirdPathNodeMaker();
+        this.nodeMaker = new LandPathNodeMaker();
         this.nodeMaker.setCanEnterOpenDoors(true);
 
         return new PathNodeNavigator(this.nodeMaker, maxVisitedNodes) {

@@ -1,6 +1,7 @@
 package aqario.fowlplay.core.platform.fabric;
 
 import aqario.fowlplay.common.entity.*;
+import aqario.fowlplay.common.util.RegistryBuilder;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;
 import aqario.fowlplay.core.FowlPlayRegistryKeys;
@@ -31,10 +32,10 @@ import net.minecraft.item.SpawnEggItem;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.particle.SimpleParticleType;
+import net.minecraft.registry.MutableRegistry;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.tslat.smartbrainlib.api.core.schedule.SmartBrainSchedule;
@@ -110,9 +111,16 @@ public class PlatformHelperImpl {
         return () -> registry;
     }
 
-    public static <T> Registry<T> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
-        FabricRegistryBuilder<T, SimpleRegistry<T>> builder = FabricRegistryBuilder.createSimple(registryKey);
-        if(sync) {
+    public static <T, R extends MutableRegistry<T>> R registerRegistry(RegistryKey<Registry<T>> registryKey, RegistryBuilder.Properties properties) {
+        FabricRegistryBuilder<T, R> builder;
+        if(properties.defaultId() == null) {
+            builder = (FabricRegistryBuilder<T, R>) FabricRegistryBuilder.createSimple(registryKey);
+        }
+        else {
+            builder = (FabricRegistryBuilder<T, R>) FabricRegistryBuilder.createDefaulted(registryKey, properties.defaultId());
+        }
+
+        if(properties.sync()) {
             builder.attribute(RegistryAttribute.SYNCED);
         }
         return builder.buildAndRegister();

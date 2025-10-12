@@ -1,6 +1,7 @@
 package aqario.fowlplay.core.platform.neoforge;
 
 import aqario.fowlplay.common.entity.*;
+import aqario.fowlplay.common.util.RegistryBuilder.Properties;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistryKeys;
 import aqario.fowlplay.core.platform.PlatformHelper;
@@ -26,6 +27,7 @@ import net.minecraft.item.ItemGroups;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.particle.SimpleParticleType;
+import net.minecraft.registry.MutableRegistry;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -165,12 +167,15 @@ public class PlatformHelperImpl {
         return SOUND_EVENTS.register(id, soundEvent);
     }
 
-    public static <T> Registry<T> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
+    public static <T, R extends MutableRegistry<T>> R registerRegistry(RegistryKey<Registry<T>> registryKey, Properties properties) {
         RegistryBuilder<T> builder = new RegistryBuilder<>(registryKey);
-        if(sync) {
+        if(properties.sync()) {
             builder.sync(true);
         }
-        Registry<T> registry = builder.create();
+        if(properties.defaultId() != null) {
+            builder.defaultKey(properties.defaultId());
+        }
+        R registry = (R) builder.create();
         REGISTRIES.add(registry);
         return registry;
     }

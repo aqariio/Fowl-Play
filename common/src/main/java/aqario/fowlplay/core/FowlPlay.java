@@ -25,6 +25,7 @@ public class FowlPlay {
 
         FowlPlayRegistryKeys.init();
         FowlPlayRegistries.init();
+        Variant.init();
     }
 
     public static void init() {

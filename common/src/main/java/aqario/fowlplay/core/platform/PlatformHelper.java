@@ -1,5 +1,6 @@
 package aqario.fowlplay.core.platform;
 
+import aqario.fowlplay.common.util.RegistryBuilder;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.particle.ParticleFactory;
@@ -18,6 +19,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.particle.SimpleParticleType;
+import net.minecraft.registry.MutableRegistry;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.sound.SoundEvent;
@@ -77,7 +79,7 @@ public class PlatformHelper {
     }
 
     @ExpectPlatform
-    public static <T> Registry<T> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
+    public static <T, R extends MutableRegistry<T>> R registerRegistry(RegistryKey<Registry<T>> registryKey, RegistryBuilder.Properties properties) {
         throw new AssertionError();
     }
 

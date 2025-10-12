@@ -12,6 +12,7 @@ public class FowlPlayRegistryKeys {
     public static final RegistryKey<Registry<GullVariant>> GULL_VARIANT = of("gull_variant");
     public static final RegistryKey<Registry<PigeonVariant>> PIGEON_VARIANT = of("pigeon_variant");
     public static final RegistryKey<Registry<SparrowVariant>> SPARROW_VARIANT = of("sparrow_variant");
+    public static final RegistryKey<Registry<Variant>> VARIANT = of("variant");
 
     private static <T> RegistryKey<Registry<T>> of(String id) {
         return RegistryKey.ofRegistry(Identifier.of(FowlPlay.ID, id));

@@ -2,6 +2,7 @@ package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.common.util.RegistryBuilder;
+import net.minecraft.registry.DefaultedRegistry;
 import net.minecraft.registry.Registry;
 
 public class FowlPlayRegistries {
@@ -27,6 +28,10 @@ public class FowlPlayRegistries {
         .buildAndRegister();
     public static final Registry<SparrowVariant> SPARROW_VARIANT = RegistryBuilder
         .create(FowlPlayRegistryKeys.SPARROW_VARIANT)
+        .sync()
+        .buildAndRegister();
+    public static final DefaultedRegistry<Variant> VARIANT = RegistryBuilder
+        .createDefaulted(FowlPlayRegistryKeys.VARIANT, "empty")
         .sync()
         .buildAndRegister();
 

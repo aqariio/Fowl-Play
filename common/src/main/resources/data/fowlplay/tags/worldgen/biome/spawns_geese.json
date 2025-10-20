@@ -1,15 +1,8 @@
 {
+  "replace": false,
   "values": [
     {
       "id": "#natures_spirit:is_wetland",
-      "required": false
-    },
-    {
-      "id": "#c:river",
-      "required": false
-    },
-    {
-      "id": "#c:swamp",
       "required": false
     },
     {
@@ -21,11 +14,23 @@
       "required": false
     },
     {
+      "id": "#c:river",
+      "required": false
+    },
+    {
+      "id": "#c:swamp",
+      "required": false
+    },
+    {
       "id": "#natures_spirit:is_autumn",
       "required": false
     },
     {
       "id": "#natures_spirit:is_cold",
+      "required": false
+    },
+    {
+      "id": "#forge:is_cold/overworld",
       "required": false
     },
     {
@@ -37,19 +42,23 @@
       "required": false
     },
     {
-      "id": "#c:is_forest",
-      "required": false
-    },
-    {
       "id": "#c:forest",
       "required": false
     },
     {
-      "id": "#c:tree_coniferous",
+      "id": "#c:is_forest",
       "required": false
     },
     {
-      "id": "#c:tree_deciduous",
+      "id": "#c:is_tree/coniferous",
+      "required": false
+    },
+    {
+      "id": "#forge:is_coniferous",
+      "required": false
+    },
+    {
+      "id": "#c:is_tree/deciduous",
       "required": false
     },
     {
@@ -61,11 +70,11 @@
       "required": false
     },
     {
-      "id": "#c:is_tree/coniferous",
+      "id": "#c:tree_coniferous",
       "required": false
     },
     {
-      "id": "#c:is_tree/deciduous",
+      "id": "#c:tree_deciduous",
       "required": false
     }
   ]

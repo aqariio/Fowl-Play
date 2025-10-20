@@ -5,7 +5,9 @@
       "conditions": {
         "items": [
           {
-            "items": "minecraft:hay_block"
+            "items": [
+              "minecraft:hay_block"
+            ]
           }
         ]
       },
@@ -20,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_hay_block"
+      "has_hay_block",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "fowlplay:scarecrow"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

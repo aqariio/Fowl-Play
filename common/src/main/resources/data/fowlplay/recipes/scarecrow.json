@@ -15,7 +15,7 @@
     " / "
   ],
   "result": {
-    "count": 1,
-    "id": "fowlplay:scarecrow"
-  }
+    "item": "fowlplay:scarecrow"
+  },
+  "show_notification": true
 }

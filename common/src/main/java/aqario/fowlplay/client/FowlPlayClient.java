@@ -1,20 +1,39 @@
 package aqario.fowlplay.client;
 
+import aqario.fowlplay.client.render.debug.BirdDebugRenderer;
 import aqario.fowlplay.client.render.entity.*;
 import aqario.fowlplay.client.render.entity.model.*;
 import aqario.fowlplay.common.config.FowlPlayConfig;
+import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayEntityType;
 import aqario.fowlplay.core.platform.PlatformHelper;
 import com.google.common.base.Suppliers;
+import dev.architectury.networking.NetworkManager;
+import io.github.flemmli97.debugutils.api.RegisterDebugRenderers;
 import net.minecraft.client.model.Dilation;
 import net.minecraft.entity.EntityType;
+import net.minecraft.util.Identifier;
 
 @SuppressWarnings("unused")
 public class FowlPlayClient {
     private static final Dilation ARMOR_DILATION = new Dilation(1.0F);
     private static final Dilation HAT_DILATION = new Dilation(0.5F);
+    public static final Identifier DEBUG_BIRD_ID = new Identifier(FowlPlay.ID, "debug/bird");
+    public static boolean DEBUG_BIRD = false;
 
     public static void init() {
+        if(FowlPlay.isDebugUtilsLoaded()) {
+            RegisterDebugRenderers.registerCustomDebugRenderer(DEBUG_BIRD_ID, BirdDebugRenderer.INSTANCE);
+            RegisterDebugRenderers.registerServerToggle(DEBUG_BIRD_ID);
+            RegisterDebugRenderers.registerClientHandler(DEBUG_BIRD_ID, b -> FowlPlayClient.DEBUG_BIRD = b);
+
+            NetworkManager.registerReceiver(
+                NetworkManager.s2c(),
+                DEBUG_BIRD_ID,
+                (payload, context) ->
+                    BirdDebugRenderer.INSTANCE.addBird(new BirdDebugRenderer.BirdData(payload))
+            );
+        }
     }
 
     public static void registerModelLayers() {

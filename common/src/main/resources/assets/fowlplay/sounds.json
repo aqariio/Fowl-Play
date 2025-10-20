@@ -131,6 +131,20 @@
     ],
     "subtitle": "subtitles.entity.duck.hurt"
   },
+  "entity.goose.call": {
+    "sounds": [
+      "fowlplay:mob/goose/call1",
+      "fowlplay:mob/goose/call2"
+    ],
+    "subtitle": "subtitles.entity.goose.call"
+  },
+  "entity.goose.hurt": {
+    "sounds": [
+      "fowlplay:mob/goose/call1",
+      "fowlplay:mob/goose/call2"
+    ],
+    "subtitle": "subtitles.entity.goose.hurt"
+  },
   "entity.gull.call": {
     "sounds": [
       "fowlplay:mob/gull/call1",

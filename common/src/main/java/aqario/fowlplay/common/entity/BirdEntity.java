@@ -3,6 +3,7 @@ package aqario.fowlplay.common.entity;
 import aqario.fowlplay.common.entity.ai.control.BirdBodyControl;
 import aqario.fowlplay.common.entity.ai.control.BirdLookControl;
 import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;
+import aqario.fowlplay.common.network.FowlPlayDebugInfoSender;
 import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
@@ -417,5 +418,6 @@ public abstract class BirdEntity extends AnimalEntity {
     protected void sendAiDebugData() {
         super.sendAiDebugData();
         DebugInfoSender.sendBrainDebugData(this);
+        FowlPlayDebugInfoSender.sendBirdDebugData(this);
     }
 }

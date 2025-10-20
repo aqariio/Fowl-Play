@@ -14,6 +14,10 @@ public class FowlPlay {
     public static final Logger LOGGER = LoggerFactory.getLogger("Fowl Play");
     public static final String ID = "fowlplay";
 
+    public static boolean isDebugUtilsLoaded() {
+        return Platform.isModLoaded("debugutils");
+    }
+
     public static void earlyInit() {
         Mod mod = Platform.getMod(ID);
         LOGGER.info("Loading {} {}", mod.getName(), mod.getVersion());

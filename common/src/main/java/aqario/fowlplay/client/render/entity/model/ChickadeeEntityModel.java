@@ -64,7 +64,7 @@ public class ChickadeeEntityModel extends FlyingBirdEntityModel<ChickadeeEntity>
         float ageInTicks = chickadee.age + tickDelta;
         float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, chickadee.prevBodyYaw, chickadee.bodyYaw);
         float headYaw = MathHelper.lerpAngleDegrees(tickDelta, chickadee.prevHeadYaw, chickadee.headYaw);
-        float relativeHeadYaw = headYaw - bodyYaw;
+        float relativeHeadYaw = MathHelper.wrapDegrees(headYaw - bodyYaw);
 
         float headPitch = MathHelper.lerp(tickDelta, chickadee.prevPitch, chickadee.getPitch());
         if (LivingEntityRenderer.shouldFlipUpsideDown(chickadee)) {

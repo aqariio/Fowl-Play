@@ -2,7 +2,11 @@
 
 ![In game screenshot of seagulls flying around](https://cdn.modrinth.com/data/WpXfePbg/images/41f74f0170525f98788a9911d3596e99b579eea2.png)
 
-Fowl Play adds more birds to Minecraft, with realistic behaviours, sounds, and flying mechanics. Unlike fluttering parrots and chickens, Fowl Play's birds can all take to the skies gracefully (_except flightless birds_). Some of them add ambience, others have useful features and all of them try to annoy you as much as they can!
+**Fowl Play** is a mod that aims to improve Minecraft's ambience and make the world seem more alive, adding birds with realistic behaviours, sounds, and flying mechanics
+
+Far from fluttering parrots and chickens, Fowl Play's birds can all take to the skies, be it hawks soaring majestically or sparrows darting between trees
+
+Some birds provide much-needed ambience to forests, others can be tamed to help players, and all of them interact to create a living ecosystem!
 
 <br/>
 
@@ -11,19 +15,25 @@ Fowl Play adds more birds to Minecraft, with realistic behaviours, sounds, and f
 <details>
 <summary>Where can I find information about the birds?</summary>
 
-You can view the wiki **[here](https://github.com/aqariio/Fowl-Play/wiki)**, although it's currently under construction.
+You can visit the wiki **[here](https://github.com/aqariio/Fowl-Play/wiki)**, although it's currently under construction. In the future, I plan to add in-game documentation for the various birds as well.
+</details>
+
+<details>
+<summary>I found a bug! / My game crashed!</summary>
+
+You can report bugs and crashes **[here](https://github.com/aqariio/Fowl-Play/issues/new?template=bug.yml)**!
 </details>
 
 <details>
 <summary>Can I use this mod in my modpack?</summary>
 
-Yes, just make sure to credit me and link back to this page.
+Sure! Just make sure to credit me and link back to this page.
 </details>
 
 <details>
 <summary>I have a question that's not listed! / I have a suggestion!</summary>
 
-You can talk about the mod in my [GitHub Discussions](https://github.com/aqariio/Fowl-Play/discussions).
+You can talk about the mod in my **[GitHub Discussions](https://github.com/aqariio/Fowl-Play/discussions)**.
 </details>
 
 <br/>
@@ -32,29 +42,30 @@ You can talk about the mod in my [GitHub Discussions](https://github.com/aqariio
 
 #### Birds:
 
-- Penguin (Emperor penguin)
-- Gull (Herring gull, ring-billed gull)
-- Robin (American robin)
-- Pigeon (Rock pigeon)
-- Cardinal (Northern cardinal)
-- Blue Jay
-- Old world Sparrow (House sparrow)
-- Chickadee (Black-capped chickadee)
-- Raven (Common raven)
-- Duck (Mallard duck)
-- Hawk (Red-tailed hawk)
-- Crows (American crow, carrion crow)
+- Penguins (Emperor penguin)
+- Gulls (Herring gull, ring-billed gull)
+- Robins (American robin)
+- Pigeons (Rock pigeon — with various colour and pattern variants)
+- Cardinals (Northern cardinal)
+- Blue Jays
+- Old world Sparrows (House sparrow)
+- Chickadees (Black-capped chickadee)
+- Ravens (Common raven)
+- Ducks (Mallard duck)
+- Hawks (Red-tailed hawk)
+- Crows (American/carrion crow)
+- Geese (Greylag goose, canada goose, emden goose, chinese goose)
 
 #### Other:
 
 - Updated chicken model with more variants (configurable)
+- Scarecrows
 
 ### Planned
 
 - Old world Vultures (Griffon vulture, lappet-faced vulture)
 - Ostriches (Common ostrich)
 - Owls (Great horned owl, snowy owl, barn owl)
-- Geese (Domestic goose, Canada goose)
 - Eagles (Bald eagle, golden eagle)
 - Woodpeckers (Downy woodpecker, pileated woodpecker, yellow-bellied sapsucker)
 - Falcons (Peregrine falcon, gyrfalcon, American kestrel)

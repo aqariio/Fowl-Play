@@ -31,7 +31,7 @@ public abstract class FenceGateBlockMixin extends HorizontalFacingBlock {
     private void fowlplay$lowerFenceGateHeight(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
         if(context instanceof EntityShapeContext entityContext
             && entityContext.getEntity() != null
-            && Birds.notFlightless(entityContext.getEntity())
+            && Birds.isNotFlightless(entityContext.getEntity())
         ) {
             switch(state.get(FACING).getAxis()) {
                 case X -> cir.setReturnValue(VoxelShapes.cuboid(

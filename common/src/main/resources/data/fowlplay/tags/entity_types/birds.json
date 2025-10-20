@@ -8,12 +8,14 @@
     "fowlplay:chickadee",
     "fowlplay:crow",
     "fowlplay:duck",
+    "fowlplay:goose",
     "fowlplay:gull",
     "fowlplay:hawk",
     "fowlplay:penguin",
     "fowlplay:pigeon",
     "fowlplay:raven",
     "fowlplay:robin",
-    "fowlplay:sparrow"
+    "fowlplay:sparrow",
+    "fowlplay:scarecrow"
   ]
 }

@@ -9,6 +9,7 @@ public class BirdBodyControl extends BodyControl {
     private final BirdEntity entity;
     private static final int BODY_KEEP_UP_THRESHOLD = 15;
     private float lastHeadYaw;
+    private int bodyAdjustTicks;
 
     public BirdBodyControl(BirdEntity entity) {
         super(entity);
@@ -23,10 +24,10 @@ public class BirdBodyControl extends BodyControl {
             this.lastHeadYaw = this.entity.headYaw;
         }
         else if (this.isIndependent()) {
-            if (Math.abs(this.entity.headYaw - this.lastHeadYaw) > BODY_KEEP_UP_THRESHOLD) {
-                this.lastHeadYaw = this.entity.headYaw;
-                this.keepUpBody();
-            }
+//            if (Math.abs(this.entity.headYaw - this.lastHeadYaw) > BODY_KEEP_UP_THRESHOLD) {
+//                this.lastHeadYaw = this.entity.headYaw;
+//                this.keepUpBody();
+//            }
         }
     }
 

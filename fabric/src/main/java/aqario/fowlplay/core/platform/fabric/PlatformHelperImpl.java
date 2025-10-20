@@ -1,6 +1,7 @@
 package aqario.fowlplay.core.platform.fabric;
 
 import aqario.fowlplay.common.entity.*;
+import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;
 import aqario.fowlplay.core.platform.CommonRegistry;
@@ -19,7 +20,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.Schedule;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.data.TrackedDataHandler;
@@ -52,6 +52,10 @@ public class PlatformHelperImpl {
         }
         else if(variant.get() instanceof DuckVariant v) {
             T registry = (T) Registry.register((Registry<DuckVariant>) FowlPlayRegistries.DUCK_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
+            return () -> registry;
+        }
+        else if(variant.get() instanceof GooseVariant v) {
+            T registry = (T) Registry.register((Registry<GooseVariant>) FowlPlayRegistries.GOOSE_VARIANT.get(), Identifier.of(FowlPlay.ID, id), v);
             return () -> registry;
         }
         else if(variant.get() instanceof GullVariant v) {
@@ -99,8 +103,8 @@ public class PlatformHelperImpl {
         return () -> registry;
     }
 
-    public static Supplier<Schedule> registerSchedule(String id, Supplier<Schedule> schedule) {
-        Schedule registry = Registry.register(Registries.SCHEDULE, Identifier.of(FowlPlay.ID, id), schedule.get());
+    public static Supplier<ExtendedSchedule> registerSchedule(String id, Supplier<ExtendedSchedule> schedule) {
+        ExtendedSchedule registry = Registry.register(Registries.SCHEDULE, Identifier.of(FowlPlay.ID, id), schedule.get());
         return () -> registry;
     }
 

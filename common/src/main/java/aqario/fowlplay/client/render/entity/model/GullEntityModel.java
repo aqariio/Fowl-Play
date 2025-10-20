@@ -68,7 +68,7 @@ public class GullEntityModel extends FlyingBirdEntityModel<GullEntity> {
         float ageInTicks = gull.age + tickDelta;
         float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, gull.prevBodyYaw, gull.bodyYaw);
         float headYaw = MathHelper.lerpAngleDegrees(tickDelta, gull.prevHeadYaw, gull.headYaw);
-        float relativeHeadYaw = headYaw - bodyYaw;
+        float relativeHeadYaw = MathHelper.wrapDegrees(headYaw - bodyYaw);
 
         float headPitch = MathHelper.lerp(tickDelta, gull.prevPitch, gull.getPitch());
         if (LivingEntityRenderer.shouldFlipUpsideDown(gull)) {

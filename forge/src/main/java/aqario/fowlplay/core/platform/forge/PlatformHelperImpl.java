@@ -1,6 +1,7 @@
 package aqario.fowlplay.core.platform.forge;
 
 import aqario.fowlplay.common.entity.*;
+import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistryKeys;
 import aqario.fowlplay.core.platform.CommonRegistry;
@@ -47,6 +48,10 @@ public class PlatformHelperImpl {
     );
     public static final DeferredRegister<DuckVariant> DUCK_VARIANTS = DeferredRegister.create(
         FowlPlayRegistryKeys.DUCK_VARIANT.getValue(),
+        FowlPlay.ID
+    );
+    public static final DeferredRegister<GooseVariant> GOOSE_VARIANTS = DeferredRegister.create(
+        FowlPlayRegistryKeys.GOOSE_VARIANT,
         FowlPlay.ID
     );
     public static final DeferredRegister<GullVariant> GULL_VARIANTS = DeferredRegister.create(
@@ -108,6 +113,9 @@ public class PlatformHelperImpl {
         else if(variant.get() instanceof DuckVariant) {
             return (Supplier<T>) DUCK_VARIANTS.register(id, (Supplier<DuckVariant>) variant);
         }
+        else if(variant.get() instanceof GooseVariant) {
+            return (Supplier<T>) GOOSE_VARIANTS.register(id, (Supplier<GooseVariant>) variant);
+        }
         else if(variant.get() instanceof GullVariant) {
             return (Supplier<T>) GULL_VARIANTS.register(id, (Supplier<GullVariant>) variant);
         }
@@ -147,7 +155,7 @@ public class PlatformHelperImpl {
         return PARTICLE_TYPES.register(id, particleType);
     }
 
-    public static Supplier<Schedule> registerSchedule(String id, Supplier<Schedule> schedule) {
+    public static Supplier<ExtendedSchedule> registerSchedule(String id, Supplier<ExtendedSchedule> schedule) {
         return SCHEDULES.register(id, schedule);
     }
 

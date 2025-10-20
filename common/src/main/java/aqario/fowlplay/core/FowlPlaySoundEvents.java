@@ -27,6 +27,9 @@ public final class FowlPlaySoundEvents {
     public static final Supplier<SoundEvent> ENTITY_DUCK_CALL = register("entity.duck.call");
     public static final Supplier<SoundEvent> ENTITY_DUCK_HURT = register("entity.duck.hurt");
 
+    public static final Supplier<SoundEvent> ENTITY_GOOSE_CALL = register("entity.goose.call");
+    public static final Supplier<SoundEvent> ENTITY_GOOSE_HURT = register("entity.goose.hurt");
+
     public static final Supplier<SoundEvent> ENTITY_GULL_CALL = register("entity.gull.call");
     public static final Supplier<SoundEvent> ENTITY_GULL_LONG_CALL = register("entity.gull.long_call");
     public static final Supplier<SoundEvent> ENTITY_GULL_HURT = register("entity.gull.hurt");

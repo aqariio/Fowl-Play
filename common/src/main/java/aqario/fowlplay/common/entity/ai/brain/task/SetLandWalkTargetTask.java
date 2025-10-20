@@ -11,7 +11,7 @@ import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.tslat.smartbrainlib.util.BrainUtils;
 
-public class GoToLandTask {
+public class SetLandWalkTargetTask {
     public static SingleTickBehaviour<BirdEntity> create(int range) {
         return new SingleTickBehaviour<>(
             MemoryList.create(4)

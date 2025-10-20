@@ -23,6 +23,13 @@ public final class FowlPlayTrackedDataHandlerRegistry {
             (buf) -> PlatformHelper.readRegistry(FowlPlayRegistries.DUCK_VARIANT.get(), DuckVariant.class, buf)
         )
     );
+    public static final TrackedDataHandler<GooseVariant> GOOSE_VARIANT = register(
+        "goose_variant",
+        TrackedDataHandler.of(
+            (buf, variant) -> PlatformHelper.writeRegistry(FowlPlayRegistries.GOOSE_VARIANT.get(), variant, buf),
+            (buf) -> PlatformHelper.readRegistry(FowlPlayRegistries.GOOSE_VARIANT.get(), GooseVariant.class, buf)
+        )
+    );
     public static final TrackedDataHandler<GullVariant> GULL_VARIANT = register(
         "gull_variant",
         TrackedDataHandler.of(

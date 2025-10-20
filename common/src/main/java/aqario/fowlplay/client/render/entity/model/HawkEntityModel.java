@@ -78,7 +78,7 @@ public class HawkEntityModel extends FlyingBirdEntityModel<HawkEntity> {
         float ageInTicks = hawk.age + tickDelta;
         float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, hawk.prevBodyYaw, hawk.bodyYaw);
         float headYaw = MathHelper.lerpAngleDegrees(tickDelta, hawk.prevHeadYaw, hawk.headYaw);
-        float relativeHeadYaw = headYaw - bodyYaw;
+        float relativeHeadYaw = MathHelper.wrapDegrees(headYaw - bodyYaw);
 
         float headPitch = MathHelper.lerp(tickDelta, hawk.prevPitch, hawk.getPitch());
         if (LivingEntityRenderer.shouldFlipUpsideDown(hawk)) {

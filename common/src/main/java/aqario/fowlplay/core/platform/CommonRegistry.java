@@ -1,5 +1,6 @@
 package aqario.fowlplay.core.platform;
 
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 
@@ -11,4 +12,6 @@ public interface CommonRegistry<T> {
     Identifier fowlplay$getId(T value);
 
     Optional<T> fowlplay$getRandom(Random random);
+
+    Optional<T> fowlplay$getRandomEntry(TagKey<T> tag, Random random);
 }

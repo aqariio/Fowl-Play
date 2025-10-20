@@ -66,6 +66,18 @@ public class FowlPlayItemTagGen extends FabricTagProvider.ItemTagProvider {
             .add(Items.TROPICAL_FISH)
             .add(Items.WHEAT_SEEDS)
             .addOptional(WORM);
+        this.getOrCreateTagBuilder(FowlPlayItemTags.GOOSE_FOOD)
+            .add(Items.BEETROOT_SEEDS)
+            .add(Items.BREAD)
+            .add(Items.COD)
+            .add(Items.MELON_SEEDS)
+            .add(Items.PUMPKIN_SEEDS)
+            .add(Items.SALMON)
+            .add(Items.SEAGRASS)
+            .add(Items.TORCHFLOWER_SEEDS)
+            .add(Items.TROPICAL_FISH)
+            .add(Items.WHEAT_SEEDS)
+            .addOptional(WORM);
         this.getOrCreateTagBuilder(FowlPlayItemTags.GULL_FOOD)
             .addOptionalTag(ConventionalItemTags.FOODS)
             .add(Items.BEETROOT_SEEDS)

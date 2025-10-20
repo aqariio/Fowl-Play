@@ -64,7 +64,7 @@ public class SparrowEntityModel extends FlyingBirdEntityModel<SparrowEntity> {
         float ageInTicks = sparrow.age + tickDelta;
         float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, sparrow.prevBodyYaw, sparrow.bodyYaw);
         float headYaw = MathHelper.lerpAngleDegrees(tickDelta, sparrow.prevHeadYaw, sparrow.headYaw);
-        float relativeHeadYaw = headYaw - bodyYaw;
+        float relativeHeadYaw = MathHelper.wrapDegrees(headYaw - bodyYaw);
 
         float headPitch = MathHelper.lerp(tickDelta, sparrow.prevPitch, sparrow.getPitch());
         if (LivingEntityRenderer.shouldFlipUpsideDown(sparrow)) {

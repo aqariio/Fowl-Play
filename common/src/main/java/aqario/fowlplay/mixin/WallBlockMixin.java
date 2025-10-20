@@ -33,7 +33,7 @@ public class WallBlockMixin {
     private void fowlplay$lowerWallHeight(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
         if(context instanceof EntityShapeContext entityContext
             && entityContext.getEntity() != null
-            && Birds.notFlightless(entityContext.getEntity())
+            && Birds.isNotFlightless(entityContext.getEntity())
         ) {
             VoxelShape originalShape = this.collisionShapeMap.get(state);
             if(originalShape.getMax(Direction.Axis.Y) > 1) {

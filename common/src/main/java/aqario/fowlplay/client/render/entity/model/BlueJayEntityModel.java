@@ -68,7 +68,7 @@ public class BlueJayEntityModel extends FlyingBirdEntityModel<BlueJayEntity> {
         float ageInTicks = blueJay.age + tickDelta;
         float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, blueJay.prevBodyYaw, blueJay.bodyYaw);
         float headYaw = MathHelper.lerpAngleDegrees(tickDelta, blueJay.prevHeadYaw, blueJay.headYaw);
-        float relativeHeadYaw = headYaw - bodyYaw;
+        float relativeHeadYaw = MathHelper.wrapDegrees(headYaw - bodyYaw);
 
         float headPitch = MathHelper.lerp(tickDelta, blueJay.prevPitch, blueJay.getPitch());
         if (LivingEntityRenderer.shouldFlipUpsideDown(blueJay)) {

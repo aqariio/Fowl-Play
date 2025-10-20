@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.util;
 
-import aqario.fowlplay.common.entity.BirdEntity;
 import com.google.common.collect.ImmutableSet;
 import dev.architectury.registry.level.entity.EntityAttributeRegistry;
 import dev.architectury.registry.level.entity.SpawnPlacementsRegistry;
@@ -43,11 +42,11 @@ public class EntityTypeBuilder<T extends Entity> {
         this.spawnableFarFromPlayer = spawnGroup == SpawnGroup.CREATURE || spawnGroup == SpawnGroup.MISC;
     }
 
-    public static <T extends BirdEntity> EntityTypeBuilder<T> create(EntityType.EntityFactory<T> factory, SpawnGroup spawnGroup) {
+    public static <T extends Entity> EntityTypeBuilder<T> create(EntityType.EntityFactory<T> factory, SpawnGroup spawnGroup) {
         return new EntityTypeBuilder<>(factory, spawnGroup);
     }
 
-    public static <T extends BirdEntity> EntityTypeBuilder<T> create(SpawnGroup spawnGroup) {
+    public static <T extends Entity> EntityTypeBuilder<T> create(SpawnGroup spawnGroup) {
         return new EntityTypeBuilder<>((type, world) -> null, spawnGroup);
     }
 

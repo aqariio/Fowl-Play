@@ -10,8 +10,8 @@ import net.minecraft.entity.ai.brain.task.LookTargetUtil;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.tslat.smartbrainlib.api.core.behaviour.AllApplicableBehaviours;
 import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.SequentialBehaviour;
 import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,19 +19,21 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * A collection of preconfigured or composite tasks for penguins.
+ */
 public class PenguinSpecificTasks {
     @SuppressWarnings("unchecked")
     public static ExtendedBehaviour<PenguinEntity> goToWater() {
-        return new SequentialBehaviour<>(
+        return new AllApplicableBehaviours<>(
             Pair.of(
                 SlideTasks.startSliding(),
                 1
             ),
             Pair.of(
-                GoToWaterTask.create(32),
+                SetWaterWalkTargetTask.create(32),
                 2
             )
-
         ).startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.HAS_HUNTING_COOLDOWN));
     }
 

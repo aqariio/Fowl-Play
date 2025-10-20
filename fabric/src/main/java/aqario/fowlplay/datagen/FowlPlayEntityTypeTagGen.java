@@ -61,47 +61,64 @@ public class FowlPlayEntityTypeTagGen extends FabricTagProvider.EntityTypeTagPro
         // Waterbirds
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.WATERBIRDS)
             .add(FowlPlayEntityType.DUCK.get())
+            .add(FowlPlayEntityType.GOOSE.get())
             .add(FowlPlayEntityType.GULL.get())
             .add(FowlPlayEntityType.PENGUIN.get());
 
         // Waterfowl
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.WATERFOWL)
-            .add(FowlPlayEntityType.DUCK.get());
+            .add(FowlPlayEntityType.DUCK.get())
+            .add(FowlPlayEntityType.GOOSE.get());
 
         // Entities to avoid
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.BLUE_JAY_AVOIDS)
             .add(EntityType.PLAYER)
+            .add(FowlPlayEntityType.SCARECROW.get())
             .add(FowlPlayEntityType.HAWK.get());
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.CARDINAL_AVOIDS)
             .add(EntityType.PLAYER)
+            .add(FowlPlayEntityType.SCARECROW.get())
             .add(FowlPlayEntityType.HAWK.get());
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.CHICKADEE_AVOIDS)
             .add(EntityType.PLAYER)
+            .add(FowlPlayEntityType.SCARECROW.get())
             .add(FowlPlayEntityType.HAWK.get());
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.CROW_AVOIDS)
             .add(EntityType.PLAYER)
+            .add(FowlPlayEntityType.SCARECROW.get())
             .add(FowlPlayEntityType.HAWK.get());
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.DUCK_AVOIDS)
             .add(EntityType.PLAYER)
+            .add(FowlPlayEntityType.SCARECROW.get())
+            .add(FowlPlayEntityType.HAWK.get());
+        this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.GOOSE_AVOIDS)
+            .add(EntityType.PLAYER)
+            .add(FowlPlayEntityType.SCARECROW.get())
             .add(FowlPlayEntityType.HAWK.get());
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.GULL_AVOIDS)
             .add(EntityType.PLAYER)
+            .add(FowlPlayEntityType.SCARECROW.get())
             .add(FowlPlayEntityType.HAWK.get());
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.HAWK_AVOIDS)
-            .add(EntityType.PLAYER);
+            .add(EntityType.PLAYER)
+            .add(FowlPlayEntityType.SCARECROW.get());
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.PENGUIN_AVOIDS)
             .add(FowlPlayEntityType.HAWK.get());
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.PIGEON_AVOIDS)
             .add(EntityType.PLAYER)
+            .add(FowlPlayEntityType.SCARECROW.get())
             .add(FowlPlayEntityType.HAWK.get());
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.RAVEN_AVOIDS)
             .add(EntityType.PLAYER)
+            .add(FowlPlayEntityType.SCARECROW.get())
             .add(FowlPlayEntityType.HAWK.get());
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.ROBIN_AVOIDS)
             .add(EntityType.PLAYER)
+            .add(FowlPlayEntityType.SCARECROW.get())
             .add(FowlPlayEntityType.HAWK.get());
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.SPARROW_AVOIDS)
             .add(EntityType.PLAYER)
+            .add(FowlPlayEntityType.SCARECROW.get())
             .add(FowlPlayEntityType.HAWK.get());
 
         // Hunted when the target is an adult
@@ -148,11 +165,31 @@ public class FowlPlayEntityTypeTagGen extends FabricTagProvider.EntityTypeTagPro
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.HAWK_BABY_HUNT_TARGETS)
             .add(EntityType.CHICKEN)
             .add(EntityType.RABBIT)
+            .add(FowlPlayEntityType.BLUE_JAY.get())
+            .add(FowlPlayEntityType.CARDINAL.get())
+            .add(FowlPlayEntityType.CHICKADEE.get())
+            .add(FowlPlayEntityType.CROW.get())
+            .add(FowlPlayEntityType.DUCK.get())
+            .add(FowlPlayEntityType.GOOSE.get())
+            .add(FowlPlayEntityType.GULL.get())
             .add(FowlPlayEntityType.PIGEON.get())
+            .add(FowlPlayEntityType.RAVEN.get())
+            .add(FowlPlayEntityType.ROBIN.get())
             .add(FowlPlayEntityType.SPARROW.get());
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.RAVEN_BABY_HUNT_TARGETS)
-            .add(EntityType.PLAYER)
-            .add(FowlPlayEntityType.HAWK.get());
+            .add(EntityType.CHICKEN)
+            .add(EntityType.RABBIT)
+            .add(FowlPlayEntityType.BLUE_JAY.get())
+            .add(FowlPlayEntityType.CARDINAL.get())
+            .add(FowlPlayEntityType.CHICKADEE.get())
+            .add(FowlPlayEntityType.CROW.get())
+            .add(FowlPlayEntityType.DUCK.get())
+            .add(FowlPlayEntityType.GOOSE.get())
+            .add(FowlPlayEntityType.GULL.get())
+            .add(FowlPlayEntityType.HAWK.get())
+            .add(FowlPlayEntityType.PIGEON.get())
+            .add(FowlPlayEntityType.ROBIN.get())
+            .add(FowlPlayEntityType.SPARROW.get());
 
         // Entities to attack
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.CROW_ATTACK_TARGETS)

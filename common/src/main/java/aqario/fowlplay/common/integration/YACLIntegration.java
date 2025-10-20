@@ -86,6 +86,15 @@ public class YACLIntegration {
                         null
                     ))
                     .group(createSoundGroup(
+                        "entity.fowlplay.goose",
+                        defaults.gooseCallVolume,
+                        () -> config.gooseCallVolume,
+                        val -> config.gooseCallVolume = val,
+                        0,
+                        null,
+                        null
+                    ))
+                    .group(createSoundGroup(
                         "entity.fowlplay.gull",
                         defaults.gullCallVolume,
                         () -> config.gullCallVolume,
@@ -211,6 +220,18 @@ public class YACLIntegration {
                         defaults.duckMaxGroupSize,
                         () -> config.duckMaxGroupSize,
                         val -> config.duckMaxGroupSize = val
+                    ))
+                    .group(createSpawningGroup(
+                        "entity.fowlplay.goose",
+                        defaults.gooseSpawnWeight,
+                        () -> config.gooseSpawnWeight,
+                        val -> config.gooseSpawnWeight = val,
+                        defaults.gooseMinGroupSize,
+                        () -> config.gooseMinGroupSize,
+                        val -> config.gooseMinGroupSize = val,
+                        defaults.gooseMaxGroupSize,
+                        () -> config.gooseMaxGroupSize,
+                        val -> config.gooseMaxGroupSize = val
                     ))
                     .group(createSpawningGroup(
                         "entity.fowlplay.gull",

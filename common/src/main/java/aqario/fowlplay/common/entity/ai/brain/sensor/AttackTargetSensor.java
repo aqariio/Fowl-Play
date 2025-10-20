@@ -9,6 +9,7 @@ import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.tslat.smartbrainlib.api.core.sensor.EntityFilteringSensor;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
+import net.tslat.smartbrainlib.util.BrainUtils;
 import net.tslat.smartbrainlib.util.SensoryUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,8 +42,9 @@ public class AttackTargetSensor<E extends BirdEntity> extends EntityFilteringSen
         };
     }
 
+    @Nullable
     @Override
-    protected @Nullable LivingEntity findMatches(E entity, LivingTargetCache matcher) {
+    protected LivingEntity findMatches(E entity, LivingTargetCache matcher) {
         return matcher.findFirst(target -> predicate().test(target, entity)).orElse(null);
     }
 
@@ -52,7 +54,7 @@ public class AttackTargetSensor<E extends BirdEntity> extends EntityFilteringSen
     }
 
     private static boolean canHunt(BirdEntity bird, LivingEntity target) {
-        return !bird.getBrain().hasMemoryModule(MemoryModuleType.HAS_HUNTING_COOLDOWN)
+        return !BrainUtils.hasMemory(bird, MemoryModuleType.HAS_HUNTING_COOLDOWN)
             && canAttack(bird, target);
     }
 }

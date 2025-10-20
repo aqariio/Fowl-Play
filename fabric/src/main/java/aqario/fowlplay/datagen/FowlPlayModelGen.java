@@ -20,6 +20,7 @@ public class FowlPlayModelGen extends FabricModelProvider {
         this.registerSpawnEgg(generator, FowlPlayItems.CHICKADEE_SPAWN_EGG.get());
         this.registerSpawnEgg(generator, FowlPlayItems.CROW_SPAWN_EGG.get());
         this.registerSpawnEgg(generator, FowlPlayItems.DUCK_SPAWN_EGG.get());
+        this.registerSpawnEgg(generator, FowlPlayItems.GOOSE_SPAWN_EGG.get());
         this.registerSpawnEgg(generator, FowlPlayItems.GULL_SPAWN_EGG.get());
         this.registerSpawnEgg(generator, FowlPlayItems.HAWK_SPAWN_EGG.get());
         this.registerSpawnEgg(generator, FowlPlayItems.PENGUIN_SPAWN_EGG.get());
@@ -27,6 +28,7 @@ public class FowlPlayModelGen extends FabricModelProvider {
         this.registerSpawnEgg(generator, FowlPlayItems.RAVEN_SPAWN_EGG.get());
         this.registerSpawnEgg(generator, FowlPlayItems.ROBIN_SPAWN_EGG.get());
         this.registerSpawnEgg(generator, FowlPlayItems.SPARROW_SPAWN_EGG.get());
+        this.registerItem(generator, FowlPlayItems.SCARECROW.get());
     }
 
     @Override
@@ -35,5 +37,9 @@ public class FowlPlayModelGen extends FabricModelProvider {
 
     protected void registerSpawnEgg(BlockStateModelGenerator generator, Item item) {
         generator.registerParentedItemModel(item, ModelIds.getMinecraftNamespacedItem("template_spawn_egg"));
+    }
+
+    protected void registerItem(BlockStateModelGenerator generator, Item item) {
+        generator.registerItemModel(item);
     }
 }

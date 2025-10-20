@@ -68,7 +68,7 @@ public class CardinalEntityModel extends FlyingBirdEntityModel<CardinalEntity> {
         float ageInTicks = cardinal.age + tickDelta;
         float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, cardinal.prevBodyYaw, cardinal.bodyYaw);
         float headYaw = MathHelper.lerpAngleDegrees(tickDelta, cardinal.prevHeadYaw, cardinal.headYaw);
-        float relativeHeadYaw = headYaw - bodyYaw;
+        float relativeHeadYaw = MathHelper.wrapDegrees(headYaw - bodyYaw);
 
         float headPitch = MathHelper.lerp(tickDelta, cardinal.prevPitch, cardinal.getPitch());
         if (LivingEntityRenderer.shouldFlipUpsideDown(cardinal)) {

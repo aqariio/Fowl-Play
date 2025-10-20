@@ -121,6 +121,10 @@ public abstract class BirdEntity extends AnimalEntity {
         return this.getFood().test(stack) && !this.getFood().test(heldStack);
     }
 
+    public boolean shouldDropBeakItem(ItemStack stack) {
+        return !stack.isEmpty() && !this.getFood().test(stack);
+    }
+
     private void dropWithoutDelay(ItemStack stack, Entity thrower) {
         ItemEntity item = new ItemEntity(this.getWorld(), this.getX(), this.getY(), this.getZ(), stack);
         if(thrower != null) {
@@ -177,7 +181,7 @@ public abstract class BirdEntity extends AnimalEntity {
     }
 
     public int getFleeRange(LivingEntity target) {
-        return Birds.notFlightless(target) ? 32 : 12;
+        return Birds.isNotFlightless(target) ? 32 : 16;
     }
 
     public boolean hasLowHealth() {
@@ -218,7 +222,7 @@ public abstract class BirdEntity extends AnimalEntity {
                     this.getWorld().sendEntityStatus(this, EntityStatuses.CREATE_EATING_PARTICLES);
                 }
             }
-            else if(!stack.isEmpty() && !this.getFood().test(stack)) {
+            else if(this.shouldDropBeakItem(stack)) {
                 if(this.random.nextFloat() < 0.1f) {
                     this.dropStack(this.getEquippedStack(EquipmentSlot.MAINHAND));
                     this.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
@@ -293,11 +297,11 @@ public abstract class BirdEntity extends AnimalEntity {
     }
 
     protected boolean canCall() {
-        return this.getWorld().isDay() || this.random.nextFloat() < 0.05F;
+        return Birds.isDaytime(this);
     }
 
     protected boolean canSing() {
-        return this.getWorld().isDay() && this.isOnGround() && !this.isBaby();
+        return Birds.isDaytime(this) && this.isOnGround() && !this.isBaby();
     }
 
     private void resetCallDelay() {
@@ -387,7 +391,7 @@ public abstract class BirdEntity extends AnimalEntity {
 
     @Override
     public int getMaxHeadRotation() {
-        return 90;
+        return 135;
     }
 
     protected MoveControl createMoveControl() {

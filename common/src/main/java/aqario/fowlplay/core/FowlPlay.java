@@ -26,6 +26,7 @@ public class FowlPlay {
     public static void init() {
         ChickenVariant.init();
         DuckVariant.init();
+        GooseVariant.init();
         GullVariant.init();
         PigeonVariant.init();
         SparrowVariant.init();
@@ -35,6 +36,7 @@ public class FowlPlay {
         FowlPlayItems.init();
         FowlPlayMemoryModuleType.init();
         FowlPlayParticleTypes.init();
+        FowlPlaySchedules.init();
         FowlPlaySensorType.init();
         FowlPlaySoundEvents.init();
         FowlPlayTrackedDataHandlerRegistry.init();

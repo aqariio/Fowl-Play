@@ -14,26 +14,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldView;
-import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
 import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
-import java.util.function.BiFunction;
 
-public class BreatheAirTask<E extends BirdEntity> extends ExtendedBehaviour<E> {
+public class SetAirTargetTask<E extends BirdEntity> extends SpeedModifiableBehaviour<E> {
     private static final MemoryList MEMORIES = MemoryList.create(1)
         .registered(MemoryModuleType.WALK_TARGET);
-    protected BiFunction<E, Vec3d, Float> speedModifier = (entity, targetPos) -> 1f;
-
-    public BreatheAirTask<E> speedModifier(float modifier) {
-        return this.speedModifier((entity, targetPos) -> modifier);
-    }
-
-    public BreatheAirTask<E> speedModifier(BiFunction<E, Vec3d, Float> function) {
-        this.speedModifier = function;
-
-        return this;
-    }
 
     @Override
     protected List<Pair<MemoryModuleType<?>, MemoryModuleState>> getMemoryRequirements() {

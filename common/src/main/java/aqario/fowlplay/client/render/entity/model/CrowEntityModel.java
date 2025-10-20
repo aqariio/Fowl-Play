@@ -68,7 +68,7 @@ public class CrowEntityModel extends FlyingBirdEntityModel<CrowEntity> {
         float ageInTicks = crow.age + tickDelta;
         float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, crow.prevBodyYaw, crow.bodyYaw);
         float headYaw = MathHelper.lerpAngleDegrees(tickDelta, crow.prevHeadYaw, crow.headYaw);
-        float relativeHeadYaw = headYaw - bodyYaw;
+        float relativeHeadYaw = MathHelper.wrapDegrees(headYaw - bodyYaw);
 
         float headPitch = MathHelper.lerp(tickDelta, crow.prevPitch, crow.getPitch());
         if (LivingEntityRenderer.shouldFlipUpsideDown(crow)) {

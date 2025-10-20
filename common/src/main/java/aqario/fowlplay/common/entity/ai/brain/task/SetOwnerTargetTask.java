@@ -9,13 +9,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.*;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
-import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
 import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
-import java.util.function.Function;
 
-public class FollowOwnerTask extends ExtendedBehaviour<PigeonEntity> {
+public class SetOwnerTargetTask extends SpeedModifiableBehaviour<PigeonEntity> {
     private static final MemoryList MEMORIES = MemoryList.create(3)
         .registered(
             FowlPlayMemoryModuleType.TELEPORT_TARGET.get(),
@@ -24,20 +22,9 @@ public class FollowOwnerTask extends ExtendedBehaviour<PigeonEntity> {
         );
     private LivingEntity owner;
     private int updateCountdownTicks;
-    protected Function<PigeonEntity, Float> speedModifier = (entity) -> 1f;
     protected UniformIntProvider range = UniformIntProvider.create(5, 10);
 
-    public FollowOwnerTask speedModifier(float modifier) {
-        return this.speedModifier(entity -> modifier);
-    }
-
-    public FollowOwnerTask speedModifier(Function<PigeonEntity, Float> function) {
-        this.speedModifier = function;
-
-        return this;
-    }
-
-    public FollowOwnerTask range(int min, int max) {
+    public SetOwnerTargetTask range(int min, int max) {
         this.range = UniformIntProvider.create(min, max);
 
         return this;
@@ -96,7 +83,7 @@ public class FollowOwnerTask extends ExtendedBehaviour<PigeonEntity> {
                     BrainUtils.setMemory(brain, FowlPlayMemoryModuleType.TELEPORT_TARGET.get(), new TeleportTarget(this.owner));
                 }
                 else {
-                    BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, new WalkTarget(this.owner, this.speedModifier.apply(pigeon), 0));
+                    BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, new WalkTarget(this.owner, this.speedModifier.apply(pigeon, this.owner.getPos()), 0));
                 }
             }
         }

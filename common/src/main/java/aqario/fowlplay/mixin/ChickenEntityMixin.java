@@ -41,14 +41,10 @@ public abstract class ChickenEntityMixin extends AnimalEntity implements Variant
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        if(spawnReason == SpawnReason.BREEDING) {
-            this.setVariant(ChickenVariant.WHITE.get());
-        }
-        else if(spawnReason == SpawnReason.CHUNK_GENERATION) {
-            this.setVariant(ChickenVariant.RED_JUNGLEFOWL.get());
-        }
-        else {
-            FowlPlayRegistries.CHICKEN_VARIANT.get()
+        switch(spawnReason) {
+            case BREEDING -> this.setVariant(ChickenVariant.WHITE.get());
+            case CHUNK_GENERATION -> this.setVariant(ChickenVariant.RED_JUNGLEFOWL.get());
+            default -> FowlPlayRegistries.CHICKEN_VARIANT.get()
                 .fowlplay$getRandom(world.getRandom())
                 .ifPresent(this::setVariant);
         }

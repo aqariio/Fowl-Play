@@ -13,19 +13,19 @@ import java.util.Optional;
 import java.util.function.BiPredicate;
 
 public class SetEntityLookTargetTask {
-    public static SingleTickBehaviour<BirdEntity> create() {
+    public static <E extends BirdEntity> SingleTickBehaviour<E> create() {
         return create((entity, target) -> true);
     }
 
-    public static SingleTickBehaviour<BirdEntity> create(SpawnGroup spawnGroup) {
+    public static <E extends BirdEntity> SingleTickBehaviour<E> create(SpawnGroup spawnGroup) {
         return create((entity, target) -> spawnGroup.equals(target.getType().getSpawnGroup()));
     }
 
-    public static SingleTickBehaviour<BirdEntity> create(EntityType<?> type) {
+    public static <E extends BirdEntity> SingleTickBehaviour<E> create(EntityType<?> type) {
         return create((entity, target) -> type.equals(target.getType()));
     }
 
-    public static SingleTickBehaviour<BirdEntity> create(BiPredicate<BirdEntity, LivingEntity> predicate) {
+    public static <E extends BirdEntity> SingleTickBehaviour<E> create(BiPredicate<E, LivingEntity> predicate) {
         return new SingleTickBehaviour<>(
             MemoryList.create(2)
                 .absent(MemoryModuleType.LOOK_TARGET)

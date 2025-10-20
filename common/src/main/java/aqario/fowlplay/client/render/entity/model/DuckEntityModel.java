@@ -68,7 +68,7 @@ public class DuckEntityModel extends FlyingBirdEntityModel<DuckEntity> {
         float ageInTicks = duck.age + tickDelta;
         float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, duck.prevBodyYaw, duck.bodyYaw);
         float headYaw = MathHelper.lerpAngleDegrees(tickDelta, duck.prevHeadYaw, duck.headYaw);
-        float relativeHeadYaw = headYaw - bodyYaw;
+        float relativeHeadYaw = MathHelper.wrapDegrees(headYaw - bodyYaw);
 
         float headPitch = MathHelper.lerp(tickDelta, duck.prevPitch, duck.getPitch());
         if (LivingEntityRenderer.shouldFlipUpsideDown(duck)) {
@@ -104,7 +104,7 @@ public class DuckEntityModel extends FlyingBirdEntityModel<DuckEntity> {
     }
 
     private void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = MathHelper.clamp(headYaw, -135.0F, 135.0F);
+        headYaw = MathHelper.clamp(headYaw, -100.0F, 100.0F);
         headPitch = MathHelper.clamp(headPitch, -25.0F, 45.0F);
         this.neck.yaw = headYaw * (float) (Math.PI / 180.0);
         this.neck.pitch = headPitch * (float) (Math.PI / 180.0);

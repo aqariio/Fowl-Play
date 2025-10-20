@@ -67,7 +67,7 @@ public class PigeonEntityModel extends FlyingBirdEntityModel<PigeonEntity> {
         float ageInTicks = pigeon.age + tickDelta;
         float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, pigeon.prevBodyYaw, pigeon.bodyYaw);
         float headYaw = MathHelper.lerpAngleDegrees(tickDelta, pigeon.prevHeadYaw, pigeon.headYaw);
-        float relativeHeadYaw = headYaw - bodyYaw;
+        float relativeHeadYaw = MathHelper.wrapDegrees(headYaw - bodyYaw);
 
         float headPitch = MathHelper.lerp(tickDelta, pigeon.prevPitch, pigeon.getPitch());
         if (LivingEntityRenderer.shouldFlipUpsideDown(pigeon)) {

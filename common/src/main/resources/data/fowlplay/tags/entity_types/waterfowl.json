@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "fowlplay:duck"
+    "fowlplay:duck",
+    "fowlplay:goose"
   ]
 }

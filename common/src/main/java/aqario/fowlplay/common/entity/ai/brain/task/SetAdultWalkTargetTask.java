@@ -12,7 +12,7 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 
-public class SetWalkTargetToClosestAdult {
+public class SetAdultWalkTargetTask {
     @SuppressWarnings("unchecked")
     public static SingleTickBehaviour<BirdEntity> create(UniformIntProvider executionRange) {
         return new SingleTickBehaviour<>(

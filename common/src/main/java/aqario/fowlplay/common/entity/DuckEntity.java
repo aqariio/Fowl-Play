@@ -1,23 +1,27 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
+import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
-import aqario.fowlplay.common.entity.ai.brain.task.*;
+import aqario.fowlplay.common.entity.ai.brain.task.CompositeTasks;
+import aqario.fowlplay.common.entity.ai.brain.task.FlightTasks;
+import aqario.fowlplay.common.entity.ai.brain.task.LookAroundTask;
+import aqario.fowlplay.common.entity.ai.brain.task.SetEntityLookTargetTask;
 import aqario.fowlplay.common.entity.ai.control.BirdFloatMoveControl;
 import aqario.fowlplay.common.entity.ai.pathing.AmphibiousNavigation;
 import aqario.fowlplay.common.util.Birds;
-import aqario.fowlplay.core.*;
+import aqario.fowlplay.core.FowlPlayRegistries;
+import aqario.fowlplay.core.FowlPlaySchedules;
+import aqario.fowlplay.core.FowlPlaySoundEvents;
+import aqario.fowlplay.core.FowlPlayTrackedDataHandlerRegistry;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.datafixers.util.Pair;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.Brain;
-import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.task.LookTargetUtil;
 import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.PathNodeType;
@@ -36,7 +40,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
-import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
@@ -44,27 +47,24 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeA
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.BreedWithPartner;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.InvalidateMemory;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowParent;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomSwimTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTarget;
+import net.tslat.smartbrainlib.api.core.schedule.SmartBrainSchedule;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.InWaterSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
 import net.tslat.smartbrainlib.object.SquareRadius;
-import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 
-public class DuckEntity extends TrustingBirdEntity implements SmartBrainOwner<DuckEntity>, VariantHolder<DuckVariant>, Flocking {
+public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEntity>, VariantHolder<DuckVariant>, Flocking {
     private static final TrackedData<DuckVariant> VARIANT = DataTracker.registerData(
         DuckEntity.class,
         FowlPlayTrackedDataHandlerRegistry.DUCK_VARIANT
@@ -96,12 +96,17 @@ public class DuckEntity extends TrustingBirdEntity implements SmartBrainOwner<Du
 
     @Override
     public int getMaxPitchChange() {
-        return 15;
+        return 18;
     }
 
     @Override
     public int getMaxYawChange() {
-        return 15;
+        return 18;
+    }
+
+    @Override
+    public Pair<Integer, Integer> getFlyHeightRange() {
+        return Pair.of(18, 24);
     }
 
     @Override
@@ -266,145 +271,95 @@ public class DuckEntity extends TrustingBirdEntity implements SmartBrainOwner<Du
                 .setScanRate(bird -> 10),
             new AvoidTargetSensor<DuckEntity>()
                 .setScanRate(bird -> 10),
-            new AttackTargetSensor<DuckEntity>()
-                .setScanRate(bird -> 10)
+            new AttackTargetSensor<>()
+        );
+    }
+
+    @Override
+    public BrainActivityGroup<? extends DuckEntity> getCoreTasks() {
+        return BirdBrain.coreActivity(
+            FlightTasks.stopFalling(),
+            new SetAttackTarget<>(),
+            new LookAtTarget<>()
+                .runFor(entity -> entity.getRandom().nextBetween(45, 90)),
+            new MoveToWalkTarget<>()
+        );
+    }
+
+    @Override
+    public BrainActivityGroup<? extends DuckEntity> getAvoidTasks() {
+        return BirdBrain.avoidActivity(
+            CompositeTasks.setAvoidEntityWalkTarget()
+        );
+    }
+
+    @Override
+    public BrainActivityGroup<? extends DuckEntity> getFightTasks() {
+        return BirdBrain.fightActivity(
+            new InvalidateAttackTarget<>(),
+            FlightTasks.startFlying(),
+            new SetWalkTargetToAttackTarget<>(),
+            new AnimatableMeleeAttack<>(0)
         );
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public BrainActivityGroup<? extends DuckEntity> getCoreTasks() {
-        return new BrainActivityGroup<DuckEntity>(Activity.CORE)
-            .priority(0)
-            .behaviours(
-                FlightTasks.stopFalling(),
-                new SetAttackTarget<DuckEntity>()
-                    .attackPredicate(Birds::canAttack),
-                new LookAtTarget<>()
-                    .runFor(entity -> entity.getRandom().nextBetween(45, 90)),
-                new MoveToWalkTarget<>()
-            );
+    public BrainActivityGroup<? extends DuckEntity> getForageTasks() {
+        return BirdBrain.forageActivity(
+            new OneRandomBehaviour<>(
+                Pair.of(
+                    CompositeTasks.setWaterfowlForagingTarget(),
+                    1
+                ),
+                Pair.of(
+                    new Idle<FlyingBirdEntity>()
+                        .runFor(entity -> entity.getRandom().nextBetween(100, 300))
+                        .startCondition(Predicate.not(FlyingBirdEntity::isFlying)),
+                    2
+                )
+            )
+        );
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public BrainActivityGroup<? extends DuckEntity> getIdleTasks() {
-        return new BrainActivityGroup<DuckEntity>(Activity.IDLE)
-            .priority(10)
-            .behaviours(
-                new BreedWithPartner<>(),
-                new FollowParent<>(),
-                SetEntityLookTargetTask.create(Birds::isPlayerHoldingFood),
-                new SetRandomLookTarget<>()
-                    .lookTime(entity -> entity.getRandom().nextBetween(150, 250)),
-                new OneRandomBehaviour<>(
-                    Pair.of(
-                        TargetlessFlyTask.create(),
-                        1
-                    )
-                ).startCondition(entity -> entity.isFlying() && !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET)),
-                new OneRandomBehaviour<>(
-                    Pair.of(
-                        new SetRandomWalkTarget<DuckEntity>()
-                            .setRadius(24, 12)
-                            .startCondition(Predicate.not(Birds::isPerched)),
-                        4
-                    ),
-                    Pair.of(
-                        new Idle<DuckEntity>()
-                            .runFor(entity -> entity.getRandom().nextBetween(100, 300)),
-                        4
-                    ),
-                    Pair.of(
-                        SetWalkTargetToClosestAdult.create(Birds.STAY_NEAR_ENTITY_RANGE),
-                        1
-                    )
-                ).startCondition(entity -> !entity.isFlying() && !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
-            )
-            .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.IS_AVOIDING.get(), MemoryModuleState.VALUE_ABSENT)
-            .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryModuleState.VALUE_ABSENT)
-            .onlyStartWithMemoryStatus(MemoryModuleType.ATTACK_TARGET, MemoryModuleState.VALUE_ABSENT);
-    }
-
-    @SuppressWarnings("unchecked")
-    public BrainActivityGroup<? extends DuckEntity> getForageTasks() {
-        return new BrainActivityGroup<DuckEntity>(FowlPlayActivities.FORAGE.get())
-            .priority(10)
-            .behaviours(
-                new SetRandomWalkTarget<DuckEntity>()
-                    .setRadius(32, 16),
+        return BirdBrain.idleActivity(
+            new BreedWithPartner<>(),
+            new FollowParent<>(),
+            SetEntityLookTargetTask.create(Birds::isPlayerHoldingFood),
+            new LookAroundTask<>()
+                .lookChance(0.02f),
+            new OneRandomBehaviour<>(
+                new SetRandomSwimTarget<>()
+                    .setRadius(24, 8),
                 new Idle<DuckEntity>()
                     .runFor(entity -> entity.getRandom().nextBetween(100, 300))
                     .startCondition(entity -> !entity.isFlying())
             )
-            .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.IS_AVOIDING.get(), MemoryModuleState.VALUE_ABSENT)
-            .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryModuleState.VALUE_ABSENT);
-    }
-
-    @SuppressWarnings("unchecked")
-    public BrainActivityGroup<? extends DuckEntity> getAvoidTasks() {
-        return new BrainActivityGroup<DuckEntity>(Activity.AVOID)
-            .priority(10)
-            .behaviours(
-                MoveAwayFromTargetTask.entity(
-                    MemoryModuleType.AVOID_TARGET,
-                    entity -> Birds.FAST_SPEED,
-                    true
-                )
-            )
-            .requireAndWipeMemoriesOnUse(FowlPlayMemoryModuleType.IS_AVOIDING.get());
-    }
-
-    @SuppressWarnings("unchecked")
-    public BrainActivityGroup<? extends DuckEntity> getPickupFoodTasks() {
-        return new BrainActivityGroup<DuckEntity>(FowlPlayActivities.PICK_UP.get())
-            .priority(10)
-            .behaviours(
-                GoToNearestItemTask.create(
-                    Birds::canPickupFood,
-                    entity -> Birds.FAST_SPEED,
-                    true,
-                    Birds.ITEM_PICK_UP_RANGE
-                )
-            )
-            .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryModuleState.VALUE_PRESENT)
-            .onlyStartWithMemoryStatus(FowlPlayMemoryModuleType.IS_AVOIDING.get(), MemoryModuleState.VALUE_ABSENT);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public BrainActivityGroup<? extends DuckEntity> getFightTasks() {
-        return new BrainActivityGroup<DuckEntity>(Activity.FIGHT)
-            .priority(10)
-            .behaviours(
-                new InvalidateAttackTarget<>(),
-                FlightTasks.startFlying(),
-                new SetWalkTargetToAttackTarget<>(),
-                new AnimatableMeleeAttack<>(0),
-                new InvalidateMemory<DuckEntity, LivingEntity>(MemoryModuleType.ATTACK_TARGET)
-                    .invalidateIf((entity, memory) -> LookTargetUtil.hasBreedTarget(entity))
-            )
-            .requireAndWipeMemoriesOnUse(MemoryModuleType.ATTACK_TARGET);
-    }
-
-    @Override
-    public Map<Activity, BrainActivityGroup<? extends DuckEntity>> getAdditionalTasks() {
-        Object2ObjectOpenHashMap<Activity, BrainActivityGroup<? extends DuckEntity>> taskList = new Object2ObjectOpenHashMap<>();
-        taskList.put(FowlPlayActivities.FORAGE.get(), this.getForageTasks());
-        taskList.put(Activity.AVOID, this.getAvoidTasks());
-        taskList.put(FowlPlayActivities.PICK_UP.get(), this.getPickupFoodTasks());
-        return taskList;
-    }
-
-    @Override
-    public List<Activity> getActivityPriorities() {
-        return ObjectArrayList.of(
-            Activity.AVOID,
-            Activity.FIGHT,
-            FowlPlayActivities.PICK_UP.get(),
-            Activity.IDLE,
-            FowlPlayActivities.FORAGE.get()
         );
+    }
+
+    @Override
+    public BrainActivityGroup<? extends DuckEntity> getPickupFoodTasks() {
+        return BirdBrain.pickupFoodActivity(
+            CompositeTasks.setNearestFoodWalkTarget()
+        );
+    }
+
+    @Override
+    public BrainActivityGroup<? extends DuckEntity> getRestTasks() {
+        return BirdBrain.restActivity(
+            CompositeTasks.setWaterWalkTarget(),
+            CompositeTasks.idleIfInWater()
+        );
+    }
+
+    @Nullable
+    @Override
+    public SmartBrainSchedule getSchedule() {
+        return FowlPlaySchedules.WATERFOWL.get();
     }
 
     @Override

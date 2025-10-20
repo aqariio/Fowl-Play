@@ -2,9 +2,10 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.entity.ai.pathing.FlightNavigation;
 import aqario.fowlplay.common.entity.ai.pathing.GroundNavigation;
+import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayBlockTags;
-import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.entity.EntityType;
@@ -13,6 +14,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
+import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -46,6 +48,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     protected FlyingBirdEntity(EntityType<? extends BirdEntity> entityType, World world) {
         super(entityType, world);
         this.setNavigation(false);
+        this.setPathfindingPenalty(PathNodeType.LEAVES, 0.0f);
     }
 
     public static DefaultAttributeContainer.Builder createFlyingBirdAttributes() {
@@ -129,6 +132,12 @@ public abstract class FlyingBirdEntity extends BirdEntity {
 
     @Override
     public void tick() {
+        // stop movement when perched
+//        if(this.isLogicalSideForUpdatingMovement()) {
+//            if(Birds.isNotFlightless(this) && Birds.isPerched(this)) {
+//                this.setVelocity(new Vec3d(0, this.getVelocity().y, 0));
+//            }
+//        }
         super.tick();
         if(!this.getWorld().isClient) {
             if(this.isFlying()) {
@@ -178,6 +187,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         return navigation;
     }
 
+    // TODO: instead of affecting the pitch and yaw change directly, it should affect the steepness of its path
     public int getMaxPitchChange() {
         return 20;
     }
@@ -201,9 +211,39 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         }
     }
 
+    // min and max flying height relative to ground level
+    public Pair<Integer, Integer> getFlyHeightRange() {
+        return Pair.of(5, 10);
+    }
+
     @Override
     public float getPathfindingFavor(BlockPos pos, WorldView world) {
-        return this.getType().isIn(FowlPlayEntityTypeTags.PASSERINES) && world.getBlockState(pos.down()).isIn(FowlPlayBlockTags.PERCHES) ? 1.0F : 0.0F;
+        if(!this.isFlying()) {
+            return super.getPathfindingFavor(pos, world);
+        }
+        return this.getFlyingPathfindingFavor(pos, world);
+    }
+
+    public float getFlyingPathfindingFavor(BlockPos pos) {
+        return this.getFlyingPathfindingFavor(pos, this.getWorld());
+    }
+
+    public float getFlyingPathfindingFavor(BlockPos pos, WorldView world) {
+        // birds prefer to fly within a certain height range above ground level
+        return magicFunction(
+            pos.getY() - world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()),
+            this.getFlyHeightRange()
+        );
+    }
+
+    private static float magicFunction(float posY, Pair<Integer, Integer> flyHeightRange) {
+        if(posY < flyHeightRange.getFirst()) {
+            return posY - flyHeightRange.getFirst();
+        }
+        if(posY > flyHeightRange.getSecond()) {
+            return flyHeightRange.getSecond() - posY;
+        }
+        return 0;
     }
 
     @Override
@@ -248,6 +288,10 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         this.getNavigation().stop();
         Brain<?> brain = this.getBrain();
         brain.forget(MemoryModuleType.WALK_TARGET);
+        if(Birds.isNotFlightless(this) && Birds.isPerched(this)) {
+            this.setVelocity(Vec3d.ZERO);
+            this.getNavigation().stop();
+        }
     }
 
     public boolean isFlying() {
@@ -271,6 +315,12 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     protected void playCombinationStepSounds(BlockState primaryState, BlockState secondaryState) {
     }
 
+    @Override
+    protected boolean canSing() {
+        return Birds.isPerched(this) && super.canSing();
+    }
+
+    // TODO: the wings should flap faster based on positive vertical (maybe horizontal) acceleration, not velocity
     @Override
     public void updateLimbs(boolean flutter) {
         float yDelta = (float) (this.getY() - this.prevY);

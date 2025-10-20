@@ -14,7 +14,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.LivingTargetCache;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.task.LookTargetUtil;
 import net.minecraft.entity.ai.pathing.Path;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.PassiveEntity;
@@ -24,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
+import net.minecraft.world.World;
 import net.tslat.smartbrainlib.object.SquareRadius;
 import net.tslat.smartbrainlib.registry.SBLMemoryTypes;
 import net.tslat.smartbrainlib.util.BrainUtils;
@@ -35,27 +35,43 @@ import java.util.Optional;
  * A utility class for birds.
  */
 public final class Birds {
-    public static final float NORMAL_SPEED = 1.0F;
     public static final float FAST_SPEED = 1.4F;
     public static final float FLY_SPEED = 2.0F;
     public static final float SWIM_SPEED = 4.0F;
     public static final int ITEM_PICK_UP_RANGE = 32;
-    public static final SquareRadius FLY_AVOID_RANGE = new SquareRadius(6, 6);
+    public static final SquareRadius FLY_AVOID_RANGE = new SquareRadius(8, 8);
     public static final int AVOID_TICKS = 160;
     public static final int CANNOT_PICKUP_FOOD_TICKS = 1200;
     public static final UniformIntProvider STAY_NEAR_ENTITY_RANGE = UniformIntProvider.create(16, 32);
 
+    public static boolean isDaytime(BirdEntity entity) {
+        World world = entity.getWorld();
+        return !world.getDimension().hasFixedTime() && (world.getTimeOfDay() < 12500 || world.getTimeOfDay() > 23000);
+    }
+
+    public static boolean shouldLandAtDestination(FlyingBirdEntity bird, BlockPos destination) {
+        World world = bird.getWorld();
+        return !world.getBlockState(destination).isAir()
+            || !world.getBlockState(destination.down()).isAir()
+            || !world.getFluidState(destination).isEmpty()
+            || !world.getFluidState(destination.down()).isEmpty();
+    }
+
+    // TODO: birds like ducks and geese should prefer to walk, only flying when absolutely necessary
     public static void tryFlyingAlongPath(FlyingBirdEntity bird, Path path) {
         // noinspection ConstantConditions
         if(bird.canStartFlying()
-            && (shouldFlyToDestination(bird, path.getTarget().toCenterPos()) && !(bird.getType().isIn(FowlPlayEntityTypeTags.WATERBIRDS) && bird.isInsideWaterOrBubbleColumn())
+            && (shouldFlyToDestination(bird, path, path.getTarget().toCenterPos()) && !(bird.getType().isIn(FowlPlayEntityTypeTags.WATERBIRDS) && bird.isInsideWaterOrBubbleColumn())
             || shouldFlyFromAvoidTarget(bird))
         ) {
             bird.startFlying();
         }
     }
 
-    public static boolean shouldFlyToDestination(FlyingBirdEntity bird, Vec3d target) {
+    public static boolean shouldFlyToDestination(FlyingBirdEntity bird, Path path, Vec3d target) {
+        if(!path.reachesTarget()) {
+            return true;
+        }
         Vec3d pos = bird.getPos();
         double dx = target.x - pos.x;
         double dy = target.y - pos.y;
@@ -114,7 +130,7 @@ public final class Birds {
         return isWithinAngle(lookVec, targetVec, angle);
     }
 
-    public static boolean notFlightless(Entity entity) {
+    public static boolean isNotFlightless(Entity entity) {
         return entity.getType().isIn(FowlPlayEntityTypeTags.BIRDS)
             && !entity.getType().isIn(FowlPlayEntityTypeTags.FLIGHTLESS);
     }
@@ -165,7 +181,7 @@ public final class Birds {
 
     public static boolean shouldAvoid(BirdEntity bird, LivingEntity target) {
         Brain<?> brain = bird.getBrain();
-        if(!(bird.shouldAvoid(target) && EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(target)) && !shouldAvoidAttacker(brain, target)) {
+        if(!(bird.shouldAvoid(target) && EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(target)) && !wasHurtBy(bird, target)) {
             return false;
         }
         if(target instanceof PlayerEntity player && bird instanceof TrustingBirdEntity trusting && trusting.trusts(player)) {
@@ -178,20 +194,13 @@ public final class Birds {
         return !bird.shouldAttack(target);
     }
 
-    public static boolean shouldAvoidAttacker(Brain<?> brain, LivingEntity attacker) {
-        LivingEntity hurtBy = BrainUtils.getMemory(brain, MemoryModuleType.HURT_BY_ENTITY);
-        return hurtBy != null && hurtBy.equals(attacker);
-    }
-
-    public static boolean canAttack(BirdEntity bird) {
-        return !bird.isInsideWaterOrBubbleColumn() && !LookTargetUtil.hasBreedTarget(bird);
-    }
-
-    public static boolean canAquaticAttack(BirdEntity bird) {
-        return !LookTargetUtil.hasBreedTarget(bird);
+    public static boolean wasHurtBy(BirdEntity bird, LivingEntity entity) {
+        LivingEntity hurtBy = BrainUtils.getMemory(bird, MemoryModuleType.HURT_BY_ENTITY);
+        return hurtBy != null && hurtBy.equals(entity);
     }
 
     public static boolean isPerched(BirdEntity entity) {
-        return entity.getWorld().getBlockState(entity.getVelocityAffectingPos()).isIn(FowlPlayBlockTags.PERCHES);
+        return (!(entity instanceof FlyingBirdEntity bird) || !bird.isFlying())
+            && entity.getWorld().getBlockState(entity.getVelocityAffectingPos()).isIn(FowlPlayBlockTags.PERCHES);
     }
 }

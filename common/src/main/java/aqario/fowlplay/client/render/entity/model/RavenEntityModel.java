@@ -77,7 +77,7 @@ public class RavenEntityModel extends FlyingBirdEntityModel<RavenEntity> {
         float ageInTicks = raven.age + tickDelta;
         float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, raven.prevBodyYaw, raven.bodyYaw);
         float headYaw = MathHelper.lerpAngleDegrees(tickDelta, raven.prevHeadYaw, raven.headYaw);
-        float relativeHeadYaw = headYaw - bodyYaw;
+        float relativeHeadYaw = MathHelper.wrapDegrees(headYaw - bodyYaw);
 
         float headPitch = MathHelper.lerp(tickDelta, raven.prevPitch, raven.getPitch());
         if (LivingEntityRenderer.shouldFlipUpsideDown(raven)) {

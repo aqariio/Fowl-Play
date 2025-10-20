@@ -64,7 +64,7 @@ public class RobinEntityModel extends FlyingBirdEntityModel<RobinEntity> {
         float ageInTicks = robin.age + tickDelta;
         float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, robin.prevBodyYaw, robin.bodyYaw);
         float headYaw = MathHelper.lerpAngleDegrees(tickDelta, robin.prevHeadYaw, robin.headYaw);
-        float relativeHeadYaw = headYaw - bodyYaw;
+        float relativeHeadYaw = MathHelper.wrapDegrees(headYaw - bodyYaw);
 
         float headPitch = MathHelper.lerp(tickDelta, robin.prevPitch, robin.getPitch());
         if (LivingEntityRenderer.shouldFlipUpsideDown(robin)) {

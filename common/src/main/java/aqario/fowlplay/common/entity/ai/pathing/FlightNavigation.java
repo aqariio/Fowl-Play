@@ -1,6 +1,7 @@
 package aqario.fowlplay.common.entity.ai.pathing;
 
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
+import aqario.fowlplay.common.util.Birds;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.pathing.*;
@@ -28,7 +29,7 @@ public class FlightNavigation extends MobNavigation implements ExtendedNavigator
 
     @Override
     public MobEntity getMob() {
-        return this.entity;
+        return this.bird;
     }
 
     @Nullable
@@ -86,12 +87,12 @@ public class FlightNavigation extends MobNavigation implements ExtendedNavigator
 
     @Override
     protected boolean canPathDirectlyThrough(Vec3d origin, Vec3d target) {
-        return doesNotCollide(this.entity, origin, target, true);
+        return doesNotCollide(this.bird, origin, target, true);
     }
 
     @Override
     protected boolean isAtValidPosition() {
-        return this.canSwim() && this.isInLiquid() || !this.entity.hasVehicle();
+        return this.canSwim() && this.isInLiquid() || !this.bird.hasVehicle();
     }
 
     @Override
@@ -106,7 +107,7 @@ public class FlightNavigation extends MobNavigation implements ExtendedNavigator
 
     @Nullable
     public Path findPathTo(BlockPos target, int distance) {
-        return this.findPathTo(ImmutableSet.of(target), 32, false, distance);
+        return this.findPathTo(ImmutableSet.of(target), 48, false, distance);
     }
 
     @Override
@@ -122,20 +123,27 @@ public class FlightNavigation extends MobNavigation implements ExtendedNavigator
             }
             else if(this.currentPath != null && !this.currentPath.isFinished()) {
                 Vec3d pos = this.getPos();
-                Vec3d nodePos = this.currentPath.getNodePosition(this.entity);
+                Vec3d nodePos = this.currentPath.getNodePosition(this.bird);
                 if(pos.y > nodePos.y
-                    && !this.entity.isOnGround()
+                    && !this.bird.isOnGround()
                     && MathHelper.floor(pos.x) == MathHelper.floor(nodePos.x)
                     && MathHelper.floor(pos.z) == MathHelper.floor(nodePos.z)) {
                     this.currentPath.next();
                 }
             }
+            if(this.currentPath != null
+                && this.currentPath.isFinished()
+                && this.getTargetPos() != null
+                && Birds.shouldLandAtDestination(this.bird, this.getTargetPos())
+            ) {
+                this.bird.stopFlying();
+            }
 
             DebugInfoSender.sendPathfindingData(this.world, this.getMob(), this.getCurrentPath(), 0.1f);
             if(!this.isIdle()) {
                 // noinspection ConstantConditions
-                Vec3d vec3d = this.currentPath.getNodePosition(this.entity);
-                this.entity.getMoveControl().moveTo(vec3d.x, vec3d.y, vec3d.z, this.speed);
+                Vec3d vec3d = this.currentPath.getNodePosition(this.bird);
+                this.bird.getMoveControl().moveTo(vec3d.x, vec3d.y, vec3d.z, this.speed);
             }
         }
     }
@@ -152,11 +160,17 @@ public class FlightNavigation extends MobNavigation implements ExtendedNavigator
     protected void continueFollowingPath() {
         final Vec3d safeSurfacePos = this.getPos();
         final int shortcutNode = this.getClosestVerticalTraversal(MathHelper.floor(safeSurfacePos.y));
-        this.nodeReachProximity = this.entity.getWidth() > 0.75f ? this.entity.getWidth() / 2f : 0.75f - this.entity.getWidth() / 2f;
+        this.nodeReachProximity = this.bird.getWidth() > 0.75f ? this.bird.getWidth() / 2f : 0.75f - this.bird.getWidth() / 2f;
 
 //        if (!this.attemptShortcut(shortcutNode, safeSurfacePos)) {
         if(this.isCloseToNextNode(NODE_REACH_RADIUS)/* || this.isAboutToTraverseVertically() && this.isCloseToNextNode(this.getNodeReachProximity())*/) {
-            this.currentPath.setCurrentNodeIndex(this.currentPath.getCurrentNodeIndex() + NODE_DISTANCE);
+            int nextNodeIndex = this.currentPath.getCurrentNodeIndex() + NODE_DISTANCE;
+            if(this.currentPath.getCurrentNodeIndex() < this.currentPath.getLength() - 1 && nextNodeIndex >= this.currentPath.getLength()) {
+                this.currentPath.setCurrentNodeIndex(this.currentPath.getLength() - 1);
+            }
+            else {
+                this.currentPath.setCurrentNodeIndex(nextNodeIndex);
+            }
         }
 //        }
 
@@ -167,6 +181,9 @@ public class FlightNavigation extends MobNavigation implements ExtendedNavigator
     public boolean isCloseToNextNode(float distance) {
         final Vec3d nextNodePos = this.getEntityPosAtNode(this.getCurrentPath().getCurrentNodeIndex());
 
+        if(this.currentPath.getCurrentNodeIndex() + 1 >= this.currentPath.getLength()) {
+            return this.getPos().isInRange(nextNodePos, 0.5);
+        }
         return this.getPos().isInRange(nextNodePos, distance);
     }
 

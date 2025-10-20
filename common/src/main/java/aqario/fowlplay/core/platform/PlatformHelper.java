@@ -1,5 +1,6 @@
 package aqario.fowlplay.core.platform;
 
+import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.particle.ParticleFactory;
@@ -9,7 +10,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.Schedule;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.data.TrackedDataHandler;
@@ -63,7 +63,7 @@ public class PlatformHelper {
     }
 
     @ExpectPlatform
-    public static Supplier<Schedule> registerSchedule(String id, Supplier<Schedule> schedule) {
+    public static Supplier<ExtendedSchedule> registerSchedule(String id, Supplier<ExtendedSchedule> schedule) {
         throw new AssertionError();
     }
 

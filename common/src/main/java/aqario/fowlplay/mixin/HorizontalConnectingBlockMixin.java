@@ -29,7 +29,7 @@ public abstract class HorizontalConnectingBlockMixin {
         if(block instanceof FenceBlock
             && context instanceof EntityShapeContext entityContext
             && entityContext.getEntity() != null
-            && Birds.notFlightless(entityContext.getEntity())
+            && Birds.isNotFlightless(entityContext.getEntity())
         ) {
             VoxelShape originalShape = this.collisionShapes[this.getShapeIndex(state)];
             if(originalShape.getMax(Direction.Axis.Y) > 1) {

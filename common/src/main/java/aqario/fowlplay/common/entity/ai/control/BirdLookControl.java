@@ -26,8 +26,8 @@ public class BirdLookControl extends LookControl {
     public void tick() {
         if (this.lookAtTimer > 0) {
             this.lookAtTimer--;
-            this.getTargetYaw().ifPresent(yaw -> this.entity.headYaw = this.changeAngle(this.entity.headYaw, yaw/* + 20.0F*/, this.maxYawChange));
-            this.getTargetPitch().ifPresent(pitch -> this.entity.setPitch(this.changeAngle(this.entity.getPitch(), pitch/* + 10.0F*/, this.maxPitchChange)));
+            this.getTargetYaw().ifPresent(yaw -> this.entity.headYaw = this.changeAngle(this.entity.headYaw, this.calculateYaw(this.entity.headYaw, yaw), this.maxYawChange));
+            this.getTargetPitch().ifPresent(pitch -> this.entity.setPitch(this.changeAngle(this.entity.getPitch(), pitch, this.maxPitchChange)));
         }
         else {
             if (this.entity.getNavigation().isIdle()) {
@@ -43,5 +43,15 @@ public class BirdLookControl extends LookControl {
         else if (yawDif > (float) this.maxYawDifference) {
             this.entity.bodyYaw += 4.0F;
         }
+    }
+
+    private float calculateYaw(float curYaw, float targetYaw) {
+        float plus60 = MathHelper.wrapDegrees(targetYaw + 60.0F);
+        float minus60 = MathHelper.wrapDegrees(targetYaw - 60.0F);
+
+        float diffPlus = Math.abs(MathHelper.wrapDegrees(plus60 - curYaw));
+        float diffMinus = Math.abs(MathHelper.wrapDegrees(minus60 - curYaw));
+
+        return diffPlus < diffMinus ? plus60 : minus60;
     }
 }

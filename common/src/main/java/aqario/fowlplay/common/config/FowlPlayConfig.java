@@ -52,6 +52,11 @@ public class FowlPlayConfig {
     @SerialEntry
     public int duckCallVolume = 1;
 
+    // Goose
+
+    @SerialEntry
+    public int gooseCallVolume = 1;
+
     // Gull
 
     @SerialEntry
@@ -141,6 +146,15 @@ public class FowlPlayConfig {
     public int duckMinGroupSize = 2;
     @SerialEntry
     public int duckMaxGroupSize = 10;
+
+    // Goose
+
+    @SerialEntry
+    public int gooseSpawnWeight = 4;
+    @SerialEntry
+    public int gooseMinGroupSize = 2;
+    @SerialEntry
+    public int gooseMaxGroupSize = 10;
 
     // Gull
 

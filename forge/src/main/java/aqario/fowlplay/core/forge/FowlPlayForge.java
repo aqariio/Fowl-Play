@@ -37,6 +37,7 @@ public final class FowlPlayForge {
 
         PlatformHelperImpl.CHICKEN_VARIANTS.register(modBus);
         PlatformHelperImpl.DUCK_VARIANTS.register(modBus);
+        PlatformHelperImpl.GOOSE_VARIANTS.register(modBus);
         PlatformHelperImpl.GULL_VARIANTS.register(modBus);
         PlatformHelperImpl.PIGEON_VARIANTS.register(modBus);
         PlatformHelperImpl.SPARROW_VARIANTS.register(modBus);
@@ -45,6 +46,7 @@ public final class FowlPlayForge {
         PlatformHelperImpl.ITEMS.register(modBus);
         PlatformHelperImpl.MEMORY_MODULE_TYPES.register(modBus);
         PlatformHelperImpl.PARTICLE_TYPES.register(modBus);
+        PlatformHelperImpl.SCHEDULES.register(modBus);
         PlatformHelperImpl.SENSOR_TYPES.register(modBus);
         PlatformHelperImpl.SOUND_EVENTS.register(modBus);
         PlatformHelperImpl.TRACKED_DATA_HANDLERS.register(modBus);
@@ -57,6 +59,7 @@ public final class FowlPlayForge {
         FowlPlayRegistries.CHICKEN_VARIANT = (Supplier<CommonRegistry<ChickenVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.CHICKEN_VARIANT.getValue()));
         FowlPlayRegistries.DUCK_VARIANT = (Supplier<CommonRegistry<DuckVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.DUCK_VARIANT.getValue()));
         FowlPlayRegistries.GULL_VARIANT = (Supplier<CommonRegistry<GullVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.GULL_VARIANT.getValue()));
+        FowlPlayRegistries.GOOSE_VARIANT = (Supplier<CommonRegistry<GooseVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.GOOSE_VARIANT.getValue()));
         FowlPlayRegistries.PIGEON_VARIANT = (Supplier<CommonRegistry<PigeonVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.PIGEON_VARIANT.getValue()));
         FowlPlayRegistries.SPARROW_VARIANT = (Supplier<CommonRegistry<SparrowVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.SPARROW_VARIANT.getValue()));
     }
@@ -71,12 +74,16 @@ public final class FowlPlayForge {
 //                event.add(item.get());
 //            }
 //        }));
+        if(event.getTabKey() == ItemGroups.FUNCTIONAL) {
+            event.add(FowlPlayItems.SCARECROW.get());
+        }
         if(event.getTabKey() == ItemGroups.SPAWN_EGGS) {
             event.add(FowlPlayItems.BLUE_JAY_SPAWN_EGG.get());
             event.add(FowlPlayItems.CARDINAL_SPAWN_EGG.get());
             event.add(FowlPlayItems.CHICKADEE_SPAWN_EGG.get());
             event.add(FowlPlayItems.CROW_SPAWN_EGG.get());
             event.add(FowlPlayItems.DUCK_SPAWN_EGG.get());
+            event.add(FowlPlayItems.GOOSE_SPAWN_EGG.get());
             event.add(FowlPlayItems.GULL_SPAWN_EGG.get());
             event.add(FowlPlayItems.HAWK_SPAWN_EGG.get());
             event.add(FowlPlayItems.PENGUIN_SPAWN_EGG.get());

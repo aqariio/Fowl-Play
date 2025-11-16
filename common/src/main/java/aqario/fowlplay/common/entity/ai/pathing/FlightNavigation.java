@@ -157,20 +157,20 @@ public class FlightNavigation extends MobNavigation implements ExtendedNavigator
     @Override
     protected void continueFollowingPath() {
         final Vec3d pos = this.getPos();
-        final int shortcutNode = this.getClosestVerticalTraversal(MathHelper.floor(pos.y));
+        final int shortcutNodeIndex = this.getClosestVerticalTraversal(MathHelper.floor(pos.y));
         this.nodeReachProximity = this.bird.getWidth() > 0.75f ? this.bird.getWidth() / 2f : 0.75f - this.bird.getWidth() / 2f;
 
-//        if (!this.attemptShortcut(shortcutNode, pos)) {
-        if(this.isCloseToNextNode(NODE_REACH_RADIUS)/* || this.isAboutToTraverseVertically() && this.isCloseToNextNode(this.getNodeReachProximity())*/) {
-            int nextNodeIndex = this.currentPath.getCurrentNodeIndex() + NODE_DISTANCE;
-            if(this.currentPath.getCurrentNodeIndex() < this.currentPath.getLength() - 1 && nextNodeIndex >= this.currentPath.getLength()) {
-                this.currentPath.setCurrentNodeIndex(this.currentPath.getLength() - 1);
-            }
-            else {
-                this.currentPath.setCurrentNodeIndex(nextNodeIndex);
+        if(!this.attemptShortcut(shortcutNodeIndex, pos)) {
+            if(this.isCloseToNextNode(NODE_REACH_RADIUS)) {
+                int nextNodeIndex = this.currentPath.getCurrentNodeIndex() + NODE_DISTANCE;
+                if(this.currentPath.getCurrentNodeIndex() < this.currentPath.getLength() - 1 && nextNodeIndex >= this.currentPath.getLength()) {
+                    this.currentPath.setCurrentNodeIndex(this.currentPath.getLength() - 1);
+                }
+                else {
+                    this.currentPath.setCurrentNodeIndex(nextNodeIndex);
+                }
             }
         }
-//        }
 
         this.checkTimeouts(pos);
     }
@@ -197,6 +197,11 @@ public class FlightNavigation extends MobNavigation implements ExtendedNavigator
         }
 
         return nodesLength;
+    }
+
+    @Override
+    public float getNodeReachProximity() {
+        return NODE_REACH_RADIUS;
     }
 
     @Override

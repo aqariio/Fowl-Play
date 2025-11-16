@@ -71,6 +71,9 @@ dependencies {
         transitive = false
     }
 
+    // Kotlin For Forge
+//    modRuntimeOnly("maven.modrinth:kotlin-for-forge:${project.kotlin_for_forge_version}")
+
     // NBT Autocomplete
     modRuntimeOnly("maven.modrinth:nbt-autocomplete:${project.nbt_autocomplete_version}-forge,1.20.1")
 

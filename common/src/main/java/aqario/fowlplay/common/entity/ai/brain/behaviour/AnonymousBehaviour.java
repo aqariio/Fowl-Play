@@ -1,4 +1,4 @@
-package aqario.fowlplay.common.entity.ai.brain.task;
+package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.fowlplay.common.entity.BirdEntity;
 import com.mojang.datafixers.util.Pair;
@@ -7,26 +7,29 @@ import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.server.world.ServerWorld;
 import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.CustomBehaviour;
 
 import java.util.List;
 import java.util.function.BiPredicate;
 
 /**
- * A behaviour that operates purely through side effects. Useful for when I'm too lazy to write an entire class.
+ * A behaviour that operates through invoking a callback, with specified memory requirements.
+ * Useful for very simple behaviours that do not require their own class. <br/>
+ * Equivalent to {@link CustomBehaviour} in SmartBrainLib, but supports specifying required memory states.
  */
-public class SingleTickBehaviour<E extends BirdEntity> extends ExtendedBehaviour<E> {
+public class AnonymousBehaviour<E extends BirdEntity> extends ExtendedBehaviour<E> {
     private final List<Pair<MemoryModuleType<?>, MemoryModuleState>> requiredMemories;
-    private final BiPredicate<E, Brain<?>> callback;
+    private final BiPredicate<E, Brain<?>> callback; // TODO: phase out Predicate in favor of Consumer, run conditions should be handled through startCondition()
 
-    public SingleTickBehaviour(List<Pair<MemoryModuleType<?>, MemoryModuleState>> requiredMemories, BiPredicate<E, Brain<?>> callback) {
+    public AnonymousBehaviour(List<Pair<MemoryModuleType<?>, MemoryModuleState>> requiredMemories, BiPredicate<E, Brain<?>> callback) {
         this.requiredMemories = requiredMemories;
         this.callback = callback;
-        for(Pair<MemoryModuleType<?>, MemoryModuleState> memoryReq : requiredMemories) {
-            this.requiredMemoryStates.put(memoryReq.getFirst(), memoryReq.getSecond());
+        for(Pair<MemoryModuleType<?>, MemoryModuleState> memory : requiredMemories) {
+            this.requiredMemoryStates.put(memory.getFirst(), memory.getSecond());
         }
     }
 
-    public SingleTickBehaviour(BiPredicate<E, Brain<?>> callback) {
+    public AnonymousBehaviour(BiPredicate<E, Brain<?>> callback) {
         this.requiredMemories = List.of();
         this.callback = callback;
     }

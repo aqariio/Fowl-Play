@@ -10,14 +10,13 @@ import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class YACLIntegration {
     public static final ConfigClassHandler<FowlPlayConfig> HANDLED_CONFIG = ConfigClassHandler.createBuilder(FowlPlayConfig.class)
-        .id(Identifier.of(FowlPlay.ID, "config"))
+        .id(FowlPlay.id("config"))
         .serializer(config -> GsonConfigSerializerBuilder.create(config)
             .setPath(Platform.getConfigFolder().resolve(FowlPlay.ID + ".json5"))
             .setJson5(true)

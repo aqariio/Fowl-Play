@@ -19,6 +19,10 @@ import java.util.List;
 import java.util.function.BiPredicate;
 
 public class AvoidTargetSensor<E extends BirdEntity> extends EntityFilteringSensor<LivingEntity, E> {
+    public AvoidTargetSensor() {
+        this.setScanRate(bird -> 10);
+    }
+
     @Override
     protected MemoryModuleType<LivingEntity> getMemory() {
         return MemoryModuleType.AVOID_TARGET;
@@ -41,7 +45,7 @@ public class AvoidTargetSensor<E extends BirdEntity> extends EntityFilteringSens
 
     @Override
     protected @Nullable LivingEntity findMatches(E bird, LivingTargetCache matcher) {
-        return matcher.findFirst(target -> predicate().test(target, bird)).orElse(null);
+        return matcher.findFirst(target -> this.predicate().test(target, bird)).orElse(null);
     }
 
     @Override

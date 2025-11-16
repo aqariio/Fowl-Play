@@ -6,11 +6,10 @@ import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 public class CardinalEntityModel extends FlyingBirdEntityModel<CardinalEntity> {
-    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of(FowlPlay.ID, "cardinal"), "main");
+    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(FowlPlay.id("cardinal"), "main");
     public final ModelPart crest;
 
     public CardinalEntityModel(ModelPart root) {

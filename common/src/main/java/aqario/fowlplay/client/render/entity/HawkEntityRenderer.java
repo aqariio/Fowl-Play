@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 public class HawkEntityRenderer extends MobEntityRenderer<HawkEntity, HawkEntityModel> {
-    private static final Identifier TEXTURE = Identifier.of(FowlPlay.ID, "textures/entity/hawk/red_tailed_hawk.png");
+    private static final Identifier TEXTURE = FowlPlay.id("textures/entity/hawk/red_tailed_hawk.png");
 
     public HawkEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new HawkEntityModel(context.getPart(HawkEntityModel.MODEL_LAYER)), 0.3f);

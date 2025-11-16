@@ -1,4 +1,4 @@
-package aqario.fowlplay.common.entity.ai.brain.task;
+package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.util.MemoryList;
@@ -11,12 +11,12 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 import java.util.List;
 import java.util.function.Function;
 
-public class SetWalkTargetAwayFromTask<E extends BirdEntity, T> extends SpeedModifiableBehaviour<E> {
+public class SetWalkTargetAwayFrom<E extends BirdEntity, T> extends SpeedModifiableBehaviour<E> {
     private final List<Pair<MemoryModuleType<?>, MemoryModuleState>> memoryRequirements;
     protected final MemoryModuleType<T> memoryType;
     protected final Function<T, Vec3d> targetPosition;
 
-    public SetWalkTargetAwayFromTask(MemoryModuleType<T> memoryType, Function<T, Vec3d> targetPosition) {
+    public SetWalkTargetAwayFrom(MemoryModuleType<T> memoryType, Function<T, Vec3d> targetPosition) {
         this.memoryType = memoryType;
         this.targetPosition = targetPosition;
         this.memoryRequirements = MemoryList.create(2)

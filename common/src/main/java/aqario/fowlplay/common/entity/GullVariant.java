@@ -12,7 +12,7 @@ public record GullVariant(Identifier texture) {
     public static final Supplier<GullVariant> BLACK_BACKED = register("black_backed");
 
     private static Supplier<GullVariant> register(String id) {
-        Identifier texture = Identifier.of(FowlPlay.ID, "textures/entity/gull/" + id + "_gull.png");
+        Identifier texture = FowlPlay.id("textures/entity/gull/" + id + "_gull.png");
         return PlatformHelper.registerVariant(id, () -> new GullVariant(texture));
     }
 

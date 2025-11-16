@@ -30,6 +30,7 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
 
     public AttackedSensor() {
         super((damageSource, entity) -> true);
+        this.setScanRate(bird -> 10);
     }
 
     @Override
@@ -46,22 +47,22 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
     protected void sense(ServerWorld world, E bird) {
         Brain<?> brain = bird.getBrain();
         DamageSource damageSource = bird.getRecentDamageSource();
-        if (damageSource == null) {
+        if(damageSource == null) {
             BrainUtils.clearMemory(brain, MemoryModuleType.HURT_BY);
             BrainUtils.clearMemory(brain, MemoryModuleType.HURT_BY_ENTITY);
             return;
         }
-        if (predicate().test(damageSource, bird)) {
+        if(this.predicate().test(damageSource, bird)) {
             BrainUtils.setMemory(brain, MemoryModuleType.HURT_BY, damageSource);
 
-            if (damageSource.getAttacker() instanceof LivingEntity attacker && attacker.isAlive() && attacker.getWorld() == bird.getWorld()) {
+            if(damageSource.getAttacker() instanceof LivingEntity attacker && attacker.isAlive() && attacker.getWorld() == bird.getWorld()) {
                 BrainUtils.setMemory(brain, MemoryModuleType.HURT_BY_ENTITY, attacker);
                 onAttacked(bird, attacker);
             }
             return;
         }
         BrainUtils.withMemory(brain, MemoryModuleType.HURT_BY_ENTITY, attacker -> {
-            if (!attacker.isAlive() || attacker.getWorld() != bird.getWorld()) {
+            if(!attacker.isAlive() || attacker.getWorld() != bird.getWorld()) {
                 BrainUtils.clearMemory(brain, MemoryModuleType.HURT_BY_ENTITY);
             }
         });
@@ -70,13 +71,13 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
     public static <T extends BirdEntity> void onAttacked(T bird, LivingEntity attacker) {
         Brain<?> brain = bird.getBrain();
         BrainUtils.clearMemory(brain, FowlPlayMemoryModuleType.SEES_FOOD.get());
-        if (attacker instanceof PlayerEntity player) {
+        if(attacker instanceof PlayerEntity player) {
             BrainUtils.setForgettableMemory(brain, FowlPlayMemoryModuleType.CANNOT_PICKUP_FOOD.get(), true, Birds.CANNOT_PICKUP_FOOD_TICKS);
-            if (bird instanceof TrustingBirdEntity trustingBird && trustingBird.trusts(player)) {
+            if(bird instanceof TrustingBirdEntity trustingBird && trustingBird.trusts(player)) {
                 trustingBird.stopTrusting(player);
             }
         }
-        if (attacker.getType() != bird.getType() && !bird.shouldAttack(attacker)) {
+        if(attacker.getType() != bird.getType() && !bird.shouldAttack(attacker)) {
             Birds.alertOthers(bird, attacker);
         }
     }

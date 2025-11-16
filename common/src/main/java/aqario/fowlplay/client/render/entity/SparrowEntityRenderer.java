@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 public class SparrowEntityRenderer extends MobEntityRenderer<SparrowEntity, SparrowEntityModel> {
-    private static final Identifier TEXTURE = Identifier.of(FowlPlay.ID, "textures/entity/sparrow/house_sparrow.png");
+    private static final Identifier TEXTURE = FowlPlay.id("textures/entity/sparrow/house_sparrow.png");
 
     public SparrowEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new SparrowEntityModel(context.getPart(SparrowEntityModel.MODEL_LAYER)), 0.15f);

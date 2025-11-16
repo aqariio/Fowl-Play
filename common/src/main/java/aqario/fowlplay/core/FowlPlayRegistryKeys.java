@@ -3,7 +3,6 @@ package aqario.fowlplay.core;
 import aqario.fowlplay.common.entity.*;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Identifier;
 
 public class FowlPlayRegistryKeys {
     public static final RegistryKey<Registry<ChickenVariant>> CHICKEN_VARIANT = of("chicken_variant");
@@ -14,7 +13,7 @@ public class FowlPlayRegistryKeys {
     public static final RegistryKey<Registry<SparrowVariant>> SPARROW_VARIANT = of("sparrow_variant");
 
     private static <T> RegistryKey<Registry<T>> of(String id) {
-        return RegistryKey.ofRegistry(Identifier.of(FowlPlay.ID, id));
+        return RegistryKey.ofRegistry(FowlPlay.id(id));
     }
 
     public static void init() {

@@ -1,4 +1,4 @@
-package aqario.fowlplay.common.entity.ai.brain.task;
+package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.fowlplay.common.util.MemoryList;
 import com.mojang.datafixers.util.Pair;
@@ -15,7 +15,7 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 
-public class LookAroundTask<E extends MobEntity> extends ExtendedBehaviour<E> {
+public class SetRandomLookTarget<E extends MobEntity> extends ExtendedBehaviour<E> {
     private static final MemoryList MEMORIES = MemoryList.create(1)
         .absent(
             MemoryModuleType.LOOK_TARGET,
@@ -25,15 +25,15 @@ public class LookAroundTask<E extends MobEntity> extends ExtendedBehaviour<E> {
     protected FloatProvider runChance = ConstantFloatProvider.create(1f);
     private long timeUntilNextLook = 0L;
 
-    public LookAroundTask() {
+    public SetRandomLookTarget() {
         this.runtimeProvider = entity -> entity.getRandom().nextBetween(20, 60);
     }
 
-    public LookAroundTask<E> lookChance(float chance) {
+    public SetRandomLookTarget<E> lookChance(float chance) {
         return this.lookChance(ConstantFloatProvider.create(chance));
     }
 
-    public LookAroundTask<E> lookChance(FloatProvider chance) {
+    public SetRandomLookTarget<E> lookChance(FloatProvider chance) {
         this.runChance = chance;
 
         return this;

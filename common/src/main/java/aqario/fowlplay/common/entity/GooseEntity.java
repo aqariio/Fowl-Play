@@ -2,11 +2,12 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
+import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
-import aqario.fowlplay.common.entity.ai.brain.task.*;
 import aqario.fowlplay.common.entity.ai.control.BirdFloatMoveControl;
 import aqario.fowlplay.common.entity.ai.pathing.AmphibiousNavigation;
 import aqario.fowlplay.common.util.Birds;
+import aqario.fowlplay.common.util.CylindricalRadius;
 import aqario.fowlplay.core.FowlPlayRegistries;
 import aqario.fowlplay.core.FowlPlaySchedules;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
@@ -47,10 +48,8 @@ import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeAttack;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.BreedWithPartner;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowParent;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomSwimTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetAttackTarget;
@@ -59,11 +58,9 @@ import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.InWaterSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
-import net.tslat.smartbrainlib.object.SquareRadius;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEntity>, VariantHolder<GooseVariant>, Flocking {
     private static final TrackedData<GooseVariant> VARIANT = DataTracker.registerData(
@@ -79,17 +76,13 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
 
     public GooseEntity(EntityType<? extends GooseEntity> entityType, World world) {
         super(entityType, world);
-        this.setPathfindingPenalty(PathNodeType.DANGER_FIRE, -1.0f);
-        this.setPathfindingPenalty(PathNodeType.WATER_BORDER, 16.0f);
+        this.setPathfindingPenalty(PathNodeType.WATER_BORDER, 0.0f);
         this.setPathfindingPenalty(PathNodeType.WATER, 0.0f);
-        this.setPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, -1.0f);
-        this.setPathfindingPenalty(PathNodeType.COCOA, -1.0f);
-        this.setPathfindingPenalty(PathNodeType.FENCE, -1.0f);
     }
 
     @Override
     protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
-        return 0.9f;
+        return 1.0f;
     }
 
     @Override
@@ -293,8 +286,8 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public SquareRadius getWalkRange() {
-        return new SquareRadius(24, 12);
+    public CylindricalRadius getWalkRange() {
+        return new CylindricalRadius(32, 12);
     }
 
     @Override
@@ -319,10 +312,8 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
             new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new InWaterSensor<>(),
-            new AttackedSensor<GooseEntity>()
-                .setScanRate(bird -> 10),
-            new AvoidTargetSensor<GooseEntity>()
-                .setScanRate(bird -> 10),
+            new AttackedSensor<>(),
+            new AvoidTargetSensor<>(),
             new AttackTargetSensor<>()
         );
     }
@@ -330,7 +321,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     public BrainActivityGroup<? extends GooseEntity> getCoreTasks() {
         return BirdBrain.coreActivity(
-            FlightTasks.stopFalling(),
+            FlightBehaviours.stopFalling(),
             new SetAttackTarget<>(),
             new LookAtTarget<>()
                 .runFor(entity -> entity.getRandom().nextBetween(45, 90)),
@@ -341,7 +332,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     public BrainActivityGroup<? extends GooseEntity> getAvoidTasks() {
         return BirdBrain.avoidActivity(
-            CompositeTasks.setAvoidEntityWalkTarget()
+            CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
@@ -359,7 +350,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     public BrainActivityGroup<? extends GooseEntity> getForageTasks() {
         return BirdBrain.forageActivity(
-            new LeaderlessFlockTask(
+            new LeaderlessFlocking(
                 5,
                 0.04f,
                 0.6f,
@@ -368,13 +359,12 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
             ),
             new OneRandomBehaviour<>(
                 Pair.of(
-                    CompositeTasks.setWaterfowlForagingTarget(),
+                    CustomBehaviours.setWaterWalkTarget(),
                     1
                 ),
                 Pair.of(
-                    new Idle<FlyingBirdEntity>()
-                        .runFor(entity -> entity.getRandom().nextBetween(100, 300))
-                        .startCondition(Predicate.not(FlyingBirdEntity::isFlying)),
+                    CustomBehaviours.idleIfNotFlying()
+                        .runFor(entity -> entity.getRandom().nextBetween(100, 300)),
                     2
                 )
             )
@@ -387,15 +377,13 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
         return BirdBrain.idleActivity(
             new BreedWithPartner<>(),
             new FollowParent<>(),
-            SetEntityLookTargetTask.create(Birds::isPlayerHoldingFood),
-            new LookAroundTask<>()
+            SetEntityLookTarget.create(Birds::isPlayerHoldingFood),
+            new SetRandomLookTarget<>()
                 .lookChance(0.02f),
             new OneRandomBehaviour<>(
-                new SetRandomSwimTarget<>()
-                    .setRadius(24, 8),
-                new Idle<GooseEntity>()
+                CustomBehaviours.setWaterWalkTarget(),
+                CustomBehaviours.idleIfNotFlying()
                     .runFor(entity -> entity.getRandom().nextBetween(100, 300))
-                    .startCondition(entity -> !entity.isFlying())
             )
         );
     }
@@ -403,15 +391,15 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     public BrainActivityGroup<? extends GooseEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
-            CompositeTasks.setNearestFoodWalkTarget()
+            CustomBehaviours.setNearestFoodWalkTarget()
         );
     }
 
     @Override
     public BrainActivityGroup<? extends GooseEntity> getRestTasks() {
         return BirdBrain.restActivity(
-            CompositeTasks.setWaterWalkTarget(),
-            CompositeTasks.idleIfInWater()
+            CustomBehaviours.setWaterRestTarget(),
+            CustomBehaviours.idleIfInWater()
         );
     }
 

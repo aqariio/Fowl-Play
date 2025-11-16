@@ -1,4 +1,4 @@
-package aqario.fowlplay.common.entity.ai.brain.task;
+package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.util.MemoryList;
@@ -12,10 +12,10 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 
-public class SetAdultWalkTargetTask {
+public class SetAdultWalkTarget {
     @SuppressWarnings("unchecked")
-    public static SingleTickBehaviour<BirdEntity> create(UniformIntProvider executionRange) {
-        return new SingleTickBehaviour<>(
+    public static AnonymousBehaviour<BirdEntity> create(UniformIntProvider executionRange) {
+        return new AnonymousBehaviour<>(
             MemoryList.create(3)
                 .present(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS.get())
                 .registered(MemoryModuleType.LOOK_TARGET)

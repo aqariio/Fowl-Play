@@ -1,4 +1,4 @@
-package aqario.fowlplay.common.entity.ai.brain.task;
+package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.fowlplay.common.entity.PigeonEntity;
 import aqario.fowlplay.common.entity.ai.brain.TeleportTarget;
@@ -13,7 +13,7 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 
-public class SetOwnerTargetTask extends SpeedModifiableBehaviour<PigeonEntity> {
+public class SetOwnerTarget extends SpeedModifiableBehaviour<PigeonEntity> {
     private static final MemoryList MEMORIES = MemoryList.create(3)
         .registered(
             FowlPlayMemoryModuleType.TELEPORT_TARGET.get(),
@@ -24,7 +24,7 @@ public class SetOwnerTargetTask extends SpeedModifiableBehaviour<PigeonEntity> {
     private int updateCountdownTicks;
     protected UniformIntProvider range = UniformIntProvider.create(5, 10);
 
-    public SetOwnerTargetTask range(int min, int max) {
+    public SetOwnerTarget setRange(int min, int max) {
         this.range = UniformIntProvider.create(min, max);
 
         return this;

@@ -6,11 +6,10 @@ import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 public class BlueJayEntityModel extends FlyingBirdEntityModel<BlueJayEntity> {
-    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of(FowlPlay.ID, "blue_jay"), "main");
+    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(FowlPlay.id("blue_jay"), "main");
     public final ModelPart crest;
 
     public BlueJayEntityModel(ModelPart root) {

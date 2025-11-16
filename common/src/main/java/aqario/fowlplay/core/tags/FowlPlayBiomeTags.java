@@ -3,7 +3,6 @@ package aqario.fowlplay.core.tags;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 
 public final class FowlPlayBiomeTags {
@@ -22,6 +21,6 @@ public final class FowlPlayBiomeTags {
     public static final TagKey<Biome> SPAWNS_SPARROWS = create("spawns_sparrows");
 
     private static TagKey<Biome> create(String id) {
-        return TagKey.of(RegistryKeys.BIOME, Identifier.of(FowlPlay.ID, id));
+        return TagKey.of(RegistryKeys.BIOME, FowlPlay.id(id));
     }
 }

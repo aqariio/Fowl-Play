@@ -1,3 +1,12 @@
+## 1.1.0-beta.4
+
+- Fix incompatibility with PerfectParity
+- Stop birds from riding vehicles when flying
+- Improve reliability of bird pathfinding (should hopefully result in less midair spinning)
+- More pathfinding optimizations
+- Fix birds spinning when trying to fly vertically
+- Birds now stop flying when below a certain speed
+
 ## 1.1.0-beta.3
 
 - Add scarecrow

@@ -4,6 +4,7 @@ import aqario.fowlplay.client.render.entity.feature.BirdHeldItemFeatureRenderer;
 import aqario.fowlplay.client.render.entity.model.DomesticGooseEntityModel;
 import aqario.fowlplay.client.render.entity.model.GooseEntityModel;
 import aqario.fowlplay.common.entity.GooseEntity;
+import aqario.fowlplay.common.entity.GooseVariant;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
@@ -14,7 +15,7 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Map;
 
 public class GooseEntityRenderer extends MobEntityRenderer<GooseEntity, GooseEntityModel> {
-    private final Map<Boolean, GooseEntityModel> models;
+    private final Map<GooseVariant.ModelType, GooseEntityModel> models;
 
     public GooseEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new GooseEntityModel(context.getPart(GooseEntityModel.MODEL_LAYER)), 0.3f);
@@ -26,18 +27,18 @@ public class GooseEntityRenderer extends MobEntityRenderer<GooseEntity, GooseEnt
         this.models = bakeModels(context);
     }
 
-    private static Map<Boolean, GooseEntityModel> bakeModels(EntityRendererFactory.Context context) {
+    private static Map<GooseVariant.ModelType, GooseEntityModel> bakeModels(EntityRendererFactory.Context context) {
         return Map.of(
-            false,
+            GooseVariant.ModelType.WILD,
             new GooseEntityModel(context.getPart(GooseEntityModel.MODEL_LAYER)),
-            true,
+            GooseVariant.ModelType.DOMESTIC,
             new DomesticGooseEntityModel(context.getPart(DomesticGooseEntityModel.MODEL_LAYER))
         );
     }
 
     @Override
     public void render(GooseEntity goose, float f, float g, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i) {
-        this.model = this.models.get(goose.getVariant().domestic());
+        this.model = this.models.get(goose.getVariant().modelType());
         super.render(goose, f, g, matrices, vertexConsumerProvider, i);
     }
 

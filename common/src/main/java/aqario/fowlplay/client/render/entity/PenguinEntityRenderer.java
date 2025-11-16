@@ -15,8 +15,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 public class PenguinEntityRenderer extends MobEntityRenderer<PenguinEntity, PenguinEntityModel> {
-    private static final Identifier TEXTURE = Identifier.of(FowlPlay.ID, "textures/entity/penguin/penguin.png");
-    private static final Identifier BABY_TEXTURE = Identifier.of(FowlPlay.ID, "textures/entity/penguin/penguin_baby.png");
+    private static final Identifier TEXTURE = FowlPlay.id("textures/entity/penguin/penguin.png");
+    private static final Identifier BABY_TEXTURE = FowlPlay.id("textures/entity/penguin/penguin_baby.png");
     private final AdultBabyModelPair<PenguinEntityModel> modelPair;
 
     public PenguinEntityRenderer(EntityRendererFactory.Context context) {

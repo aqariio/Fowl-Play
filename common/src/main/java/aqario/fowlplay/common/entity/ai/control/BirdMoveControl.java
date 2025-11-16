@@ -25,7 +25,7 @@ public class BirdMoveControl extends MoveControl {
     @Override
     public void tick() {
         if(this.bird instanceof FlyingBirdEntity flyingBird && flyingBird.isFlying()) {
-            this.tickFlying();
+            this.tickFlying(flyingBird);
         }
         else {
 //            this.tickWalking();
@@ -33,14 +33,12 @@ public class BirdMoveControl extends MoveControl {
         }
     }
 
-    private void tickFlying() {
+    private void tickFlying(FlyingBirdEntity bird) {
         this.state = State.MOVE_TO;
-        FlyingBirdEntity bird = (FlyingBirdEntity) this.bird;
 
-        // distance to target
+        // vector pointing to target
         Vec3d distance = new Vec3d(this.targetX - bird.getX(), this.targetY - bird.getY(), this.targetZ - bird.getZ());
-        double squaredDistance = distance.lengthSquared();
-        if(squaredDistance < 2.5000003E-7F) {
+        if(distance.lengthSquared() < 2.5000003E-7F) {
             bird.setForwardSpeed(0.0F);
             return;
         }
@@ -64,11 +62,11 @@ public class BirdMoveControl extends MoveControl {
             }
         }
         bird.setMovementSpeed(speed);
-        double horizontalDistance = Math.sqrt(distance.x * distance.x + distance.z * distance.z);
+        double lateralDistance = distance.horizontalLength();
 
         // pitch
-        if(Math.abs(distance.y) > 1.0E-5F || Math.abs(horizontalDistance) > 1.0E-5F) {
-            float pitch = -(float) (MathHelper.atan2(distance.y, horizontalDistance) * 180.0F / Math.PI);
+        if(Math.abs(distance.length()) > 1.0E-5F) {
+            float pitch = -(float) (MathHelper.atan2(distance.y, lateralDistance) * 180.0F / Math.PI);
             pitch = MathHelper.clamp(MathHelper.wrapDegrees(pitch), -bird.getMaxLookPitchChange(), bird.getMaxLookPitchChange());
             bird.setPitch(this.wrapDegrees(bird.getPitch(), pitch, /*bird.getMaxPitchChange()*/25));
         }

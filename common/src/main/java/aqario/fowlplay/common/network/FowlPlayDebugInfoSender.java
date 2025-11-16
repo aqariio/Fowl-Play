@@ -3,6 +3,7 @@ package aqario.fowlplay.common.network;
 import aqario.fowlplay.client.FowlPlayClient;
 import aqario.fowlplay.client.render.debug.BirdDebugRenderer;
 import aqario.fowlplay.common.entity.BirdEntity;
+import aqario.fowlplay.common.entity.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.TrustingBirdEntity;
 import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.core.FowlPlay;
@@ -34,13 +35,10 @@ import java.util.*;
 public class FowlPlayDebugInfoSender {
     @SuppressWarnings("deprecation")
     public static void sendBirdDebugData(BirdEntity bird) {
-        if(!FowlPlay.isDebugUtilsLoaded()) {
-            return;
-        }
-        if(!FowlPlayClient.DEBUG_BIRD) {
-            return;
-        }
-        if(bird.getWorld().isClient()) {
+        if(!FowlPlay.isDebugUtilsLoaded()
+            || bird.getWorld().isClient()
+            || !FowlPlayClient.DEBUG_BIRD
+        ) {
             return;
         }
 
@@ -48,6 +46,7 @@ public class FowlPlayDebugInfoSender {
         String name = NameGenerator.name(bird);
         String inventory = "";
         Path path = null;
+        boolean flying = bird instanceof FlyingBirdEntity flyingBird && flyingBird.isFlying();
         if(bird instanceof InventoryOwner inventoryOwner) {
             inventory = inventoryOwner.getInventory().isEmpty() ? "" : inventoryOwner.getInventory().toString();
         }
@@ -86,6 +85,7 @@ public class FowlPlayDebugInfoSender {
             inventory,
             path,
             trusting,
+            flying,
             bird.isAmbient(),
             Birds.isPerched(bird),
             activities,

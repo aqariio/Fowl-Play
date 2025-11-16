@@ -15,7 +15,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class ScarecrowEntityRenderer extends LivingEntityRenderer<ScarecrowEntity, ScarecrowEntityModel> {
-    public static final Identifier TEXTURE = Identifier.of(FowlPlay.ID, "textures/entity/scarecrow/scarecrow.png");
+    public static final Identifier TEXTURE = FowlPlay.id("textures/entity/scarecrow/scarecrow.png");
 
     public ScarecrowEntityRenderer(EntityRendererFactory.Context ctx) {
         super(ctx, new ScarecrowEntityModel(ctx.getPart(ScarecrowEntityModel.MODEL_LAYER)), 0.0F);

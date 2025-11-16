@@ -3,12 +3,10 @@ package aqario.fowlplay.core.forge;
 import aqario.fowlplay.client.forge.FowlPlayForgeClient;
 import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.core.FowlPlay;
-import aqario.fowlplay.core.FowlPlayItems;
 import aqario.fowlplay.core.FowlPlayRegistries;
 import aqario.fowlplay.core.FowlPlayRegistryKeys;
 import aqario.fowlplay.core.platform.CommonRegistry;
 import aqario.fowlplay.core.platform.forge.PlatformHelperImpl;
-import net.minecraft.item.ItemGroups;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -69,28 +67,10 @@ public final class FowlPlayForge {
     }
 
     private static void onAddItemGroupEntries(BuildCreativeModeTabContentsEvent event) {
-//        PlatformHelperImpl.ITEM_TO_GROUPS.forEach(((item, group) -> {
-//            if(event.getTabKey() == group) {
-//                event.add(item.get());
-//            }
-//        }));
-        if(event.getTabKey() == ItemGroups.FUNCTIONAL) {
-            event.add(FowlPlayItems.SCARECROW.get());
-        }
-        if(event.getTabKey() == ItemGroups.SPAWN_EGGS) {
-            event.add(FowlPlayItems.BLUE_JAY_SPAWN_EGG.get());
-            event.add(FowlPlayItems.CARDINAL_SPAWN_EGG.get());
-            event.add(FowlPlayItems.CHICKADEE_SPAWN_EGG.get());
-            event.add(FowlPlayItems.CROW_SPAWN_EGG.get());
-            event.add(FowlPlayItems.DUCK_SPAWN_EGG.get());
-            event.add(FowlPlayItems.GOOSE_SPAWN_EGG.get());
-            event.add(FowlPlayItems.GULL_SPAWN_EGG.get());
-            event.add(FowlPlayItems.HAWK_SPAWN_EGG.get());
-            event.add(FowlPlayItems.PENGUIN_SPAWN_EGG.get());
-            event.add(FowlPlayItems.PIGEON_SPAWN_EGG.get());
-            event.add(FowlPlayItems.RAVEN_SPAWN_EGG.get());
-            event.add(FowlPlayItems.ROBIN_SPAWN_EGG.get());
-            event.add(FowlPlayItems.SPARROW_SPAWN_EGG.get());
-        }
+        PlatformHelperImpl.ITEM_TO_GROUPS.forEach(((item, group) -> {
+            if(event.getTabKey() == group) {
+                event.add(item.get());
+            }
+        }));
     }
 }

@@ -6,11 +6,10 @@ import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.entity.passive.ChickenEntity;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 public class CustomBabyChickenEntityModel extends CustomChickenEntityModel {
-    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of(FowlPlay.ID, "baby_chicken"), "main");
+    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(FowlPlay.id("baby_chicken"), "main");
 
     public CustomBabyChickenEntityModel(ModelPart root) {
         super(root);

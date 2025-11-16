@@ -1,4 +1,4 @@
-package aqario.fowlplay.common.entity.ai.brain.task;
+package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.util.MemoryList;
@@ -16,7 +16,7 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 
-public class TeleportToTargetTask extends ExtendedBehaviour<BirdEntity> {
+public class TeleportToTarget extends ExtendedBehaviour<BirdEntity> {
     private static final MemoryList MEMORIES = MemoryList.create(1)
         .present(FowlPlayMemoryModuleType.TELEPORT_TARGET.get());
 

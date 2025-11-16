@@ -100,7 +100,7 @@ public final class FowlPlayEntityType {
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 FlyingBirdEntity::canSpawnWaterfowl
             )
-            .dimensions(0.8f, 1.0f)
+            .dimensions(0.7f, 1.1f)
     );
 
     public static final Supplier<EntityType<GullEntity>> GULL = register("gull",

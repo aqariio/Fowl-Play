@@ -19,7 +19,7 @@ You can visit the wiki **[here](https://github.com/aqariio/Fowl-Play/wiki)**, al
 </details>
 
 <details>
-<summary>I found a bug! / My game crashed!</summary>
+<summary>I found a bug! My game crashed!</summary>
 
 You can report bugs and crashes **[here](https://github.com/aqariio/Fowl-Play/issues/new?template=bug.yml)**!
 </details>
@@ -31,7 +31,7 @@ Sure! Just make sure to credit me and link back to this page.
 </details>
 
 <details>
-<summary>I have a question that's not listed! / I have a suggestion!</summary>
+<summary>I have a question! I have a suggestion!</summary>
 
 You can talk about the mod in my **[GitHub Discussions](https://github.com/aqariio/Fowl-Play/discussions)**.
 </details>
@@ -54,7 +54,7 @@ You can talk about the mod in my **[GitHub Discussions](https://github.com/aqari
 - Ducks (Mallard duck)
 - Hawks (Red-tailed hawk)
 - Crows (American/carrion crow)
-- Geese (Greylag goose, canada goose, emden goose, chinese goose)
+- Geese (Greylag goose, canada goose, swan goose, emden goose, chinese goose)
 
 #### Other:
 

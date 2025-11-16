@@ -3,11 +3,13 @@ package aqario.fowlplay.common.entity;
 import aqario.fowlplay.common.entity.ai.pathing.FlightNavigation;
 import aqario.fowlplay.common.entity.ai.pathing.GroundNavigation;
 import aqario.fowlplay.common.util.Birds;
+import aqario.fowlplay.common.util.CylindricalRadius;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayBlockTags;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.SpawnReason;
@@ -32,11 +34,13 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
-import net.tslat.smartbrainlib.object.SquareRadius;
 import org.jetbrains.annotations.VisibleForTesting;
 
 public abstract class FlyingBirdEntity extends BirdEntity {
-    private static final TrackedData<Boolean> FLYING = DataTracker.registerData(FlyingBirdEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> FLYING = DataTracker.registerData(
+        FlyingBirdEntity.class,
+        TrackedDataHandlerRegistry.BOOLEAN
+    );
     private boolean isFlightNavigation;
     private float prevRoll;
     private float visualRoll;
@@ -44,11 +48,14 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     private static final int ROLL_FACTOR = 4;
     private static final float MIN_HEALTH_TO_FLY = 1.5F;
     private static final int MIN_FLIGHT_TIME = 15;
+    private static final double MIN_FLIGHT_VELOCITY = 0.1;
 
     protected FlyingBirdEntity(EntityType<? extends BirdEntity> entityType, World world) {
         super(entityType, world);
         this.setNavigation(false);
         this.setPathfindingPenalty(PathNodeType.LEAVES, 0.0f);
+        this.setPathfindingPenalty(PathNodeType.WATER_BORDER, 16.0f);
+        this.setPathfindingPenalty(PathNodeType.WATER, -1.0f);
     }
 
     public static DefaultAttributeContainer.Builder createFlyingBirdAttributes() {
@@ -126,8 +133,8 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     public abstract float getFlapPitch();
 
     // range where the bird prefers walking over flying
-    public SquareRadius getWalkRange() {
-        return new SquareRadius(16, 8);
+    public CylindricalRadius getWalkRange() {
+        return new CylindricalRadius(16, 8);
     }
 
     @Override
@@ -139,7 +146,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
 //            }
 //        }
         super.tick();
-        if(!this.getWorld().isClient) {
+        if(!this.getWorld().isClient()) {
             if(this.isFlying()) {
                 this.timeFlying++;
                 this.setNoGravity(true);
@@ -194,6 +201,11 @@ public abstract class FlyingBirdEntity extends BirdEntity {
 
     public int getMaxYawChange() {
         return 20;
+    }
+
+    @Override
+    public int getMaxLookYawChange() {
+        return this.isFlying() ? 10 : super.getMaxLookYawChange();
     }
 
     protected boolean canSwim() {
@@ -263,18 +275,26 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         }
     }
 
+    @Override
+    protected boolean canStartRiding(Entity entity) {
+        return !this.isFlying() && super.canStartRiding(entity);
+    }
+
     public boolean canStartFlying() {
         return !this.isFlying() && !this.isBelowWaterline() && this.getHealth() >= MIN_HEALTH_TO_FLY;
     }
 
     public boolean shouldStopFlying() {
-        if(this.isSubmergedInWater()) {
+        if(this.isSubmergedInWater() || this.hasVehicle()) {
             return true;
         }
         if(this.timeFlying < MIN_FLIGHT_TIME) {
             return false;
         }
-        return this.isOnGround() || this.isBelowWaterline() || this.getHealth() < MIN_HEALTH_TO_FLY;
+        return this.isOnGround()
+            || this.isBelowWaterline()
+            || this.getVelocity().length() < MIN_FLIGHT_VELOCITY
+            || this.getHealth() < MIN_HEALTH_TO_FLY;
     }
 
     public void startFlying() {

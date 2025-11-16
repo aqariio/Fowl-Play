@@ -1,4 +1,4 @@
-package aqario.fowlplay.common.entity.ai.brain.task;
+package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
 import aqario.fowlplay.common.util.MemoryList;
@@ -15,7 +15,7 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 
-public class LeaderlessFlockTask extends ExtendedBehaviour<FlyingBirdEntity> {
+public class LeaderlessFlocking extends ExtendedBehaviour<FlyingBirdEntity> {
     private static final MemoryList MEMORIES = MemoryList.create(3)
         .present(
             FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS.get()
@@ -32,7 +32,7 @@ public class LeaderlessFlockTask extends ExtendedBehaviour<FlyingBirdEntity> {
     public final float separationRange;
     private List<? extends PassiveEntity> nearbyBirds;
 
-    public LeaderlessFlockTask(int minFlockSize, float coherence, float alignment, float separation, float separationRange) {
+    public LeaderlessFlocking(int minFlockSize, float coherence, float alignment, float separation, float separationRange) {
         this.minFlockSize = minFlockSize;
         this.coherence = coherence;
         this.alignment = alignment;

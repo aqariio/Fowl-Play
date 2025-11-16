@@ -1,12 +1,10 @@
 package aqario.fowlplay.datagen;
 
-import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayEntityType;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.entity.EntityType;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.util.Identifier;
@@ -31,14 +29,22 @@ public class FowlPlayEntityTypeTagGen extends FabricTagProvider.EntityTypeTagPro
     @Override
     protected void configure(RegistryWrapper.WrapperLookup lookup) {
         // Birds
-        FabricTagProvider<EntityType<?>>.FabricTagBuilder builder = this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.BIRDS)
+        this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.BIRDS)
             .add(EntityType.CHICKEN)
-            .add(EntityType.PARROT);
-        Registries.ENTITY_TYPE.forEach((type) -> {
-            if(Registries.ENTITY_TYPE.getId(type).getNamespace().equals(FowlPlay.ID)) {
-                builder.add(type);
-            }
-        });
+            .add(EntityType.PARROT)
+            .add(FowlPlayEntityType.BLUE_JAY.get())
+            .add(FowlPlayEntityType.CARDINAL.get())
+            .add(FowlPlayEntityType.CHICKADEE.get())
+            .add(FowlPlayEntityType.CROW.get())
+            .add(FowlPlayEntityType.DUCK.get())
+            .add(FowlPlayEntityType.GOOSE.get())
+            .add(FowlPlayEntityType.GULL.get())
+            .add(FowlPlayEntityType.HAWK.get())
+            .add(FowlPlayEntityType.PENGUIN.get())
+            .add(FowlPlayEntityType.PIGEON.get())
+            .add(FowlPlayEntityType.RAVEN.get())
+            .add(FowlPlayEntityType.ROBIN.get())
+            .add(FowlPlayEntityType.SPARROW.get());
 
         // Flightless
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.FLIGHTLESS)

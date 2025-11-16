@@ -3,16 +3,16 @@ package aqario.fowlplay.client.render.entity.model;
 import aqario.fowlplay.client.render.entity.animation.DomesticGooseAnimations;
 import aqario.fowlplay.client.render.entity.animation.GooseAnimations;
 import aqario.fowlplay.common.entity.GooseEntity;
+import aqario.fowlplay.common.entity.GooseVariant;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 public class GooseEntityModel extends FlyingBirdEntityModel<GooseEntity> {
-    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of(FowlPlay.ID, "goose"), "main");
+    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(FowlPlay.id("goose"), "main");
 
     public GooseEntityModel(ModelPart root) {
         super(root);
@@ -97,7 +97,7 @@ public class GooseEntityModel extends FlyingBirdEntityModel<GooseEntity> {
             this.leftWing.visible = true;
             this.rightWing.visible = true;
         }
-        boolean domestic = goose.getVariant().domestic();
+        boolean domestic = goose.getVariant().modelType() == GooseVariant.ModelType.DOMESTIC;
         final Animation walkingAnimation = domestic ? DomesticGooseAnimations.WALKING : GooseAnimations.WALKING;
         final Animation standingAnimation = domestic ? DomesticGooseAnimations.STANDING : GooseAnimations.STANDING;
         final Animation swimmingAnimation = domestic ? DomesticGooseAnimations.SWIMMING : GooseAnimations.SWIMMING;

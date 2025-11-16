@@ -2,8 +2,8 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
+import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
-import aqario.fowlplay.common.entity.ai.brain.task.*;
 import aqario.fowlplay.common.entity.ai.control.BirdAquaticMoveControl;
 import aqario.fowlplay.common.entity.ai.pathing.AmphibiousNavigation;
 import aqario.fowlplay.common.util.Birds;
@@ -62,6 +62,7 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.InvalidateMemory;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowParent;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowTemptation;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomSwimTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
@@ -95,7 +96,10 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     public PenguinEntity(EntityType<? extends PenguinEntity> entityType, World world) {
         super(entityType, world);
+        this.setPathfindingPenalty(PathNodeType.WATER_BORDER, 0.0f);
         this.setPathfindingPenalty(PathNodeType.WATER, 0.0f);
+        this.setPathfindingPenalty(PathNodeType.POWDER_SNOW, 0.0f);
+        this.setPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, 0.0f);
         this.lookControl = new YawAdjustingLookControl(this, 85);
     }
 
@@ -617,19 +621,16 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
             new ItemTemptingSensor<PenguinEntity>()
                 .temptedWith((entity, stack) -> this.getFood().test(stack)),
             new InWaterSensor<>(),
-            new AttackedSensor<PenguinEntity>()
-                .setScanRate(bird -> 10),
-            new AvoidTargetSensor<PenguinEntity>()
-                .setScanRate(bird -> 10),
-            new AttackTargetSensor<PenguinEntity>()
-                .setScanRate(bird -> 10)
+            new AttackedSensor<>(),
+            new AvoidTargetSensor<>(),
+            new AttackTargetSensor<>()
         );
     }
 
     @Override
     public BrainActivityGroup<? extends PenguinEntity> getCoreTasks() {
         return BirdBrain.coreActivity(
-            new SetAirTargetTask<>(),
+            new SetBreatheTarget<>(),
             new SetAttackTarget<>(),
             new LookAtTarget<>()
                 .runFor(entity -> entity.getRandom().nextBetween(45, 90)),
@@ -640,7 +641,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     @Override
     public BrainActivityGroup<? extends PenguinEntity> getAvoidTasks() {
         return BirdBrain.avoidActivity(
-            CompositeTasks.setAvoidEntityWalkTarget()
+            CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
@@ -648,7 +649,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     public BrainActivityGroup<? extends PenguinEntity> getFightTasks() {
         return BirdBrain.fightActivity(
             new InvalidateAttackTarget<>(),
-            SlideTasks.startSliding(),
+            SlideBehaviours.startSliding(),
             new SetWalkTargetToAttackTarget<>()
                 .speedMod((entity, target) -> Birds.FAST_SPEED),
             new AnimatableMeleeAttack<>(0),
@@ -663,17 +664,19 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
         return BirdBrain.idleActivity(
             new BreedWithPartner<>(),
             new FollowParent<>(),
-            SetEntityLookTargetTask.create(EntityType.PLAYER),
+            SetEntityLookTarget.create(EntityType.PLAYER),
             new FollowTemptation<>(),
-            new LookAroundTask<>()
+            new SetRandomLookTarget<>()
                 .lookChance(0.02f),
             new OneRandomBehaviour<>(
                 Pair.of(
-                    SetLandWalkTargetTask.create(32),
+                    new SetRandomWalkTarget<>()
+                        .setRadius(64, 32),
                     5
                 ),
                 Pair.of(
-                    PenguinSpecificTasks.swim(),
+                    new SetRandomSwimTarget<>()
+                        .setRadius(32, 16),
                     2
                 )
             ).startCondition(entity -> entity.isInsideWaterOrBubbleColumn() && !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET)),
@@ -684,7 +687,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
                     2
                 ),
                 Pair.of(
-                    SlideTasks.toggleSliding(20),
+                    SlideBehaviours.toggleSliding(20),
                     5
                 ),
                 Pair.of(
@@ -693,11 +696,11 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
                     5
                 ),
                 Pair.of(
-                    SetAdultWalkTargetTask.create(Birds.STAY_NEAR_ENTITY_RANGE),
+                    SetAdultWalkTarget.create(Birds.STAY_NEAR_ENTITY_RANGE),
                     2
                 ),
                 Pair.of(
-                    PenguinSpecificTasks.goToWater(),
+                    CompositeBehaviours.slideToWater(),
                     6
                 )
             ).startCondition(entity -> !entity.isInsideWaterOrBubbleColumn() && !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
@@ -707,8 +710,8 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     @Override
     public BrainActivityGroup<? extends PenguinEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
-            SlideTasks.startSliding(),
-            CompositeTasks.setNearestFoodWalkTarget()
+            SlideBehaviours.startSliding(),
+            CustomBehaviours.setNearestFoodWalkTarget()
         );
     }
 

@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 public class BlueJayEntityRenderer extends MobEntityRenderer<BlueJayEntity, BlueJayEntityModel> {
-    private static final Identifier TEXTURE = Identifier.of(FowlPlay.ID, "textures/entity/blue_jay/blue_jay.png");
+    private static final Identifier TEXTURE = FowlPlay.id("textures/entity/blue_jay/blue_jay.png");
 
     public BlueJayEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new BlueJayEntityModel(context.getPart(BlueJayEntityModel.MODEL_LAYER)), 0.15f);

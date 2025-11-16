@@ -52,7 +52,7 @@ public class FowlPlayAdvancementGen extends FabricAdvancementProvider {
                     EntityPredicate.Builder.create().type(FowlPlayEntityTypeTags.BIRDS).nbt(new NbtPredicate(flying)).build()
                 )
             )
-            .build(exporter, new Identifier(FowlPlay.ID, "adventure/damage_flying_bird").toString());
+            .build(exporter, FowlPlay.id("adventure/damage_flying_bird").toString());
 
         Advancement.Builder.createUntelemetered()
             .parent(advancement("adventure/root"))
@@ -70,7 +70,7 @@ public class FowlPlayAdvancementGen extends FabricAdvancementProvider {
                 "fall_with_penguin",
                 new ImpossibleCriterion.Conditions()
             )
-            .build(exporter, new Identifier(FowlPlay.ID, "adventure/fly_penguin").toString());
+            .build(exporter, FowlPlay.id("adventure/fly_penguin").toString());
     }
 
     private static Advancement advancement(String id) {

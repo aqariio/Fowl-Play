@@ -4,7 +4,6 @@ import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.entity.EntityType;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
 
 public final class FowlPlayEntityTypeTags {
     public static final TagKey<EntityType<?>> BIRDS = create("birds");
@@ -37,6 +36,6 @@ public final class FowlPlayEntityTypeTags {
     public static final TagKey<EntityType<?>> WATERFOWL = create("waterfowl");
 
     private static TagKey<EntityType<?>> create(String id) {
-        return TagKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(FowlPlay.ID, id));
+        return TagKey.of(RegistryKeys.ENTITY_TYPE, FowlPlay.id(id));
     }
 }

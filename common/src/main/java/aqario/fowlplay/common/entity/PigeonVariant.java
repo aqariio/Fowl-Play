@@ -14,7 +14,7 @@ public record PigeonVariant(Identifier texture) {
     public static final Supplier<PigeonVariant> WHITE = register("white");
 
     private static Supplier<PigeonVariant> register(String id) {
-        Identifier texture = Identifier.of(FowlPlay.ID, "textures/entity/pigeon/" + id + "_pigeon.png");
+        Identifier texture = FowlPlay.id("textures/entity/pigeon/" + id + "_pigeon.png");
         return PlatformHelper.registerVariant(id, () -> new PigeonVariant(texture));
     }
 

@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 public class CrowEntityRenderer extends MobEntityRenderer<CrowEntity, CrowEntityModel> {
-    private static final Identifier TEXTURE = Identifier.of(FowlPlay.ID, "textures/entity/crow/crow.png");
+    private static final Identifier TEXTURE = FowlPlay.id("textures/entity/crow/crow.png");
 
     public CrowEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new CrowEntityModel(context.getPart(CrowEntityModel.MODEL_LAYER)), 0.15f);

@@ -1,4 +1,4 @@
-package aqario.fowlplay.common.entity.ai.brain.task;
+package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.util.MemoryList;
@@ -12,21 +12,21 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
-public class SetEntityLookTargetTask {
-    public static <E extends BirdEntity> SingleTickBehaviour<E> create() {
+public class SetEntityLookTarget {
+    public static <E extends BirdEntity> AnonymousBehaviour<E> create() {
         return create((entity, target) -> true);
     }
 
-    public static <E extends BirdEntity> SingleTickBehaviour<E> create(SpawnGroup spawnGroup) {
+    public static <E extends BirdEntity> AnonymousBehaviour<E> create(SpawnGroup spawnGroup) {
         return create((entity, target) -> spawnGroup.equals(target.getType().getSpawnGroup()));
     }
 
-    public static <E extends BirdEntity> SingleTickBehaviour<E> create(EntityType<?> type) {
+    public static <E extends BirdEntity> AnonymousBehaviour<E> create(EntityType<?> type) {
         return create((entity, target) -> type.equals(target.getType()));
     }
 
-    public static <E extends BirdEntity> SingleTickBehaviour<E> create(BiPredicate<E, LivingEntity> predicate) {
-        return new SingleTickBehaviour<>(
+    public static <E extends BirdEntity> AnonymousBehaviour<E> create(BiPredicate<E, LivingEntity> predicate) {
+        return new AnonymousBehaviour<>(
             MemoryList.create(2)
                 .absent(MemoryModuleType.LOOK_TARGET)
                 .present(MemoryModuleType.VISIBLE_MOBS),

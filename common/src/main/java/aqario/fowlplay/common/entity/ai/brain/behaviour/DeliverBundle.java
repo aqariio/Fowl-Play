@@ -1,4 +1,4 @@
-package aqario.fowlplay.common.entity.ai.brain.task;
+package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.fowlplay.common.entity.PigeonEntity;
 import aqario.fowlplay.common.entity.ai.brain.TeleportTarget;
@@ -10,14 +10,16 @@ import net.minecraft.entity.ai.brain.WalkTarget;
 import net.minecraft.entity.player.PlayerEntity;
 import net.tslat.smartbrainlib.util.BrainUtils;
 
-public class DeliverBundleTask {
-    public static <E extends PigeonEntity> SingleTickBehaviour<E> run() {
-        return new SingleTickBehaviour<>(
+public class DeliverBundle {
+    public static <E extends PigeonEntity> AnonymousBehaviour<E> run() {
+        return new AnonymousBehaviour<>(
             MemoryList.create(4)
                 .present(FowlPlayMemoryModuleType.RECIPIENT.get())
-                .registered(MemoryModuleType.LOOK_TARGET)
-                .registered(MemoryModuleType.WALK_TARGET)
-                .registered(FowlPlayMemoryModuleType.TELEPORT_TARGET.get()),
+                .registered(
+                    MemoryModuleType.LOOK_TARGET,
+                    MemoryModuleType.WALK_TARGET,
+                    FowlPlayMemoryModuleType.TELEPORT_TARGET.get()
+                ),
             (bird, brain) -> {
                 PlayerEntity recipient = bird.getWorld().getPlayerByUuid(BrainUtils.getMemory(brain, FowlPlayMemoryModuleType.RECIPIENT.get()));
                 if(recipient != null) {

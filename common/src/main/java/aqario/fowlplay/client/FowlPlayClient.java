@@ -18,7 +18,7 @@ import net.minecraft.util.Identifier;
 public class FowlPlayClient {
     private static final Dilation ARMOR_DILATION = new Dilation(1.0F);
     private static final Dilation HAT_DILATION = new Dilation(0.5F);
-    public static final Identifier DEBUG_BIRD_ID = new Identifier(FowlPlay.ID, "debug/bird");
+    public static final Identifier DEBUG_BIRD_ID = FowlPlay.id("debug/bird");
     public static boolean DEBUG_BIRD = false;
 
     public static void init() {

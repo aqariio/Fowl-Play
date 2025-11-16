@@ -1,7 +1,8 @@
-package aqario.fowlplay.common.entity.ai.brain.task;
+package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
-import aqario.fowlplay.common.entity.ai.pathing.FlightTargeting;
+import aqario.fowlplay.common.entity.ai.pathing.BirdTargeting;
+import aqario.fowlplay.common.util.CylindricalRadius;
 import aqario.fowlplay.common.util.MemoryList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.ai.brain.Brain;
@@ -14,11 +15,11 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 
-public class SetRandomFlightTargetTask<E extends FlyingBirdEntity> extends ExtendedBehaviour<E> {
+public class SetPerchWalkTarget<E extends FlyingBirdEntity> extends ExtendedBehaviour<E> {
     private static final MemoryList MEMORIES = MemoryList.create(1)
         .absent(MemoryModuleType.WALK_TARGET);
-    private static final int HORIZONTAL_RANGE = 32;
-    private static final int VERTICAL_RANGE = 16;
+    public static final CylindricalRadius PERCH_RANGE = new CylindricalRadius(32, 32);
+    public static final CylindricalRadius GROUND_RANGE = new CylindricalRadius(8, 64);
 
     @Override
     protected List<Pair<MemoryModuleType<?>, MemoryModuleState>> getMemoryRequirements() {
@@ -28,12 +29,12 @@ public class SetRandomFlightTargetTask<E extends FlyingBirdEntity> extends Exten
     @Override
     protected void start(E entity) {
         Brain<?> brain = entity.getBrain();
-        Vec3d target = FlightTargeting.find(entity, HORIZONTAL_RANGE, VERTICAL_RANGE, entity::getFlyingPathfindingFavor);
-        if(target == null) {
-            BrainUtils.clearMemory(brain, MemoryModuleType.WALK_TARGET);
+        Vec3d target = BirdTargeting.findPerchOrGround(entity, PERCH_RANGE, GROUND_RANGE);
+        if(target != null) {
+            BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, new WalkTarget(target, 1.0f, 0));
         }
         else {
-            BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, new WalkTarget(target, 1.0f, 0));
+            BrainUtils.clearMemory(brain, MemoryModuleType.WALK_TARGET);
         }
     }
 }

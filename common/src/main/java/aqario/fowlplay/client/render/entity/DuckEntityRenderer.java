@@ -11,7 +11,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 public class DuckEntityRenderer extends MobEntityRenderer<DuckEntity, DuckEntityModel> {
-    private static final Identifier QUACKERS_TEXTURE = Identifier.of(FowlPlay.ID, "textures/entity/duck/quackers.png");
+    private static final Identifier QUACKERS_TEXTURE = FowlPlay.id("textures/entity/duck/quackers.png");
 
     public DuckEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new DuckEntityModel(context.getPart(DuckEntityModel.MODEL_LAYER)), 0.3f);

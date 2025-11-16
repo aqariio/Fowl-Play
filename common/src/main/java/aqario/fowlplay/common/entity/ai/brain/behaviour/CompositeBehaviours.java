@@ -1,0 +1,78 @@
+package aqario.fowlplay.common.entity.ai.brain.behaviour;
+
+import aqario.fowlplay.common.entity.FlyingBirdEntity;
+import aqario.fowlplay.common.entity.PenguinEntity;
+import aqario.fowlplay.common.util.Birds;
+import com.mojang.datafixers.util.Pair;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.ai.brain.MemoryModuleType;
+import net.tslat.smartbrainlib.api.core.behaviour.AllApplicableBehaviours;
+import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
+import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomSwimTarget;
+import net.tslat.smartbrainlib.util.BrainUtils;
+
+import java.util.function.Predicate;
+
+/**
+ * A collection of preconfigured group behaviours for ease of use.
+ */
+public class CompositeBehaviours {
+    @SuppressWarnings("unchecked")
+    public static ExtendedBehaviour<PenguinEntity> slideToWater() {
+        return new AllApplicableBehaviours<>(
+            Pair.of(
+                SlideBehaviours.startSliding(),
+                1
+            ),
+            Pair.of(
+                new SetRandomSwimTarget<>()
+                    .setRadius(64, 24),
+                2
+            )
+        ).startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.HAS_HUNTING_COOLDOWN));
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> tryPerch() {
+        return new OneRandomBehaviour<>(
+            Pair.of(
+                new OneRandomBehaviour<E>(
+                    new SetRandomLookTarget<>(),
+                    new Idle<>()
+                        .noTimeout()
+                )
+                    .runFor(entity -> entity.getRandom().nextBetween(30, 100))
+                    .startCondition(Birds::isPerched)
+                    .stopIf(Predicate.not(Birds::isPerched)),
+                8
+            ),
+            Pair.of(
+                new SetPerchWalkTarget<>(),
+                1
+            )
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> tryForage() {
+        return new OneRandomBehaviour<>(
+            Pair.of(
+                new OneRandomBehaviour<>(
+                    new SetRandomLookTarget<>(),
+                    new Idle<>()
+                        .noTimeout()
+                )
+                    .runFor(entity -> entity.getRandom().nextBetween(30, 100))
+                    .startCondition(Entity::isOnGround)
+                    .stopIf(Predicate.not(Entity::isOnGround)),
+                2
+            ),
+            Pair.of(
+                CustomBehaviours.setGroundWalkTarget(),
+                1
+            )
+        );
+    }
+}

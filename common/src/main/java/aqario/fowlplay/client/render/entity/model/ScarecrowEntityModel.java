@@ -7,12 +7,11 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.render.entity.model.EntityModelPartNames;
-import net.minecraft.util.Identifier;
 
 public class ScarecrowEntityModel extends ScarecrowArmorEntityModel {
-    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of(FowlPlay.ID, "scarecrow"), "main");
-    public static final EntityModelLayer INNER_ARMOR = new EntityModelLayer(Identifier.of(FowlPlay.ID, "scarecrow"), "inner_armor");
-    public static final EntityModelLayer OUTER_ARMOR = new EntityModelLayer(Identifier.of(FowlPlay.ID, "scarecrow"), "outer_armor");
+    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(FowlPlay.id("scarecrow"), "main");
+    public static final EntityModelLayer INNER_ARMOR = new EntityModelLayer(FowlPlay.id("scarecrow"), "inner_armor");
+    public static final EntityModelLayer OUTER_ARMOR = new EntityModelLayer(FowlPlay.id("scarecrow"), "outer_armor");
     private static final String STAND = "stand";
     private final ModelPart stand;
 

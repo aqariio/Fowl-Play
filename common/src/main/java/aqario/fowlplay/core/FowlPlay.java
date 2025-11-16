@@ -7,12 +7,17 @@ import aqario.fowlplay.common.world.gen.SparrowSpawner;
 import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.platform.Mod;
 import dev.architectury.platform.Platform;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FowlPlay {
     public static final Logger LOGGER = LoggerFactory.getLogger("Fowl Play");
     public static final String ID = "fowlplay";
+
+    public static Identifier id(String id) {
+        return Identifier.of(ID, id);
+    }
 
     public static boolean isDebugUtilsLoaded() {
         return Platform.isModLoaded("debugutils");

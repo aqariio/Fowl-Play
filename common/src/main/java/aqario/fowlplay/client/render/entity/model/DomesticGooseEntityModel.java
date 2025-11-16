@@ -3,10 +3,9 @@ package aqario.fowlplay.client.render.entity.model;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.util.Identifier;
 
 public class DomesticGooseEntityModel extends GooseEntityModel {
-    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of(FowlPlay.ID, "domestic_goose"), "main");
+    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(FowlPlay.id("domestic_goose"), "main");
 
     public DomesticGooseEntityModel(ModelPart root) {
         super(root);

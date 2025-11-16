@@ -11,7 +11,7 @@ public record SparrowVariant(Identifier texture) {
     public static final Supplier<SparrowVariant> PALE = register("pale");
 
     private static Supplier<SparrowVariant> register(String id) {
-        Identifier texture = Identifier.of(FowlPlay.ID, "textures/entity/sparrow/" + id + "_sparrow.png");
+        Identifier texture = FowlPlay.id("textures/entity/sparrow/" + id + "_sparrow.png");
         return PlatformHelper.registerVariant(id, () -> new SparrowVariant(texture));
     }
 

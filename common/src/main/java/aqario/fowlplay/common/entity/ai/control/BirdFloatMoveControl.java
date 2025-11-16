@@ -10,15 +10,15 @@ public class BirdFloatMoveControl extends BirdMoveControl {
 
     @Override
     public void tick() {
-        Vec3d velocity = this.entity.getVelocity();
-        if (((BirdEntity) this.entity).isBelowWaterline()) {
-            this.entity.setVelocity(velocity.add(0.0, 0.05, 0.0));
-            if (this.entity.isSubmergedInWater()) {
-                velocity = this.entity.getVelocity();
-                this.entity.setVelocity(velocity.add(0.0, 0.1, 0.0));
+        if (this.bird.isBelowWaterline()) {
+            Vec3d velocity = this.bird.getVelocity();
+            this.bird.setVelocity(velocity.add(0.0, 0.05, 0.0));
+            if (this.bird.isSubmergedInWater()) {
+                velocity = this.bird.getVelocity();
+                this.bird.setVelocity(velocity.add(0.0, 0.1, 0.0));
             }
-            velocity = this.entity.getVelocity();
-            this.entity.setVelocity(velocity.getX(), Math.max(velocity.getY(), 0), velocity.getZ());
+            velocity = this.bird.getVelocity();
+            this.bird.setVelocity(velocity.getX(), Math.max(velocity.getY(), 0), velocity.getZ());
         }
         super.tick();
     }

@@ -5,11 +5,10 @@ import aqario.fowlplay.common.entity.PenguinEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 public class PenguinEntityModel extends BirdEntityModel<PenguinEntity> {
-    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of(FowlPlay.ID, "penguin"), "main");
+    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(FowlPlay.id("penguin"), "main");
 
     public PenguinEntityModel(ModelPart root) {
         super(root);

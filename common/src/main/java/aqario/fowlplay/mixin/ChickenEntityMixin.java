@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ChickenEntity.class)
+@Mixin(value = ChickenEntity.class, priority = 999)
 public abstract class ChickenEntityMixin extends AnimalEntity implements VariantHolder<ChickenVariant>, ChickenAnimationStates {
     @Unique
     private static final TrackedData<ChickenVariant> fowlplay$VARIANT = DataTracker.registerData(

@@ -61,10 +61,18 @@ dependencies {
     modRuntimeOnly("maven.modrinth:nbt-autocomplete:${project.nbt_autocomplete_version}-fabric,1.20.1")
 
     // Observable
-    modRuntimeOnly("maven.modrinth:observable:${project.observable_version}")
+    modRuntimeOnly("maven.modrinth:observable:${project.observable_version}+fabric")
 
     // Smart Brain Lib
     modImplementation("net.tslat.smartbrainlib:SmartBrainLib-fabric-${project.minecraft_version}:${project.sbl_version}")
+
+    // Spark
+    modRuntimeOnly("me.lucko:fabric-permissions-api:${project.fabric_permissions_api_version}") {
+        transitive = false
+    }
+    modRuntimeOnly("maven.modrinth:spark:${project.spark_version}-fabric") {
+        transitive = false
+    }
 
     // Suggestion Tweaker
     modRuntimeOnly("maven.modrinth:suggestion-tweaker:${project.suggestion_tweaker_version}+fabric")

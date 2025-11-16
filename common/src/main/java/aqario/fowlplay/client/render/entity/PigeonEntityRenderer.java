@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 public class PigeonEntityRenderer extends MobEntityRenderer<PigeonEntity, PigeonEntityModel> {
-    private static final Identifier MARTHA_TEXTURE = Identifier.of(FowlPlay.ID, "textures/entity/pigeon/martha.png");
+    private static final Identifier MARTHA_TEXTURE = FowlPlay.id("textures/entity/pigeon/martha.png");
 
     public PigeonEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new PigeonEntityModel(context.getPart(PigeonEntityModel.MODEL_LAYER)), 0.2f);

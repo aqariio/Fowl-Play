@@ -7,16 +7,22 @@ import aqario.fowlplay.core.FowlPlayRegistries;
 import aqario.fowlplay.core.FowlPlayRegistryKeys;
 import aqario.fowlplay.core.platform.CommonRegistry;
 import aqario.fowlplay.core.platform.forge.PlatformHelperImpl;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.registries.RegistryBuilder;
 
+import java.util.Comparator;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 @Mod(FowlPlay.ID)
@@ -67,10 +73,16 @@ public final class FowlPlayForge {
     }
 
     private static void onAddItemGroupEntries(BuildCreativeModeTabContentsEvent event) {
-        PlatformHelperImpl.ITEM_TO_GROUPS.forEach(((item, group) -> {
-            if(event.getTabKey() == group) {
-                event.accept(item.get());
-            }
-        }));
+        PlatformHelperImpl.ITEM_TO_GROUPS.entrySet().stream()
+            .sorted(Comparator.comparing(entry ->
+                Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(entry.getKey().get())))
+            )
+            .forEach(entry -> {
+                Item item = entry.getKey().get();
+                ResourceKey<CreativeModeTab> group = entry.getValue();
+                if(event.getTabKey() == group) {
+                    event.accept(item);
+                }
+            });
     }
 }

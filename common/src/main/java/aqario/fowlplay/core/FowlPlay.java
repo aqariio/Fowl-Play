@@ -7,7 +7,7 @@ import aqario.fowlplay.common.world.gen.SparrowSpawner;
 import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.platform.Mod;
 import dev.architectury.platform.Platform;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,8 +15,8 @@ public class FowlPlay {
     public static final Logger LOGGER = LoggerFactory.getLogger("Fowl Play");
     public static final String ID = "fowlplay";
 
-    public static Identifier id(String id) {
-        return Identifier.of(ID, id);
+    public static ResourceLocation id(String id) {
+        return ResourceLocation.tryBuild(ID, id);
     }
 
     public static boolean isDebugUtilsLoaded() {
@@ -58,15 +58,15 @@ public class FowlPlay {
         SparrowSpawner sparrowSpawner = new SparrowSpawner();
 
         TickEvent.SERVER_LEVEL_POST.register(world -> {
-            pigeonSpawner.spawn(
+            pigeonSpawner.tick(
                 world,
-                world.getServer().isMonsterSpawningEnabled(),
-                world.getServer().shouldSpawnAnimals()
+                world.getServer().isSpawningMonsters(),
+                world.getServer().isSpawningAnimals()
             );
-            sparrowSpawner.spawn(
+            sparrowSpawner.tick(
                 world,
-                world.getServer().isMonsterSpawningEnabled(),
-                world.getServer().shouldSpawnAnimals()
+                world.getServer().isSpawningMonsters(),
+                world.getServer().isSpawningAnimals()
             );
         });
     }

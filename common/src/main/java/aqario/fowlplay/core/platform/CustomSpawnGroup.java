@@ -1,7 +1,7 @@
 package aqario.fowlplay.core.platform;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.entity.SpawnGroup;
+import net.minecraft.world.entity.MobCategory;
 
 // credit to friendsandfoes for the platform agnostic enum extension implementation
 public final class CustomSpawnGroup {
@@ -20,12 +20,12 @@ public final class CustomSpawnGroup {
     public static final int BIRDS_IMMEDIATE_DESPAWN_RANGE = 96;
 
     @ExpectPlatform
-    public static SpawnGroup ambientBirds() {
+    public static MobCategory ambientBirds() {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static SpawnGroup birds() {
+    public static MobCategory birds() {
         throw new AssertionError();
     }
 

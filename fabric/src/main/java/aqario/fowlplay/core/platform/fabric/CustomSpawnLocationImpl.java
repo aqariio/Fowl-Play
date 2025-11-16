@@ -1,25 +1,25 @@
 package aqario.fowlplay.core.platform.fabric;
 
-import net.minecraft.entity.SpawnRestriction;
+import net.minecraft.world.entity.SpawnPlacements;
 
 public final class CustomSpawnLocationImpl {
     static {
-        SpawnRestriction.Location.values();
+        SpawnPlacements.Type.values();
     }
 
-    public static SpawnRestriction.Location GROUND;
-    public static SpawnRestriction.Location SEMIAQUATIC;
-    public static SpawnRestriction.Location AQUATIC;
+    public static SpawnPlacements.Type GROUND;
+    public static SpawnPlacements.Type SEMIAQUATIC;
+    public static SpawnPlacements.Type AQUATIC;
 
-    public static SpawnRestriction.Location ground() {
+    public static SpawnPlacements.Type ground() {
         return GROUND;
     }
 
-    public static SpawnRestriction.Location semiaquatic() {
+    public static SpawnPlacements.Type semiaquatic() {
         return SEMIAQUATIC;
     }
 
-    public static SpawnRestriction.Location aquatic() {
+    public static SpawnPlacements.Type aquatic() {
         return AQUATIC;
     }
 }

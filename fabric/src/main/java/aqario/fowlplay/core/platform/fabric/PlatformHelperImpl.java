@@ -11,32 +11,32 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.client.model.TexturedModelData;
-import net.minecraft.client.particle.ParticleFactory;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.brain.Activity;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.sensor.Sensor;
-import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.entity.data.TrackedDataHandler;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.item.SpawnEggItem;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.SimpleRegistry;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.sensing.Sensor;
+import net.minecraft.world.entity.ai.sensing.SensorType;
+import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SpawnEggItem;
 
 import java.util.function.Supplier;
 
@@ -72,53 +72,53 @@ public class PlatformHelperImpl {
     }
 
     public static Supplier<Activity> registerActivity(String id, Supplier<Activity> activity) {
-        Activity registry = Registry.register(Registries.ACTIVITY, FowlPlay.id(id), activity.get());
+        Activity registry = Registry.register(BuiltInRegistries.ACTIVITY, FowlPlay.id(id), activity.get());
         return () -> registry;
     }
 
     public static <T extends Entity> Supplier<EntityType<T>> registerEntityType(String id, Supplier<EntityType<T>> entityType) {
-        EntityType<T> registry = Registry.register(Registries.ENTITY_TYPE, FowlPlay.id(id), entityType.get());
+        EntityType<T> registry = Registry.register(BuiltInRegistries.ENTITY_TYPE, FowlPlay.id(id), entityType.get());
         return () -> registry;
     }
 
-    public static Supplier<Item> registerItem(String id, Supplier<Item> item, RegistryKey<ItemGroup> group) {
-        Item registry = Registry.register(Registries.ITEM, FowlPlay.id(id), item.get());
+    public static Supplier<Item> registerItem(String id, Supplier<Item> item, ResourceKey<CreativeModeTab> group) {
+        Item registry = Registry.register(BuiltInRegistries.ITEM, FowlPlay.id(id), item.get());
         addItemToItemGroup(() -> registry, group);
         return () -> registry;
     }
 
-    public static <T extends MobEntity> Supplier<Item> registerSpawnEggItem(String id, Supplier<EntityType<T>> entityType, int backgroundColor, int highlightColor) {
-        return registerItem(id, () -> new SpawnEggItem(entityType.get(), backgroundColor, highlightColor, new Item.Settings()), ItemGroups.SPAWN_EGGS);
+    public static <T extends Mob> Supplier<Item> registerSpawnEggItem(String id, Supplier<EntityType<T>> entityType, int backgroundColor, int highlightColor) {
+        return registerItem(id, () -> new SpawnEggItem(entityType.get(), backgroundColor, highlightColor, new Item.Properties()), CreativeModeTabs.SPAWN_EGGS);
     }
 
     public static <T> Supplier<MemoryModuleType<T>> registerMemoryModuleType(String id, Supplier<MemoryModuleType<T>> memoryModuleType) {
-        MemoryModuleType<T> registry = Registry.register(Registries.MEMORY_MODULE_TYPE, FowlPlay.id(id), memoryModuleType.get());
+        MemoryModuleType<T> registry = Registry.register(BuiltInRegistries.MEMORY_MODULE_TYPE, FowlPlay.id(id), memoryModuleType.get());
         return () -> registry;
     }
 
-    public static Supplier<DefaultParticleType> registerParticleType(String id, Supplier<DefaultParticleType> particleType) {
-        DefaultParticleType registry = Registry.register(Registries.PARTICLE_TYPE, FowlPlay.id(id), particleType.get());
+    public static Supplier<SimpleParticleType> registerParticleType(String id, Supplier<SimpleParticleType> particleType) {
+        SimpleParticleType registry = Registry.register(BuiltInRegistries.PARTICLE_TYPE, FowlPlay.id(id), particleType.get());
         return () -> registry;
     }
 
     public static Supplier<ExtendedSchedule> registerSchedule(String id, Supplier<ExtendedSchedule> schedule) {
-        ExtendedSchedule registry = Registry.register(Registries.SCHEDULE, FowlPlay.id(id), schedule.get());
+        ExtendedSchedule registry = Registry.register(BuiltInRegistries.SCHEDULE, FowlPlay.id(id), schedule.get());
         return () -> registry;
     }
 
     public static <T extends Sensor<?>> Supplier<SensorType<T>> registerSensorType(String id, Supplier<SensorType<T>> sensorType) {
-        SensorType<T> registry = Registry.register(Registries.SENSOR_TYPE, FowlPlay.id(id), sensorType.get());
+        SensorType<T> registry = Registry.register(BuiltInRegistries.SENSOR_TYPE, FowlPlay.id(id), sensorType.get());
         return () -> registry;
     }
 
     public static Supplier<SoundEvent> registerSoundEvent(String id, Supplier<SoundEvent> soundEvent) {
-        SoundEvent registry = Registry.register(Registries.SOUND_EVENT, FowlPlay.id(id), soundEvent.get());
+        SoundEvent registry = Registry.register(BuiltInRegistries.SOUND_EVENT, FowlPlay.id(id), soundEvent.get());
         return () -> registry;
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Supplier<CommonRegistry<T>> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
-        FabricRegistryBuilder<T, SimpleRegistry<T>> builder = FabricRegistryBuilder.createSimple(registryKey);
+    public static <T> Supplier<CommonRegistry<T>> registerRegistry(ResourceKey<Registry<T>> registryKey, boolean sync) {
+        FabricRegistryBuilder<T, MappedRegistry<T>> builder = FabricRegistryBuilder.createSimple(registryKey);
         if(sync) {
             builder.attribute(RegistryAttribute.SYNCED);
         }
@@ -126,35 +126,35 @@ public class PlatformHelperImpl {
         return () -> (CommonRegistry<T>) registry;
     }
 
-    public static <T> void registerTrackedDataHandler(String id, TrackedDataHandler<T> handler) {
-        TrackedDataHandlerRegistry.register(handler);
+    public static <T> void registerTrackedDataHandler(String id, EntityDataSerializer<T> handler) {
+        EntityDataSerializers.registerSerializer(handler);
     }
 
-    public static void addItemToItemGroup(Supplier<Item> item, RegistryKey<ItemGroup> itemGroup) {
+    public static void addItemToItemGroup(Supplier<Item> item, ResourceKey<CreativeModeTab> itemGroup) {
         ItemGroupEvents.modifyEntriesEvent(itemGroup).register(entries ->
-            entries.add(item.get())
+            entries.accept(item.get())
         );
     }
 
-    public static <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererFactory<T> provider) {
+    public static <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<T> provider) {
         EntityRendererRegistry.register(type.get(), provider);
     }
 
-    public static void registerModelLayer(EntityModelLayer location, Supplier<TexturedModelData> definition) {
+    public static void registerModelLayer(ModelLayerLocation location, Supplier<LayerDefinition> definition) {
         EntityModelLayerRegistry.registerModelLayer(location, definition::get);
     }
 
-    public static <T extends ParticleEffect> void registerParticleFactory(Supplier<ParticleType<T>> supplier, ParticleFactory<T> provider) {
+    public static <T extends ParticleOptions> void registerParticleFactory(Supplier<ParticleType<T>> supplier, ParticleProvider<T> provider) {
         ParticleFactoryRegistry.getInstance().register(supplier.get(), provider);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> void writeRegistry(CommonRegistry<T> registry, T value, PacketByteBuf buf) {
-        buf.writeRegistryValue((Registry<T>) registry, value);
+    public static <T> void writeRegistry(CommonRegistry<T> registry, T value, FriendlyByteBuf buf) {
+        buf.writeId((Registry<T>) registry, value);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T readRegistry(CommonRegistry<T> registry, Class<T> clazz, PacketByteBuf buf) {
-        return buf.readRegistryValue((Registry<T>) registry);
+    public static <T> T readRegistry(CommonRegistry<T> registry, Class<T> clazz, FriendlyByteBuf buf) {
+        return buf.readById((Registry<T>) registry);
     }
 }

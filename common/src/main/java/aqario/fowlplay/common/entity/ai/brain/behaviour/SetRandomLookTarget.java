@@ -2,35 +2,35 @@ package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.fowlplay.common.util.MemoryList;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.entity.ai.brain.MemoryModuleState;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.floatprovider.ConstantFloatProvider;
-import net.minecraft.util.math.floatprovider.FloatProvider;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.util.valueproviders.ConstantFloat;
+import net.minecraft.util.valueproviders.FloatProvider;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
 import net.tslat.smartbrainlib.object.FreePositionTracker;
 import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 
-public class SetRandomLookTarget<E extends MobEntity> extends ExtendedBehaviour<E> {
+public class SetRandomLookTarget<E extends Mob> extends ExtendedBehaviour<E> {
     private static final MemoryList MEMORIES = MemoryList.create(1)
         .absent(
             MemoryModuleType.LOOK_TARGET,
             MemoryModuleType.WALK_TARGET
         );
 
-    protected FloatProvider runChance = ConstantFloatProvider.create(1f);
+    protected FloatProvider runChance = ConstantFloat.of(1f);
     private long timeUntilNextLook = 0L;
 
     public SetRandomLookTarget() {
-        this.runtimeProvider = entity -> entity.getRandom().nextBetween(20, 60);
+        this.runtimeProvider = entity -> entity.getRandom().nextIntBetweenInclusive(20, 60);
     }
 
     public SetRandomLookTarget<E> lookChance(float chance) {
-        return this.lookChance(ConstantFloatProvider.create(chance));
+        return this.lookChance(ConstantFloat.of(chance));
     }
 
     public SetRandomLookTarget<E> lookChance(FloatProvider chance) {
@@ -40,13 +40,13 @@ public class SetRandomLookTarget<E extends MobEntity> extends ExtendedBehaviour<
     }
 
     @Override
-    protected List<Pair<MemoryModuleType<?>, MemoryModuleState>> getMemoryRequirements() {
+    protected List<Pair<MemoryModuleType<?>, MemoryStatus>> getMemoryRequirements() {
         return MEMORIES;
     }
 
     @Override
-    protected boolean shouldRun(ServerWorld level, E entity) {
-        return entity.getRandom().nextFloat() < this.runChance.get(entity.getRandom());
+    protected boolean checkExtraStartConditions(ServerLevel level, E entity) {
+        return entity.getRandom().nextFloat() < this.runChance.sample(entity.getRandom());
     }
 
     @Override
@@ -56,16 +56,16 @@ public class SetRandomLookTarget<E extends MobEntity> extends ExtendedBehaviour<
 
     @Override
     protected void tick(E entity) {
-        if(this.timeUntilNextLook <= entity.getWorld().getTime()) {
+        if(this.timeUntilNextLook <= entity.level().getGameTime()) {
             this.lookAround(entity);
         }
     }
 
     private void lookAround(E entity) {
-        double angle = MathHelper.TAU * entity.getRandom().nextDouble();
+        double angle = Mth.TWO_PI * entity.getRandom().nextDouble();
 
-        int lookTime = entity.getRandom().nextBetween(15, 60);
-        this.timeUntilNextLook = entity.getWorld().getTime() + lookTime;
-        BrainUtils.setForgettableMemory(entity, MemoryModuleType.LOOK_TARGET, new FreePositionTracker(entity.getEyePos().add(Math.cos(angle), 0, Math.sin(angle))), lookTime);
+        int lookTime = entity.getRandom().nextIntBetweenInclusive(15, 60);
+        this.timeUntilNextLook = entity.level().getGameTime() + lookTime;
+        BrainUtils.setForgettableMemory(entity, MemoryModuleType.LOOK_TARGET, new FreePositionTracker(entity.getEyePosition().add(Math.cos(angle), 0, Math.sin(angle))), lookTime);
     }
 }

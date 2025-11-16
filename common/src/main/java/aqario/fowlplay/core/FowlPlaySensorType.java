@@ -2,8 +2,8 @@ package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.core.platform.PlatformHelper;
-import net.minecraft.entity.ai.brain.sensor.Sensor;
-import net.minecraft.entity.ai.brain.sensor.SensorType;
+import net.minecraft.world.entity.ai.sensing.Sensor;
+import net.minecraft.world.entity.ai.sensing.SensorType;
 
 import java.util.function.Supplier;
 

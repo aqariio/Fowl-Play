@@ -2,63 +2,57 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.core.FowlPlayItems;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.*;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.projectile.FireworkRocketEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.vehicle.AbstractMinecartEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.InventoryChangedListener;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.tag.DamageTypeTags;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Arm;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.EulerAngle;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.core.Rotations;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.*;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Predicate;
 
-public class ScarecrowEntity extends LivingEntity implements InventoryChangedListener, NamedScreenHandlerFactory {
-    private static final Predicate<Entity> RIDEABLE_MINECART_PREDICATE = entity -> entity instanceof AbstractMinecartEntity
-        && ((AbstractMinecartEntity) entity).getMinecartType() == AbstractMinecartEntity.Type.RIDEABLE;
-    private static final EulerAngle DEFAULT_HEAD_ROTATION = new EulerAngle(0.0F, 0.0F, 0.0F);
-    private static final EulerAngle DEFAULT_BODY_ROTATION = new EulerAngle(0.0F, 0.0F, 0.0F);
-    private static final EulerAngle DEFAULT_LEFT_ARM_ROTATION = new EulerAngle(0.0F, 0.0F, -90.0F);
-    private static final EulerAngle DEFAULT_RIGHT_ARM_ROTATION = new EulerAngle(0.0F, 0.0F, 90.0F);
-    public static final TrackedData<EulerAngle> HEAD_ROTATION = DataTracker.registerData(ScarecrowEntity.class, TrackedDataHandlerRegistry.ROTATION);
-    public static final TrackedData<EulerAngle> BODY_ROTATION = DataTracker.registerData(ScarecrowEntity.class, TrackedDataHandlerRegistry.ROTATION);
-    public static final TrackedData<EulerAngle> LEFT_ARM_ROTATION = DataTracker.registerData(ScarecrowEntity.class, TrackedDataHandlerRegistry.ROTATION);
-    public static final TrackedData<EulerAngle> RIGHT_ARM_ROTATION = DataTracker.registerData(ScarecrowEntity.class, TrackedDataHandlerRegistry.ROTATION);
-    private EulerAngle headRotation = DEFAULT_HEAD_ROTATION;
-    private EulerAngle bodyRotation = DEFAULT_BODY_ROTATION;
-    private EulerAngle leftArmRotation = DEFAULT_LEFT_ARM_ROTATION;
-    private EulerAngle rightArmRotation = DEFAULT_RIGHT_ARM_ROTATION;
+public class ScarecrowEntity extends LivingEntity implements ContainerListener, MenuProvider {
+    private static final Predicate<Entity> RIDEABLE_MINECART_PREDICATE = entity -> entity instanceof AbstractMinecart
+        && ((AbstractMinecart) entity).getMinecartType() == AbstractMinecart.Type.RIDEABLE;
+    private static final Rotations DEFAULT_HEAD_ROTATION = new Rotations(0.0F, 0.0F, 0.0F);
+    private static final Rotations DEFAULT_BODY_ROTATION = new Rotations(0.0F, 0.0F, 0.0F);
+    private static final Rotations DEFAULT_LEFT_ARM_ROTATION = new Rotations(0.0F, 0.0F, -90.0F);
+    private static final Rotations DEFAULT_RIGHT_ARM_ROTATION = new Rotations(0.0F, 0.0F, 90.0F);
+    public static final EntityDataAccessor<Rotations> HEAD_ROTATION = SynchedEntityData.defineId(ScarecrowEntity.class, EntityDataSerializers.ROTATIONS);
+    public static final EntityDataAccessor<Rotations> BODY_ROTATION = SynchedEntityData.defineId(ScarecrowEntity.class, EntityDataSerializers.ROTATIONS);
+    public static final EntityDataAccessor<Rotations> LEFT_ARM_ROTATION = SynchedEntityData.defineId(ScarecrowEntity.class, EntityDataSerializers.ROTATIONS);
+    public static final EntityDataAccessor<Rotations> RIGHT_ARM_ROTATION = SynchedEntityData.defineId(ScarecrowEntity.class, EntityDataSerializers.ROTATIONS);
+    private Rotations headRotation = DEFAULT_HEAD_ROTATION;
+    private Rotations bodyRotation = DEFAULT_BODY_ROTATION;
+    private Rotations leftArmRotation = DEFAULT_LEFT_ARM_ROTATION;
+    private Rotations rightArmRotation = DEFAULT_RIGHT_ARM_ROTATION;
     private static final String POSE_KEY = "pose";
     private static final String HEAD_ROTATION_KEY = "head";
     private static final String BODY_ROTATION_KEY = "body";
@@ -71,121 +65,121 @@ public class ScarecrowEntity extends LivingEntity implements InventoryChangedLis
     private static final int CHEST_SLOT = 1;
     private static final int MAINHAND_SLOT = 2;
     private static final int OFFHAND_SLOT = 3;
-    protected SimpleInventory inventory;
+    protected SimpleContainer inventory;
 
-    public ScarecrowEntity(EntityType<? extends ScarecrowEntity> entityType, World world) {
+    public ScarecrowEntity(EntityType<? extends ScarecrowEntity> entityType, Level world) {
         super(entityType, world);
-        this.inventory = new SimpleInventory(INVENTORY_SIZE);
+        this.inventory = new SimpleContainer(INVENTORY_SIZE);
         this.inventory.addListener(this);
-        this.setStepHeight(0.0f);
+        this.setMaxUpStep(0.0f);
     }
 
     @Override
-    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+    protected float getStandingEyeHeight(Pose pose, EntityDimensions dimensions) {
         return 1.72f;
     }
 
-    public static DefaultAttributeContainer.Builder createScarecrowAttributes() {
+    public static AttributeSupplier.Builder createScarecrowAttributes() {
         return createLivingAttributes()
-            .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0);
+            .add(Attributes.KNOCKBACK_RESISTANCE, 1.0);
     }
 
     @Override
-    protected float turnHead(float bodyRotation, float headRotation) {
-        this.prevBodyYaw = this.prevYaw;
-        this.bodyYaw = this.getYaw();
+    protected float tickHeadTurn(float bodyRotation, float headRotation) {
+        this.yBodyRotO = this.yRotO;
+        this.yBodyRot = this.getYRot();
         return 0.0F;
     }
 
     @Override
-    public void setBodyYaw(float bodyYaw) {
-        this.prevBodyYaw = this.prevYaw = bodyYaw;
-        this.prevHeadYaw = this.headYaw = bodyYaw;
+    public void setYBodyRot(float bodyYaw) {
+        this.yBodyRotO = this.yRotO = bodyYaw;
+        this.yHeadRotO = this.yHeadRot = bodyYaw;
     }
 
     @Override
-    public void setHeadYaw(float headYaw) {
-        this.prevBodyYaw = this.prevYaw = headYaw;
-        this.prevHeadYaw = this.headYaw = headYaw;
+    public void setYHeadRot(float headYaw) {
+        this.yBodyRotO = this.yRotO = headYaw;
+        this.yHeadRotO = this.yHeadRot = headYaw;
     }
 
     @Override
-    public void onInventoryChanged(Inventory sender) {
+    public void containerChanged(Container sender) {
     }
 
     @Override
-    protected void dropInventory() {
-        super.dropInventory();
+    protected void dropEquipment() {
+        super.dropEquipment();
 
         if(this.inventory != null) {
-            for(int i = 0; i < this.inventory.size(); ++i) {
-                ItemStack itemStack = this.inventory.getStack(i);
+            for(int i = 0; i < this.inventory.getContainerSize(); ++i) {
+                ItemStack itemStack = this.inventory.getItem(i);
                 if(itemStack.isEmpty()) {
                     continue;
                 }
-                this.dropStack(itemStack);
+                this.spawnAtLocation(itemStack);
             }
         }
     }
 
     @Override
-    public Iterable<ItemStack> getHandItems() {
-        return ImmutableList.of(this.inventory.getStack(MAINHAND_SLOT), this.inventory.getStack(OFFHAND_SLOT));
+    public Iterable<ItemStack> getHandSlots() {
+        return ImmutableList.of(this.inventory.getItem(MAINHAND_SLOT), this.inventory.getItem(OFFHAND_SLOT));
     }
 
     @Override
-    public Iterable<ItemStack> getArmorItems() {
-        return ImmutableList.of(this.inventory.getStack(HEAD_SLOT), this.inventory.getStack(CHEST_SLOT));
+    public Iterable<ItemStack> getArmorSlots() {
+        return ImmutableList.of(this.inventory.getItem(HEAD_SLOT), this.inventory.getItem(CHEST_SLOT));
     }
 
     @Override
-    public ItemStack getEquippedStack(EquipmentSlot slot) {
+    public ItemStack getItemBySlot(EquipmentSlot slot) {
         return switch(slot) {
-            case HEAD -> this.inventory.getStack(HEAD_SLOT);
-            case CHEST -> this.inventory.getStack(CHEST_SLOT);
-            case MAINHAND -> this.inventory.getStack(MAINHAND_SLOT);
-            case OFFHAND -> this.inventory.getStack(OFFHAND_SLOT);
+            case HEAD -> this.inventory.getItem(HEAD_SLOT);
+            case CHEST -> this.inventory.getItem(CHEST_SLOT);
+            case MAINHAND -> this.inventory.getItem(MAINHAND_SLOT);
+            case OFFHAND -> this.inventory.getItem(OFFHAND_SLOT);
             default -> ItemStack.EMPTY;
         };
     }
 
     @Override
-    public void equipStack(EquipmentSlot slot, ItemStack stack) {
-        this.processEquippedStack(stack);
+    public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
+        this.verifyEquippedItem(stack);
         switch(slot) {
-            case HEAD -> this.inventory.setStack(HEAD_SLOT, stack);
-            case CHEST -> this.inventory.setStack(CHEST_SLOT, stack);
-            case MAINHAND -> this.inventory.setStack(MAINHAND_SLOT, stack);
-            case OFFHAND -> this.inventory.setStack(OFFHAND_SLOT, stack);
+            case HEAD -> this.inventory.setItem(HEAD_SLOT, stack);
+            case CHEST -> this.inventory.setItem(CHEST_SLOT, stack);
+            case MAINHAND -> this.inventory.setItem(MAINHAND_SLOT, stack);
+            case OFFHAND -> this.inventory.setItem(OFFHAND_SLOT, stack);
         }
     }
 
     @Override
-    public boolean canEquip(ItemStack stack) {
-        EquipmentSlot equipmentSlot = getPreferredEquipmentSlot(stack);
-        return this.getEquippedStack(equipmentSlot).isEmpty();
+    public boolean canTakeItem(ItemStack stack) {
+        EquipmentSlot equipmentSlot = getEquipmentSlotForItem(stack);
+        return this.getItemBySlot(equipmentSlot).isEmpty();
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(HEAD_ROTATION, DEFAULT_HEAD_ROTATION);
-        this.dataTracker.startTracking(BODY_ROTATION, DEFAULT_BODY_ROTATION);
-        this.dataTracker.startTracking(LEFT_ARM_ROTATION, DEFAULT_LEFT_ARM_ROTATION);
-        this.dataTracker.startTracking(RIGHT_ARM_ROTATION, DEFAULT_RIGHT_ARM_ROTATION);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(HEAD_ROTATION, DEFAULT_HEAD_ROTATION);
+        this.entityData.define(BODY_ROTATION, DEFAULT_BODY_ROTATION);
+        this.entityData.define(LEFT_ARM_ROTATION, DEFAULT_LEFT_ARM_ROTATION);
+        this.entityData.define(RIGHT_ARM_ROTATION, DEFAULT_RIGHT_ARM_ROTATION);
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
-        NbtList nbtList = new NbtList();
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
+        ListTag nbtList = new ListTag();
 
-        for(int i = 0; i < this.inventory.size(); ++i) {
-            ItemStack itemStack = this.inventory.getStack(i);
+        for(int i = 0; i < this.inventory.getContainerSize(); ++i) {
+            ItemStack itemStack = this.inventory.getItem(i);
             if(!itemStack.isEmpty()) {
-                NbtCompound nbtCompound = new NbtCompound();
+                CompoundTag nbtCompound = new CompoundTag();
                 nbtCompound.putByte(SLOT_KEY, (byte) i);
-                itemStack.writeNbt(nbtCompound);
+                itemStack.save(nbtCompound);
                 nbtList.add(nbtCompound);
             }
         }
@@ -194,37 +188,37 @@ public class ScarecrowEntity extends LivingEntity implements InventoryChangedLis
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        NbtList nbtList = nbt.getList(ITEMS_KEY, NbtElement.COMPOUND_TYPE);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
+        ListTag nbtList = nbt.getList(ITEMS_KEY, Tag.TAG_COMPOUND);
 
         for(int i = 0; i < nbtList.size(); ++i) {
-            NbtCompound nbtCompound = nbtList.getCompound(i);
+            CompoundTag nbtCompound = nbtList.getCompound(i);
             int j = nbtCompound.getByte(SLOT_KEY) & 255;
-            if(j < this.inventory.size()) {
-                this.inventory.setStack(j, ItemStack.fromNbt(nbtCompound));
+            if(j < this.inventory.getContainerSize()) {
+                this.inventory.setItem(j, ItemStack.of(nbtCompound));
             }
         }
-        NbtCompound poseNbt = nbt.getCompound(POSE_KEY);
+        CompoundTag poseNbt = nbt.getCompound(POSE_KEY);
         this.readPoseNbt(poseNbt);
     }
 
     @Override
-    public ActionResult interact(PlayerEntity player, Hand hand) {
-        if(!player.getWorld().isClient() && player.getStackInHand(hand).isEmpty() && !player.shouldCancelInteraction()) {
-            return ActionResult.CONSUME;
+    public InteractionResult interact(Player player, InteractionHand hand) {
+        if(!player.level().isClientSide() && player.getItemInHand(hand).isEmpty() && !player.isSecondaryUseActive()) {
+            return InteractionResult.CONSUME;
         }
         return super.interact(player, hand);
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player playerEntity) {
         return null;
     }
 
     @Override
-    public boolean isCollidable() {
+    public boolean canBeCollidedWith() {
         return true;
     }
 
@@ -234,64 +228,64 @@ public class ScarecrowEntity extends LivingEntity implements InventoryChangedLis
     }
 
     @Override
-    protected void pushAway(Entity entity) {
+    protected void doPush(Entity entity) {
     }
 
     @Override
-    protected void tickCramming() {
-        List<Entity> list = this.getWorld().getOtherEntities(this, this.getBoundingBox(), RIDEABLE_MINECART_PREDICATE);
+    protected void pushEntities() {
+        List<Entity> list = this.level().getEntities(this, this.getBoundingBox(), RIDEABLE_MINECART_PREDICATE);
         for(Entity entity : list) {
-            if(this.squaredDistanceTo(entity) <= 0.2) {
-                entity.pushAwayFrom(this);
+            if(this.distanceToSqr(entity) <= 0.2) {
+                entity.push(this);
             }
         }
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
-        if(this.getWorld().isClient() || this.isRemoved()) {
+    public boolean hurt(DamageSource source, float amount) {
+        if(this.level().isClientSide() || this.isRemoved()) {
             return false;
         }
-        if(source.isIn(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+        if(source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             this.kill();
             return false;
         }
         if(this.isInvulnerableTo(source)) {
             return false;
         }
-        if(source.getSource() instanceof FireworkRocketEntity) {
+        if(source.getDirectEntity() instanceof FireworkRocketEntity) {
             return false;
         }
-        if(source.isIn(DamageTypeTags.IS_EXPLOSION)) {
+        if(source.is(DamageTypeTags.IS_EXPLOSION)) {
             this.updateHealth(source, amount);
             return false;
         }
-        if(source.isOf(DamageTypes.LAVA)) {
-            this.setOnFireFor(10);
+        if(source.is(DamageTypes.LAVA)) {
+            this.setSecondsOnFire(10);
             if(this.isOnFire()) {
                 this.updateHealth(source, 1.0F);
             }
             return false;
         }
-        if(source.isIn(DamageTypeTags.IS_FIRE)) {
-            this.setOnFireFor(5);
+        if(source.is(DamageTypeTags.IS_FIRE)) {
+            this.setSecondsOnFire(5);
             if(this.isOnFire()) {
                 this.updateHealth(source, 0.05F);
             }
             return false;
         }
-        if(source.getSource() instanceof PersistentProjectileEntity) {
+        if(source.getDirectEntity() instanceof AbstractArrow) {
             return true;
         }
-        if(source.getAttacker() instanceof PlayerEntity player) {
-            if(!player.isSneaking()) {
-                this.emitGameEvent(GameEvent.ENTITY_DAMAGE, source.getAttacker());
+        if(source.getEntity() instanceof Player player) {
+            if(!player.isShiftKeyDown()) {
+                this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
                 return true;
             }
-            if(!player.getAbilities().allowModifyWorld) {
+            if(!player.getAbilities().mayBuild) {
                 return false;
             }
-            if(source.isSourceCreativePlayer()) {
+            if(source.isCreativePlayer()) {
                 this.onBreak(source);
                 this.spawnBreakParticles();
                 this.kill();
@@ -306,30 +300,30 @@ public class ScarecrowEntity extends LivingEntity implements InventoryChangedLis
 
     @Override
     public boolean isInvulnerableTo(DamageSource damageSource) {
-        return damageSource.isIn(DamageTypeTags.IS_FALL);
+        return damageSource.is(DamageTypeTags.IS_FALL);
     }
 
     @Override
-    public void onStruckByLightning(ServerWorld world, LightningEntity lightning) {
+    public void thunderHit(ServerLevel world, LightningBolt lightning) {
     }
 
     @Override
     public void kill() {
         this.remove(RemovalReason.KILLED);
-        this.emitGameEvent(GameEvent.ENTITY_DIE);
+        this.gameEvent(GameEvent.ENTITY_DIE);
     }
 
     protected void spawnBreakParticles() {
-        if(this.getWorld() instanceof ServerWorld world) {
-            world.spawnParticles(
+        if(this.level() instanceof ServerLevel world) {
+            world.sendParticles(
                 this.getParticle(),
                 this.getX(),
-                this.getBodyY(0.6666666666666666),
+                this.getY(0.6666666666666666),
                 this.getZ(),
                 10,
-                this.getWidth() / 4.0F,
-                this.getHeight() / 4.0F,
-                this.getWidth() / 4.0F,
+                this.getBbWidth() / 4.0F,
+                this.getBbHeight() / 4.0F,
+                this.getBbWidth() / 4.0F,
                 0.05
             );
         }
@@ -344,140 +338,140 @@ public class ScarecrowEntity extends LivingEntity implements InventoryChangedLis
         }
         else {
             this.setHealth(f);
-            this.emitGameEvent(GameEvent.ENTITY_DAMAGE, damageSource.getAttacker());
+            this.gameEvent(GameEvent.ENTITY_DAMAGE, damageSource.getEntity());
         }
     }
 
     private void breakAndDropThis(DamageSource damageSource) {
-        Block.dropStack(this.getWorld(), this.getBlockPos(), this.getItem());
+        Block.popResource(this.level(), this.blockPosition(), this.getItem());
         this.onBreak(damageSource);
     }
 
     private void onBreak(DamageSource damageSource) {
         this.playBreakSound();
-        this.drop(damageSource);
+        this.dropAllDeathLoot(damageSource);
     }
 
     private void playBreakSound() {
-        this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), this.getDeathSound(), this.getSoundCategory(), 1.0F, 1.0F);
+        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), this.getDeathSound(), this.getSoundSource(), 1.0F, 1.0F);
     }
 
-    private void readPoseNbt(NbtCompound nbt) {
-        NbtList head = nbt.getList(HEAD_ROTATION_KEY, NbtElement.FLOAT_TYPE);
-        NbtList body = nbt.getList(BODY_ROTATION_KEY, NbtElement.FLOAT_TYPE);
-        NbtList leftArm = nbt.getList(LEFT_ARM_ROTATION_KEY, NbtElement.FLOAT_TYPE);
-        NbtList rightArm = nbt.getList(RIGHT_ARM_ROTATION_KEY, NbtElement.FLOAT_TYPE);
+    private void readPoseNbt(CompoundTag nbt) {
+        ListTag head = nbt.getList(HEAD_ROTATION_KEY, Tag.TAG_FLOAT);
+        ListTag body = nbt.getList(BODY_ROTATION_KEY, Tag.TAG_FLOAT);
+        ListTag leftArm = nbt.getList(LEFT_ARM_ROTATION_KEY, Tag.TAG_FLOAT);
+        ListTag rightArm = nbt.getList(RIGHT_ARM_ROTATION_KEY, Tag.TAG_FLOAT);
 
-        this.setHeadRotation(head.isEmpty() ? DEFAULT_HEAD_ROTATION : new EulerAngle(head));
-        this.setBodyRotation(body.isEmpty() ? DEFAULT_BODY_ROTATION : new EulerAngle(body));
-        this.setLeftArmRotation(leftArm.isEmpty() ? DEFAULT_LEFT_ARM_ROTATION : new EulerAngle(leftArm));
-        this.setRightArmRotation(rightArm.isEmpty() ? DEFAULT_RIGHT_ARM_ROTATION : new EulerAngle(rightArm));
+        this.setHeadRotation(head.isEmpty() ? DEFAULT_HEAD_ROTATION : new Rotations(head));
+        this.setBodyRotation(body.isEmpty() ? DEFAULT_BODY_ROTATION : new Rotations(body));
+        this.setLeftArmRotation(leftArm.isEmpty() ? DEFAULT_LEFT_ARM_ROTATION : new Rotations(leftArm));
+        this.setRightArmRotation(rightArm.isEmpty() ? DEFAULT_RIGHT_ARM_ROTATION : new Rotations(rightArm));
     }
 
-    private NbtCompound poseToNbt() {
-        NbtCompound nbt = new NbtCompound();
+    private CompoundTag poseToNbt() {
+        CompoundTag nbt = new CompoundTag();
         if(!DEFAULT_HEAD_ROTATION.equals(this.headRotation)) {
-            nbt.put(HEAD_ROTATION_KEY, this.headRotation.toNbt());
+            nbt.put(HEAD_ROTATION_KEY, this.headRotation.save());
         }
 
         if(!DEFAULT_BODY_ROTATION.equals(this.bodyRotation)) {
-            nbt.put(BODY_ROTATION_KEY, this.bodyRotation.toNbt());
+            nbt.put(BODY_ROTATION_KEY, this.bodyRotation.save());
         }
 
         if(!DEFAULT_LEFT_ARM_ROTATION.equals(this.leftArmRotation)) {
-            nbt.put(LEFT_ARM_ROTATION_KEY, this.leftArmRotation.toNbt());
+            nbt.put(LEFT_ARM_ROTATION_KEY, this.leftArmRotation.save());
         }
 
         if(!DEFAULT_RIGHT_ARM_ROTATION.equals(this.rightArmRotation)) {
-            nbt.put(RIGHT_ARM_ROTATION_KEY, this.rightArmRotation.toNbt());
+            nbt.put(RIGHT_ARM_ROTATION_KEY, this.rightArmRotation.save());
         }
 
         return nbt;
     }
 
-    public EulerAngle getHeadRotation() {
+    public Rotations getHeadRotation() {
         return this.headRotation;
     }
 
-    public EulerAngle getBodyRotation() {
+    public Rotations getBodyRotation() {
         return this.bodyRotation;
     }
 
-    public EulerAngle getLeftArmRotation() {
+    public Rotations getLeftArmRotation() {
         return this.leftArmRotation;
     }
 
-    public EulerAngle getRightArmRotation() {
+    public Rotations getRightArmRotation() {
         return this.rightArmRotation;
     }
 
-    public void setHeadRotation(EulerAngle angle) {
+    public void setHeadRotation(Rotations angle) {
         this.headRotation = angle;
-        this.dataTracker.set(HEAD_ROTATION, angle);
+        this.entityData.set(HEAD_ROTATION, angle);
     }
 
-    public void setBodyRotation(EulerAngle angle) {
+    public void setBodyRotation(Rotations angle) {
         this.bodyRotation = angle;
-        this.dataTracker.set(BODY_ROTATION, angle);
+        this.entityData.set(BODY_ROTATION, angle);
     }
 
-    public void setLeftArmRotation(EulerAngle angle) {
+    public void setLeftArmRotation(Rotations angle) {
         this.leftArmRotation = angle;
-        this.dataTracker.set(LEFT_ARM_ROTATION, angle);
+        this.entityData.set(LEFT_ARM_ROTATION, angle);
     }
 
-    public void setRightArmRotation(EulerAngle angle) {
+    public void setRightArmRotation(Rotations angle) {
         this.rightArmRotation = angle;
-        this.dataTracker.set(RIGHT_ARM_ROTATION, angle);
+        this.entityData.set(RIGHT_ARM_ROTATION, angle);
     }
 
     @Override
-    public Arm getMainArm() {
-        return Arm.RIGHT;
+    public HumanoidArm getMainArm() {
+        return HumanoidArm.RIGHT;
     }
 
     public ItemStack getItem() {
-        return FowlPlayItems.SCARECROW.get().getDefaultStack();
+        return FowlPlayItems.SCARECROW.get().getDefaultInstance();
     }
 
-    public ParticleEffect getParticle() {
-        return new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.HAY_BLOCK.getDefaultState());
+    public ParticleOptions getParticle() {
+        return new BlockParticleOption(ParticleTypes.BLOCK, Blocks.HAY_BLOCK.defaultBlockState());
     }
 
     public SoundEvent getPlaceSound() {
-        return SoundEvents.BLOCK_WOOD_PLACE;
+        return SoundEvents.WOOD_PLACE;
     }
 
     @Override
-    public FallSounds getFallSounds() {
-        return new LivingEntity.FallSounds(SoundEvents.BLOCK_WOOD_FALL, SoundEvents.BLOCK_WOOD_FALL);
+    public Fallsounds getFallSounds() {
+        return new LivingEntity.Fallsounds(SoundEvents.WOOD_FALL, SoundEvents.WOOD_FALL);
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.BLOCK_WOOD_HIT;
+        return SoundEvents.WOOD_HIT;
     }
 
     @Nullable
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.BLOCK_WOOD_BREAK;
+        return SoundEvents.WOOD_BREAK;
     }
 
     @Override
-    public boolean isAffectedBySplashPotions() {
+    public boolean isAffectedByPotions() {
         return false;
     }
 
     @Override
-    public boolean isMobOrPlayer() {
+    public boolean attackable() {
         return false;
     }
 
     @Nullable
     @Override
-    public ItemStack getPickBlockStack() {
+    public ItemStack getPickResult() {
         return this.getItem();
     }
 }

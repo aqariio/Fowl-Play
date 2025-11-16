@@ -5,8 +5,8 @@ import aqario.fowlplay.client.particle.SmallBubbleParticle;
 import aqario.fowlplay.common.integration.YACLIntegration;
 import aqario.fowlplay.core.FowlPlayParticleTypes;
 import aqario.fowlplay.core.platform.forge.PlatformHelperImpl;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
@@ -43,7 +43,7 @@ public class FowlPlayForgeClient {
     public static void onRegisterEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         FowlPlayClient.registerEntityRenderers();
         PlatformHelperImpl.ENTITY_RENDERERS.forEach(pair ->
-            event.registerEntityRenderer(pair.getFirst().get(), (EntityRendererFactory<Entity>) pair.getSecond())
+            event.registerEntityRenderer(pair.getFirst().get(), (EntityRendererProvider<Entity>) pair.getSecond())
         );
     }
 

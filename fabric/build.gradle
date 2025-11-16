@@ -30,7 +30,10 @@ configurations {
 
 dependencies {
     // Mappings
-    mappings "net.fabricmc:yarn:${project.yarn_mappings_version}:v2"
+    mappings loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${project.parchment_mappings_version}@zip")
+    }
 
     // Fabric Loader
     modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"

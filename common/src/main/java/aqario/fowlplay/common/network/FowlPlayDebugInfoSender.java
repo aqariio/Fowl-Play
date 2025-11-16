@@ -9,24 +9,31 @@ import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.core.FowlPlay;
 import com.google.common.collect.Lists;
 import io.netty.buffer.Unpooled;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.InventoryOwner;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.brain.*;
-import net.minecraft.entity.ai.brain.task.Task;
-import net.minecraft.entity.ai.pathing.Path;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
-import net.minecraft.registry.Registries;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.NameGenerator;
-import net.minecraft.util.Nameable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.GlobalPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
+import net.minecraft.network.protocol.game.DebugEntityNameGenerator;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Nameable;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.behavior.BehaviorControl;
+import net.minecraft.world.entity.ai.behavior.BlockPosTracker;
+import net.minecraft.world.entity.ai.behavior.EntityTracker;
+import net.minecraft.world.entity.ai.memory.ExpirableValue;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
+import net.minecraft.world.entity.ai.memory.WalkTarget;
+import net.minecraft.world.entity.npc.InventoryCarrier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.level.pathfinder.Path;
 import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,18 +43,18 @@ public class FowlPlayDebugInfoSender {
     @SuppressWarnings("deprecation")
     public static void sendBirdDebugData(BirdEntity bird) {
         if(!FowlPlay.isDebugUtilsLoaded()
-            || bird.getWorld().isClient()
+            || bird.level().isClientSide()
             || !FowlPlayClient.DEBUG_BIRD
         ) {
             return;
         }
 
         Brain<?> brain = bird.getBrain();
-        String name = NameGenerator.name(bird);
+        String name = DebugEntityNameGenerator.getEntityName(bird);
         String inventory = "";
         Path path = null;
         boolean flying = bird instanceof FlyingBirdEntity flyingBird && flyingBird.isFlying();
-        if(bird instanceof InventoryOwner inventoryOwner) {
+        if(bird instanceof InventoryCarrier inventoryOwner) {
             inventory = inventoryOwner.getInventory().isEmpty() ? "" : inventoryOwner.getInventory().toString();
         }
         if(BrainUtils.hasMemory(brain, MemoryModuleType.PATH)) {
@@ -56,7 +63,7 @@ public class FowlPlayDebugInfoSender {
         List<String> trusting = new ArrayList<>();
         if(bird instanceof TrustingBirdEntity trustingBird) {
             trustingBird.getTrustedUuids().forEach(uuid -> {
-                PlayerEntity player = bird.getWorld().getPlayerByUuid(uuid);
+                Player player = bird.level().getPlayerByUUID(uuid);
                 if(player != null) {
                     trusting.add(player.getName().getString());
                 }
@@ -66,22 +73,22 @@ public class FowlPlayDebugInfoSender {
             });
         }
 
-        List<String> activities = brain.getPossibleActivities().stream().map(Activity::getId).toList();
-        List<String> behaviors = brain.getRunningTasks().stream().map(Task::getName).toList();
-        List<String> memories = getMemoryDescriptions(bird, bird.getWorld().getTime());
-        String schedule = Optional.ofNullable(Registries.SCHEDULE.getId(brain.getSchedule())).map(Identifier::getPath).orElse(null);
+        List<String> activities = brain.getActiveActivities().stream().map(Activity::getName).toList();
+        List<String> behaviors = brain.getRunningBehaviors().stream().map(BehaviorControl::debugString).toList();
+        List<String> memories = getMemoryDescriptions(bird, bird.level().getGameTime());
+        String schedule = Optional.ofNullable(BuiltInRegistries.SCHEDULE.getKey(brain.getSchedule())).map(ResourceLocation::getPath).orElse(null);
         Set<BlockPos> pois = Set.of();
         Set<BlockPos> potentialPois = Set.of();
 
         BirdDebugRenderer.BirdData data = new BirdDebugRenderer.BirdData(
-            bird.getUuid(),
+            bird.getUUID(),
             bird.getId(),
             name,
             bird.getMoveControl().getClass().getSimpleName(),
             bird.getNavigation().getClass().getSimpleName(),
             bird.getHealth(),
             bird.getMaxHealth(),
-            bird.getPos(),
+            bird.position(),
             inventory,
             path,
             trusting,
@@ -95,47 +102,47 @@ public class FowlPlayDebugInfoSender {
             pois,
             potentialPois
         );
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         data.write(buf);
 
-        CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(FowlPlayClient.DEBUG_BIRD_ID, buf);
-        sendToAll((ServerWorld) bird.getWorld(), packet);
+        ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(FowlPlayClient.DEBUG_BIRD_ID, buf);
+        sendToAll((ServerLevel) bird.level(), packet);
     }
 
     @SuppressWarnings("deprecation")
     private static List<String> getMemoryDescriptions(LivingEntity entity, long gameTime) {
-        Map<MemoryModuleType<?>, Optional<? extends Memory<?>>> map = entity.getBrain().getMemories();
+        Map<MemoryModuleType<?>, Optional<? extends ExpirableValue<?>>> map = entity.getBrain().getMemories();
         List<String> list = Lists.newArrayList();
-        for(Map.Entry<MemoryModuleType<?>, Optional<? extends Memory<?>>> entry : map.entrySet()) {
+        for(Map.Entry<MemoryModuleType<?>, Optional<? extends ExpirableValue<?>>> entry : map.entrySet()) {
             MemoryModuleType<?> memoryModuleType = entry.getKey();
-            Optional<? extends Memory<?>> optional = entry.getValue();
+            Optional<? extends ExpirableValue<?>> optional = entry.getValue();
             String value;
             if(optional.isPresent()) {
-                Memory<?> expirableValue = optional.get();
+                ExpirableValue<?> expirableValue = optional.get();
                 Object object = expirableValue.getValue();
                 if(memoryModuleType == MemoryModuleType.HEARD_BELL_TIME) {
                     long l = gameTime - (Long) object;
                     value = l + " ticks ago";
                 }
-                else if(expirableValue.isTimed()) {
-                    String desc = getMemoryValueDescription((ServerWorld) entity.getWorld(), object);
-                    value = desc + " (ttl: " + expirableValue.getExpiry() + ")";
+                else if(expirableValue.canExpire()) {
+                    String desc = getMemoryValueDescription((ServerLevel) entity.level(), object);
+                    value = desc + " (ttl: " + expirableValue.getTimeToLive() + ")";
                 }
                 else {
-                    value = getMemoryValueDescription((ServerWorld) entity.getWorld(), object);
+                    value = getMemoryValueDescription((ServerLevel) entity.level(), object);
                 }
             }
             else {
                 value = "-";
             }
-            String memory = Registries.MEMORY_MODULE_TYPE.getId(memoryModuleType).getPath();
+            String memory = BuiltInRegistries.MEMORY_MODULE_TYPE.getKey(memoryModuleType).getPath();
             list.add(memory + ": " + value);
         }
         list.sort(String::compareTo);
         return list;
     }
 
-    private static String getMemoryValueDescription(ServerWorld world, @Nullable Object object) {
+    private static String getMemoryValueDescription(ServerLevel world, @Nullable Object object) {
         if(object == null) {
             return "-";
         }
@@ -143,25 +150,25 @@ public class FowlPlayDebugInfoSender {
             return getMemoryValueDescription(world, world.getEntity(uuid));
         }
         if(object instanceof LivingEntity entity) {
-            return NameGenerator.name(entity);
+            return DebugEntityNameGenerator.getEntityName(entity);
         }
         if(object instanceof Nameable nameable) {
             return nameable.getName().getString();
         }
         if(object instanceof WalkTarget walkTarget) {
-            return getMemoryValueDescription(world, walkTarget.getLookTarget());
+            return getMemoryValueDescription(world, walkTarget.getTarget());
         }
-        if(object instanceof EntityLookTarget entityLookTarget) {
+        if(object instanceof EntityTracker entityLookTarget) {
             return getMemoryValueDescription(world, entityLookTarget.getEntity());
         }
         if(object instanceof GlobalPos globalPos) {
-            return getMemoryValueDescription(world, globalPos.getPos());
+            return getMemoryValueDescription(world, globalPos.pos());
         }
-        if(object instanceof BlockPosLookTarget blockPosLookTarget) {
-            return getMemoryValueDescription(world, blockPosLookTarget.getBlockPos());
+        if(object instanceof BlockPosTracker blockPosLookTarget) {
+            return getMemoryValueDescription(world, blockPosLookTarget.currentBlockPosition());
         }
         if(object instanceof DamageSource damageSource) {
-            Entity entity = damageSource.getAttacker();
+            Entity entity = damageSource.getEntity();
             return entity == null ? object.toString() : getMemoryValueDescription(world, entity);
         }
         if(object instanceof Collection<?> iterable) {
@@ -169,18 +176,18 @@ public class FowlPlayDebugInfoSender {
             iterable.forEach(o -> list.add(getMemoryValueDescription(world, o)));
             return list.toString();
         }
-        if(object instanceof LivingTargetCache cache) {
+        if(object instanceof NearestVisibleLivingEntities cache) {
             List<String> list = Lists.newArrayList();
-            cache.stream(entity -> true).forEach(o -> list.add(getMemoryValueDescription(world, o)));
+            cache.find(entity -> true).forEach(o -> list.add(getMemoryValueDescription(world, o)));
             return list.toString();
         }
         return object.toString();
     }
 
-    private static void sendToAll(ServerWorld world, Packet<?> packet) {
-        world.getPlayers().forEach(player -> {
+    private static void sendToAll(ServerLevel world, Packet<?> packet) {
+        world.players().forEach(player -> {
             if(FowlPlayClient.DEBUG_BIRD) {
-                player.networkHandler.sendPacket(packet);
+                player.connection.send(packet);
             }
         });
     }

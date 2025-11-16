@@ -1,10 +1,10 @@
 accessWidener v2 named
 
-accessible field net/minecraft/entity/ai/pathing/Path nodes Ljava/util/List;
-accessible field net/minecraft/entity/ai/pathing/Path debugTargetNodes Ljava/util/Set;
+accessible field net/minecraft/world/level/pathfinder/Path nodes Ljava/util/List;
+accessible field net/minecraft/world/level/pathfinder/Path targetNodes Ljava/util/Set;
 
-accessible method net/minecraft/entity/ai/brain/sensor/SensorType <init> (Ljava/util/function/Supplier;)V
-accessible method net/minecraft/entity/ai/brain/Activity <init> (Ljava/lang/String;)V
-accessible method net/minecraft/particle/DefaultParticleType <init> (Z)V
-accessible method net/minecraft/entity/ai/pathing/Path setDebugInfo ([Lnet/minecraft/entity/ai/pathing/PathNode;[Lnet/minecraft/entity/ai/pathing/PathNode;Ljava/util/Set;)V
-accessible method net/minecraft/entity/Entity getVelocityAffectingPos ()Lnet/minecraft/util/math/BlockPos;
+accessible method net/minecraft/world/entity/ai/sensing/SensorType <init> (Ljava/util/function/Supplier;)V
+accessible method net/minecraft/world/entity/schedule/Activity <init> (Ljava/lang/String;)V
+accessible method net/minecraft/core/particles/SimpleParticleType <init> (Z)V
+accessible method net/minecraft/world/level/pathfinder/Path setDebug ([Lnet/minecraft/world/level/pathfinder/Node;[Lnet/minecraft/world/level/pathfinder/Node;Ljava/util/Set;)V
+accessible method net/minecraft/world/entity/Entity getBlockPosBelowThatAffectsMyMovement ()Lnet/minecraft/core/BlockPos;

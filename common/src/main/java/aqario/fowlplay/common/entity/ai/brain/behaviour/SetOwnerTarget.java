@@ -5,10 +5,14 @@ import aqario.fowlplay.common.entity.ai.brain.TeleportTarget;
 import aqario.fowlplay.common.util.MemoryList;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.brain.*;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.intprovider.UniformIntProvider;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.behavior.EntityTracker;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.MemoryStatus;
+import net.minecraft.world.entity.ai.memory.WalkTarget;
 import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
@@ -22,21 +26,21 @@ public class SetOwnerTarget extends SpeedModifiableBehaviour<PigeonEntity> {
         );
     private LivingEntity owner;
     private int updateCountdownTicks;
-    protected UniformIntProvider range = UniformIntProvider.create(5, 10);
+    protected UniformInt range = UniformInt.of(5, 10);
 
     public SetOwnerTarget setRange(int min, int max) {
-        this.range = UniformIntProvider.create(min, max);
+        this.range = UniformInt.of(min, max);
 
         return this;
     }
 
     @Override
-    protected List<Pair<MemoryModuleType<?>, MemoryModuleState>> getMemoryRequirements() {
+    protected List<Pair<MemoryModuleType<?>, MemoryStatus>> getMemoryRequirements() {
         return MEMORIES;
     }
 
     @Override
-    protected boolean shouldRun(ServerWorld world, PigeonEntity pigeon) {
+    protected boolean checkExtraStartConditions(ServerLevel world, PigeonEntity pigeon) {
         LivingEntity owner = pigeon.getOwner();
         if(owner == null) {
             return false;
@@ -47,14 +51,14 @@ public class SetOwnerTarget extends SpeedModifiableBehaviour<PigeonEntity> {
         if(pigeon.isSitting()) {
             return false;
         }
-        if(pigeon.squaredDistanceTo(owner) < this.range.getMin() * this.range.getMin()) {
+        if(pigeon.distanceToSqr(owner) < this.range.getMinValue() * this.range.getMinValue()) {
             return false;
         }
         if(pigeon.getRecipientUuid() != null) {
             return false;
         }
         this.owner = owner;
-        return super.shouldRun(world, pigeon);
+        return super.checkExtraStartConditions(world, pigeon);
     }
 
     @Override
@@ -62,28 +66,28 @@ public class SetOwnerTarget extends SpeedModifiableBehaviour<PigeonEntity> {
         if(pigeon.getRecipientUuid() != null) {
             return false;
         }
-        if(pigeon.getNavigation().isIdle()) {
+        if(pigeon.getNavigation().isDone()) {
             return false;
         }
         if(pigeon.isSitting()) {
             return false;
         }
 
-        return pigeon.squaredDistanceTo(this.owner) > this.range.getMax() * this.range.getMax();
+        return pigeon.distanceToSqr(this.owner) > this.range.getMaxValue() * this.range.getMaxValue();
     }
 
     @Override
     protected void tick(PigeonEntity pigeon) {
         Brain<?> brain = pigeon.getBrain();
-        BrainUtils.setMemory(brain, MemoryModuleType.LOOK_TARGET, new EntityLookTarget(this.owner, true));
+        BrainUtils.setMemory(brain, MemoryModuleType.LOOK_TARGET, new EntityTracker(this.owner, true));
         if(--this.updateCountdownTicks <= 0) {
             this.updateCountdownTicks = 20;
-            if(!pigeon.isLeashed() && !pigeon.hasVehicle()) {
-                if(pigeon.squaredDistanceTo(this.owner) >= 144.0) {
+            if(!pigeon.isLeashed() && !pigeon.isPassenger()) {
+                if(pigeon.distanceToSqr(this.owner) >= 144.0) {
                     BrainUtils.setMemory(brain, FowlPlayMemoryModuleType.TELEPORT_TARGET.get(), new TeleportTarget(this.owner));
                 }
                 else {
-                    BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, new WalkTarget(this.owner, this.speedModifier.apply(pigeon, this.owner.getPos()), 0));
+                    BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, new WalkTarget(this.owner, this.speedModifier.apply(pigeon, this.owner.position()), 0));
                 }
             }
         }

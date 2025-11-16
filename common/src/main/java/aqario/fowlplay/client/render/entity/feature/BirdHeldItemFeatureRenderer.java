@@ -2,74 +2,74 @@ package aqario.fowlplay.client.render.entity.feature;
 
 import aqario.fowlplay.client.render.entity.model.BirdEntityModel;
 import aqario.fowlplay.common.entity.BirdEntity;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.item.HeldItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import net.minecraft.client.renderer.ItemInHandRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 
-public class BirdHeldItemFeatureRenderer<E extends BirdEntity, M extends BirdEntityModel<E>> extends FeatureRenderer<E, M> {
-    private final HeldItemRenderer itemRenderer;
+public class BirdHeldItemFeatureRenderer<E extends BirdEntity, M extends BirdEntityModel<E>> extends RenderLayer<E, M> {
+    private final ItemInHandRenderer itemRenderer;
     // Z should be ((number of pixels offset from head pivot point) / 16 + 0.0225) * -1
-    private final Vec3d heldItemOffset;
+    private final Vec3 heldItemOffset;
 
-    public BirdHeldItemFeatureRenderer(FeatureRendererContext<E, M> context, HeldItemRenderer heldItemRenderer, Vec3d heldItemOffset) {
+    public BirdHeldItemFeatureRenderer(RenderLayerParent<E, M> context, ItemInHandRenderer heldItemRenderer, Vec3 heldItemOffset) {
         super(context);
         this.itemRenderer = heldItemRenderer;
         this.heldItemOffset = heldItemOffset;
     }
 
     @Override
-    public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, E bird, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        matrices.push();
+    public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, E bird, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
+        matrices.pushPose();
 
         matrices.translate(
-            this.getContextModel().root.pivotX / 16.0F,
-            this.getContextModel().root.pivotY / 16.0F,
-            this.getContextModel().root.pivotZ / 16.0F
+            this.getParentModel().root.x / 16.0F,
+            this.getParentModel().root.y / 16.0F,
+            this.getParentModel().root.z / 16.0F
         );
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotation(this.getContextModel().root.getTransform().roll));
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotation(this.getContextModel().root.getTransform().yaw));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotation(this.getContextModel().root.getTransform().pitch));
+        matrices.mulPose(Axis.ZP.rotation(this.getParentModel().root.storePose().zRot));
+        matrices.mulPose(Axis.YP.rotation(this.getParentModel().root.storePose().yRot));
+        matrices.mulPose(Axis.XP.rotation(this.getParentModel().root.storePose().xRot));
 
         matrices.translate(
-            this.getContextModel().body.pivotX / 16.0F,
-            this.getContextModel().body.pivotY / 16.0F,
-            this.getContextModel().body.pivotZ / 16.0F
+            this.getParentModel().body.x / 16.0F,
+            this.getParentModel().body.y / 16.0F,
+            this.getParentModel().body.z / 16.0F
         );
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotation(this.getContextModel().body.getTransform().roll));
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotation(this.getContextModel().body.getTransform().yaw));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotation(this.getContextModel().body.getTransform().pitch));
+        matrices.mulPose(Axis.ZP.rotation(this.getParentModel().body.storePose().zRot));
+        matrices.mulPose(Axis.YP.rotation(this.getParentModel().body.storePose().yRot));
+        matrices.mulPose(Axis.XP.rotation(this.getParentModel().body.storePose().xRot));
 
         matrices.translate(
-            this.getContextModel().neck.pivotX / 16.0F,
-            this.getContextModel().neck.pivotY / 16.0F,
-            this.getContextModel().neck.pivotZ / 16.0F
+            this.getParentModel().neck.x / 16.0F,
+            this.getParentModel().neck.y / 16.0F,
+            this.getParentModel().neck.z / 16.0F
         );
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotation(this.getContextModel().neck.getTransform().roll));
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotation(this.getContextModel().neck.getTransform().yaw));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotation(this.getContextModel().neck.getTransform().pitch));
+        matrices.mulPose(Axis.ZP.rotation(this.getParentModel().neck.storePose().zRot));
+        matrices.mulPose(Axis.YP.rotation(this.getParentModel().neck.storePose().yRot));
+        matrices.mulPose(Axis.XP.rotation(this.getParentModel().neck.storePose().xRot));
 
         matrices.translate(
-            this.getContextModel().head.pivotX / 16.0F,
-            this.getContextModel().head.pivotY / 16.0F,
-            this.getContextModel().head.pivotZ / 16.0F
+            this.getParentModel().head.x / 16.0F,
+            this.getParentModel().head.y / 16.0F,
+            this.getParentModel().head.z / 16.0F
         );
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotation(this.getContextModel().head.getTransform().roll));
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotation(this.getContextModel().head.getTransform().yaw));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotation(this.getContextModel().head.getTransform().pitch));
+        matrices.mulPose(Axis.ZP.rotation(this.getParentModel().head.storePose().zRot));
+        matrices.mulPose(Axis.YP.rotation(this.getParentModel().head.storePose().yRot));
+        matrices.mulPose(Axis.XP.rotation(this.getParentModel().head.storePose().xRot));
 
         matrices.translate(this.heldItemOffset.x, this.heldItemOffset.y, this.heldItemOffset.z);
-        matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(90.0F));
+        matrices.mulPose(Axis.XN.rotationDegrees(90.0F));
         matrices.scale(0.5F, 0.5F, 0.5F);
 
-        ItemStack stack = bird.getEquippedStack(EquipmentSlot.MAINHAND);
-        this.itemRenderer.renderItem(bird, stack, ModelTransformationMode.GROUND, false, matrices, vertexConsumers, light);
-        matrices.pop();
+        ItemStack stack = bird.getItemBySlot(EquipmentSlot.MAINHAND);
+        this.itemRenderer.renderItem(bird, stack, ItemDisplayContext.GROUND, false, matrices, vertexConsumers, light);
+        matrices.popPose();
     }
 }

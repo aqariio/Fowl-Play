@@ -8,13 +8,13 @@ import aqario.fowlplay.core.platform.CustomSpawnLocation;
 import aqario.fowlplay.core.platform.PlatformHelper;
 import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
 import dev.architectury.registry.level.biome.BiomeModifications;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.SpawnSettings;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.function.Supplier;
 
@@ -27,7 +27,7 @@ public final class FowlPlayEntityType {
             .attributes(BlueJayEntity::createFlyingBirdAttributes)
             .spawnRestriction(
                 CustomSpawnLocation.ground(),
-                Heightmap.Type.MOTION_BLOCKING,
+                Heightmap.Types.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
             .dimensions(0.4f, 0.55f)
@@ -41,7 +41,7 @@ public final class FowlPlayEntityType {
             .attributes(CardinalEntity::createFlyingBirdAttributes)
             .spawnRestriction(
                 CustomSpawnLocation.ground(),
-                Heightmap.Type.MOTION_BLOCKING,
+                Heightmap.Types.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
             .dimensions(0.4f, 0.55f)
@@ -55,7 +55,7 @@ public final class FowlPlayEntityType {
             .attributes(ChickadeeEntity::createFlyingBirdAttributes)
             .spawnRestriction(
                 CustomSpawnLocation.ground(),
-                Heightmap.Type.MOTION_BLOCKING,
+                Heightmap.Types.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
             .dimensions(0.3f, 0.45f)
@@ -69,7 +69,7 @@ public final class FowlPlayEntityType {
             .attributes(CrowEntity::createCrowAttributes)
             .spawnRestriction(
                 CustomSpawnLocation.ground(),
-                Heightmap.Type.MOTION_BLOCKING,
+                Heightmap.Types.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
             .dimensions(0.5f, 0.6f)
@@ -83,7 +83,7 @@ public final class FowlPlayEntityType {
             .attributes(DuckEntity::createDuckAttributes)
             .spawnRestriction(
                 CustomSpawnLocation.aquatic(),
-                Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 FlyingBirdEntity::canSpawnWaterfowl
             )
             .dimensions(0.6f, 0.8f)
@@ -97,7 +97,7 @@ public final class FowlPlayEntityType {
             .attributes(GooseEntity::createGooseAttributes)
             .spawnRestriction(
                 CustomSpawnLocation.aquatic(),
-                Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 FlyingBirdEntity::canSpawnWaterfowl
             )
             .dimensions(0.7f, 1.1f)
@@ -111,7 +111,7 @@ public final class FowlPlayEntityType {
             .attributes(GullEntity::createGullAttributes)
             .spawnRestriction(
                 CustomSpawnLocation.semiaquatic(),
-                Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 FlyingBirdEntity::canSpawnShorebirds
             )
             .dimensions(0.6f, 0.8f)
@@ -125,7 +125,7 @@ public final class FowlPlayEntityType {
             .attributes(HawkEntity::createHawkAttributes)
             .spawnRestriction(
                 CustomSpawnLocation.ground(),
-                Heightmap.Type.MOTION_BLOCKING,
+                Heightmap.Types.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
             .dimensions(0.6f, 0.8f)
@@ -134,12 +134,12 @@ public final class FowlPlayEntityType {
     public static final Supplier<EntityType<PenguinEntity>> PENGUIN = register("penguin",
         EntityTypeBuilder.create(
                 PenguinEntity::new,
-                SpawnGroup.CREATURE
+                MobCategory.CREATURE
             )
             .attributes(PenguinEntity::createPenguinAttributes)
             .spawnRestriction(
                 CustomSpawnLocation.semiaquatic(),
-                Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 PenguinEntity::canSpawnPenguins
             )
             .dimensions(0.5f, 1.4f)
@@ -153,7 +153,7 @@ public final class FowlPlayEntityType {
             .attributes(PigeonEntity::createPigeonAttributes)
             .spawnRestriction(
                 CustomSpawnLocation.ground(),
-                Heightmap.Type.MOTION_BLOCKING,
+                Heightmap.Types.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnShorebirds
             )
             .dimensions(0.5f, 0.6f)
@@ -167,7 +167,7 @@ public final class FowlPlayEntityType {
             .attributes(RavenEntity::createRavenAttributes)
             .spawnRestriction(
                 CustomSpawnLocation.ground(),
-                Heightmap.Type.MOTION_BLOCKING,
+                Heightmap.Types.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
             .dimensions(0.6f, 0.8f)
@@ -181,7 +181,7 @@ public final class FowlPlayEntityType {
             .attributes(RobinEntity::createFlyingBirdAttributes)
             .spawnRestriction(
                 CustomSpawnLocation.ground(),
-                Heightmap.Type.MOTION_BLOCKING,
+                Heightmap.Types.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
             .dimensions(0.4f, 0.55f)
@@ -195,7 +195,7 @@ public final class FowlPlayEntityType {
             .attributes(SparrowEntity::createFlyingBirdAttributes)
             .spawnRestriction(
                 CustomSpawnLocation.ground(),
-                Heightmap.Type.MOTION_BLOCKING,
+                Heightmap.Types.MOTION_BLOCKING,
                 FlyingBirdEntity::canSpawnPasserines
             )
             .dimensions(0.3f, 0.45f)
@@ -204,7 +204,7 @@ public final class FowlPlayEntityType {
     public static final Supplier<EntityType<ScarecrowEntity>> SCARECROW = register("scarecrow",
         EntityTypeBuilder.create(
                 ScarecrowEntity::new,
-                SpawnGroup.MISC
+                MobCategory.MISC
             )
             .attributes(ScarecrowEntity::createScarecrowAttributes)
             .dimensions(0.6f, 2.0f)
@@ -282,7 +282,7 @@ public final class FowlPlayEntityType {
         );
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_PENGUINS,
-            SpawnGroup.CREATURE,
+            MobCategory.CREATURE,
             FowlPlayEntityType.PENGUIN,
             FowlPlayConfig.getInstance().penguinSpawnWeight,
             FowlPlayConfig.getInstance().penguinMinGroupSize,
@@ -337,12 +337,12 @@ public final class FowlPlayEntityType {
     }
 
     // TODO: use biome property based spawning to more accurately reflect real life habitats
-    public static <T extends Entity> void addSpawn(TagKey<Biome> tag, SpawnGroup spawnGroup, Supplier<EntityType<T>> type, int weight, int minGroupSize, int maxGroupSize) {
+    public static <T extends Entity> void addSpawn(TagKey<Biome> tag, MobCategory spawnGroup, Supplier<EntityType<T>> type, int weight, int minGroupSize, int maxGroupSize) {
         BiomeModifications.addProperties(
             context -> context.hasTag(tag),
             (context, mutable) -> mutable.getSpawnProperties().addSpawn(
                 spawnGroup,
-                new SpawnSettings.SpawnEntry(
+                new MobSpawnSettings.SpawnerData(
                     type.get(),
                     weight,
                     minGroupSize,
@@ -357,7 +357,7 @@ public final class FowlPlayEntityType {
             context -> context.hasTag(tag),
             (context, mutable) -> mutable.getSpawnProperties().setSpawnCost(
                 type.get(),
-                new SpawnSettings.SpawnDensity(
+                new MobSpawnSettings.MobSpawnCost(
                     gravityLimit,
                     mass
                 )

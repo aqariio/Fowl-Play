@@ -2,7 +2,7 @@ package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
 import aqario.fowlplay.core.platform.PlatformHelper;
-import net.minecraft.entity.ai.brain.Activity;
+import net.minecraft.world.entity.schedule.Activity;
 
 import java.util.function.Supplier;
 

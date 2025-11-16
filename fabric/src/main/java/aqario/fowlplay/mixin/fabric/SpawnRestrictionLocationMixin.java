@@ -2,7 +2,7 @@ package aqario.fowlplay.mixin.fabric;
 
 import aqario.fowlplay.core.platform.CustomSpawnLocation;
 import aqario.fowlplay.core.platform.fabric.CustomSpawnLocationImpl;
-import net.minecraft.entity.SpawnRestriction;
+import net.minecraft.world.entity.SpawnPlacements;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,17 +17,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 // this is probably a bad idea
-@Mixin(SpawnRestriction.Location.class)
+@Mixin(SpawnPlacements.Type.class)
 @SuppressWarnings({"ShadowTarget", "InvokerTarget"})
 public class SpawnRestrictionLocationMixin {
     // Vanilla Spawn Location array
     @Shadow
     @Mutable
     @Final
-    private static SpawnRestriction.Location[] field_6319;
+    private static SpawnPlacements.Type[] $VALUES;
 
     @Invoker("<init>")
-    public static SpawnRestriction.Location newLocation(String enumname, int ordinal) {
+    public static SpawnPlacements.Type newLocation(String enumname, int ordinal) {
         throw new AssertionError();
     }
 
@@ -36,35 +36,35 @@ public class SpawnRestrictionLocationMixin {
         at = @At(
             value = "FIELD",
             opcode = Opcodes.PUTSTATIC,
-            target = "Lnet/minecraft/entity/SpawnRestriction$Location;field_6319:[Lnet/minecraft/entity/SpawnRestriction$Location;",
+            target = "Lnet/minecraft/world/entity/SpawnPlacements$Type;$VALUES:[Lnet/minecraft/world/entity/SpawnPlacements$Type;",
             shift = At.Shift.AFTER
         )
     )
     private static void fowlplay$addCustomLocations(CallbackInfo ci) {
-        ArrayList<SpawnRestriction.Location> locations = new ArrayList<>(Arrays.asList(field_6319));
+        ArrayList<SpawnPlacements.Type> locations = new ArrayList<>(Arrays.asList($VALUES));
         int vanillaLength = locations.get(locations.size() - 1).ordinal();
 
-        SpawnRestriction.Location ground = newLocation(
+        SpawnPlacements.Type ground = newLocation(
             CustomSpawnLocation.GROUND_INTERNAL_NAME,
             vanillaLength + 1
         );
         CustomSpawnLocationImpl.GROUND = ground;
         locations.add(ground);
 
-        SpawnRestriction.Location semiaquatic = newLocation(
+        SpawnPlacements.Type semiaquatic = newLocation(
             CustomSpawnLocation.SEMIAQUATIC_INTERNAL_NAME,
             vanillaLength + 2
         );
         CustomSpawnLocationImpl.SEMIAQUATIC = semiaquatic;
         locations.add(semiaquatic);
 
-        SpawnRestriction.Location aquatic = newLocation(
+        SpawnPlacements.Type aquatic = newLocation(
             CustomSpawnLocation.AQUATIC_INTERNAL_NAME,
             vanillaLength + 3
         );
         CustomSpawnLocationImpl.AQUATIC = aquatic;
         locations.add(aquatic);
 
-        field_6319 = locations.toArray(new SpawnRestriction.Location[0]);
+        $VALUES = locations.toArray(new SpawnPlacements.Type[0]);
     }
 }

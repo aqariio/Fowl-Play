@@ -3,10 +3,10 @@ package aqario.fowlplay.datagen;
 import aqario.fowlplay.core.FowlPlayItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.ItemModelGenerator;
-import net.minecraft.data.client.ModelIds;
-import net.minecraft.item.Item;
+import net.minecraft.data.models.BlockModelGenerators;
+import net.minecraft.data.models.ItemModelGenerators;
+import net.minecraft.data.models.model.ModelLocationUtils;
+import net.minecraft.world.item.Item;
 
 public class FowlPlayModelGen extends FabricModelProvider {
     public FowlPlayModelGen(FabricDataOutput output) {
@@ -14,7 +14,7 @@ public class FowlPlayModelGen extends FabricModelProvider {
     }
 
     @Override
-    public void generateBlockStateModels(BlockStateModelGenerator generator) {
+    public void generateBlockStateModels(BlockModelGenerators generator) {
         this.registerSpawnEgg(generator, FowlPlayItems.BLUE_JAY_SPAWN_EGG.get());
         this.registerSpawnEgg(generator, FowlPlayItems.CARDINAL_SPAWN_EGG.get());
         this.registerSpawnEgg(generator, FowlPlayItems.CHICKADEE_SPAWN_EGG.get());
@@ -32,14 +32,14 @@ public class FowlPlayModelGen extends FabricModelProvider {
     }
 
     @Override
-    public void generateItemModels(ItemModelGenerator generator) {
+    public void generateItemModels(ItemModelGenerators generator) {
     }
 
-    protected void registerSpawnEgg(BlockStateModelGenerator generator, Item item) {
-        generator.registerParentedItemModel(item, ModelIds.getMinecraftNamespacedItem("template_spawn_egg"));
+    protected void registerSpawnEgg(BlockModelGenerators generator, Item item) {
+        generator.delegateItemModel(item, ModelLocationUtils.decorateItemModelLocation("template_spawn_egg"));
     }
 
-    protected void registerItem(BlockStateModelGenerator generator, Item item) {
-        generator.registerItemModel(item);
+    protected void registerItem(BlockModelGenerators generator, Item item) {
+        generator.createSimpleFlatItemModel(item);
     }
 }

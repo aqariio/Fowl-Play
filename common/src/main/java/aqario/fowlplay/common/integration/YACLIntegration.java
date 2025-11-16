@@ -8,8 +8,8 @@ import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -25,12 +25,12 @@ public class YACLIntegration {
 
     public static Screen createScreen(Screen parent) {
         return YetAnotherConfigLib.create(HANDLED_CONFIG, (defaults, config, builder) -> builder
-                .title(Text.translatable("config.title"))
+                .title(Component.translatable("config.title"))
                 .category(ConfigCategory.createBuilder()
-                    .name(Text.translatable("config.visual"))
+                    .name(Component.translatable("config.visual"))
                     .option(Option.<Boolean>createBuilder()
-                        .name(Text.translatable("config.visual.customChickenModel"))
-                        .description(OptionDescription.of(Text.translatable("config.info.restart").append("\n\n").append(Text.translatable("config.visual.customChickenModel.desc"))))
+                        .name(Component.translatable("config.visual.customChickenModel"))
+                        .description(OptionDescription.of(Component.translatable("config.info.restart").append("\n\n").append(Component.translatable("config.visual.customChickenModel.desc"))))
                         .binding(true, () -> config.customChickenModel, val -> config.customChickenModel = val)
                         .controller(BooleanControllerBuilder::create)
                         .build()
@@ -38,7 +38,7 @@ public class YACLIntegration {
                     .build()
                 )
                 .category(ConfigCategory.createBuilder()
-                    .name(Text.translatable("config.audio"))
+                    .name(Component.translatable("config.audio"))
                     .group(createSoundGroup(
                         "entity.fowlplay.blue_jay",
                         defaults.blueJayCallVolume,
@@ -159,7 +159,7 @@ public class YACLIntegration {
                     .build()
                 )
                 .category(ConfigCategory.createBuilder()
-                    .name(Text.translatable("config.spawning"))
+                    .name(Component.translatable("config.spawning"))
                     .group(createSpawningGroup(
                         "entity.fowlplay.blue_jay",
                         defaults.blueJaySpawnWeight,
@@ -333,7 +333,7 @@ public class YACLIntegration {
         Consumer<Integer> setSongVolume
     ) {
         OptionGroup.Builder builder = OptionGroup.createBuilder()
-            .name(Text.translatable(entity));
+            .name(Component.translatable(entity));
 
         if(getCallVolume != null && setCallVolume != null) {
             builder.option(createSoundOption(
@@ -362,8 +362,8 @@ public class YACLIntegration {
 
     private static Option<Integer> createSoundOption(String entity, String name, String description, int defaultValue, Supplier<Integer> get, Consumer<Integer> set) {
         return Option.<Integer>createBuilder()
-            .name(Text.translatable(name))
-            .description(OptionDescription.of(Text.translatable(description, Text.translatable(entity))))
+            .name(Component.translatable(name))
+            .description(OptionDescription.of(Component.translatable(description, Component.translatable(entity))))
             .binding(defaultValue, get, set)
             .controller(option -> IntegerSliderControllerBuilder.create(option)
                 .range(0, 20)
@@ -385,7 +385,7 @@ public class YACLIntegration {
         Consumer<Integer> setMaxGroupSize
     ) {
         return OptionGroup.createBuilder()
-            .name(Text.translatable(entity))
+            .name(Component.translatable(entity))
             .option(createSpawningOption(
                 entity,
                 "config.spawning.generic.spawnWeight",
@@ -415,8 +415,8 @@ public class YACLIntegration {
 
     private static Option<Integer> createSpawningOption(String entity, String name, String description, int defaultValue, Supplier<Integer> get, Consumer<Integer> set) {
         return Option.<Integer>createBuilder()
-            .name(Text.translatable(name))
-            .description(OptionDescription.of(Text.translatable("config.info.restart").append("\n\n").append(Text.translatable(description, Text.translatable(entity)))))
+            .name(Component.translatable(name))
+            .description(OptionDescription.of(Component.translatable("config.info.restart").append("\n\n").append(Component.translatable(description, Component.translatable(entity)))))
             .binding(defaultValue, get, set)
             .controller(option -> IntegerSliderControllerBuilder.create(option)
                 .range(0, 100)

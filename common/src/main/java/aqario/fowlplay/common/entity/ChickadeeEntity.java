@@ -13,15 +13,14 @@ import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.brain.Brain;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
@@ -44,18 +43,18 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
     public final AnimationState flappingState = new AnimationState();
     public final AnimationState floatingState = new AnimationState();
 
-    public ChickadeeEntity(EntityType<? extends ChickadeeEntity> entityType, World world) {
+    public ChickadeeEntity(EntityType<? extends ChickadeeEntity> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+    protected float getStandingEyeHeight(Pose pose, EntityDimensions dimensions) {
         return 0.4f;
     }
 
     @Nullable
     @Override
-    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
         return null;
     }
 
@@ -66,12 +65,12 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
 
     @Override
     public Ingredient getFood() {
-        return Ingredient.fromTag(FowlPlayItemTags.CHICKADEE_FOOD);
+        return Ingredient.of(FowlPlayItemTags.CHICKADEE_FOOD);
     }
 
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
-        return entity.getType().isIn(FowlPlayEntityTypeTags.CHICKADEE_AVOIDS);
+        return entity.getType().is(FowlPlayEntityTypeTags.CHICKADEE_AVOIDS);
     }
 
     @Override
@@ -81,13 +80,13 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
 
     @Override
     protected void updateAnimations() {
-        this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
-        this.flappingState.setRunning(this.isFlying(), this.age);
-        this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
+        this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
+        this.flappingState.animateWhen(this.isFlying(), this.tickCount);
+        this.floatingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
     }
 
     @Override
-    protected boolean isFlappingWings() {
+    protected boolean isFlapping() {
         return this.isFlying();
     }
 
@@ -107,8 +106,8 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
     }
 
     @Override
-    public Vec3d getLeashOffset() {
-        return new Vec3d(0.0, 0.5f * this.getStandingEyeHeight(), this.getWidth() * 0.4f);
+    public Vec3 getLeashOffset() {
+        return new Vec3(0.0, 0.5f * this.getEyeHeight(), this.getBbWidth() * 0.4f);
     }
 
     @Nullable
@@ -150,7 +149,7 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
     }
 
     @Override
-    protected Brain.Profile<ChickadeeEntity> createBrainProfile() {
+    protected Brain.Provider<ChickadeeEntity> brainProvider() {
         return new SmartBrainProvider<>(this);
     }
 
@@ -174,7 +173,7 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
             FlightBehaviours.stopFalling(),
             SetEntityLookTarget.create(Birds::isPlayerHoldingFood),
             new LookAtTarget<>()
-                .runFor(entity -> entity.getRandom().nextBetween(45, 90)),
+                .runFor(entity -> entity.getRandom().nextIntBetweenInclusive(45, 90)),
             new MoveToWalkTarget<>()
         );
     }
@@ -227,8 +226,8 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
     }
 
     @Override
-    protected void mobTick() {
+    protected void customServerAiStep() {
         this.tickBrain(this);
-        super.mobTick();
+        super.customServerAiStep();
     }
 }

@@ -4,25 +4,25 @@ import aqario.fowlplay.client.render.entity.feature.BirdHeldItemFeatureRenderer;
 import aqario.fowlplay.client.render.entity.model.RavenEntityModel;
 import aqario.fowlplay.common.entity.RavenEntity;
 import aqario.fowlplay.core.FowlPlay;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
 
-public class RavenEntityRenderer extends MobEntityRenderer<RavenEntity, RavenEntityModel> {
-    private static final Identifier TEXTURE = FowlPlay.id("textures/entity/raven/raven.png");
+public class RavenEntityRenderer extends MobRenderer<RavenEntity, RavenEntityModel> {
+    private static final ResourceLocation TEXTURE = FowlPlay.id("textures/entity/raven/raven.png");
 
-    public RavenEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new RavenEntityModel(context.getPart(RavenEntityModel.MODEL_LAYER)), 0.3f);
-        this.addFeature(new BirdHeldItemFeatureRenderer<>(
+    public RavenEntityRenderer(EntityRendererProvider.Context context) {
+        super(context, new RavenEntityModel(context.bakeLayer(RavenEntityModel.MODEL_LAYER)), 0.3f);
+        this.addLayer(new BirdHeldItemFeatureRenderer<>(
             this,
-            context.getHeldItemRenderer(),
-            new Vec3d(0.0, -0.05375, -0.1475)
+            context.getItemInHandRenderer(),
+            new Vec3(0.0, -0.05375, -0.1475)
         ));
     }
 
     @Override
-    public Identifier getTexture(RavenEntity raven) {
+    public ResourceLocation getTextureLocation(RavenEntity raven) {
         return TEXTURE;
     }
 }

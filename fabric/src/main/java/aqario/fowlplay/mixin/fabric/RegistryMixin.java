@@ -1,12 +1,12 @@
 package aqario.fowlplay.mixin.fabric;
 
 import aqario.fowlplay.core.platform.CommonRegistry;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.entry.RegistryEntryList;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,36 +16,36 @@ import java.util.Optional;
 @Mixin(Registry.class)
 public interface RegistryMixin<T> extends CommonRegistry<T> {
     @Shadow
-    Optional<RegistryEntry.Reference<T>> getRandom(Random random);
+    Optional<Holder.Reference<T>> getRandom(RandomSource random);
 
     @Shadow
     @Nullable
-    T get(@Nullable Identifier id);
+    T get(@Nullable ResourceLocation id);
 
     @Shadow
     @Nullable
-    Identifier getId(T value);
+    ResourceLocation getKey(T value);
 
     @Shadow
-    Optional<RegistryEntryList.Named<T>> getEntryList(TagKey<T> tag);
+    Optional<HolderSet.Named<T>> getTag(TagKey<T> tag);
 
     @Override
-    default T fowlplay$get(Identifier id) {
+    default T fowlplay$get(ResourceLocation id) {
         return this.get(id);
     }
 
     @Override
-    default Identifier fowlplay$getId(T value) {
-        return this.getId(value);
+    default ResourceLocation fowlplay$getId(T value) {
+        return this.getKey(value);
     }
 
     @Override
-    default Optional<T> fowlplay$getRandom(Random random) {
-        return this.getRandom(random).map(RegistryEntry.Reference::value);
+    default Optional<T> fowlplay$getRandom(RandomSource random) {
+        return this.getRandom(random).map(Holder.Reference::value);
     }
 
     @Override
-    default Optional<T> fowlplay$getRandomEntry(TagKey<T> tag, Random random) {
-        return this.getEntryList(tag).flatMap(list -> list.getRandom(random).map(RegistryEntry::value));
+    default Optional<T> fowlplay$getRandomEntry(TagKey<T> tag, RandomSource random) {
+        return this.getTag(tag).flatMap(list -> list.getRandomElement(random).map(Holder::value));
     }
 }

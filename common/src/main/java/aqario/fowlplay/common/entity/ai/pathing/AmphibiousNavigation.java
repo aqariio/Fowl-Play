@@ -2,22 +2,22 @@ package aqario.fowlplay.common.entity.ai.pathing;
 
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
 import aqario.fowlplay.common.util.Birds;
-import net.minecraft.entity.ai.pathing.AmphibiousSwimNavigation;
-import net.minecraft.entity.ai.pathing.Path;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.pathfinder.Path;
 import org.jetbrains.annotations.Nullable;
 
-public class AmphibiousNavigation extends AmphibiousSwimNavigation {
-    public AmphibiousNavigation(MobEntity mob, World level) {
+public class AmphibiousNavigation extends AmphibiousPathNavigation {
+    public AmphibiousNavigation(Mob mob, Level level) {
         super(mob, level);
     }
 
     @Override
-    public boolean startMovingAlong(@Nullable Path path, double speed) {
-        if(path != null && this.entity instanceof FlyingBirdEntity flyingBird) {
+    public boolean moveTo(@Nullable Path path, double speed) {
+        if(path != null && this.mob instanceof FlyingBirdEntity flyingBird) {
             Birds.tryFlyingAlongPath(flyingBird, path);
         }
-        return super.startMovingAlong(path, speed);
+        return super.moveTo(path, speed);
     }
 }

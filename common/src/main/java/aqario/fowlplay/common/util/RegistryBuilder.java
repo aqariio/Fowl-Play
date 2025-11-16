@@ -2,20 +2,20 @@ package aqario.fowlplay.common.util;
 
 import aqario.fowlplay.core.platform.CommonRegistry;
 import aqario.fowlplay.core.platform.PlatformHelper;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 
 import java.util.function.Supplier;
 
 public final class RegistryBuilder<T> {
-    private final RegistryKey<Registry<T>> registryKey;
+    private final ResourceKey<Registry<T>> registryKey;
     private boolean sync = false;
 
-    private RegistryBuilder(RegistryKey<Registry<T>> registryKey) {
+    private RegistryBuilder(ResourceKey<Registry<T>> registryKey) {
         this.registryKey = registryKey;
     }
 
-    public static <T> RegistryBuilder<T> create(RegistryKey<Registry<T>> registryKey) {
+    public static <T> RegistryBuilder<T> create(ResourceKey<Registry<T>> registryKey) {
         return new RegistryBuilder<>(registryKey);
     }
 

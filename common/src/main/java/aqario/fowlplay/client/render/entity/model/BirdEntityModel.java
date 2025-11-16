@@ -1,10 +1,10 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.common.entity.BirdEntity;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.SinglePartEntityModel;
+import net.minecraft.client.model.HierarchicalModel;
+import net.minecraft.client.model.geom.ModelPart;
 
-public abstract class BirdEntityModel<E extends BirdEntity> extends SinglePartEntityModel<E> {
+public abstract class BirdEntityModel<E extends BirdEntity> extends HierarchicalModel<E> {
     public final ModelPart root;
     public final ModelPart body;
     public final ModelPart neck;
@@ -30,11 +30,11 @@ public abstract class BirdEntityModel<E extends BirdEntity> extends SinglePartEn
     }
 
     @Override
-    public ModelPart getPart() {
+    public ModelPart root() {
         return this.root;
     }
 
     @Override
-    public void setAngles(E bird, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch) {
+    public void setupAnim(E bird, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch) {
     }
 }

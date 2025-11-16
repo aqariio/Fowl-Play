@@ -1,7 +1,7 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.core.platform.PlatformHelper;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.sounds.SoundEvent;
 
 import java.util.function.Supplier;
 
@@ -57,7 +57,7 @@ public final class FowlPlaySoundEvents {
     public static final Supplier<SoundEvent> ENTITY_SPARROW_HURT = register("entity.sparrow.hurt");
 
     private static Supplier<SoundEvent> register(String id) {
-        return PlatformHelper.registerSoundEvent(id, () -> SoundEvent.of(FowlPlay.id(id)));
+        return PlatformHelper.registerSoundEvent(id, () -> SoundEvent.createVariableRangeEvent(FowlPlay.id(id)));
     }
 
     public static void init() {

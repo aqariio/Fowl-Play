@@ -1,7 +1,7 @@
 package aqario.fowlplay.core.platform;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.entity.SpawnRestriction;
+import net.minecraft.world.entity.SpawnPlacements;
 
 // credit to friendsandfoes for the platform agnostic enum extension implementation
 public final class CustomSpawnLocation {
@@ -10,17 +10,17 @@ public final class CustomSpawnLocation {
     public static final String AQUATIC_INTERNAL_NAME = "AQUATIC";
 
     @ExpectPlatform
-    public static SpawnRestriction.Location ground() {
+    public static SpawnPlacements.Type ground() {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static SpawnRestriction.Location semiaquatic() {
+    public static SpawnPlacements.Type semiaquatic() {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static SpawnRestriction.Location aquatic() {
+    public static SpawnPlacements.Type aquatic() {
         throw new AssertionError();
     }
 

@@ -3,51 +3,52 @@ package aqario.fowlplay.common.entity.ai.pathing;
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
 import aqario.fowlplay.common.util.Birds;
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.pathing.*;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.server.network.DebugInfoSender;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.ChunkCache;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.protocol.game.DebugPackets;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.PathNavigationRegion;
+import net.minecraft.world.level.pathfinder.*;
+import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.core.navigation.ExtendedNavigator;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public class FlightNavigation extends MobNavigation implements ExtendedNavigator {
+public class FlightNavigation extends GroundPathNavigation implements ExtendedNavigator {
     private static final int NODE_DISTANCE = 2;
     private static final float NODE_REACH_RADIUS = 1.5f;
     private final FlyingBirdEntity bird;
 
-    public FlightNavigation(FlyingBirdEntity bird, World world) {
+    public FlightNavigation(FlyingBirdEntity bird, Level world) {
         super(bird, world);
         this.bird = bird;
     }
 
     @Override
-    public MobEntity getMob() {
+    public Mob getMob() {
         return this.bird;
     }
 
     @Nullable
     @Override
-    public Path getCurrentPath() {
-        return super.getCurrentPath();
+    public Path getPath() {
+        return super.getPath();
     }
 
     @Override
-    protected PathNodeNavigator createPathNodeNavigator(int maxVisitedNodes) {
-        this.nodeMaker = new BirdPathNodeMaker();
-        this.nodeMaker.setCanEnterOpenDoors(true);
+    protected PathFinder createPathFinder(int maxVisitedNodes) {
+        this.nodeEvaluator = new FlyNodeEvaluator();
+        this.nodeEvaluator.setCanPassDoors(true);
 
-        return new PathNodeNavigator(this.nodeMaker, maxVisitedNodes) {
+        return new PathFinder(this.nodeEvaluator, maxVisitedNodes) {
             @Nullable
             @Override
-            public Path findPathToAny(ChunkCache navigationRegion, MobEntity mob, Set<BlockPos> targetPositions, float maxRange, int accuracy, float searchDepthMultiplier) {
-                final Path path = super.findPathToAny(navigationRegion, mob, targetPositions, maxRange, accuracy, searchDepthMultiplier);
+            public Path findPath(PathNavigationRegion navigationRegion, Mob mob, Set<BlockPos> targetPositions, float maxRange, int accuracy, float searchDepthMultiplier) {
+                final Path path = super.findPath(navigationRegion, mob, targetPositions, maxRange, accuracy, searchDepthMultiplier);
 
                 return FlightNavigation.this.patchPath(path);
             }
@@ -59,139 +60,139 @@ public class FlightNavigation extends MobNavigation implements ExtendedNavigator
             return null;
         }
 
-        Path newPath = new Path(path.nodes, path.getTarget(), path.reachesTarget()) {
+        Path newPath = new Path(path.nodes, path.getTarget(), path.canReach()) {
             @Override
-            public Vec3d getNodePosition(Entity entity1, int nodeIndex) {
+            public Vec3 getEntityPosAtNode(Entity entity1, int nodeIndex) {
                 return FlightNavigation.this.getEntityPosAtNode(nodeIndex);
             }
         };
-        PathNode[] debugNodes = path.getDebugNodes();
-        PathNode[] debugSecondNodes = path.getDebugSecondNodes();
-        Set<TargetPathNode> debugTargetNodes = path.debugTargetNodes;
-        newPath.setDebugInfo(debugNodes, debugSecondNodes, debugTargetNodes);
+        Node[] debugNodes = path.getOpenSet();
+        Node[] debugSecondNodes = path.getClosedSet();
+        Set<Target> debugTargetNodes = path.targetNodes;
+        newPath.setDebug(debugNodes, debugSecondNodes, debugTargetNodes);
 
         return newPath;
     }
 
     @Override
-    public boolean startMovingTo(double x, double y, double z, double speed) {
-        this.bird.getMoveControl().moveTo(x, y, z, speed);
+    public boolean moveTo(double x, double y, double z, double speed) {
+        this.bird.getMoveControl().setWantedPosition(x, y, z, speed);
         return true;
     }
 
     @Override
-    public boolean startMovingTo(Entity entity, double speed) {
-        this.bird.getMoveControl().moveTo(entity.getX(), entity.getY(), entity.getZ(), speed);
+    public boolean moveTo(Entity entity, double speed) {
+        this.bird.getMoveControl().setWantedPosition(entity.getX(), entity.getY(), entity.getZ(), speed);
         return true;
     }
 
     @Override
-    protected boolean canPathDirectlyThrough(Vec3d origin, Vec3d target) {
-        return doesNotCollide(this.bird, origin, target, true);
+    protected boolean canMoveDirectly(Vec3 origin, Vec3 target) {
+        return isClearForMovementBetween(this.bird, origin, target, true);
     }
 
     @Override
-    protected boolean isAtValidPosition() {
-        return this.canSwim() && this.isInLiquid() || !this.bird.hasVehicle();
+    protected boolean canUpdatePath() {
+        return this.canFloat() && this.isInLiquid() || !this.bird.isPassenger();
     }
 
     @Override
-    protected Vec3d getPos() {
-        return this.getMob().getPos();
+    protected Vec3 getTempMobPos() {
+        return this.getMob().position();
     }
 
     @Override
-    protected double adjustTargetY(Vec3d pos) {
+    protected double getGroundY(Vec3 pos) {
         return pos.y;
     }
 
     @Nullable
-    public Path findPathTo(BlockPos target, int distance) {
-        return this.findPathTo(ImmutableSet.of(target), 48, false, distance);
+    public Path createPath(BlockPos target, int distance) {
+        return this.createPath(ImmutableSet.of(target), 48, false, distance);
     }
 
     @Override
     public void tick() {
-        this.tickCount++;
-        if(this.inRecalculationCooldown) {
-            this.recalculatePath();
+        this.tick++;
+        if(this.hasDelayedRecomputation) {
+            this.recomputePath();
         }
 
-        if(!this.isIdle()) {
-            if(this.isAtValidPosition()) {
-                this.continueFollowingPath();
+        if(!this.isDone()) {
+            if(this.canUpdatePath()) {
+                this.followThePath();
             }
-            else if(this.currentPath != null && !this.currentPath.isFinished()) {
-                Vec3d pos = this.getPos();
-                Vec3d nodePos = this.currentPath.getNodePosition(this.bird);
+            else if(this.path != null && !this.path.isDone()) {
+                Vec3 pos = this.getTempMobPos();
+                Vec3 nodePos = this.path.getNextEntityPos(this.bird);
                 if(pos.y > nodePos.y
-                    && !this.bird.isOnGround()
-                    && MathHelper.floor(pos.x) == MathHelper.floor(nodePos.x)
-                    && MathHelper.floor(pos.z) == MathHelper.floor(nodePos.z)) {
-                    this.currentPath.next();
+                    && !this.bird.onGround()
+                    && Mth.floor(pos.x) == Mth.floor(nodePos.x)
+                    && Mth.floor(pos.z) == Mth.floor(nodePos.z)) {
+                    this.path.advance();
                 }
             }
-            if(this.currentPath != null
-                && this.currentPath.isFinished()
+            if(this.path != null
+                && this.path.isDone()
                 && this.getTargetPos() != null
-                && this.bird.getPos().isInRange(Vec3d.ofBottomCenter(this.getTargetPos()), 2)
+                && this.bird.position().closerThan(Vec3.atBottomCenterOf(this.getTargetPos()), 2)
                 && Birds.shouldLandAtDestination(this.bird, this.getTargetPos())
             ) {
                 this.bird.stopFlying();
             }
 
-            DebugInfoSender.sendPathfindingData(this.world, this.getMob(), this.getCurrentPath(), 0.1f);
-            if(!this.isIdle()) {
+            DebugPackets.sendPathFindingPacket(this.level, this.getMob(), this.getPath(), 0.1f);
+            if(!this.isDone()) {
                 // noinspection ConstantConditions
-                Vec3d vec3d = this.currentPath.getNodePosition(this.bird);
-                this.bird.getMoveControl().moveTo(vec3d.x, vec3d.y, vec3d.z, this.speed);
+                Vec3 vec3d = this.path.getNextEntityPos(this.bird);
+                this.bird.getMoveControl().setWantedPosition(vec3d.x, vec3d.y, vec3d.z, this.speedModifier);
             }
         }
     }
 
     @Override
-    public Vec3d getEntityPosAtNode(int nodeIndex) {
-        return Vec3d.ofBottomCenter(this.getCurrentPath().getNodePos(nodeIndex));
+    public Vec3 getEntityPosAtNode(int nodeIndex) {
+        return Vec3.atBottomCenterOf(this.getPath().getNodePos(nodeIndex));
     }
 
     @Override
-    protected void continueFollowingPath() {
-        final Vec3d pos = this.getPos();
-        final int shortcutNodeIndex = this.getClosestVerticalTraversal(MathHelper.floor(pos.y));
-        this.nodeReachProximity = this.bird.getWidth() > 0.75f ? this.bird.getWidth() / 2f : 0.75f - this.bird.getWidth() / 2f;
+    protected void followThePath() {
+        final Vec3 pos = this.getTempMobPos();
+        final int shortcutNodeIndex = this.getClosestVerticalTraversal(Mth.floor(pos.y));
+        this.maxDistanceToWaypoint = this.bird.getBbWidth() > 0.75f ? this.bird.getBbWidth() / 2f : 0.75f - this.bird.getBbWidth() / 2f;
 
         if(!this.attemptShortcut(shortcutNodeIndex, pos)) {
             if(this.isCloseToNextNode(NODE_REACH_RADIUS)) {
-                int nextNodeIndex = this.currentPath.getCurrentNodeIndex() + NODE_DISTANCE;
-                if(this.currentPath.getCurrentNodeIndex() < this.currentPath.getLength() - 1 && nextNodeIndex >= this.currentPath.getLength()) {
-                    this.currentPath.setCurrentNodeIndex(this.currentPath.getLength() - 1);
+                int nextNodeIndex = this.path.getNextNodeIndex() + NODE_DISTANCE;
+                if(this.path.getNextNodeIndex() < this.path.getNodeCount() - 1 && nextNodeIndex >= this.path.getNodeCount()) {
+                    this.path.setNextNodeIndex(this.path.getNodeCount() - 1);
                 }
                 else {
-                    this.currentPath.setCurrentNodeIndex(nextNodeIndex);
+                    this.path.setNextNodeIndex(nextNodeIndex);
                 }
             }
         }
 
-        this.checkTimeouts(pos);
+        this.doStuckDetection(pos);
     }
 
     @Override
     public boolean isCloseToNextNode(float distance) {
-        final Vec3d nextNodePos = this.getEntityPosAtNode(this.getCurrentPath().getCurrentNodeIndex());
+        final Vec3 nextNodePos = this.getEntityPosAtNode(this.getPath().getNextNodeIndex());
 
-        if(this.currentPath.getCurrentNodeIndex() + 1 >= this.currentPath.getLength()
+        if(this.path.getNextNodeIndex() + 1 >= this.path.getNodeCount()
             && Birds.shouldLandAtDestination(this.bird, this.getTargetPos())
         ) {
-            return this.getPos().isInRange(nextNodePos, 0.5);
+            return this.getTempMobPos().closerThan(nextNodePos, 0.5);
         }
-        return this.getPos().isInRange(nextNodePos, distance);
+        return this.getTempMobPos().closerThan(nextNodePos, distance);
     }
 
     protected int getClosestVerticalTraversal(int safeSurfaceHeight) {
-        final int nodesLength = this.currentPath.getLength();
+        final int nodesLength = this.path.getNodeCount();
 
-        for(int nodeIndex = this.currentPath.getCurrentNodeIndex(); nodeIndex < nodesLength; nodeIndex++) {
-            if(this.currentPath.getNode(nodeIndex).y != safeSurfaceHeight) {
+        for(int nodeIndex = this.path.getNextNodeIndex(); nodeIndex < nodesLength; nodeIndex++) {
+            if(this.path.getNode(nodeIndex).y != safeSurfaceHeight) {
                 return nodeIndex;
             }
         }
@@ -200,12 +201,12 @@ public class FlightNavigation extends MobNavigation implements ExtendedNavigator
     }
 
     @Override
-    public float getNodeReachProximity() {
+    public float getMaxDistanceToWaypoint() {
         return NODE_REACH_RADIUS;
     }
 
     @Override
-    public boolean isValidPosition(BlockPos pos) {
+    public boolean isStableDestination(BlockPos pos) {
         return true;
     }
 }

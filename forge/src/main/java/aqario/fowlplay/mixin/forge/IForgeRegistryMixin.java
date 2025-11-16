@@ -1,11 +1,11 @@
 package aqario.fowlplay.mixin.forge;
 
 import aqario.fowlplay.core.platform.CommonRegistry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.Util;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.tags.ITagManager;
 import org.jetbrains.annotations.NotNull;
@@ -23,37 +23,37 @@ public interface IForgeRegistryMixin<V> extends CommonRegistry<V> {
 
     @Shadow
     @Nullable
-    V getValue(Identifier key);
+    V getValue(ResourceLocation key);
 
     @Shadow
     @Nullable
-    Identifier getKey(V value);
+    ResourceLocation getKey(V value);
 
     @Shadow
     @NotNull
-    Set<Map.Entry<RegistryKey<V>, V>> getEntries();
+    Set<Map.Entry<ResourceKey<V>, V>> getEntries();
 
     @Shadow
     @Nullable
     ITagManager<V> tags();
 
     @Override
-    default V fowlplay$get(Identifier id) {
+    default V fowlplay$get(ResourceLocation id) {
         return this.getValue(id);
     }
 
     @Override
-    default Identifier fowlplay$getId(V value) {
+    default ResourceLocation fowlplay$getId(V value) {
         return this.getKey(value);
     }
 
     @Override
-    default Optional<V> fowlplay$getRandom(Random random) {
-        return Util.getRandomOrEmpty(List.copyOf(this.getValues()), random);
+    default Optional<V> fowlplay$getRandom(RandomSource random) {
+        return Util.getRandomSafe(List.copyOf(this.getValues()), random);
     }
 
     @Override
-    default Optional<V> fowlplay$getRandomEntry(TagKey<V> tag, Random random) {
+    default Optional<V> fowlplay$getRandomEntry(TagKey<V> tag, RandomSource random) {
         ITagManager<V> tagManager = this.tags();
         if(tagManager == null) {
             return Optional.empty();

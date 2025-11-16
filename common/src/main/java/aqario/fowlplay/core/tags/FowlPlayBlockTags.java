@@ -1,9 +1,9 @@
 package aqario.fowlplay.core.tags;
 
 import aqario.fowlplay.core.FowlPlay;
-import net.minecraft.block.Block;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
 
 public final class FowlPlayBlockTags {
     public static final TagKey<Block> PENGUINS_SLIDE_ON = create("penguins_slide_on");
@@ -13,6 +13,6 @@ public final class FowlPlayBlockTags {
     public static final TagKey<Block> WATERFOWL_SPAWNABLE_ON = create("waterfowl_spawnable_on");
 
     private static TagKey<Block> create(String id) {
-        return TagKey.of(RegistryKeys.BLOCK, FowlPlay.id(id));
+        return TagKey.create(Registries.BLOCK, FowlPlay.id(id));
     }
 }

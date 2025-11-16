@@ -3,8 +3,12 @@ package aqario.fowlplay.common.entity.ai.brain.behaviour;
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.util.MemoryList;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.ai.brain.*;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.behavior.EntityTracker;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.MemoryStatus;
+import net.minecraft.world.entity.ai.memory.WalkTarget;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.tslat.smartbrainlib.registry.SBLMemoryTypes;
 import net.tslat.smartbrainlib.util.BrainUtils;
 
@@ -34,7 +38,7 @@ public class SetItemWalkTarget<E extends BirdEntity> extends SpeedModifiableBeha
     }
 
     @Override
-    protected List<Pair<MemoryModuleType<?>, MemoryModuleState>> getMemoryRequirements() {
+    protected List<Pair<MemoryModuleType<?>, MemoryStatus>> getMemoryRequirements() {
         return MEMORY_REQUIREMENTS;
     }
 
@@ -44,12 +48,12 @@ public class SetItemWalkTarget<E extends BirdEntity> extends SpeedModifiableBeha
         List<ItemEntity> wantedItems = BrainUtils.getMemory(brain, SBLMemoryTypes.NEARBY_ITEMS.get());
         // noinspection ConstantConditions
         ItemEntity targetItem = wantedItems.get(0);
-        if(targetItem.isInRange(entity, this.radius.apply(entity))
-            && entity.getWorld().getWorldBorder().contains(targetItem.getBlockPos())
+        if(targetItem.closerThan(entity, this.radius.apply(entity))
+            && entity.level().getWorldBorder().isWithinBounds(targetItem.blockPosition())
         ) {
-            WalkTarget newWalkTarget = new WalkTarget(new EntityLookTarget(targetItem, false), this.speedModifier.apply(entity, targetItem.getPos()), 0);
+            WalkTarget newWalkTarget = new WalkTarget(new EntityTracker(targetItem, false), this.speedModifier.apply(entity, targetItem.position()), 0);
             if(!BrainUtils.hasMemory(brain, MemoryModuleType.AVOID_TARGET)) {
-                BrainUtils.setMemory(brain, MemoryModuleType.LOOK_TARGET, new EntityLookTarget(targetItem, true));
+                BrainUtils.setMemory(brain, MemoryModuleType.LOOK_TARGET, new EntityTracker(targetItem, true));
             }
             BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, newWalkTarget);
         }

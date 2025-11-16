@@ -6,13 +6,13 @@ import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import aqario.fowlplay.core.FowlPlaySensorType;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.brain.Brain;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.sensing.SensorType;
+import net.minecraft.world.entity.player.Player;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.PredicateSensor;
 import net.tslat.smartbrainlib.util.BrainUtils;
@@ -44,9 +44,9 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
     }
 
     @Override
-    protected void sense(ServerWorld world, E bird) {
+    protected void doTick(ServerLevel world, E bird) {
         Brain<?> brain = bird.getBrain();
-        DamageSource damageSource = bird.getRecentDamageSource();
+        DamageSource damageSource = bird.getLastDamageSource();
         if(damageSource == null) {
             BrainUtils.clearMemory(brain, MemoryModuleType.HURT_BY);
             BrainUtils.clearMemory(brain, MemoryModuleType.HURT_BY_ENTITY);
@@ -55,14 +55,14 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
         if(this.predicate().test(damageSource, bird)) {
             BrainUtils.setMemory(brain, MemoryModuleType.HURT_BY, damageSource);
 
-            if(damageSource.getAttacker() instanceof LivingEntity attacker && attacker.isAlive() && attacker.getWorld() == bird.getWorld()) {
+            if(damageSource.getEntity() instanceof LivingEntity attacker && attacker.isAlive() && attacker.level() == bird.level()) {
                 BrainUtils.setMemory(brain, MemoryModuleType.HURT_BY_ENTITY, attacker);
                 onAttacked(bird, attacker);
             }
             return;
         }
         BrainUtils.withMemory(brain, MemoryModuleType.HURT_BY_ENTITY, attacker -> {
-            if(!attacker.isAlive() || attacker.getWorld() != bird.getWorld()) {
+            if(!attacker.isAlive() || attacker.level() != bird.level()) {
                 BrainUtils.clearMemory(brain, MemoryModuleType.HURT_BY_ENTITY);
             }
         });
@@ -71,7 +71,7 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
     public static <T extends BirdEntity> void onAttacked(T bird, LivingEntity attacker) {
         Brain<?> brain = bird.getBrain();
         BrainUtils.clearMemory(brain, FowlPlayMemoryModuleType.SEES_FOOD.get());
-        if(attacker instanceof PlayerEntity player) {
+        if(attacker instanceof Player player) {
             BrainUtils.setForgettableMemory(brain, FowlPlayMemoryModuleType.CANNOT_PICKUP_FOOD.get(), true, Birds.CANNOT_PICKUP_FOOD_TICKS);
             if(bird instanceof TrustingBirdEntity trustingBird && trustingBird.trusts(player)) {
                 trustingBird.stopTrusting(player);

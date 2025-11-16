@@ -3,25 +3,25 @@ package aqario.fowlplay.common.entity.ai.brain.sensor;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import aqario.fowlplay.core.FowlPlaySensorType;
 import com.google.common.collect.Lists;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.brain.LivingTargetCache;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
+import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.tslat.smartbrainlib.api.core.sensor.EntityFilteringSensor;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 
 import java.util.List;
 import java.util.function.BiPredicate;
 
-public class NearbyAdultsSensor<E extends PassiveEntity> extends EntityFilteringSensor<List<? extends PassiveEntity>, E> {
+public class NearbyAdultsSensor<E extends AgeableMob> extends EntityFilteringSensor<List<? extends AgeableMob>, E> {
     @Override
     public SensorType<? extends ExtendedSensor<?>> type() {
         return FowlPlaySensorType.NEARBY_ADULTS.get();
     }
 
     @Override
-    protected MemoryModuleType<List<? extends PassiveEntity>> getMemory() {
+    protected MemoryModuleType<List<? extends AgeableMob>> getMemory() {
         return FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS.get();
     }
 
@@ -31,10 +31,10 @@ public class NearbyAdultsSensor<E extends PassiveEntity> extends EntityFiltering
     }
 
     @Override
-    protected List<? extends PassiveEntity> findMatches(E self, LivingTargetCache matcher) {
-        List<PassiveEntity> nearbyVisibleAdults = Lists.newArrayList();
-        matcher.stream(target -> this.predicate().test(target, self))
-            .forEach(target -> nearbyVisibleAdults.add((PassiveEntity) target));
+    protected List<? extends AgeableMob> findMatches(E self, NearestVisibleLivingEntities matcher) {
+        List<AgeableMob> nearbyVisibleAdults = Lists.newArrayList();
+        matcher.find(target -> this.predicate().test(target, self))
+            .forEach(target -> nearbyVisibleAdults.add((AgeableMob) target));
         return nearbyVisibleAdults;
     }
 }

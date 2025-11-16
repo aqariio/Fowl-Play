@@ -5,14 +5,14 @@ import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.datagen.provider.SoundDefinition;
 import aqario.fowlplay.datagen.provider.SoundDefinitionsProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 
 import java.util.concurrent.CompletableFuture;
 
 public class FowlPlaySoundDefinitionsGen extends SoundDefinitionsProvider {
-    protected FowlPlaySoundDefinitionsGen(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
+    protected FowlPlaySoundDefinitionsGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(output, FowlPlay.ID, registryLookup);
     }
 
@@ -74,7 +74,7 @@ public class FowlPlaySoundDefinitionsGen extends SoundDefinitionsProvider {
         for (int i = start; i <= end; i++) {
             definition.with(sound(FowlPlay.id(location + i)));
         }
-        definition.subtitle("subtitles." + soundEvent.getId().getPath());
+        definition.subtitle("subtitles." + soundEvent.getLocation().getPath());
         this.add(soundEvent, definition);
     }
 
@@ -85,16 +85,16 @@ public class FowlPlaySoundDefinitionsGen extends SoundDefinitionsProvider {
     private void addOne(SoundEvent soundEvent, String location) {
         SoundDefinition definition = SoundDefinition.builder()
             .with(sound(FowlPlay.id(location)))
-            .subtitle("subtitles." + soundEvent.getId().getPath());
+            .subtitle("subtitles." + soundEvent.getLocation().getPath());
         this.add(soundEvent, definition);
     }
 
     private void addVariousVanilla(SoundEvent soundEvent, String location, int start, int end) {
         SoundDefinition definition = SoundDefinition.builder();
         for (int i = start; i <= end; i++) {
-            definition.with(sound(new Identifier(location + i)));
+            definition.with(sound(new ResourceLocation(location + i)));
         }
-        definition.subtitle("subtitles." + soundEvent.getId().getPath());
+        definition.subtitle("subtitles." + soundEvent.getLocation().getPath());
         this.add(soundEvent, definition);
     }
 
@@ -104,8 +104,8 @@ public class FowlPlaySoundDefinitionsGen extends SoundDefinitionsProvider {
 
     private void addVanilla(SoundEvent soundEvent, String location) {
         SoundDefinition definition = SoundDefinition.builder()
-            .with(sound(new Identifier(location)))
-            .subtitle("subtitles." + soundEvent.getId().getPath());
+            .with(sound(new ResourceLocation(location)))
+            .subtitle("subtitles." + soundEvent.getLocation().getPath());
         this.add(soundEvent, definition);
     }
 }

@@ -1,12 +1,16 @@
 package aqario.fowlplay.mixin;
 
 import aqario.fowlplay.common.util.Birds;
-import net.minecraft.block.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.CrossCollisionBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,32 +18,32 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(HorizontalConnectingBlock.class)
+@Mixin(CrossCollisionBlock.class)
 public abstract class HorizontalConnectingBlockMixin {
     @Shadow
-    protected abstract int getShapeIndex(BlockState state);
+    protected abstract int getAABBIndex(BlockState state);
 
     @Shadow
     @Final
-    protected VoxelShape[] collisionShapes;
+    protected VoxelShape[] collisionShapeByIndex;
 
     @Inject(method = "getCollisionShape", at = @At(value = "HEAD"), cancellable = true)
-    private void fowlplay$lowerFenceHeight(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
-        HorizontalConnectingBlock block = (HorizontalConnectingBlock) (Object) this;
+    private void fowlplay$lowerFenceHeight(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir) {
+        CrossCollisionBlock block = (CrossCollisionBlock) (Object) this;
         if(block instanceof FenceBlock
-            && context instanceof EntityShapeContext entityContext
+            && context instanceof EntityCollisionContext entityContext
             && entityContext.getEntity() != null
             && Birds.isNotFlightless(entityContext.getEntity())
         ) {
-            VoxelShape originalShape = this.collisionShapes[this.getShapeIndex(state)];
-            if(originalShape.getMax(Direction.Axis.Y) > 1) {
-                cir.setReturnValue(VoxelShapes.cuboid(
-                    originalShape.getMin(Direction.Axis.X),
-                    originalShape.getMin(Direction.Axis.Y),
-                    originalShape.getMin(Direction.Axis.Z),
-                    originalShape.getMax(Direction.Axis.X),
+            VoxelShape originalShape = this.collisionShapeByIndex[this.getAABBIndex(state)];
+            if(originalShape.max(Direction.Axis.Y) > 1) {
+                cir.setReturnValue(Shapes.box(
+                    originalShape.min(Direction.Axis.X),
+                    originalShape.min(Direction.Axis.Y),
+                    originalShape.min(Direction.Axis.Z),
+                    originalShape.max(Direction.Axis.X),
                     1,
-                    originalShape.getMax(Direction.Axis.Z)
+                    originalShape.max(Direction.Axis.Z)
                 ));
             }
         }

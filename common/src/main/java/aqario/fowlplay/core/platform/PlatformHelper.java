@@ -2,27 +2,27 @@ package aqario.fowlplay.core.platform;
 
 import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.client.model.TexturedModelData;
-import net.minecraft.client.particle.ParticleFactory;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.brain.Activity;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.sensor.Sensor;
-import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.entity.data.TrackedDataHandler;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleType;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.sensing.Sensor;
+import net.minecraft.world.entity.ai.sensing.SensorType;
+import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 
 import java.util.function.Supplier;
 
@@ -43,12 +43,12 @@ public class PlatformHelper {
     }
 
     @ExpectPlatform
-    public static Supplier<Item> registerItem(String id, Supplier<Item> item, RegistryKey<ItemGroup> group) {
+    public static Supplier<Item> registerItem(String id, Supplier<Item> item, ResourceKey<CreativeModeTab> group) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <T extends MobEntity> Supplier<Item> registerSpawnEggItem(String id, Supplier<EntityType<T>> entityType, int backgroundColor, int highlightColor) {
+    public static <T extends Mob> Supplier<Item> registerSpawnEggItem(String id, Supplier<EntityType<T>> entityType, int backgroundColor, int highlightColor) {
         throw new AssertionError();
     }
 
@@ -58,7 +58,7 @@ public class PlatformHelper {
     }
 
     @ExpectPlatform
-    public static Supplier<DefaultParticleType> registerParticleType(String id, Supplier<DefaultParticleType> particleType) {
+    public static Supplier<SimpleParticleType> registerParticleType(String id, Supplier<SimpleParticleType> particleType) {
         throw new AssertionError();
     }
 
@@ -78,42 +78,42 @@ public class PlatformHelper {
     }
 
     @ExpectPlatform
-    public static <T> Supplier<CommonRegistry<T>> registerRegistry(RegistryKey<Registry<T>> registryKey, boolean sync) {
+    public static <T> Supplier<CommonRegistry<T>> registerRegistry(ResourceKey<Registry<T>> registryKey, boolean sync) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <T> void registerTrackedDataHandler(String id, TrackedDataHandler<T> handler) {
+    public static <T> void registerTrackedDataHandler(String id, EntityDataSerializer<T> handler) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static void addItemToItemGroup(Supplier<Item> item, RegistryKey<ItemGroup> itemGroup) {
+    public static void addItemToItemGroup(Supplier<Item> item, ResourceKey<CreativeModeTab> itemGroup) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererFactory<T> provider) {
+    public static <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<T> provider) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static void registerModelLayer(EntityModelLayer location, Supplier<TexturedModelData> definition) {
+    public static void registerModelLayer(ModelLayerLocation location, Supplier<LayerDefinition> definition) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <T extends ParticleEffect> void registerParticleFactory(Supplier<ParticleType<T>> supplier, ParticleFactory<T> provider) {
+    public static <T extends ParticleOptions> void registerParticleFactory(Supplier<ParticleType<T>> supplier, ParticleProvider<T> provider) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <T> void writeRegistry(CommonRegistry<T> registry, T value, PacketByteBuf buf) {
+    public static <T> void writeRegistry(CommonRegistry<T> registry, T value, FriendlyByteBuf buf) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <T> T readRegistry(CommonRegistry<T> registry, Class<T> clazz, PacketByteBuf buf) {
+    public static <T> T readRegistry(CommonRegistry<T> registry, Class<T> clazz, FriendlyByteBuf buf) {
         throw new AssertionError();
     }
 }

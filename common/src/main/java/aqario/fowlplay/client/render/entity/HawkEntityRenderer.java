@@ -4,25 +4,25 @@ import aqario.fowlplay.client.render.entity.feature.BirdHeldItemFeatureRenderer;
 import aqario.fowlplay.client.render.entity.model.HawkEntityModel;
 import aqario.fowlplay.common.entity.HawkEntity;
 import aqario.fowlplay.core.FowlPlay;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
 
-public class HawkEntityRenderer extends MobEntityRenderer<HawkEntity, HawkEntityModel> {
-    private static final Identifier TEXTURE = FowlPlay.id("textures/entity/hawk/red_tailed_hawk.png");
+public class HawkEntityRenderer extends MobRenderer<HawkEntity, HawkEntityModel> {
+    private static final ResourceLocation TEXTURE = FowlPlay.id("textures/entity/hawk/red_tailed_hawk.png");
 
-    public HawkEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new HawkEntityModel(context.getPart(HawkEntityModel.MODEL_LAYER)), 0.3f);
-        this.addFeature(new BirdHeldItemFeatureRenderer<>(
+    public HawkEntityRenderer(EntityRendererProvider.Context context) {
+        super(context, new HawkEntityModel(context.bakeLayer(HawkEntityModel.MODEL_LAYER)), 0.3f);
+        this.addLayer(new BirdHeldItemFeatureRenderer<>(
             this,
-            context.getHeldItemRenderer(),
-            new Vec3d(0.0, -0.05375, -0.1475)
+            context.getItemInHandRenderer(),
+            new Vec3(0.0, -0.05375, -0.1475)
         ));
     }
 
     @Override
-    public Identifier getTexture(HawkEntity hawk) {
+    public ResourceLocation getTextureLocation(HawkEntity hawk) {
         return TEXTURE;
     }
 }

@@ -4,13 +4,13 @@ import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.util.MemoryList;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.brain.Brain;
-import net.minecraft.entity.ai.brain.MemoryModuleState;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.pathing.LandPathNodeMaker;
-import net.minecraft.entity.ai.pathing.PathNodeType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.MemoryStatus;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
 import net.tslat.smartbrainlib.util.BrainUtils;
 
@@ -21,7 +21,7 @@ public class TeleportToTarget extends ExtendedBehaviour<BirdEntity> {
         .present(FowlPlayMemoryModuleType.TELEPORT_TARGET.get());
 
     @Override
-    protected List<Pair<MemoryModuleType<?>, MemoryModuleState>> getMemoryRequirements() {
+    protected List<Pair<MemoryModuleType<?>, MemoryStatus>> getMemoryRequirements() {
         return MEMORIES;
     }
 
@@ -44,13 +44,13 @@ public class TeleportToTarget extends ExtendedBehaviour<BirdEntity> {
         }
         // noinspection ConstantConditions
         Entity target = BrainUtils.getMemory(brain, FowlPlayMemoryModuleType.TELEPORT_TARGET.get()).entity();
-        BlockPos pos = target.getBlockPos();
+        BlockPos pos = target.blockPosition();
 
         for(int i = 0; i < 10; i++) {
-            int j = entity.getRandom().nextBetween(-3, 3);
-            int k = entity.getRandom().nextBetween(-3, 3);
+            int j = entity.getRandom().nextIntBetweenInclusive(-3, 3);
+            int k = entity.getRandom().nextIntBetweenInclusive(-3, 3);
             if(Math.abs(j) >= 2 || Math.abs(k) >= 2) {
-                int l = entity.getRandom().nextBetween(-1, 1);
+                int l = entity.getRandom().nextIntBetweenInclusive(-1, 1);
                 if(this.tryTeleportTo(entity, pos.getX() + j, pos.getY() + l, pos.getZ() + k)) {
                     return true;
                 }
@@ -65,17 +65,17 @@ public class TeleportToTarget extends ExtendedBehaviour<BirdEntity> {
             return false;
         }
 
-        entity.refreshPositionAndAngles(x + 0.5, y, z + 0.5, entity.getYaw(), entity.getPitch());
+        entity.moveTo(x + 0.5, y, z + 0.5, entity.getYRot(), entity.getXRot());
         entity.getNavigation().stop();
         return true;
     }
 
     private boolean canTeleportTo(BirdEntity entity, BlockPos pos) {
-        PathNodeType pathNodeType = LandPathNodeMaker.getLandNodeType(entity.getWorld(), pos.mutableCopy());
-        if(pathNodeType != PathNodeType.WALKABLE) {
+        BlockPathTypes pathNodeType = WalkNodeEvaluator.getBlockPathTypeStatic(entity.level(), pos.mutable());
+        if(pathNodeType != BlockPathTypes.WALKABLE) {
             return false;
         }
-        BlockPos distance = pos.subtract(entity.getBlockPos());
-        return entity.getWorld().isSpaceEmpty(entity, entity.getBoundingBox().offset(distance));
+        BlockPos distance = pos.subtract(entity.blockPosition());
+        return entity.level().noCollision(entity, entity.getBoundingBox().move(distance));
     }
 }

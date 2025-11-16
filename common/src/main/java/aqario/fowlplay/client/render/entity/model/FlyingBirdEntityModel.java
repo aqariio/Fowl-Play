@@ -1,7 +1,7 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
-import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.model.geom.ModelPart;
 
 public abstract class FlyingBirdEntityModel<E extends FlyingBirdEntity> extends BirdEntityModel<E> {
     public final ModelPart leftWingOpen;
@@ -14,6 +14,6 @@ public abstract class FlyingBirdEntityModel<E extends FlyingBirdEntity> extends 
     }
 
     @Override
-    public void setAngles(E bird, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch) {
+    public void setupAnim(E bird, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch) {
     }
 }

@@ -6,18 +6,18 @@ import aqario.fowlplay.core.forge.FowlPlayBiomeModifiers;
 import aqario.fowlplay.core.platform.CustomSpawnGroup;
 import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
 import com.mojang.serialization.Codec;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.SpawnSettings;
+import net.minecraft.core.Holder;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.common.world.ModifiableBiomeInfo;
 
 public class AddBirdsBiomeModifier implements BiomeModifier {
     @Override
-    public void modify(RegistryEntry<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
+    public void modify(Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
         if(!phase.equals(Phase.ADD)) {
             return;
         }
@@ -107,7 +107,7 @@ public class AddBirdsBiomeModifier implements BiomeModifier {
             builder,
             biome,
             FowlPlayBiomeTags.SPAWNS_PENGUINS,
-            SpawnGroup.CREATURE,
+            MobCategory.CREATURE,
             FowlPlayEntityType.PENGUIN.get(),
             FowlPlayConfig.getInstance().penguinSpawnWeight,
             FowlPlayConfig.getInstance().penguinMinGroupSize,
@@ -173,15 +173,15 @@ public class AddBirdsBiomeModifier implements BiomeModifier {
         );
     }
 
-    private static void addSpawn(ModifiableBiomeInfo.BiomeInfo.Builder builder, RegistryEntry<Biome> biome, TagKey<Biome> tag, SpawnGroup spawnGroup, EntityType<?> entityType, int weight, int minGroupSize, int maxGroupSize) {
-        if(biome.isIn(tag)) {
-            builder.getMobSpawnSettings().spawn(spawnGroup, new SpawnSettings.SpawnEntry(entityType, weight, minGroupSize, maxGroupSize));
+    private static void addSpawn(ModifiableBiomeInfo.BiomeInfo.Builder builder, Holder<Biome> biome, TagKey<Biome> tag, MobCategory spawnGroup, EntityType<?> entityType, int weight, int minGroupSize, int maxGroupSize) {
+        if(biome.is(tag)) {
+            builder.getMobSpawnSettings().addSpawn(spawnGroup, new MobSpawnSettings.SpawnerData(entityType, weight, minGroupSize, maxGroupSize));
         }
     }
 
-    private static void setSpawnCost(ModifiableBiomeInfo.BiomeInfo.Builder builder, RegistryEntry<Biome> biome, TagKey<Biome> tag, EntityType<?> entityType, double gravityLimit, double mass) {
-        if(biome.isIn(tag)) {
-            builder.getMobSpawnSettings().spawnCost(entityType, gravityLimit, mass);
+    private static void setSpawnCost(ModifiableBiomeInfo.BiomeInfo.Builder builder, Holder<Biome> biome, TagKey<Biome> tag, EntityType<?> entityType, double gravityLimit, double mass) {
+        if(biome.is(tag)) {
+            builder.getMobSpawnSettings().addMobCharge(entityType, gravityLimit, mass);
         }
     }
 

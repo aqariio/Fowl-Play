@@ -2,11 +2,11 @@ package aqario.fowlplay.common.entity.ai.brain.sensor;
 
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.core.FowlPlaySensorType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.brain.LivingTargetCache;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
+import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.tslat.smartbrainlib.api.core.sensor.EntityFilteringSensor;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.util.BrainUtils;
@@ -24,7 +24,7 @@ public class AttackTargetSensor<E extends BirdEntity> extends EntityFilteringSen
 
     @Override
     public List<MemoryModuleType<?>> memoriesUsed() {
-        return List.of(this.getMemory(), MemoryModuleType.VISIBLE_MOBS);
+        return List.of(this.getMemory(), MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES);
     }
 
     @Override
@@ -44,13 +44,13 @@ public class AttackTargetSensor<E extends BirdEntity> extends EntityFilteringSen
 
     @Nullable
     @Override
-    protected LivingEntity findMatches(E entity, LivingTargetCache matcher) {
-        return matcher.findFirst(target -> predicate().test(target, entity)).orElse(null);
+    protected LivingEntity findMatches(E entity, NearestVisibleLivingEntities matcher) {
+        return matcher.findClosest(target -> predicate().test(target, entity)).orElse(null);
     }
 
     private static boolean canAttack(BirdEntity bird, LivingEntity target) {
         return SensoryUtils.isEntityAttackable(bird, target)
-            && EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(target);
+            && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target);
     }
 
     private static boolean canHunt(BirdEntity bird, LivingEntity target) {

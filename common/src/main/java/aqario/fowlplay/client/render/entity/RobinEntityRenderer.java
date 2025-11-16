@@ -4,23 +4,23 @@ import aqario.fowlplay.client.render.entity.feature.BirdHeldItemFeatureRenderer;
 import aqario.fowlplay.client.render.entity.model.RobinEntityModel;
 import aqario.fowlplay.common.entity.RobinEntity;
 import aqario.fowlplay.core.FowlPlay;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
 
-public class RobinEntityRenderer extends MobEntityRenderer<RobinEntity, RobinEntityModel> {
-    public RobinEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new RobinEntityModel(context.getPart(RobinEntityModel.MODEL_LAYER)), 0.15f);
-        this.addFeature(new BirdHeldItemFeatureRenderer<>(
+public class RobinEntityRenderer extends MobRenderer<RobinEntity, RobinEntityModel> {
+    public RobinEntityRenderer(EntityRendererProvider.Context context) {
+        super(context, new RobinEntityModel(context.bakeLayer(RobinEntityModel.MODEL_LAYER)), 0.15f);
+        this.addLayer(new BirdHeldItemFeatureRenderer<>(
             this,
-            context.getHeldItemRenderer(),
-            new Vec3d(0.0, -0.085, -0.1475)
+            context.getItemInHandRenderer(),
+            new Vec3(0.0, -0.085, -0.1475)
         ));
     }
 
     @Override
-    public Identifier getTexture(RobinEntity entity) {
+    public ResourceLocation getTextureLocation(RobinEntity entity) {
         return FowlPlay.id("textures/entity/robin/" + entity.getVariant().getId() + "_robin.png");
     }
 }

@@ -1,20 +1,20 @@
 package aqario.fowlplay.core.platform.fabric;
 
-import net.minecraft.entity.SpawnGroup;
+import net.minecraft.world.entity.MobCategory;
 
 public final class CustomSpawnGroupImpl {
     static {
-        SpawnGroup.values();
+        MobCategory.values();
     }
 
-    public static SpawnGroup AMBIENT_BIRDS;
-    public static SpawnGroup BIRDS;
+    public static MobCategory AMBIENT_BIRDS;
+    public static MobCategory BIRDS;
 
-    public static SpawnGroup ambientBirds() {
+    public static MobCategory ambientBirds() {
         return AMBIENT_BIRDS;
     }
 
-    public static SpawnGroup birds() {
+    public static MobCategory birds() {
         return BIRDS;
     }
 }

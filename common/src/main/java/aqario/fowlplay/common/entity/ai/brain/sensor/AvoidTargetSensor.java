@@ -4,12 +4,12 @@ import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import aqario.fowlplay.core.FowlPlaySensorType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.brain.LivingTargetCache;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Unit;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
+import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.tslat.smartbrainlib.api.core.sensor.EntityFilteringSensor;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.util.BrainUtils;
@@ -30,7 +30,7 @@ public class AvoidTargetSensor<E extends BirdEntity> extends EntityFilteringSens
 
     @Override
     public List<MemoryModuleType<?>> memoriesUsed() {
-        return List.of(this.getMemory(), MemoryModuleType.VISIBLE_MOBS, FowlPlayMemoryModuleType.IS_AVOIDING.get());
+        return List.of(this.getMemory(), MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES, FowlPlayMemoryModuleType.IS_AVOIDING.get());
     }
 
     @Override
@@ -44,12 +44,12 @@ public class AvoidTargetSensor<E extends BirdEntity> extends EntityFilteringSens
     }
 
     @Override
-    protected @Nullable LivingEntity findMatches(E bird, LivingTargetCache matcher) {
-        return matcher.findFirst(target -> this.predicate().test(target, bird)).orElse(null);
+    protected @Nullable LivingEntity findMatches(E bird, NearestVisibleLivingEntities matcher) {
+        return matcher.findClosest(target -> this.predicate().test(target, bird)).orElse(null);
     }
 
     @Override
-    protected void sense(ServerWorld level, E bird) {
+    protected void doTick(ServerLevel level, E bird) {
         LivingEntity avoidTarget = this.testForEntity(bird);
         if(avoidTarget != null) {
             BrainUtils.setMemory(bird, this.getMemory(), avoidTarget);
@@ -57,7 +57,7 @@ public class AvoidTargetSensor<E extends BirdEntity> extends EntityFilteringSens
         else {
             BrainUtils.clearMemory(bird, this.getMemory());
         }
-        if(avoidTarget != null && avoidTarget.isInRange(bird, bird.getFleeRange(avoidTarget))) {
+        if(avoidTarget != null && avoidTarget.closerThan(bird, bird.getFleeRange(avoidTarget))) {
             BrainUtils.setMemory(bird, FowlPlayMemoryModuleType.IS_AVOIDING.get(), Unit.INSTANCE);
         }
         else {

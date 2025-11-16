@@ -3,22 +3,22 @@ package aqario.fowlplay.datagen;
 import aqario.fowlplay.core.tags.FowlPlayBlockTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.block.Blocks;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.concurrent.CompletableFuture;
 
 public class FowlPlayBlockTagGen extends FabricTagProvider.BlockTagProvider {
-    private static final Identifier STONES = Identifier.of("c", "stones");
+    private static final ResourceLocation STONES = ResourceLocation.tryBuild("c", "stones");
 
-    public FowlPlayBlockTagGen(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+    public FowlPlayBlockTagGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
     @Override
-    protected void configure(RegistryWrapper.WrapperLookup lookup) {
+    protected void addTags(HolderLookup.Provider lookup) {
         this.getOrCreateTagBuilder(FowlPlayBlockTags.PENGUINS_SLIDE_ON)
             .addOptionalTag(BlockTags.ICE)
             .addOptionalTag(BlockTags.SNOW);

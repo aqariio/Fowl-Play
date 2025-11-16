@@ -3,27 +3,27 @@ package aqario.fowlplay.datagen;
 import aqario.fowlplay.core.FowlPlayEntityType;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.function.LootingEnchantLootFunction;
-import net.minecraft.loot.function.SetCountLootFunction;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.loot.provider.number.UniformLootNumberProvider;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.LootingEnchantFunction;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.util.function.BiConsumer;
 
 public class FowlPlayEntityLootTableGen extends SimpleFabricLootTableProvider {
     public FowlPlayEntityLootTableGen(FabricDataOutput output) {
-        super(output, LootContextTypes.ENTITY);
+        super(output, LootContextParamSets.ENTITY);
     }
 
     @Override
-    public void accept(BiConsumer<Identifier, LootTable.Builder> exporter) {
+    public void generate(BiConsumer<ResourceLocation, LootTable.Builder> exporter) {
         this.registerBird(exporter, FowlPlayEntityType.BLUE_JAY.get());
         this.registerBird(exporter, FowlPlayEntityType.CARDINAL.get());
         this.registerBird(exporter, FowlPlayEntityType.CHICKADEE.get());
@@ -39,25 +39,25 @@ public class FowlPlayEntityLootTableGen extends SimpleFabricLootTableProvider {
         this.registerBird(exporter, FowlPlayEntityType.SPARROW.get());
     }
 
-    private void registerBird(BiConsumer<Identifier, LootTable.Builder> exporter, EntityType<?> type) {
+    private void registerBird(BiConsumer<ResourceLocation, LootTable.Builder> exporter, EntityType<?> type) {
         this.register(
             exporter,
             type,
-            LootTable.builder()
-                .pool(
-                    LootPool.builder()
-                        .rolls(ConstantLootNumberProvider.create(1.0F))
-                        .with(
-                            ItemEntry.builder(Items.FEATHER)
-                                .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0F, 2.0F)))
-                                .apply(LootingEnchantLootFunction.builder(UniformLootNumberProvider.create(0.0F, 1.0F)))
+            LootTable.lootTable()
+                .withPool(
+                    LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(1.0F))
+                        .add(
+                            LootItem.lootTableItem(Items.FEATHER)
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F)))
+                                .apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F)))
                         )
                 )
-                .randomSequenceId(type.getLootTableId())
+                .setRandomSequence(type.getDefaultLootTable())
         );
     }
 
-    private void register(BiConsumer<Identifier, LootTable.Builder> exporter, EntityType<?> type, LootTable.Builder builder) {
-        exporter.accept(type.getLootTableId(), builder);
+    private void register(BiConsumer<ResourceLocation, LootTable.Builder> exporter, EntityType<?> type, LootTable.Builder builder) {
+        exporter.accept(type.getDefaultLootTable(), builder);
     }
 }

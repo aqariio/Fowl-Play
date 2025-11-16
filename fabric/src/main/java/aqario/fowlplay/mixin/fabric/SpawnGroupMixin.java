@@ -2,7 +2,7 @@ package aqario.fowlplay.mixin.fabric;
 
 import aqario.fowlplay.core.platform.CustomSpawnGroup;
 import aqario.fowlplay.core.platform.fabric.CustomSpawnGroupImpl;
-import net.minecraft.entity.SpawnGroup;
+import net.minecraft.world.entity.MobCategory;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,16 +16,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-@Mixin(SpawnGroup.class)
+@Mixin(MobCategory.class)
 public class SpawnGroupMixin {
     // Vanilla Spawn Groups array
     @Shadow
     @Mutable
     @Final
-    private static SpawnGroup[] field_6301;
+    private static MobCategory[] $VALUES;
 
     @Invoker("<init>")
-    public static SpawnGroup newSpawnGroup(
+    public static MobCategory newSpawnGroup(
         String enumname,
         int ordinal,
         String name,
@@ -42,15 +42,15 @@ public class SpawnGroupMixin {
         at = @At(
             value = "FIELD",
             opcode = Opcodes.PUTSTATIC,
-            target = "Lnet/minecraft/entity/SpawnGroup;field_6301:[Lnet/minecraft/entity/SpawnGroup;",
+            target = "Lnet/minecraft/world/entity/MobCategory;$VALUES:[Lnet/minecraft/world/entity/MobCategory;",
             shift = At.Shift.AFTER
         )
     )
     private static void fowlplay$addCustomGroups(CallbackInfo ci) {
-        ArrayList<SpawnGroup> spawnGroups = new ArrayList<>(Arrays.asList(field_6301));
+        ArrayList<MobCategory> spawnGroups = new ArrayList<>(Arrays.asList($VALUES));
         int vanillaLength = spawnGroups.get(spawnGroups.size() - 1).ordinal();
 
-        SpawnGroup glaresSpawnGroup = newSpawnGroup(
+        MobCategory glaresSpawnGroup = newSpawnGroup(
             CustomSpawnGroup.AMBIENT_BIRDS_INTERNAL_NAME,
             vanillaLength + 1,
             CustomSpawnGroup.AMBIENT_BIRDS_NAME,
@@ -62,7 +62,7 @@ public class SpawnGroupMixin {
         CustomSpawnGroupImpl.AMBIENT_BIRDS = glaresSpawnGroup;
         spawnGroups.add(glaresSpawnGroup);
 
-        SpawnGroup rascalsSpawnGroup = newSpawnGroup(
+        MobCategory rascalsSpawnGroup = newSpawnGroup(
             CustomSpawnGroup.BIRDS_INTERNAL_NAME,
             vanillaLength + 2,
             CustomSpawnGroup.BIRDS_NAME,
@@ -74,6 +74,6 @@ public class SpawnGroupMixin {
         CustomSpawnGroupImpl.BIRDS = rascalsSpawnGroup;
         spawnGroups.add(rascalsSpawnGroup);
 
-        field_6301 = spawnGroups.toArray(new SpawnGroup[0]);
+        $VALUES = spawnGroups.toArray(new MobCategory[0]);
     }
 }

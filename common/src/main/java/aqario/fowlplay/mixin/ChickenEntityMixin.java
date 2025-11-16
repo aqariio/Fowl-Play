@@ -4,16 +4,16 @@ import aqario.fowlplay.common.entity.ChickenVariant;
 import aqario.fowlplay.common.util.ChickenAnimationStates;
 import aqario.fowlplay.core.FowlPlayRegistries;
 import aqario.fowlplay.core.FowlPlayTrackedDataHandlerRegistry;
-import net.minecraft.entity.*;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.ChickenEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -21,11 +21,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = ChickenEntity.class, priority = 999)
-public abstract class ChickenEntityMixin extends AnimalEntity implements VariantHolder<ChickenVariant>, ChickenAnimationStates {
+@Mixin(value = Chicken.class, priority = 999)
+public abstract class ChickenEntityMixin extends Animal implements VariantHolder<ChickenVariant>, ChickenAnimationStates {
     @Unique
-    private static final TrackedData<ChickenVariant> fowlplay$VARIANT = DataTracker.registerData(
-        ChickenEntity.class,
+    private static final EntityDataAccessor<ChickenVariant> fowlplay$VARIANT = SynchedEntityData.defineId(
+        Chicken.class,
         FowlPlayTrackedDataHandlerRegistry.CHICKEN_VARIANT
     );
     @Unique
@@ -35,12 +35,12 @@ public abstract class ChickenEntityMixin extends AnimalEntity implements Variant
     @Unique
     private final AnimationState fowlplay$floatingState = new AnimationState();
 
-    protected ChickenEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
+    protected ChickenEntityMixin(EntityType<? extends Animal> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt) {
         switch(spawnReason) {
             case BREEDING -> this.setVariant(ChickenVariant.WHITE.get());
             case CHUNK_GENERATION -> this.setVariant(ChickenVariant.RED_JUNGLEFOWL.get());
@@ -48,44 +48,44 @@ public abstract class ChickenEntityMixin extends AnimalEntity implements Variant
                 .fowlplay$getRandom(world.getRandom())
                 .ifPresent(this::setVariant);
         }
-        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+        return super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
     @Override
     public ChickenVariant getVariant() {
-        return this.dataTracker.get(fowlplay$VARIANT);
+        return this.entityData.get(fowlplay$VARIANT);
     }
 
     @Override
     public void setVariant(ChickenVariant variant) {
-        this.dataTracker.set(fowlplay$VARIANT, variant);
+        this.entityData.set(fowlplay$VARIANT, variant);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(fowlplay$VARIANT, ChickenVariant.WHITE.get());
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(fowlplay$VARIANT, ChickenVariant.WHITE.get());
     }
 
-    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-    private void fowlplay$readCustomVariant(NbtCompound nbt, CallbackInfo ci) {
-        ChickenVariant variant = FowlPlayRegistries.CHICKEN_VARIANT.get().fowlplay$get(Identifier.tryParse(nbt.getString("variant")));
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    private void fowlplay$readCustomVariant(CompoundTag nbt, CallbackInfo ci) {
+        ChickenVariant variant = FowlPlayRegistries.CHICKEN_VARIANT.get().fowlplay$get(ResourceLocation.tryParse(nbt.getString("variant")));
         if(variant != null) {
             this.setVariant(variant);
         }
     }
 
-    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-    private void fowlplay$writeCustomVariant(NbtCompound nbt, CallbackInfo ci) {
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    private void fowlplay$writeCustomVariant(CompoundTag nbt, CallbackInfo ci) {
         nbt.putString("variant", FowlPlayRegistries.CHICKEN_VARIANT.get().fowlplay$getId(this.getVariant()).toString());
     }
 
     @Override
     public void tick() {
-        if(this.getWorld().isClient()) {
-            this.fowlplay$standingState.setRunning(this.isOnGround() && !this.isInsideWaterOrBubbleColumn(), this.age);
-            this.fowlplay$flappingState.setRunning(!this.isOnGround() && !this.isInsideWaterOrBubbleColumn(), this.age);
-            this.fowlplay$floatingState.setRunning(this.isInsideWaterOrBubbleColumn(), this.age);
+        if(this.level().isClientSide()) {
+            this.fowlplay$standingState.animateWhen(this.onGround() && !this.isInWaterOrBubble(), this.tickCount);
+            this.fowlplay$flappingState.animateWhen(!this.onGround() && !this.isInWaterOrBubble(), this.tickCount);
+            this.fowlplay$floatingState.animateWhen(this.isInWaterOrBubble(), this.tickCount);
         }
         super.tick();
     }

@@ -5,31 +5,31 @@ import aqario.fowlplay.client.render.entity.model.CustomBabyChickenEntityModel;
 import aqario.fowlplay.client.render.entity.model.CustomChickenEntityModel;
 import aqario.fowlplay.common.entity.ChickenVariant;
 import aqario.fowlplay.core.FowlPlay;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.VariantHolder;
-import net.minecraft.entity.passive.ChickenEntity;
-import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.VariantHolder;
+import net.minecraft.world.entity.animal.Chicken;
 
-public class CustomChickenEntityRenderer extends MobEntityRenderer<ChickenEntity, CustomChickenEntityModel> {
+public class CustomChickenEntityRenderer extends MobRenderer<Chicken, CustomChickenEntityModel> {
     private final AdultBabyModelPair<CustomChickenEntityModel> modelPair;
 
-    public CustomChickenEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new CustomChickenEntityModel(context.getPart(CustomChickenEntityModel.MODEL_LAYER)), 0.3f);
+    public CustomChickenEntityRenderer(EntityRendererProvider.Context context) {
+        super(context, new CustomChickenEntityModel(context.bakeLayer(CustomChickenEntityModel.MODEL_LAYER)), 0.3f);
         this.modelPair = bakeModels(context);
     }
 
-    private static AdultBabyModelPair<CustomChickenEntityModel> bakeModels(EntityRendererFactory.Context context) {
+    private static AdultBabyModelPair<CustomChickenEntityModel> bakeModels(EntityRendererProvider.Context context) {
         return AdultBabyModelPair.of(
-            new CustomChickenEntityModel(context.getPart(CustomChickenEntityModel.MODEL_LAYER)),
-            new CustomBabyChickenEntityModel(context.getPart(CustomBabyChickenEntityModel.MODEL_LAYER))
+            new CustomChickenEntityModel(context.bakeLayer(CustomChickenEntityModel.MODEL_LAYER)),
+            new CustomBabyChickenEntityModel(context.bakeLayer(CustomBabyChickenEntityModel.MODEL_LAYER))
         );
     }
 
     @Override
-    public void render(ChickenEntity chicken, float f, float g, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int i) {
+    public void render(Chicken chicken, float f, float g, PoseStack matrices, MultiBufferSource vertexConsumers, int i) {
         this.model = this.modelPair.getModel(chicken.isBaby());
         if(chicken.isBaby()) {
             matrices.scale(0.8F, 0.8F, 0.8F);
@@ -39,7 +39,7 @@ public class CustomChickenEntityRenderer extends MobEntityRenderer<ChickenEntity
 
     @SuppressWarnings("unchecked")
     @Override
-    public Identifier getTexture(ChickenEntity chicken) {
+    public ResourceLocation getTextureLocation(Chicken chicken) {
         return chicken.isBaby()
             ? FowlPlay.id("textures/entity/chicken/" + ((VariantHolder<ChickenVariant>) chicken).getVariant().id() + "_baby_chicken.png")
             : FowlPlay.id("textures/entity/chicken/" + ((VariantHolder<ChickenVariant>) chicken).getVariant().id() + "_chicken.png");

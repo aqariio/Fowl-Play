@@ -5,46 +5,46 @@ import aqario.fowlplay.client.render.entity.model.ScarecrowArmorEntityModel;
 import aqario.fowlplay.client.render.entity.model.ScarecrowEntityModel;
 import aqario.fowlplay.common.entity.ScarecrowEntity;
 import aqario.fowlplay.core.FowlPlay;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.render.entity.feature.ArmorFeatureRenderer;
-import net.minecraft.client.render.entity.feature.ElytraFeatureRenderer;
-import net.minecraft.client.render.entity.feature.HeadFeatureRenderer;
-import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
+import net.minecraft.client.renderer.entity.layers.ElytraLayer;
+import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
+import net.minecraft.resources.ResourceLocation;
 
 public class ScarecrowEntityRenderer extends LivingEntityRenderer<ScarecrowEntity, ScarecrowEntityModel> {
-    public static final Identifier TEXTURE = FowlPlay.id("textures/entity/scarecrow/scarecrow.png");
+    public static final ResourceLocation TEXTURE = FowlPlay.id("textures/entity/scarecrow/scarecrow.png");
 
-    public ScarecrowEntityRenderer(EntityRendererFactory.Context ctx) {
-        super(ctx, new ScarecrowEntityModel(ctx.getPart(ScarecrowEntityModel.MODEL_LAYER)), 0.0F);
-        this.addFeature(
-            new ArmorFeatureRenderer<>(
+    public ScarecrowEntityRenderer(EntityRendererProvider.Context ctx) {
+        super(ctx, new ScarecrowEntityModel(ctx.bakeLayer(ScarecrowEntityModel.MODEL_LAYER)), 0.0F);
+        this.addLayer(
+            new HumanoidArmorLayer<>(
                 this,
-                new ScarecrowArmorEntityModel(ctx.getPart(ScarecrowEntityModel.INNER_ARMOR)),
-                new ScarecrowArmorEntityModel(ctx.getPart(ScarecrowEntityModel.OUTER_ARMOR)),
+                new ScarecrowArmorEntityModel(ctx.bakeLayer(ScarecrowEntityModel.INNER_ARMOR)),
+                new ScarecrowArmorEntityModel(ctx.bakeLayer(ScarecrowEntityModel.OUTER_ARMOR)),
                 ctx.getModelManager()
             )
         );
-        this.addFeature(new StuckArrowsFeatureRenderer<>(ctx, this));
-        this.addFeature(new HeldItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
-        this.addFeature(new ElytraFeatureRenderer<>(this, ctx.getModelLoader()));
-        this.addFeature(new HeadFeatureRenderer<>(this, ctx.getModelLoader(), ctx.getHeldItemRenderer()));
+        this.addLayer(new StuckArrowsFeatureRenderer<>(ctx, this));
+        this.addLayer(new ItemInHandLayer<>(this, ctx.getItemInHandRenderer()));
+        this.addLayer(new ElytraLayer<>(this, ctx.getModelSet()));
+        this.addLayer(new CustomHeadLayer<>(this, ctx.getModelSet(), ctx.getItemInHandRenderer()));
     }
 
     @Override
-    protected void scale(ScarecrowEntity entity, MatrixStack matrices, float amount) {
+    protected void scale(ScarecrowEntity entity, PoseStack matrices, float amount) {
         matrices.scale(0.9375F, 0.9375F, 0.9375F);
     }
 
     @Override
-    protected boolean hasLabel(ScarecrowEntity livingEntity) {
+    protected boolean shouldShowName(ScarecrowEntity livingEntity) {
         return false;
     }
 
     @Override
-    public Identifier getTexture(ScarecrowEntity entity) {
+    public ResourceLocation getTextureLocation(ScarecrowEntity entity) {
         return TEXTURE;
     }
 }

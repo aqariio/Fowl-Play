@@ -5,10 +5,10 @@ import aqario.fowlplay.common.entity.ai.pathing.BirdTargeting;
 import aqario.fowlplay.common.util.CylindricalRadius;
 import aqario.fowlplay.common.util.MemoryList;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.entity.ai.brain.MemoryModuleState;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.WalkTarget;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.MemoryStatus;
+import net.minecraft.world.entity.ai.memory.WalkTarget;
+import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +21,7 @@ public class SetNonAirWalkTarget<E extends BirdEntity> extends SpeedModifiableBe
         .absent(MemoryModuleType.WALK_TARGET);
     protected Predicate<E> avoidWaterPredicate = entity -> true;
     protected CylindricalRadius radius = new CylindricalRadius(32, 16);
-    protected BiPredicate<E, Vec3d> positionPredicate = (entity, pos) -> true;
+    protected BiPredicate<E, Vec3> positionPredicate = (entity, pos) -> true;
 
     public SetNonAirWalkTarget<E> setRadius(int radius) {
         return this.setRadius(radius, radius);
@@ -33,7 +33,7 @@ public class SetNonAirWalkTarget<E extends BirdEntity> extends SpeedModifiableBe
         return this;
     }
 
-    public SetNonAirWalkTarget<E> walkTargetPredicate(BiPredicate<E, Vec3d> predicate) {
+    public SetNonAirWalkTarget<E> walkTargetPredicate(BiPredicate<E, Vec3> predicate) {
         this.positionPredicate = predicate;
 
         return this;
@@ -50,13 +50,13 @@ public class SetNonAirWalkTarget<E extends BirdEntity> extends SpeedModifiableBe
     }
 
     @Override
-    protected List<Pair<MemoryModuleType<?>, MemoryModuleState>> getMemoryRequirements() {
+    protected List<Pair<MemoryModuleType<?>, MemoryStatus>> getMemoryRequirements() {
         return MEMORIES;
     }
 
     @Override
     protected void start(E entity) {
-        Vec3d targetPos = this.getTargetPos(entity);
+        Vec3 targetPos = this.getTargetPos(entity);
 
         if(!this.positionPredicate.test(entity, targetPos)) {
             targetPos = null;
@@ -71,7 +71,7 @@ public class SetNonAirWalkTarget<E extends BirdEntity> extends SpeedModifiableBe
     }
 
     @Nullable
-    protected Vec3d getTargetPos(E entity) {
+    protected Vec3 getTargetPos(E entity) {
         if(this.avoidWaterPredicate.test(entity)) {
             return BirdTargeting.findGround(entity, this.radius);
         }

@@ -3,7 +3,7 @@ package aqario.fowlplay.core.tags;
 import aqario.fowlplay.common.entity.GooseVariant;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistryKeys;
-import net.minecraft.registry.tag.TagKey;
+import net.minecraft.tags.TagKey;
 
 public class FowlPlayVariantTags {
     public static class Goose {
@@ -11,7 +11,7 @@ public class FowlPlayVariantTags {
         public static final TagKey<GooseVariant> DOMESTIC = create("domestic");
 
         private static TagKey<GooseVariant> create(String id) {
-            return TagKey.of(FowlPlayRegistryKeys.GOOSE_VARIANT, FowlPlay.id(id));
+            return TagKey.create(FowlPlayRegistryKeys.GOOSE_VARIANT, FowlPlay.id(id));
         }
     }
 }

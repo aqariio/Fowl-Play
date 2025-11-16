@@ -4,9 +4,9 @@ import aqario.fowlplay.common.entity.PigeonEntity;
 import aqario.fowlplay.core.FowlPlayMemoryModuleType;
 import aqario.fowlplay.core.FowlPlaySensorType;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.PredicateSensor;
 import net.tslat.smartbrainlib.util.BrainUtils;
@@ -23,7 +23,7 @@ public class PigeonSpecificSensor extends PredicateSensor<UUID, PigeonEntity> {
         super(
             (uuid, pigeon) -> pigeon.isTamed()
                 && pigeon.getRecipientUuid() != null
-                && pigeon.getWorld().getPlayerByUuid(pigeon.getRecipientUuid()) != null
+                && pigeon.level().getPlayerByUUID(pigeon.getRecipientUuid()) != null
         );
     }
 
@@ -38,7 +38,7 @@ public class PigeonSpecificSensor extends PredicateSensor<UUID, PigeonEntity> {
     }
 
     @Override
-    protected void sense(ServerWorld world, PigeonEntity pigeon) {
+    protected void doTick(ServerLevel world, PigeonEntity pigeon) {
         if (this.predicate().test(null, pigeon)) {
             BrainUtils.setMemory(pigeon, FowlPlayMemoryModuleType.RECIPIENT.get(), pigeon.getRecipientUuid());
         }

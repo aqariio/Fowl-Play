@@ -2,9 +2,9 @@ package aqario.fowlplay.common.entity.ai.control;
 
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.util.Birds;
-import net.minecraft.entity.ai.control.MoveControl;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.MoveControl;
 
 public class BirdAquaticMoveControl extends BirdMoveControl {
     private static final float field_40123 = 10.0F;
@@ -25,7 +25,7 @@ public class BirdAquaticMoveControl extends BirdMoveControl {
 
     @Override
     public void tick() {
-        if(this.bird.isInsideWaterOrBubbleColumn() && !this.bird.isBaby()) {
+        if(this.bird.isInWaterOrBubble() && !this.bird.isBaby()) {
             this.tickSwimming();
         }
         else {
@@ -34,54 +34,54 @@ public class BirdAquaticMoveControl extends BirdMoveControl {
     }
 
     private void tickSwimming() {
-        if(this.buoyant && this.entity.isTouchingWater()) {
-            this.entity.setVelocity(this.entity.getVelocity().add(0.0, 0.005, 0.0));
+        if(this.buoyant && this.mob.isInWater()) {
+            this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(0.0, 0.005, 0.0));
         }
 
-        if(this.state == MoveControl.State.MOVE_TO && !this.entity.getNavigation().isIdle()) {
-            double d = this.targetX - this.entity.getX();
-            double e = this.targetY - this.entity.getY();
-            double f = this.targetZ - this.entity.getZ();
+        if(this.operation == MoveControl.Operation.MOVE_TO && !this.mob.getNavigation().isDone()) {
+            double d = this.wantedX - this.mob.getX();
+            double e = this.wantedY - this.mob.getY();
+            double f = this.wantedZ - this.mob.getZ();
             double g = d * d + e * e + f * f;
             if(g < 2.5000003E-7F) {
-                this.entity.setForwardSpeed(0.0F);
+                this.mob.setZza(0.0F);
             }
             else {
-                float h = (float) (MathHelper.atan2(f, d) * 180.0F / (float) Math.PI) - 90.0F;
-                this.entity.setYaw(this.wrapDegrees(this.entity.getYaw(), h, this.yawChange));
-                this.entity.bodyYaw = this.entity.getYaw();
-                this.entity.headYaw = this.entity.getYaw();
-                float speed = (float) (/*this.speed * */this.entity.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED) * Birds.SWIM_SPEED);
-                if(this.entity.isTouchingWater()) {
-                    this.entity.setMovementSpeed(speed * this.speedInWater);
+                float h = (float) (Mth.atan2(f, d) * 180.0F / (float) Math.PI) - 90.0F;
+                this.mob.setYRot(this.rotlerp(this.mob.getYRot(), h, this.yawChange));
+                this.mob.yBodyRot = this.mob.getYRot();
+                this.mob.yHeadRot = this.mob.getYRot();
+                float speed = (float) (/*this.speed * */this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED) * Birds.SWIM_SPEED);
+                if(this.mob.isInWater()) {
+                    this.mob.setSpeed(speed * this.speedInWater);
                     double j = Math.sqrt(d * d + f * f);
                     if(Math.abs(e) > 1.0E-5F || Math.abs(j) > 1.0E-5F) {
-                        float k = -((float) (MathHelper.atan2(e, j) * 180.0F / (float) Math.PI));
-                        k = MathHelper.clamp(MathHelper.wrapDegrees(k), (float) (-this.pitchChange), (float) this.pitchChange);
-                        this.entity.setPitch(this.wrapDegrees(this.entity.getPitch(), k, 5.0F));
+                        float k = -((float) (Mth.atan2(e, j) * 180.0F / (float) Math.PI));
+                        k = Mth.clamp(Mth.wrapDegrees(k), (float) (-this.pitchChange), (float) this.pitchChange);
+                        this.mob.setXRot(this.rotlerp(this.mob.getXRot(), k, 5.0F));
                     }
 
-                    float k = MathHelper.cos(this.entity.getPitch() * (float) (Math.PI / 180.0));
-                    float l = MathHelper.sin(this.entity.getPitch() * (float) (Math.PI / 180.0));
-                    this.entity.forwardSpeed = k * speed;
-                    this.entity.upwardSpeed = -l * speed;
+                    float k = Mth.cos(this.mob.getXRot() * (float) (Math.PI / 180.0));
+                    float l = Mth.sin(this.mob.getXRot() * (float) (Math.PI / 180.0));
+                    this.mob.zza = k * speed;
+                    this.mob.yya = -l * speed;
                 }
                 else {
-                    float m = Math.abs(MathHelper.wrapDegrees(this.entity.getYaw() - h));
+                    float m = Math.abs(Mth.wrapDegrees(this.mob.getYRot() - h));
                     float n = method_45335(m);
-                    this.entity.setMovementSpeed(speed * this.speedInAir * n);
+                    this.mob.setSpeed(speed * this.speedInAir * n);
                 }
             }
         }
         else {
-            this.entity.setMovementSpeed(0.0F);
-            this.entity.setSidewaysSpeed(0.0F);
-            this.entity.setUpwardSpeed(0.0F);
-            this.entity.setForwardSpeed(0.0F);
+            this.mob.setSpeed(0.0F);
+            this.mob.setXxa(0.0F);
+            this.mob.setYya(0.0F);
+            this.mob.setZza(0.0F);
         }
     }
 
     private static float method_45335(float f) {
-        return 1.0F - MathHelper.clamp((f - field_40123) / 50.0F, 0.0F, 1.0F);
+        return 1.0F - Mth.clamp((f - field_40123) / 50.0F, 0.0F, 1.0F);
     }
 }

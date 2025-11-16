@@ -3,73 +3,75 @@ package aqario.fowlplay.client.render.entity.model;
 import aqario.fowlplay.client.render.entity.animation.PigeonAnimations;
 import aqario.fowlplay.common.entity.PigeonEntity;
 import aqario.fowlplay.core.FowlPlay;
-import net.minecraft.client.model.*;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.util.Mth;
 
 public class PigeonEntityModel extends FlyingBirdEntityModel<PigeonEntity> {
-    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(FowlPlay.id("pigeon"), "main");
+    public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("pigeon"), "main");
 
     public PigeonEntityModel(ModelPart root) {
         super(root);
     }
 
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
-        ModelPartData root = modelPartData.addChild("root", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 21.0F, -1.0F));
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
+        PartDefinition root = modelPartData.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 21.0F, -1.0F));
 
-        ModelPartData body = root.addChild("body", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.25F, 1.0F));
+        PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 0.25F, 1.0F));
 
-        ModelPartData neck = body.addChild("neck", ModelPartBuilder.create().uv(0, 14).cuboid(-1.0F, -3.0F, -1.0F, 2.0F, 3.0F, 2.0F, new Dilation(-0.001F)), ModelTransform.pivot(0.0F, -1.75F, -2.5F));
+        PartDefinition neck = body.addOrReplaceChild("neck", CubeListBuilder.create().texOffs(0, 14).addBox(-1.0F, -3.0F, -1.0F, 2.0F, 3.0F, 2.0F, new CubeDeformation(-0.001F)), PartPose.offset(0.0F, -1.75F, -2.5F));
 
-        ModelPartData head = neck.addChild("head", ModelPartBuilder.create().uv(0, 9).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 3.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -3.0F, 0.0F));
+        PartDefinition head = neck.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 9).addBox(-1.0F, -2.0F, -1.0F, 2.0F, 3.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -3.0F, 0.0F));
 
-        head.addChild("beak", ModelPartBuilder.create().uv(0, 0).cuboid(-0.5F, -0.5F, -1.5F, 1.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -0.5F, -1.0F));
+        head.addOrReplaceChild("beak", CubeListBuilder.create().texOffs(0, 0).addBox(-0.5F, -0.5F, -1.5F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -0.5F, -1.0F));
 
-        body.addChild("torso", ModelPartBuilder.create().uv(0, 0).cuboid(-1.5F, -2.0F, -4.0F, 3.0F, 3.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -0.25F, 0.0F, -0.6109F, 0.0F, 0.0F));
+        body.addOrReplaceChild("torso", CubeListBuilder.create().texOffs(0, 0).addBox(-1.5F, -2.0F, -4.0F, 3.0F, 3.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -0.25F, 0.0F, -0.6109F, 0.0F, 0.0F));
 
-        body.addChild("left_wing", ModelPartBuilder.create().uv(9, 0).cuboid(-1.5F, -1.0F, -0.5F, 2.0F, 3.0F, 9.0F, new Dilation(0.0F)), ModelTransform.of(1.5F, -3.0F, -2.0F, -0.4363F, 0.0F, 0.0F));
+        body.addOrReplaceChild("left_wing", CubeListBuilder.create().texOffs(9, 0).addBox(-1.5F, -1.0F, -0.5F, 2.0F, 3.0F, 9.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.5F, -3.0F, -2.0F, -0.4363F, 0.0F, 0.0F));
 
-        body.addChild("right_wing", ModelPartBuilder.create().uv(9, 0).mirrored().cuboid(-0.5F, -1.0F, -0.5F, 2.0F, 3.0F, 9.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(-1.5F, -3.0F, -2.0F, -0.4363F, 0.0F, 0.0F));
+        body.addOrReplaceChild("right_wing", CubeListBuilder.create().texOffs(9, 0).mirror().addBox(-0.5F, -1.0F, -0.5F, 2.0F, 3.0F, 9.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(-1.5F, -3.0F, -2.0F, -0.4363F, 0.0F, 0.0F));
 
-        ModelPartData left_wing_open = body.addChild("left_wing_open", ModelPartBuilder.create().uv(8, 12).cuboid(-0.5F, 0.0F, -1.0F, 6.0F, 1.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(1.0F, -3.25F, -1.0F, -0.6109F, 0.0F, 0.0F));
+        PartDefinition left_wing_open = body.addOrReplaceChild("left_wing_open", CubeListBuilder.create().texOffs(8, 12).addBox(-0.5F, 0.0F, -1.0F, 6.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.0F, -3.25F, -1.0F, -0.6109F, 0.0F, 0.0F));
 
-        left_wing_open.addChild("left_wing_outer", ModelPartBuilder.create().uv(2, 19).cuboid(0.0F, 0.0F, 0.0F, 6.0F, 0.0F, 6.0F, new Dilation(0.0F)), ModelTransform.pivot(5.5F, 0.0F, -1.0F));
+        left_wing_open.addOrReplaceChild("left_wing_outer", CubeListBuilder.create().texOffs(2, 19).addBox(0.0F, 0.0F, 0.0F, 6.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(5.5F, 0.0F, -1.0F));
 
-        ModelPartData right_wing_open = body.addChild("right_wing_open", ModelPartBuilder.create().uv(8, 12).mirrored().cuboid(-5.5F, 0.0F, -1.0F, 6.0F, 1.0F, 6.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(-1.0F, -3.25F, -1.0F, -0.6109F, 0.0F, 0.0F));
+        PartDefinition right_wing_open = body.addOrReplaceChild("right_wing_open", CubeListBuilder.create().texOffs(8, 12).mirror().addBox(-5.5F, 0.0F, -1.0F, 6.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(-1.0F, -3.25F, -1.0F, -0.6109F, 0.0F, 0.0F));
 
-        right_wing_open.addChild("right_wing_outer", ModelPartBuilder.create().uv(2, 19).mirrored().cuboid(-6.0F, 0.0F, 0.0F, 6.0F, 0.0F, 6.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.pivot(-5.5F, 0.0F, -1.0F));
+        right_wing_open.addOrReplaceChild("right_wing_outer", CubeListBuilder.create().texOffs(2, 19).mirror().addBox(-6.0F, 0.0F, 0.0F, 6.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-5.5F, 0.0F, -1.0F));
 
-        ModelPartData tail = body.addChild("tail", ModelPartBuilder.create().uv(22, 0).cuboid(-1.0F, -1.0F, 1.0F, 2.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -0.25F, 1.0F, -0.5236F, 0.0F, 0.0F));
+        PartDefinition tail = body.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(22, 0).addBox(-1.0F, -1.0F, 1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -0.25F, 1.0F, -0.5236F, 0.0F, 0.0F));
 
-        tail.addChild("cube_r1", ModelPartBuilder.create().uv(7, 0).cuboid(-1.0F, 0.0F, 0.0F, 2.0F, 0.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(-0.25F, -1.0F, 1.0F, 0.0F, -0.2182F, 0.0F));
+        tail.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(7, 0).addBox(-1.0F, 0.0F, 0.0F, 2.0F, 0.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.25F, -1.0F, 1.0F, 0.0F, -0.2182F, 0.0F));
 
-        tail.addChild("cube_r2", ModelPartBuilder.create().uv(7, 0).mirrored().cuboid(-1.0F, 0.0F, 0.0F, 2.0F, 0.0F, 5.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(0.25F, -1.0F, 1.0F, 0.0F, 0.2182F, 0.0F));
+        tail.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(7, 0).mirror().addBox(-1.0F, 0.0F, 0.0F, 2.0F, 0.0F, 5.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.25F, -1.0F, 1.0F, 0.0F, 0.2182F, 0.0F));
 
-        ModelPartData left_leg = root.addChild("left_leg", ModelPartBuilder.create().uv(16, 3).cuboid(-0.5F, -0.5F, 0.0F, 1.0F, 3.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(1.0F, 0.5F, 1.0F, -0.2618F, 0.0F, 0.0F));
+        PartDefinition left_leg = root.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(16, 3).addBox(-0.5F, -0.5F, 0.0F, 1.0F, 3.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.0F, 0.5F, 1.0F, -0.2618F, 0.0F, 0.0F));
 
-        left_leg.addChild("cube_r3", ModelPartBuilder.create().uv(15, 2).cuboid(-0.5F, 0.0F, -1.0F, 1.0F, 0.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 2.5F, 0.0F, 0.2618F, 0.0F, 0.0F));
+        left_leg.addOrReplaceChild("cube_r3", CubeListBuilder.create().texOffs(15, 2).addBox(-0.5F, 0.0F, -1.0F, 1.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 2.5F, 0.0F, 0.2618F, 0.0F, 0.0F));
 
-        ModelPartData right_leg = root.addChild("right_leg", ModelPartBuilder.create().uv(16, 3).cuboid(-0.5F, -0.5F, 0.0F, 1.0F, 3.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(-1.0F, 0.5F, 1.0F, -0.2618F, 0.0F, 0.0F));
+        PartDefinition right_leg = root.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(16, 3).addBox(-0.5F, -0.5F, 0.0F, 1.0F, 3.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.0F, 0.5F, 1.0F, -0.2618F, 0.0F, 0.0F));
 
-        right_leg.addChild("cube_r4", ModelPartBuilder.create().uv(15, 2).cuboid(-0.5F, 0.0F, -1.0F, 1.0F, 0.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 2.5F, 0.0F, 0.2618F, 0.0F, 0.0F));
+        right_leg.addOrReplaceChild("cube_r4", CubeListBuilder.create().texOffs(15, 2).addBox(-0.5F, 0.0F, -1.0F, 1.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 2.5F, 0.0F, 0.2618F, 0.0F, 0.0F));
 
-        return TexturedModelData.of(modelData, 32, 32);
+        return LayerDefinition.create(modelData, 32, 32);
     }
 
     @Override
-    public void animateModel(PigeonEntity pigeon, float limbAngle, float limbDistance, float tickDelta) {
-        this.getPart().traverse().forEach(ModelPart::resetTransform);
-        super.animateModel(pigeon, limbAngle, limbDistance, tickDelta);
-        float ageInTicks = pigeon.age + tickDelta;
-        float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, pigeon.prevBodyYaw, pigeon.bodyYaw);
-        float headYaw = MathHelper.lerpAngleDegrees(tickDelta, pigeon.prevHeadYaw, pigeon.headYaw);
-        float relativeHeadYaw = MathHelper.wrapDegrees(headYaw - bodyYaw);
+    public void prepareMobModel(PigeonEntity pigeon, float limbAngle, float limbDistance, float tickDelta) {
+        this.root().getAllParts().forEach(ModelPart::resetPose);
+        super.prepareMobModel(pigeon, limbAngle, limbDistance, tickDelta);
+        float ageInTicks = pigeon.tickCount + tickDelta;
+        float bodyYaw = Mth.rotLerp(tickDelta, pigeon.yBodyRotO, pigeon.yBodyRot);
+        float headYaw = Mth.rotLerp(tickDelta, pigeon.yHeadRotO, pigeon.yHeadRot);
+        float relativeHeadYaw = Mth.wrapDegrees(headYaw - bodyYaw);
 
-        float headPitch = MathHelper.lerp(tickDelta, pigeon.prevPitch, pigeon.getPitch());
-        if (LivingEntityRenderer.shouldFlipUpsideDown(pigeon)) {
+        float headPitch = Mth.lerp(tickDelta, pigeon.xRotO, pigeon.getXRot());
+        if (LivingEntityRenderer.isEntityUpsideDown(pigeon)) {
             headPitch *= -1.0F;
             relativeHeadYaw *= -1.0F;
         }
@@ -77,8 +79,8 @@ public class PigeonEntityModel extends FlyingBirdEntityModel<PigeonEntity> {
             this.updateHeadRotation(relativeHeadYaw, headPitch);
         }
         if (pigeon.isFlying()) {
-            this.root.pitch = pigeon.getPitch(tickDelta) * (float) (Math.PI / 180.0);
-            this.root.roll = pigeon.getRoll(tickDelta) * (float) (Math.PI / 180.0);
+            this.root.xRot = pigeon.getViewXRot(tickDelta) * (float) (Math.PI / 180.0);
+            this.root.zRot = pigeon.getRoll(tickDelta) * (float) (Math.PI / 180.0);
         }
         if (pigeon.isFlying()) {
             this.leftWingOpen.visible = true;
@@ -92,20 +94,20 @@ public class PigeonEntityModel extends FlyingBirdEntityModel<PigeonEntity> {
             this.leftWing.visible = true;
             this.rightWing.visible = true;
         }
-        if (!pigeon.isFlying() && !pigeon.isInsideWaterOrBubbleColumn() && !pigeon.isInSittingPose()) {
-            this.animateMovement(PigeonAnimations.WALKING, limbAngle, limbDistance, 5F, 5F);
+        if (!pigeon.isFlying() && !pigeon.isInWaterOrBubble() && !pigeon.isInSittingPose()) {
+            this.animateWalk(PigeonAnimations.WALKING, limbAngle, limbDistance, 5F, 5F);
         }
-        this.updateAnimation(pigeon.standingState, PigeonAnimations.STANDING, ageInTicks);
-        this.updateAnimation(pigeon.floatingState, PigeonAnimations.FLOATING, ageInTicks);
-        this.updateAnimation(pigeon.glidingState, PigeonAnimations.GLIDING, ageInTicks);
-        this.updateAnimation(pigeon.flappingState, PigeonAnimations.FLAPPING, ageInTicks);
-        this.updateAnimation(pigeon.sittingState, PigeonAnimations.SITTING, ageInTicks);
+        this.animate(pigeon.standingState, PigeonAnimations.STANDING, ageInTicks);
+        this.animate(pigeon.floatingState, PigeonAnimations.FLOATING, ageInTicks);
+        this.animate(pigeon.glidingState, PigeonAnimations.GLIDING, ageInTicks);
+        this.animate(pigeon.flappingState, PigeonAnimations.FLAPPING, ageInTicks);
+        this.animate(pigeon.sittingState, PigeonAnimations.SITTING, ageInTicks);
     }
 
     private void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = MathHelper.clamp(headYaw, -135.0F, 135.0F);
-        headPitch = MathHelper.clamp(headPitch, -25.0F, 45.0F);
-        this.neck.yaw = headYaw * (float) (Math.PI / 180.0);
-        this.neck.pitch = headPitch * (float) (Math.PI / 180.0);
+        headYaw = Mth.clamp(headYaw, -135.0F, 135.0F);
+        headPitch = Mth.clamp(headPitch, -25.0F, 45.0F);
+        this.neck.yRot = headYaw * (float) (Math.PI / 180.0);
+        this.neck.xRot = headPitch * (float) (Math.PI / 180.0);
     }
 }

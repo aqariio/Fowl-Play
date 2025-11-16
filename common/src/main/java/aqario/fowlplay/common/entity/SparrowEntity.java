@@ -13,15 +13,14 @@ import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.brain.Brain;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
@@ -49,18 +48,18 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     private static final int FLAP_DURATION = 8;
     private int flapTime = 0;
 
-    public SparrowEntity(EntityType<? extends SparrowEntity> entityType, World world) {
+    public SparrowEntity(EntityType<? extends SparrowEntity> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+    protected float getStandingEyeHeight(Pose pose, EntityDimensions dimensions) {
         return 0.4f;
     }
 
     @Nullable
     @Override
-    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
         return null;
     }
 
@@ -71,12 +70,12 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
 
     @Override
     public Ingredient getFood() {
-        return Ingredient.fromTag(FowlPlayItemTags.SPARROW_FOOD);
+        return Ingredient.of(FowlPlayItemTags.SPARROW_FOOD);
     }
 
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
-        return entity.getType().isIn(FowlPlayEntityTypeTags.SPARROW_AVOIDS);
+        return entity.getType().is(FowlPlayEntityTypeTags.SPARROW_AVOIDS);
     }
 
     @Override
@@ -90,31 +89,31 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     private boolean isMoving() {
-        return this.limbAnimator.isLimbMoving();
+        return this.walkAnimation.isMoving();
     }
 
     @Override
     protected void updateAnimations() {
         // on land
-        if(!this.isFlying() && !this.isInsideWaterOrBubbleColumn()) {
+        if(!this.isFlying() && !this.isInWaterOrBubble()) {
             if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {
                 this.resetIdleAnimationDelay();
                 this.standingState.stop();
                 this.preeningState.stop();
                 this.scratchingState.stop();
                 if(this.getRandom().nextFloat() < 0.75f) {
-                    this.preeningState.start(this.age);
+                    this.preeningState.start(this.tickCount);
                 }
                 else {
-                    this.scratchingState.start(this.age);
+                    this.scratchingState.start(this.tickCount);
                 }
             }
             else if(this.isMoving()) {
                 this.preeningState.stop();
                 this.scratchingState.stop();
             }
-            if(!(this.preeningState.isRunning() || this.scratchingState.isRunning())) {
-                this.standingState.startIfNotRunning(this.age);
+            if(!(this.preeningState.isStarted() || this.scratchingState.isStarted())) {
+                this.standingState.startIfStopped(this.tickCount);
             }
             else {
                 this.standingState.stop();
@@ -134,13 +133,13 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
             else if(this.flapTime >= 0 && this.flapTime < FLAP_DURATION) {
                 this.flapTime++;
                 this.glidingState.stop();
-                this.flappingState.startIfNotRunning(this.age);
+                this.flappingState.startIfStopped(this.tickCount);
             }
             else {
                 this.timeSinceLastFlap++;
                 this.flapTime = 0;
                 this.flappingState.stop();
-                this.glidingState.startIfNotRunning(this.age);
+                this.glidingState.startIfStopped(this.tickCount);
             }
         }
         else {
@@ -150,7 +149,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
             this.glidingState.stop();
         }
         // in water
-        this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
+        this.floatingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
     }
 
     @Override
@@ -159,7 +158,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    protected boolean isFlappingWings() {
+    protected boolean isFlapping() {
         return this.isFlying() && this.flapTime >= 0 && this.flapTime < FLAP_DURATION;
     }
 
@@ -179,8 +178,8 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    public Vec3d getLeashOffset() {
-        return new Vec3d(0.0, 0.5f * this.getStandingEyeHeight(), this.getWidth() * 0.4f);
+    public Vec3 getLeashOffset() {
+        return new Vec3(0.0, 0.5f * this.getEyeHeight(), this.getBbWidth() * 0.4f);
     }
 
     @Nullable
@@ -222,7 +221,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    protected Brain.Profile<SparrowEntity> createBrainProfile() {
+    protected Brain.Provider<SparrowEntity> brainProvider() {
         return new SmartBrainProvider<>(this);
     }
 
@@ -246,7 +245,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
             FlightBehaviours.stopFalling(),
             SetEntityLookTarget.create(Birds::isPlayerHoldingFood),
             new LookAtTarget<>()
-                .runFor(entity -> entity.getRandom().nextBetween(45, 90)),
+                .runFor(entity -> entity.getRandom().nextIntBetweenInclusive(45, 90)),
             new MoveToWalkTarget<>()
         );
     }
@@ -306,9 +305,9 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    protected void mobTick() {
+    protected void customServerAiStep() {
         this.tickBrain(this);
-        super.mobTick();
+        super.customServerAiStep();
     }
 
     @Override

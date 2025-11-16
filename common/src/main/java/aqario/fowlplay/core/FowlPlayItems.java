@@ -2,12 +2,12 @@ package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.item.ScarecrowItem;
 import aqario.fowlplay.core.platform.PlatformHelper;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
 
 import java.util.function.Supplier;
 
@@ -92,17 +92,17 @@ public final class FowlPlayItems {
     );
     public static final Supplier<Item> SCARECROW = register(
         "scarecrow",
-        () -> new ScarecrowItem(new Item.Settings()
-            .maxCount(16)
+        () -> new ScarecrowItem(new Item.Properties()
+            .stacksTo(16)
         ),
-        ItemGroups.FUNCTIONAL
+        CreativeModeTabs.FUNCTIONAL_BLOCKS
     );
 
-    private static <T extends MobEntity> Supplier<Item> registerSpawnEgg(String id, Supplier<EntityType<T>> type, int backgroundColor, int highlightColor) {
+    private static <T extends Mob> Supplier<Item> registerSpawnEgg(String id, Supplier<EntityType<T>> type, int backgroundColor, int highlightColor) {
         return PlatformHelper.registerSpawnEggItem(id, type, backgroundColor, highlightColor);
     }
 
-    private static Supplier<Item> register(String id, Supplier<Item> item, RegistryKey<ItemGroup> group) {
+    private static Supplier<Item> register(String id, Supplier<Item> item, ResourceKey<CreativeModeTab> group) {
         return PlatformHelper.registerItem(id, item, group);
     }
 

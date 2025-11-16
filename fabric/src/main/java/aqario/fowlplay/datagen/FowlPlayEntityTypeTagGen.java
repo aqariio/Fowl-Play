@@ -4,30 +4,30 @@ import aqario.fowlplay.core.FowlPlayEntityType;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.entity.EntityType;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.EntityTypeTags;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.world.entity.EntityType;
 
 import java.util.concurrent.CompletableFuture;
 
 public class FowlPlayEntityTypeTagGen extends FabricTagProvider.EntityTypeTagProvider {
-    private static final Identifier ANCIENTSCALE = Identifier.of("fishofthieves", "ancientscale");
-    private static final Identifier BATTLEGILL = Identifier.of("fishofthieves", "battlegill");
-    private static final Identifier DEVILFISH = Identifier.of("fishofthieves", "devilfish");
-    private static final Identifier ISLEHOPPER = Identifier.of("fishofthieves", "islehopper");
-    private static final Identifier PLENTIFIN = Identifier.of("fishofthieves", "plentifin");
-    private static final Identifier PONDIE = Identifier.of("fishofthieves", "pondie");
-    private static final Identifier SPLASHTAIL = Identifier.of("fishofthieves", "splashtail");
-    private static final Identifier STORMFISH = Identifier.of("fishofthieves", "stormfish");
-    private static final Identifier WILDSPLASH = Identifier.of("fishofthieves", "wildsplash");
+    private static final ResourceLocation ANCIENTSCALE = ResourceLocation.tryBuild("fishofthieves", "ancientscale");
+    private static final ResourceLocation BATTLEGILL = ResourceLocation.tryBuild("fishofthieves", "battlegill");
+    private static final ResourceLocation DEVILFISH = ResourceLocation.tryBuild("fishofthieves", "devilfish");
+    private static final ResourceLocation ISLEHOPPER = ResourceLocation.tryBuild("fishofthieves", "islehopper");
+    private static final ResourceLocation PLENTIFIN = ResourceLocation.tryBuild("fishofthieves", "plentifin");
+    private static final ResourceLocation PONDIE = ResourceLocation.tryBuild("fishofthieves", "pondie");
+    private static final ResourceLocation SPLASHTAIL = ResourceLocation.tryBuild("fishofthieves", "splashtail");
+    private static final ResourceLocation STORMFISH = ResourceLocation.tryBuild("fishofthieves", "stormfish");
+    private static final ResourceLocation WILDSPLASH = ResourceLocation.tryBuild("fishofthieves", "wildsplash");
 
-    public FowlPlayEntityTypeTagGen(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture) {
+    public FowlPlayEntityTypeTagGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
         super(output, completableFuture);
     }
 
     @Override
-    protected void configure(RegistryWrapper.WrapperLookup lookup) {
+    protected void addTags(HolderLookup.Provider lookup) {
         // Birds
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.BIRDS)
             .add(EntityType.CHICKEN)

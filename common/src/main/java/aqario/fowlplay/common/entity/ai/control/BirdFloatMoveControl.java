@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.ai.control;
 
 import aqario.fowlplay.common.entity.BirdEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.phys.Vec3;
 
 public class BirdFloatMoveControl extends BirdMoveControl {
     public BirdFloatMoveControl(BirdEntity bird) {
@@ -11,14 +11,14 @@ public class BirdFloatMoveControl extends BirdMoveControl {
     @Override
     public void tick() {
         if (this.bird.isBelowWaterline()) {
-            Vec3d velocity = this.bird.getVelocity();
-            this.bird.setVelocity(velocity.add(0.0, 0.05, 0.0));
-            if (this.bird.isSubmergedInWater()) {
-                velocity = this.bird.getVelocity();
-                this.bird.setVelocity(velocity.add(0.0, 0.1, 0.0));
+            Vec3 velocity = this.bird.getDeltaMovement();
+            this.bird.setDeltaMovement(velocity.add(0.0, 0.05, 0.0));
+            if (this.bird.isUnderWater()) {
+                velocity = this.bird.getDeltaMovement();
+                this.bird.setDeltaMovement(velocity.add(0.0, 0.1, 0.0));
             }
-            velocity = this.bird.getVelocity();
-            this.bird.setVelocity(velocity.getX(), Math.max(velocity.getY(), 0), velocity.getZ());
+            velocity = this.bird.getDeltaMovement();
+            this.bird.setDeltaMovement(velocity.x(), Math.max(velocity.y(), 0), velocity.z());
         }
         super.tick();
     }

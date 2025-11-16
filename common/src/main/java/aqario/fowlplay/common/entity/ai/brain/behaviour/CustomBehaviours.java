@@ -3,9 +3,9 @@ package aqario.fowlplay.common.entity.ai.brain.behaviour;
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
 import aqario.fowlplay.common.util.Birds;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.InvalidateMemory;
@@ -29,8 +29,8 @@ public class CustomBehaviours {
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> setWaterRestTarget() {
         return new SetWaterWalkTarget<E>()
             .radius(64, 32)
-            .startCondition(Predicate.not(Entity::isInsideWaterOrBubbleColumn))
-            .stopIf(Entity::isInsideWaterOrBubbleColumn);
+            .startCondition(Predicate.not(Entity::isInWaterOrBubble))
+            .stopIf(Entity::isInWaterOrBubble);
     }
 
     public static <E extends BirdEntity> ExtendedBehaviour<E> setNearestFoodWalkTarget() {
@@ -40,7 +40,7 @@ public class CustomBehaviours {
     }
 
     public static <E extends BirdEntity> ExtendedBehaviour<E> setAvoidEntityWalkTarget() {
-        return new SetWalkTargetAwayFrom<E, LivingEntity>(MemoryModuleType.AVOID_TARGET, Entity::getPos)
+        return new SetWalkTargetAwayFrom<E, LivingEntity>(MemoryModuleType.AVOID_TARGET, Entity::position)
             .speed(Birds.FAST_SPEED);
     }
 
@@ -61,14 +61,14 @@ public class CustomBehaviours {
     public static <E extends BirdEntity> ExtendedBehaviour<E> idleIfInWater() {
         return new Idle<E>()
             .noTimeout()
-            .startCondition(Entity::isInsideWaterOrBubbleColumn)
-            .stopIf(Predicate.not(Entity::isInsideWaterOrBubbleColumn));
+            .startCondition(Entity::isInWaterOrBubble)
+            .stopIf(Predicate.not(Entity::isInWaterOrBubble));
     }
 
     public static <E extends BirdEntity> ExtendedBehaviour<E> forgetUnderwaterAttackTarget() {
         return new InvalidateMemory<E, LivingEntity>(MemoryModuleType.ATTACK_TARGET)
             .invalidateIf(((entity, target) ->
-                entity.isInsideWaterOrBubbleColumn() && target.isSubmergedInWater() && target.getPos().y < entity.getPos().y
+                entity.isInWaterOrBubble() && target.isUnderWater() && target.position().y < entity.position().y
             ));
     }
 }

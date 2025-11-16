@@ -50,9 +50,8 @@ configurations {
 dependencies {
     // Mappings
     mappings loom.layered {
-        it.mappings("net.fabricmc:yarn:$rootProject.yarn_mappings_version:v2")
-//        officialMojangMappings()
-//        parchment("org.parchmentmc.data:parchment-${project.parchment_mappings_version}@zip")
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${project.parchment_mappings_version}@zip")
     }
 
     // Forge

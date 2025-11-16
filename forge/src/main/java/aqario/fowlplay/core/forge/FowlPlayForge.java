@@ -54,12 +54,12 @@ public final class FowlPlayForge {
     @SuppressWarnings("unchecked")
     private static void onNewRegistry(NewRegistryEvent event) {
         FowlPlay.earlyInit();
-        FowlPlayRegistries.CHICKEN_VARIANT = (Supplier<CommonRegistry<ChickenVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.CHICKEN_VARIANT.getValue()));
-        FowlPlayRegistries.DUCK_VARIANT = (Supplier<CommonRegistry<DuckVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.DUCK_VARIANT.getValue()));
-        FowlPlayRegistries.GULL_VARIANT = (Supplier<CommonRegistry<GullVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.GULL_VARIANT.getValue()));
-        FowlPlayRegistries.GOOSE_VARIANT = (Supplier<CommonRegistry<GooseVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.GOOSE_VARIANT.getValue()));
-        FowlPlayRegistries.PIGEON_VARIANT = (Supplier<CommonRegistry<PigeonVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.PIGEON_VARIANT.getValue()));
-        FowlPlayRegistries.SPARROW_VARIANT = (Supplier<CommonRegistry<SparrowVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.SPARROW_VARIANT.getValue()));
+        FowlPlayRegistries.CHICKEN_VARIANT = (Supplier<CommonRegistry<ChickenVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.CHICKEN_VARIANT.location()));
+        FowlPlayRegistries.DUCK_VARIANT = (Supplier<CommonRegistry<DuckVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.DUCK_VARIANT.location()));
+        FowlPlayRegistries.GULL_VARIANT = (Supplier<CommonRegistry<GullVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.GULL_VARIANT.location()));
+        FowlPlayRegistries.GOOSE_VARIANT = (Supplier<CommonRegistry<GooseVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.GOOSE_VARIANT.location()));
+        FowlPlayRegistries.PIGEON_VARIANT = (Supplier<CommonRegistry<PigeonVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.PIGEON_VARIANT.location()));
+        FowlPlayRegistries.SPARROW_VARIANT = (Supplier<CommonRegistry<SparrowVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.SPARROW_VARIANT.location()));
     }
 
     private static void onRegister(RegisterEvent event) {
@@ -69,7 +69,7 @@ public final class FowlPlayForge {
     private static void onAddItemGroupEntries(BuildCreativeModeTabContentsEvent event) {
         PlatformHelperImpl.ITEM_TO_GROUPS.forEach(((item, group) -> {
             if(event.getTabKey() == group) {
-                event.add(item.get());
+                event.accept(item.get());
             }
         }));
     }

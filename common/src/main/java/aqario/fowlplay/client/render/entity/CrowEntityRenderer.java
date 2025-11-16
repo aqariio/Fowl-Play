@@ -4,25 +4,25 @@ import aqario.fowlplay.client.render.entity.feature.BirdHeldItemFeatureRenderer;
 import aqario.fowlplay.client.render.entity.model.CrowEntityModel;
 import aqario.fowlplay.common.entity.CrowEntity;
 import aqario.fowlplay.core.FowlPlay;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
 
-public class CrowEntityRenderer extends MobEntityRenderer<CrowEntity, CrowEntityModel> {
-    private static final Identifier TEXTURE = FowlPlay.id("textures/entity/crow/crow.png");
+public class CrowEntityRenderer extends MobRenderer<CrowEntity, CrowEntityModel> {
+    private static final ResourceLocation TEXTURE = FowlPlay.id("textures/entity/crow/crow.png");
 
-    public CrowEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new CrowEntityModel(context.getPart(CrowEntityModel.MODEL_LAYER)), 0.15f);
-        this.addFeature(new BirdHeldItemFeatureRenderer<>(
+    public CrowEntityRenderer(EntityRendererProvider.Context context) {
+        super(context, new CrowEntityModel(context.bakeLayer(CrowEntityModel.MODEL_LAYER)), 0.15f);
+        this.addLayer(new BirdHeldItemFeatureRenderer<>(
             this,
-            context.getHeldItemRenderer(),
-            new Vec3d(0.0, -0.0225, -0.1475)
+            context.getItemInHandRenderer(),
+            new Vec3(0.0, -0.0225, -0.1475)
         ));
     }
 
     @Override
-    public Identifier getTexture(CrowEntity entity) {
+    public ResourceLocation getTextureLocation(CrowEntity entity) {
         return TEXTURE;
     }
 }

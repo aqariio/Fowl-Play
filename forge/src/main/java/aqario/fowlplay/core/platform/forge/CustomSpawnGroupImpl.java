@@ -1,17 +1,17 @@
 package aqario.fowlplay.core.platform.forge;
 
 import aqario.fowlplay.core.platform.CustomSpawnGroup;
-import net.minecraft.entity.SpawnGroup;
+import net.minecraft.world.entity.MobCategory;
 
 public final class CustomSpawnGroupImpl {
-    public static SpawnGroup AMBIENT_BIRDS;
-    public static SpawnGroup BIRDS;
+    public static MobCategory AMBIENT_BIRDS;
+    public static MobCategory BIRDS;
 
-    public static SpawnGroup ambientBirds() {
-        SpawnGroup spawnGroup = SpawnGroup.byName(CustomSpawnGroup.AMBIENT_BIRDS_NAME);
+    public static MobCategory ambientBirds() {
+        MobCategory spawnGroup = MobCategory.byName(CustomSpawnGroup.AMBIENT_BIRDS_NAME);
 
         if(spawnGroup == null) {
-            spawnGroup = SpawnGroup.create(
+            spawnGroup = MobCategory.create(
                 CustomSpawnGroup.AMBIENT_BIRDS_NAME,
                 CustomSpawnGroup.AMBIENT_BIRDS_NAME,
                 CustomSpawnGroup.AMBIENT_BIRDS_SPAWN_CAP,
@@ -24,11 +24,11 @@ public final class CustomSpawnGroupImpl {
         return spawnGroup;
     }
 
-    public static SpawnGroup birds() {
-        SpawnGroup spawnGroup = SpawnGroup.byName(CustomSpawnGroup.BIRDS_NAME);
+    public static MobCategory birds() {
+        MobCategory spawnGroup = MobCategory.byName(CustomSpawnGroup.BIRDS_NAME);
 
         if(spawnGroup == null) {
-            spawnGroup = SpawnGroup.create(
+            spawnGroup = MobCategory.create(
                 CustomSpawnGroup.BIRDS_NAME,
                 CustomSpawnGroup.BIRDS_NAME,
                 CustomSpawnGroup.BIRDS_SPAWN_CAP,

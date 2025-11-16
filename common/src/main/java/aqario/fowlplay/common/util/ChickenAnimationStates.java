@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.util;
 
-import net.minecraft.entity.AnimationState;
+import net.minecraft.world.entity.AnimationState;
 
 public interface ChickenAnimationStates {
     AnimationState fowlplay$getStandingState();

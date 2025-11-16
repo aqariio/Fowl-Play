@@ -17,6 +17,7 @@ import java.util.function.ToDoubleFunction;
  * Similar to {@link LandRandomPos} but specialized for birds.
  */
 public class BirdTargeting {
+    // TODO: fix birds always pathing towards the origin of the world
     @Nullable
     public static Vec3 findWaterOrGround(BirdEntity entity, CylindricalRadius waterRange, CylindricalRadius groundRange) {
         Vec3 pos = findWater(entity, waterRange);

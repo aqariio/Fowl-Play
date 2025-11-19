@@ -7,6 +7,7 @@ import aqario.fowlplay.common.entity.ai.brain.sensor.AttackedSensor;
 import aqario.fowlplay.common.entity.ai.brain.sensor.AvoidTargetSensor;
 import aqario.fowlplay.common.entity.ai.brain.sensor.NearbyAdultsSensor;
 import aqario.fowlplay.common.entity.ai.brain.sensor.NearbyFoodSensor;
+import aqario.fowlplay.common.util.AnimationStateList;
 import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.core.FowlPlaySchedules;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
@@ -38,14 +39,11 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<SparrowEntity>, Flocking {
-    public final AnimationState standingState = new AnimationState();
-    public final AnimationState glidingState = new AnimationState();
-    public final AnimationState flappingState = new AnimationState();
-    public final AnimationState floatingState = new AnimationState();
     public final AnimationState scratchingState = new AnimationState();
     public final AnimationState preeningState = new AnimationState();
-    private int timeSinceLastFlap = this.getFlapFrequency();
+    private static final int FLAP_FREQUENCY = 1;
     private static final int FLAP_DURATION = 8;
+    private int timeSinceLastFlap = FLAP_FREQUENCY;
     private int flapTime = 0;
 
     public SparrowEntity(EntityType<? extends SparrowEntity> entityType, Level world) {
@@ -79,17 +77,15 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    public int getFlapFrequency() {
-        return 1;
-    }
-
-    @Override
     public void tick() {
         super.tick();
     }
 
-    private boolean isMoving() {
-        return this.walkAnimation.isMoving();
+    @Override
+    protected AnimationStateList createIdleAnimations() {
+        return new AnimationStateList()
+            .with(this.scratchingState, 1)
+            .with(this.preeningState, 3);
     }
 
     @Override
@@ -126,11 +122,11 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
         }
         // flying
         if(this.isFlying()) {
-            if(this.timeSinceLastFlap >= this.getFlapFrequency()) {
+            if(this.timeSinceLastFlap >= FLAP_FREQUENCY) {
                 this.timeSinceLastFlap = 0;
                 this.flapTime++;
             }
-            else if(this.flapTime >= 0 && this.flapTime < FLAP_DURATION) {
+            else if(this.isAnimatingFlapping()) {
                 this.flapTime++;
                 this.glidingState.stop();
                 this.flappingState.startIfStopped(this.tickCount);
@@ -143,23 +139,27 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
             }
         }
         else {
-            this.timeSinceLastFlap = this.getFlapFrequency();
+            this.timeSinceLastFlap = FLAP_FREQUENCY;
             this.flapTime = 0;
             this.flappingState.stop();
             this.glidingState.stop();
         }
         // in water
-        this.floatingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+    }
+
+    private boolean isAnimatingFlapping() {
+        return this.flapTime >= 0 && this.flapTime < FLAP_DURATION;
+    }
+
+    @Override
+    protected boolean isFlapping() {
+        return this.isFlying() && this.isAnimatingFlapping();
     }
 
     @Override
     protected int getIdleAnimationDelay() {
         return 400;
-    }
-
-    @Override
-    protected boolean isFlapping() {
-        return this.isFlying() && this.flapTime >= 0 && this.flapTime < FLAP_DURATION;
     }
 
     @Override
@@ -285,7 +285,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     @Override
     public BrainActivityGroup<? extends SparrowEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
-            CustomBehaviours.setNearestFoodWalkTarget()
+            CompositeBehaviours.tryPickUpFood()
         );
     }
 

@@ -37,11 +37,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class BlueJayEntity extends FlyingBirdEntity implements BirdBrain<BlueJayEntity> {
-    public final AnimationState standingState = new AnimationState();
-    public final AnimationState glidingState = new AnimationState();
-    public final AnimationState flappingState = new AnimationState();
-    public final AnimationState floatingState = new AnimationState();
-
     public BlueJayEntity(EntityType<? extends BirdEntity> entityType, Level world) {
         super(entityType, world);
     }
@@ -68,20 +63,10 @@ public class BlueJayEntity extends FlyingBirdEntity implements BirdBrain<BlueJay
     }
 
     @Override
-    public int getFlapFrequency() {
-        return 7;
-    }
-
-    @Override
     protected void updateAnimations() {
         this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
         this.flappingState.animateWhen(this.isFlying(), this.tickCount);
-        this.floatingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
-    }
-
-    @Override
-    protected boolean isFlapping() {
-        return this.isFlying();
+        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
     }
 
     @Override
@@ -179,7 +164,7 @@ public class BlueJayEntity extends FlyingBirdEntity implements BirdBrain<BlueJay
     @Override
     public BrainActivityGroup<? extends BlueJayEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
-            CustomBehaviours.setNearestFoodWalkTarget()
+            CompositeBehaviours.tryPickUpFood()
         );
     }
 

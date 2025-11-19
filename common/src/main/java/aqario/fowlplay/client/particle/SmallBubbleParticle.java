@@ -58,7 +58,7 @@ public class SmallBubbleParticle extends TextureSheetParticle {
             this.remove();
         }
         if(!this.removed) {
-            this.setSprite(spriteProvider.get(this.popAge, this.maxPopAge));
+            this.setSprite(this.spriteProvider.get(this.popAge, this.maxPopAge));
         }
     }
 

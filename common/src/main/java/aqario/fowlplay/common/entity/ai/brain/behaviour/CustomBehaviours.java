@@ -16,23 +16,6 @@ import java.util.function.Predicate;
  * A collection of preconfigured behaviours for ease of use.
  */
 public class CustomBehaviours {
-    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> setWaterWalkTarget() {
-        return new SetWaterWalkTarget<E>()
-            .radius(32, 24);
-    }
-
-    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> setGroundWalkTarget() {
-        return new SetNonAirWalkTarget<E>()
-            .setRadius(32, 16);
-    }
-
-    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> setWaterRestTarget() {
-        return new SetWaterWalkTarget<E>()
-            .radius(64, 32)
-            .startCondition(Predicate.not(Entity::isInWaterOrBubble))
-            .stopIf(Entity::isInWaterOrBubble);
-    }
-
     public static <E extends BirdEntity> ExtendedBehaviour<E> setNearestFoodWalkTarget() {
         return new SetItemWalkTarget<E>()
             .radius(Birds.ITEM_PICK_UP_RANGE)

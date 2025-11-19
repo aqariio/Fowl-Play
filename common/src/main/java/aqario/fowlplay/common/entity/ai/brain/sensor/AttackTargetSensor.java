@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.sensor;
 
 import aqario.fowlplay.common.entity.BirdEntity;
-import aqario.fowlplay.core.FowlPlaySensorType;
+import aqario.fowlplay.core.FowlPlaySensorTypes;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
@@ -29,7 +29,7 @@ public class AttackTargetSensor<E extends BirdEntity> extends EntityFilteringSen
 
     @Override
     public SensorType<? extends ExtendedSensor<?>> type() {
-        return FowlPlaySensorType.ATTACK_TARGETS.get();
+        return FowlPlaySensorTypes.ATTACK_TARGETS.get();
     }
 
     @Override

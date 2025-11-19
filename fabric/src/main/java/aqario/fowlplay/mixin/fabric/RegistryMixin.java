@@ -4,6 +4,7 @@ import aqario.fowlplay.core.platform.CommonRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
@@ -29,13 +30,19 @@ public interface RegistryMixin<T> extends CommonRegistry<T> {
     @Shadow
     Optional<HolderSet.Named<T>> getTag(TagKey<T> tag);
 
+    @Shadow
+    Optional<Holder.Reference<T>> getHolder(ResourceKey<T> key);
+
+    @Shadow
+    Optional<ResourceKey<T>> getResourceKey(T value);
+
     @Override
     default T fowlplay$get(ResourceLocation id) {
         return this.get(id);
     }
 
     @Override
-    default ResourceLocation fowlplay$getId(T value) {
+    default ResourceLocation fowlplay$getKey(T value) {
         return this.getKey(value);
     }
 
@@ -45,7 +52,12 @@ public interface RegistryMixin<T> extends CommonRegistry<T> {
     }
 
     @Override
-    default Optional<T> fowlplay$getRandomEntry(TagKey<T> tag, RandomSource random) {
+    default Optional<T> fowlplay$getRandomElement(TagKey<T> tag, RandomSource random) {
         return this.getTag(tag).flatMap(list -> list.getRandomElement(random).map(Holder::value));
+    }
+
+    @Override
+    default Optional<Holder.Reference<T>> fowlplay$getHolder(T value) {
+        return this.getResourceKey(value).flatMap(this::getHolder);
     }
 }

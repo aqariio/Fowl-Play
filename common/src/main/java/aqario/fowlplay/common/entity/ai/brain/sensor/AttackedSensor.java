@@ -3,8 +3,8 @@ package aqario.fowlplay.common.entity.ai.brain.sensor;
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.entity.TrustingBirdEntity;
 import aqario.fowlplay.common.util.Birds;
-import aqario.fowlplay.core.FowlPlayMemoryModuleType;
-import aqario.fowlplay.core.FowlPlaySensorType;
+import aqario.fowlplay.core.FowlPlayMemoryTypes;
+import aqario.fowlplay.core.FowlPlaySensorTypes;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -24,8 +24,8 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
         MemoryModuleType.HURT_BY,
         MemoryModuleType.HURT_BY_ENTITY,
         MemoryModuleType.AVOID_TARGET,
-        FowlPlayMemoryModuleType.SEES_FOOD.get(),
-        FowlPlayMemoryModuleType.CANNOT_PICKUP_FOOD.get()
+        FowlPlayMemoryTypes.SEES_FOOD.get(),
+        FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get()
     );
 
     public AttackedSensor() {
@@ -40,7 +40,7 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
 
     @Override
     public SensorType<? extends ExtendedSensor<?>> type() {
-        return FowlPlaySensorType.ATTACKED.get();
+        return FowlPlaySensorTypes.ATTACKED.get();
     }
 
     @Override
@@ -70,9 +70,9 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
 
     public static <T extends BirdEntity> void onAttacked(T bird, LivingEntity attacker) {
         Brain<?> brain = bird.getBrain();
-        BrainUtils.clearMemory(brain, FowlPlayMemoryModuleType.SEES_FOOD.get());
+        BrainUtils.clearMemory(brain, FowlPlayMemoryTypes.SEES_FOOD.get());
         if(attacker instanceof Player player) {
-            BrainUtils.setForgettableMemory(brain, FowlPlayMemoryModuleType.CANNOT_PICKUP_FOOD.get(), true, Birds.CANNOT_PICKUP_FOOD_TICKS);
+            BrainUtils.setForgettableMemory(brain, FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get(), true, Birds.CANNOT_PICKUP_FOOD_TICKS);
             if(bird instanceof TrustingBirdEntity trustingBird && trustingBird.trusts(player)) {
                 trustingBird.stopTrusting(player);
             }

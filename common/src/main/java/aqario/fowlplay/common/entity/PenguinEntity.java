@@ -5,9 +5,9 @@ import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.entity.ai.control.BirdAquaticMoveControl;
-import aqario.fowlplay.common.entity.ai.pathing.AmphibiousNavigation;
+import aqario.fowlplay.common.entity.ai.navigation.AmphibiousNavigation;
 import aqario.fowlplay.common.util.Birds;
-import aqario.fowlplay.core.FowlPlayEntityType;
+import aqario.fowlplay.core.FowlPlayEntityTypes;
 import aqario.fowlplay.core.FowlPlayParticleTypes;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
@@ -17,41 +17,40 @@ import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.world.entity.vehicle.DismountHelper;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.ai.Brain;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
@@ -84,12 +83,10 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     private static final long LAST_POSE_CHANGE_TICKS = 0L;
     public static final EntityDataAccessor<Long> LAST_POSE_TICK = SynchedEntityData.defineId(PenguinEntity.class, EntityDataSerializers.LONG);
     private static final int SWIM_PARTICLE_COUNT = 15;
-    public final AnimationState standingState = new AnimationState();
     public final AnimationState slidingState = new AnimationState();
     public final AnimationState slidingTransitionState = new AnimationState();
     public final AnimationState standingTransitionState = new AnimationState();
     public final AnimationState flappingState = new AnimationState();
-    public final AnimationState swimmingState = new AnimationState();
     public final AnimationState dancingState = new AnimationState();
     private boolean songPlaying;
     @Nullable
@@ -153,7 +150,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     @Nullable
     @Override
     public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
-        return FowlPlayEntityType.PENGUIN.get().create(world);
+        return FowlPlayEntityTypes.PENGUIN.get().create(world);
     }
 
     @Override

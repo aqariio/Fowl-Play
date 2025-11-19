@@ -1,36 +1,20 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.entity.*;
-import aqario.fowlplay.common.util.RegistryBuilder;
-import aqario.fowlplay.core.platform.CommonRegistry;
-
-import java.util.function.Supplier;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 
 public class FowlPlayRegistries {
-    public static /*final*/ Supplier<CommonRegistry<ChickenVariant>> CHICKEN_VARIANT = RegistryBuilder
-        .create(FowlPlayRegistryKeys.CHICKEN_VARIANT)
-        .sync()
-        .buildAndRegister();
-    public static /*final*/ Supplier<CommonRegistry<DuckVariant>> DUCK_VARIANT = RegistryBuilder
-        .create(FowlPlayRegistryKeys.DUCK_VARIANT)
-        .sync()
-        .buildAndRegister();
-    public static /*final*/ Supplier<CommonRegistry<GooseVariant>> GOOSE_VARIANT = RegistryBuilder
-        .create(FowlPlayRegistryKeys.GOOSE_VARIANT)
-        .sync()
-        .buildAndRegister();
-    public static /*final*/ Supplier<CommonRegistry<GullVariant>> GULL_VARIANT = RegistryBuilder
-        .create(FowlPlayRegistryKeys.GULL_VARIANT)
-        .sync()
-        .buildAndRegister();
-    public static /*final*/ Supplier<CommonRegistry<PigeonVariant>> PIGEON_VARIANT = RegistryBuilder
-        .create(FowlPlayRegistryKeys.PIGEON_VARIANT)
-        .sync()
-        .buildAndRegister();
-    public static /*final*/ Supplier<CommonRegistry<SparrowVariant>> SPARROW_VARIANT = RegistryBuilder
-        .create(FowlPlayRegistryKeys.SPARROW_VARIANT)
-        .sync()
-        .buildAndRegister();
+    public static final ResourceKey<Registry<ChickenVariant>> CHICKEN_VARIANT = createRegistryKey("chicken_variant");
+    public static final ResourceKey<Registry<DuckVariant>> DUCK_VARIANT = createRegistryKey("duck_variant");
+    public static final ResourceKey<Registry<GooseVariant>> GOOSE_VARIANT = createRegistryKey("goose_variant");
+    public static final ResourceKey<Registry<GullVariant>> GULL_VARIANT = createRegistryKey("gull_variant");
+    public static final ResourceKey<Registry<PigeonVariant>> PIGEON_VARIANT = createRegistryKey("pigeon_variant");
+    public static final ResourceKey<Registry<SparrowVariant>> SPARROW_VARIANT = createRegistryKey("sparrow_variant");
+
+    private static <T> ResourceKey<Registry<T>> createRegistryKey(String id) {
+        return ResourceKey.createRegistryKey(FowlPlay.id(id));
+    }
 
     public static void init() {
     }

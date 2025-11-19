@@ -2,7 +2,7 @@ package aqario.fowlplay.mixin.forge;
 
 import aqario.fowlplay.core.platform.CommonRegistry;
 import net.minecraft.Util;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
@@ -13,7 +13,9 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 @Mixin(IForgeRegistry.class)
 public interface IForgeRegistryMixin<V> extends CommonRegistry<V> {
@@ -30,12 +32,11 @@ public interface IForgeRegistryMixin<V> extends CommonRegistry<V> {
     ResourceLocation getKey(V value);
 
     @Shadow
-    @NotNull
-    Set<Map.Entry<ResourceKey<V>, V>> getEntries();
-
-    @Shadow
     @Nullable
     ITagManager<V> tags();
+
+    @Shadow
+    @NotNull Optional<Holder.Reference<V>> getDelegate(V value);
 
     @Override
     default V fowlplay$get(ResourceLocation id) {
@@ -43,7 +44,7 @@ public interface IForgeRegistryMixin<V> extends CommonRegistry<V> {
     }
 
     @Override
-    default ResourceLocation fowlplay$getId(V value) {
+    default ResourceLocation fowlplay$getKey(V value) {
         return this.getKey(value);
     }
 
@@ -53,11 +54,16 @@ public interface IForgeRegistryMixin<V> extends CommonRegistry<V> {
     }
 
     @Override
-    default Optional<V> fowlplay$getRandomEntry(TagKey<V> tag, RandomSource random) {
+    default Optional<V> fowlplay$getRandomElement(TagKey<V> tag, RandomSource random) {
         ITagManager<V> tagManager = this.tags();
         if(tagManager == null) {
             return Optional.empty();
         }
         return tagManager.getTag(tag).getRandomElement(random);
+    }
+
+    @Override
+    default Optional<Holder.Reference<V>> fowlplay$getHolder(V value) {
+        return this.getDelegate(value);
     }
 }

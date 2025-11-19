@@ -2,7 +2,7 @@ package aqario.fowlplay.common.entity.ai.brain.sensor;
 
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.util.Birds;
-import aqario.fowlplay.core.FowlPlayMemoryModuleType;
+import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Unit;
@@ -45,10 +45,10 @@ public class NearbyFoodSensor<E extends BirdEntity> extends PredicateSensor<Item
         BrainUtils.setMemory(brain, SBLMemoryTypes.NEARBY_ITEMS.get(), nearbyItems);
 
         if(Birds.canPickupFood(bird)) {
-            BrainUtils.setMemory(brain, FowlPlayMemoryModuleType.SEES_FOOD.get(), Unit.INSTANCE);
+            BrainUtils.setMemory(brain, FowlPlayMemoryTypes.SEES_FOOD.get(), Unit.INSTANCE);
         }
         else {
-            BrainUtils.clearMemory(brain, FowlPlayMemoryModuleType.SEES_FOOD.get());
+            BrainUtils.clearMemory(brain, FowlPlayMemoryTypes.SEES_FOOD.get());
         }
     }
 }

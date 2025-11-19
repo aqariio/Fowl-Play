@@ -43,10 +43,6 @@ import java.util.function.Predicate;
 
 public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEntity>, VariantHolder<RobinEntity.Variant> {
     private static final EntityDataAccessor<String> VARIANT = SynchedEntityData.defineId(RobinEntity.class, EntityDataSerializers.STRING);
-    public final AnimationState standingState = new AnimationState();
-    public final AnimationState glidingState = new AnimationState();
-    public final AnimationState flappingState = new AnimationState();
-    public final AnimationState floatingState = new AnimationState();
 
     public RobinEntity(EntityType<? extends RobinEntity> entityType, Level world) {
         super(entityType, world);
@@ -109,20 +105,10 @@ public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEnti
     }
 
     @Override
-    public int getFlapFrequency() {
-        return 7;
-    }
-
-    @Override
     public void updateAnimations() {
         this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
         this.flappingState.animateWhen(this.isFlying(), this.tickCount);
-        this.floatingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
-    }
-
-    @Override
-    protected boolean isFlapping() {
-        return this.isFlying();
+        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
     }
 
     @Override
@@ -241,7 +227,7 @@ public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEnti
     @Override
     public BrainActivityGroup<? extends RobinEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
-            CustomBehaviours.setNearestFoodWalkTarget()
+            CompositeBehaviours.tryPickUpFood()
         );
     }
 

@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.fowlplay.common.entity.BirdEntity;
-import aqario.fowlplay.common.entity.ai.pathing.BirdTargeting;
+import aqario.fowlplay.common.entity.ai.navigation.BirdRandomPos;
 import aqario.fowlplay.common.util.CylindricalRadius;
 import aqario.fowlplay.common.util.MemoryList;
 import com.mojang.datafixers.util.Pair;
@@ -60,6 +60,6 @@ public class SetWaterWalkTarget<E extends BirdEntity> extends SpeedModifiableBeh
 
     @Nullable
     protected Vec3 getTargetPos(E entity) {
-        return BirdTargeting.findWaterOrGround(entity, this.radius, this.radius);
+        return BirdRandomPos.getWaterOrGround(entity, this.radius, this.radius);
     }
 }

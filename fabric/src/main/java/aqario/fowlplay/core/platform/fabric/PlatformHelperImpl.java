@@ -3,7 +3,7 @@ package aqario.fowlplay.core.platform.fabric;
 import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
 import aqario.fowlplay.core.FowlPlay;
-import aqario.fowlplay.core.FowlPlayRegistries;
+import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
 import aqario.fowlplay.core.platform.CommonRegistry;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
@@ -45,27 +45,27 @@ public class PlatformHelperImpl {
     @SuppressWarnings("unchecked")
     public static <T> Supplier<T> registerVariant(String id, Supplier<T> variant) {
         if(variant.get() instanceof ChickenVariant v) {
-            T registry = (T) Registry.register((Registry<ChickenVariant>) FowlPlayRegistries.CHICKEN_VARIANT.get(), FowlPlay.id(id), v);
+            T registry = (T) Registry.register((Registry<ChickenVariant>) FowlPlayBuiltInRegistries.CHICKEN_VARIANT.get(), FowlPlay.id(id), v);
             return () -> registry;
         }
         else if(variant.get() instanceof DuckVariant v) {
-            T registry = (T) Registry.register((Registry<DuckVariant>) FowlPlayRegistries.DUCK_VARIANT.get(), FowlPlay.id(id), v);
+            T registry = (T) Registry.register((Registry<DuckVariant>) FowlPlayBuiltInRegistries.DUCK_VARIANT.get(), FowlPlay.id(id), v);
             return () -> registry;
         }
         else if(variant.get() instanceof GooseVariant v) {
-            T registry = (T) Registry.register((Registry<GooseVariant>) FowlPlayRegistries.GOOSE_VARIANT.get(), FowlPlay.id(id), v);
+            T registry = (T) Registry.register((Registry<GooseVariant>) FowlPlayBuiltInRegistries.GOOSE_VARIANT.get(), FowlPlay.id(id), v);
             return () -> registry;
         }
         else if(variant.get() instanceof GullVariant v) {
-            T registry = (T) Registry.register((Registry<GullVariant>) FowlPlayRegistries.GULL_VARIANT.get(), FowlPlay.id(id), v);
+            T registry = (T) Registry.register((Registry<GullVariant>) FowlPlayBuiltInRegistries.GULL_VARIANT.get(), FowlPlay.id(id), v);
             return () -> registry;
         }
         else if(variant.get() instanceof PigeonVariant v) {
-            T registry = (T) Registry.register((Registry<PigeonVariant>) FowlPlayRegistries.PIGEON_VARIANT.get(), FowlPlay.id(id), v);
+            T registry = (T) Registry.register((Registry<PigeonVariant>) FowlPlayBuiltInRegistries.PIGEON_VARIANT.get(), FowlPlay.id(id), v);
             return () -> registry;
         }
         else if(variant.get() instanceof SparrowVariant v) {
-            T registry = (T) Registry.register((Registry<SparrowVariant>) FowlPlayRegistries.SPARROW_VARIANT.get(), FowlPlay.id(id), v);
+            T registry = (T) Registry.register((Registry<SparrowVariant>) FowlPlayBuiltInRegistries.SPARROW_VARIANT.get(), FowlPlay.id(id), v);
             return () -> registry;
         }
         return null;

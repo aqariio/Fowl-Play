@@ -1,9 +1,9 @@
 package aqario.fowlplay.client.render.entity.animation;
 
-import net.minecraft.client.animation.AnimationDefinition;
-import net.minecraft.client.animation.KeyframeAnimations;
-import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.AnimationChannel;
+import net.minecraft.client.animation.AnimationDefinition;
+import net.minecraft.client.animation.Keyframe;
+import net.minecraft.client.animation.KeyframeAnimations;
 
 public class PigeonAnimations {
     public static final AnimationDefinition STANDING = AnimationDefinition.Builder.withLength(1.0F).looping()
@@ -183,7 +183,7 @@ public class PigeonAnimations {
         )
         .build();
 
-    public static final AnimationDefinition FLOATING = AnimationDefinition.Builder.withLength(0f).looping()
+    public static final AnimationDefinition SWIMMING = AnimationDefinition.Builder.withLength(0f).looping()
         .build();
 
     public static final AnimationDefinition GLIDING = AnimationDefinition.Builder.withLength(0f).looping()

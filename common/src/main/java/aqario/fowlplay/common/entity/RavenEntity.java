@@ -5,7 +5,7 @@ import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.util.Birds;
-import aqario.fowlplay.core.FowlPlayMemoryModuleType;
+import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.FowlPlaySchedules;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
@@ -48,17 +48,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEntity> {
-    public final AnimationState standingState = new AnimationState();
-    public final AnimationState glidingState = new AnimationState();
-    public final AnimationState floatingState = new AnimationState();
-
     public RavenEntity(EntityType<? extends RavenEntity> entityType, Level world) {
         super(entityType, world);
-    }
-
-    @Override
-    public int getFlapFrequency() {
-        return 0;
     }
 
     public static AttributeSupplier.Builder createRavenAttributes() {
@@ -125,12 +116,11 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
         if(this.hasLowHealth()) {
             return false;
         }
-        Brain<?> brain = this.getBrain();
-        Optional<LivingEntity> hurtBy = this.getBrain().getMemory(MemoryModuleType.HURT_BY_ENTITY);
-        if(!target.getType().is(FowlPlayEntityTypeTags.RAVEN_ATTACK_TARGETS) && (hurtBy.isEmpty() || !hurtBy.get().equals(target))) {
+        LivingEntity hurtBy = BrainUtils.getLastAttacker(this);
+        if(!target.getType().is(FowlPlayEntityTypeTags.RAVEN_ATTACK_TARGETS) && (hurtBy == null || !hurtBy.equals(target))) {
             return false;
         }
-        Optional<List<? extends AgeableMob>> nearbyAdults = brain.getMemory(FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS.get());
+        Optional<List<? extends AgeableMob>> nearbyAdults = Optional.ofNullable(BrainUtils.getMemory(this, FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get()));
         return nearbyAdults.filter(passiveEntities -> passiveEntities.size() >= 2).isPresent();
     }
 
@@ -143,12 +133,7 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     public void updateAnimations() {
         this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
         this.glidingState.animateWhen(this.isFlying(), this.tickCount);
-        this.floatingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
-    }
-
-    @Override
-    protected boolean isFlapping() {
-        return this.isFlying();
+        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
     }
 
     @Override
@@ -264,7 +249,7 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     @Override
     public BrainActivityGroup<? extends RavenEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
-            CustomBehaviours.setNearestFoodWalkTarget()
+            CompositeBehaviours.tryPickUpFood()
         );
     }
 

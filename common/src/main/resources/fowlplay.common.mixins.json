@@ -4,13 +4,13 @@
   "package": "aqario.fowlplay.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "AbstractBlockStateMixin",
-    "ChickenEntityMixin",
+    "BlockStateBaseMixin",
+    "ChickenMixin",
+    "CrossCollisionBlockMixin",
     "EnchantmentHelperMixin",
     "FenceGateBlockMixin",
-    "HorizontalConnectingBlockMixin",
+    "NaturalSpawnerMixin",
     "PowderSnowBlockMixin",
-    "SpawnHelperMixin",
     "WallBlockMixin"
   ],
   "client": [

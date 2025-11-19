@@ -5,13 +5,13 @@ import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.entity.ai.control.BirdFloatMoveControl;
-import aqario.fowlplay.common.entity.ai.pathing.AmphibiousNavigation;
+import aqario.fowlplay.common.entity.ai.navigation.AmphibiousNavigation;
 import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.common.util.CylindricalRadius;
-import aqario.fowlplay.core.FowlPlayRegistries;
+import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
+import aqario.fowlplay.core.FowlPlayEntityDataSerializers;
 import aqario.fowlplay.core.FowlPlaySchedules;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
-import aqario.fowlplay.core.FowlPlayTrackedDataHandlerRegistry;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import aqario.fowlplay.core.tags.FowlPlayVariantTags;
@@ -64,14 +64,10 @@ import java.util.List;
 public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEntity>, VariantHolder<GooseVariant>, Flocking {
     private static final EntityDataAccessor<GooseVariant> VARIANT = SynchedEntityData.defineId(
         GooseEntity.class,
-        FowlPlayTrackedDataHandlerRegistry.GOOSE_VARIANT
+        FowlPlayEntityDataSerializers.GOOSE_VARIANT
     );
     private static final String AGGRESSIVE_KEY = "aggressive";
     private boolean aggressive;
-    public final AnimationState standingState = new AnimationState();
-    public final AnimationState glidingState = new AnimationState();
-    public final AnimationState flappingState = new AnimationState();
-    public final AnimationState floatingState = new AnimationState();
 
     public GooseEntity(EntityType<? extends GooseEntity> entityType, Level world) {
         super(entityType, world);
@@ -112,15 +108,15 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt) {
         switch(spawnReason) {
-            case BREEDING -> FowlPlayRegistries.GOOSE_VARIANT.get()
-                .fowlplay$getRandomEntry(FowlPlayVariantTags.Goose.DOMESTIC, world.getRandom())
+            case BREEDING -> FowlPlayBuiltInRegistries.GOOSE_VARIANT.get()
+                .fowlplay$getRandomElement(FowlPlayVariantTags.Goose.DOMESTIC, world.getRandom())
                 .ifPresent(this::setVariant);
 
-            case CHUNK_GENERATION, NATURAL -> FowlPlayRegistries.GOOSE_VARIANT.get()
-                .fowlplay$getRandomEntry(FowlPlayVariantTags.Goose.NATURAL, world.getRandom())
+            case CHUNK_GENERATION, NATURAL -> FowlPlayBuiltInRegistries.GOOSE_VARIANT.get()
+                .fowlplay$getRandomElement(FowlPlayVariantTags.Goose.NATURAL, world.getRandom())
                 .ifPresent(this::setVariant);
 
-            default -> FowlPlayRegistries.GOOSE_VARIANT.get()
+            default -> FowlPlayBuiltInRegistries.GOOSE_VARIANT.get()
                 .fowlplay$getRandom(world.getRandom())
                 .ifPresent(this::setVariant);
         }
@@ -132,17 +128,19 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
         return true;
     }
 
-    @Override
-    public int getFlapFrequency() {
-        return 0;
-    }
-
     public static AttributeSupplier.Builder createGooseAttributes() {
         return FlyingBirdEntity.createFlyingBirdAttributes()
             .add(Attributes.MAX_HEALTH, 10.0f)
             .add(Attributes.ATTACK_DAMAGE, 1.5f)
             .add(Attributes.MOVEMENT_SPEED, 0.23f)
             .add(Attributes.FLYING_SPEED, 0.22f);
+    }
+
+    public boolean isDomestic() {
+        return FowlPlayBuiltInRegistries.GOOSE_VARIANT.get()
+            .fowlplay$getHolder(this.getVariant())
+            .map(ref -> ref.is(FowlPlayVariantTags.Goose.DOMESTIC))
+            .orElse(false);
     }
 
     @Override
@@ -164,7 +162,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putString("variant", FowlPlayRegistries.GOOSE_VARIANT.get().fowlplay$getId(this.getVariant()).toString());
+        nbt.putString("variant", FowlPlayBuiltInRegistries.GOOSE_VARIANT.get().fowlplay$getKey(this.getVariant()).toString());
         if(this.aggressive) {
             nbt.putBoolean(AGGRESSIVE_KEY, true);
         }
@@ -173,7 +171,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        GooseVariant variant = FowlPlayRegistries.GOOSE_VARIANT.get().fowlplay$get(ResourceLocation.tryParse(nbt.getString("variant")));
+        GooseVariant variant = FowlPlayBuiltInRegistries.GOOSE_VARIANT.get().fowlplay$get(ResourceLocation.tryParse(nbt.getString("variant")));
         if(variant != null) {
             this.setVariant(variant);
         }
@@ -231,7 +229,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     public void updateAnimations() {
         this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
         this.flappingState.animateWhen(this.isFlying(), this.tickCount);
-        this.floatingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
     }
 
     @Override
@@ -240,11 +238,6 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
         if(!this.aggressive && name != null && name.getString().equalsIgnoreCase("untitled")) {
             this.aggressive = true;
         }
-    }
-
-    @Override
-    protected boolean isFlapping() {
-        return this.isFlying();
     }
 
     @Override
@@ -286,7 +279,9 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
 
     @Override
     public CylindricalRadius getWalkRange() {
-        return new CylindricalRadius(32, 12);
+        return this.isDomestic()
+            ? new CylindricalRadius(64, 12)
+            : new CylindricalRadius(32, 12);
     }
 
     @Override
@@ -358,7 +353,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
             ),
             new OneRandomBehaviour<>(
                 Pair.of(
-                    CustomBehaviours.setWaterWalkTarget(),
+                    CompositeBehaviours.trySetWaterWalkTarget(),
                     1
                 ),
                 Pair.of(
@@ -380,7 +375,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
             new SetRandomLookTarget<>()
                 .lookChance(0.02f),
             new OneRandomBehaviour<>(
-                CustomBehaviours.setWaterWalkTarget(),
+                CompositeBehaviours.trySetWaterWalkTarget(),
                 CustomBehaviours.idleIfNotFlying()
                     .runFor(entity -> entity.getRandom().nextIntBetweenInclusive(100, 300))
             )
@@ -390,14 +385,14 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     public BrainActivityGroup<? extends GooseEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
-            CustomBehaviours.setNearestFoodWalkTarget()
+            CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
     public BrainActivityGroup<? extends GooseEntity> getRestTasks() {
         return BirdBrain.restActivity(
-            CustomBehaviours.setWaterRestTarget(),
+            CompositeBehaviours.trySetWaterRestTarget(),
             CustomBehaviours.idleIfInWater()
         );
     }

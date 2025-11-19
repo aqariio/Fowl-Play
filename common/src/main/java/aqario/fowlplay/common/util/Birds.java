@@ -3,7 +3,7 @@ package aqario.fowlplay.common.util;
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.TrustingBirdEntity;
-import aqario.fowlplay.core.FowlPlayMemoryModuleType;
+import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.BlockPos;
@@ -80,7 +80,7 @@ public final class Birds {
     public static boolean shouldFlyFromAvoidTarget(FlyingBirdEntity bird) {
         Brain<?> brain = bird.getBrain();
         if(!BrainUtils.hasMemory(brain, MemoryModuleType.AVOID_TARGET)
-            || !BrainUtils.hasMemory(brain, FowlPlayMemoryModuleType.IS_AVOIDING.get())
+            || !BrainUtils.hasMemory(brain, FowlPlayMemoryTypes.IS_AVOIDING.get())
         ) {
             return false;
         }
@@ -110,7 +110,7 @@ public final class Birds {
         getNearbyVisibleAdults(bird).forEach(other -> {
             Brain<?> brain = other.getBrain();
             if(attacker instanceof Player) {
-                BrainUtils.setForgettableMemory(brain, FowlPlayMemoryModuleType.CANNOT_PICKUP_FOOD.get(), true, CANNOT_PICKUP_FOOD_TICKS);
+                BrainUtils.setForgettableMemory(brain, FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get(), true, CANNOT_PICKUP_FOOD_TICKS);
             }
             BrainUtils.clearMemory(brain, MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
             BrainUtils.setForgettableMemory(brain, MemoryModuleType.AVOID_TARGET, attacker, AVOID_TICKS);
@@ -118,7 +118,7 @@ public final class Birds {
     }
 
     public static <T extends BirdEntity> List<? extends AgeableMob> getNearbyVisibleAdults(T bird) {
-        return Optional.ofNullable(BrainUtils.getMemory(bird, FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS.get()))
+        return Optional.ofNullable(BrainUtils.getMemory(bird, FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get()))
             .orElse(ImmutableList.of());
     }
 
@@ -128,7 +128,7 @@ public final class Birds {
 
     public static boolean canPickupFood(BirdEntity bird) {
         Brain<?> brain = bird.getBrain();
-        if(BrainUtils.hasMemory(brain, FowlPlayMemoryModuleType.CANNOT_PICKUP_FOOD.get())) {
+        if(BrainUtils.hasMemory(brain, FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get())) {
             return false;
         }
         if(!BrainUtils.hasMemory(brain, SBLMemoryTypes.NEARBY_ITEMS.get())) {

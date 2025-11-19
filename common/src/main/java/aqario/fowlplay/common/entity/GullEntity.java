@@ -5,13 +5,13 @@ import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.entity.ai.control.BirdFloatMoveControl;
-import aqario.fowlplay.common.entity.ai.pathing.AmphibiousNavigation;
+import aqario.fowlplay.common.entity.ai.navigation.AmphibiousNavigation;
 import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.common.util.CylindricalRadius;
-import aqario.fowlplay.core.FowlPlayRegistries;
+import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
+import aqario.fowlplay.core.FowlPlayEntityDataSerializers;
 import aqario.fowlplay.core.FowlPlaySchedules;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
-import aqario.fowlplay.core.FowlPlayTrackedDataHandlerRegistry;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.datafixers.util.Pair;
@@ -39,6 +39,7 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
+import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeAttack;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.BreedWithPartner;
@@ -52,7 +53,6 @@ import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.InWaterSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
-import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -60,12 +60,8 @@ import java.util.List;
 public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEntity>, VariantHolder<GullVariant> {
     private static final EntityDataAccessor<GullVariant> VARIANT = SynchedEntityData.defineId(
         GullEntity.class,
-        FowlPlayTrackedDataHandlerRegistry.GULL_VARIANT
+        FowlPlayEntityDataSerializers.GULL_VARIANT
     );
-    public final AnimationState standingState = new AnimationState();
-    public final AnimationState glidingState = new AnimationState();
-    public final AnimationState flappingState = new AnimationState();
-    public final AnimationState floatingState = new AnimationState();
 
     public GullEntity(EntityType<? extends GullEntity> entityType, Level world) {
         super(entityType, world);
@@ -105,7 +101,7 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt) {
-        FowlPlayRegistries.GULL_VARIANT.get()
+        FowlPlayBuiltInRegistries.GULL_VARIANT.get()
             .fowlplay$getRandom(world.getRandom())
             .ifPresent(this::setVariant);
         return super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityNbt);
@@ -114,11 +110,6 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     @Override
     protected boolean canSwim() {
         return true;
-    }
-
-    @Override
-    public int getFlapFrequency() {
-        return 0;
     }
 
     public static AttributeSupplier.Builder createGullAttributes() {
@@ -148,13 +139,13 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putString("variant", FowlPlayRegistries.GULL_VARIANT.get().fowlplay$getId(this.getVariant()).toString());
+        nbt.putString("variant", FowlPlayBuiltInRegistries.GULL_VARIANT.get().fowlplay$getKey(this.getVariant()).toString());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        GullVariant variant = FowlPlayRegistries.GULL_VARIANT.get().fowlplay$get(ResourceLocation.tryParse(nbt.getString("variant")));
+        GullVariant variant = FowlPlayBuiltInRegistries.GULL_VARIANT.get().fowlplay$get(ResourceLocation.tryParse(nbt.getString("variant")));
         if(variant != null) {
             this.setVariant(variant);
         }
@@ -190,12 +181,7 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     public void updateAnimations() {
         this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
         this.glidingState.animateWhen(this.isFlying(), this.tickCount);
-        this.floatingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
-    }
-
-    @Override
-    protected boolean isFlapping() {
-        return this.isFlying();
+        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
     }
 
     @Override
@@ -299,6 +285,26 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
         );
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public BrainActivityGroup<? extends GullEntity> getForageTasks() {
+        return BirdBrain.forageActivity(
+            new OneRandomBehaviour<>(
+                Pair.of(
+                    CompositeBehaviours.trySetNonAirWalkTarget(),
+                    1
+                ),
+                Pair.of(
+                    CustomBehaviours.idleIfNotFlying()
+                        .runFor(entity -> entity.getRandom().nextIntBetweenInclusive(100, 300)),
+                    2
+                )
+            ),
+            new SetRandomFlightTarget<>()
+        );
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public BrainActivityGroup<? extends GullEntity> getIdleTasks() {
         return BirdBrain.idleActivity(
@@ -306,21 +312,26 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
             new FollowParent<>(),
             SetEntityLookTarget.create(Birds::isPlayerHoldingFood),
             new SetRandomLookTarget<>()
-                .lookChance(0.02f)
+                .lookChance(0.02f),
+            new OneRandomBehaviour<>(
+                CompositeBehaviours.trySetNonAirWalkTarget(),
+                CustomBehaviours.idleIfNotFlying()
+                    .runFor(entity -> entity.getRandom().nextIntBetweenInclusive(100, 300))
+            )
         );
     }
 
     @Override
     public BrainActivityGroup<? extends GullEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
-            CustomBehaviours.setNearestFoodWalkTarget()
+            CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
     public BrainActivityGroup<? extends GullEntity> getRestTasks() {
         return BirdBrain.restActivity(
-            CustomBehaviours.setWaterRestTarget(),
+            CompositeBehaviours.trySetWaterRestTarget(),
             CustomBehaviours.idleIfInWater()
         );
     }
@@ -329,7 +340,6 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     public BrainActivityGroup<GullEntity> getSoarTasks() {
         return BirdBrain.soarActivity(
             new SetRandomFlightTarget<>()
-                .startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
         );
     }
 

@@ -1,13 +1,14 @@
 package aqario.fowlplay.common.entity;
 
-import aqario.fowlplay.common.entity.ai.control.BirdBodyControl;
+import aqario.fowlplay.common.entity.ai.control.BirdBodyRotationControl;
 import aqario.fowlplay.common.entity.ai.control.BirdLookControl;
 import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;
-import aqario.fowlplay.common.network.FowlPlayDebugInfoSender;
+import aqario.fowlplay.common.network.FowlPlayDebugPackets;
+import aqario.fowlplay.common.util.AnimationStateList;
 import aqario.fowlplay.common.util.Birds;
-import aqario.fowlplay.core.FowlPlayMemoryModuleType;
+import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
-import aqario.fowlplay.core.platform.CustomSpawnGroup;
+import aqario.fowlplay.core.platform.CustomMobCategory;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -17,11 +18,11 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.BodyRotationControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
-import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -30,9 +31,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
+import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class BirdEntity extends Animal {
+    public final AnimationState standingState = new AnimationState();
+    public final AnimationState swimmingState = new AnimationState();
+    public final AnimationStateList idleAnimStates = this.createIdleAnimations();
     private boolean ambient;
     private int eatingTime;
     protected int idleAnimationChance;
@@ -65,7 +70,7 @@ public abstract class BirdEntity extends Animal {
         this.setYRot(world.getRandom().nextFloat() * 360.0F);
         this.setYBodyRot(this.getYRot());
         this.setYHeadRot(this.getYRot());
-        if(this.getType().getCategory() == CustomSpawnGroup.ambientBirds()) {
+        if(this.getType().getCategory() == CustomMobCategory.ambientBirds()) {
             this.setAmbient(true);
         }
         return super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityNbt);
@@ -84,11 +89,13 @@ public abstract class BirdEntity extends Animal {
             this.setAmbient(nbt.getBoolean("ambient"));
         }
         else {
-            this.setAmbient(this.getType().getCategory() == CustomSpawnGroup.ambientBirds());
+            this.setAmbient(this.getType().getCategory() == CustomMobCategory.ambientBirds());
         }
     }
 
-    // non-ambient birds count towards the mob cap, but they don't despawn
+    /**
+     * non-ambient birds count towards the mob cap, but they don't despawn
+     */
     public boolean isAmbient() {
         return this.ambient;
     }
@@ -155,9 +162,8 @@ public abstract class BirdEntity extends Animal {
             this.take(item, stack.getCount());
             item.discard();
             this.eatingTime = 0;
-            if(this.getBrain().checkMemory(FowlPlayMemoryModuleType.SEES_FOOD.get(), MemoryStatus.VALUE_PRESENT)) {
-                this.getBrain().eraseMemory(FowlPlayMemoryModuleType.SEES_FOOD.get());
-            }
+            Brain<?> brain = this.getBrain();
+            BrainUtils.clearMemory(brain, FowlPlayMemoryTypes.SEES_FOOD.get());
         }
     }
 
@@ -202,7 +208,7 @@ public abstract class BirdEntity extends Animal {
     @Override
     public void aiStep() {
         super.aiStep();
-        if(!this.level().isClientSide && this.isAlive()) {
+        if(!this.level().isClientSide() && this.isAlive()) {
             ++this.eatingTime;
             ItemStack stack = this.getItemBySlot(EquipmentSlot.MAINHAND);
             if(this.canEat(stack)) {
@@ -283,6 +289,10 @@ public abstract class BirdEntity extends Animal {
         this.level().getProfiler().pop();
     }
 
+    protected AnimationStateList createIdleAnimations() {
+        return new AnimationStateList();
+    }
+
     @Override
     public void tick() {
         if(this.level().isClientSide()) {
@@ -291,7 +301,35 @@ public abstract class BirdEntity extends Animal {
         super.tick();
     }
 
+    protected boolean isMoving() {
+        return this.walkAnimation.isMoving();
+    }
+
     protected void updateAnimations() {
+        // on land
+        if(!this.isInWaterOrBubble()) {
+            if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {
+                this.resetIdleAnimationDelay();
+                this.standingState.stop();
+                this.idleAnimStates.stopAll();
+                this.idleAnimStates.startRandom(this.tickCount);
+            }
+            else if(this.isMoving()) {
+                this.idleAnimStates.stopAll();
+            }
+            if(!this.idleAnimStates.containsStarted()) {
+                this.standingState.startIfStopped(this.tickCount);
+            }
+            else {
+                this.standingState.stop();
+            }
+        }
+        else {
+            this.standingState.stop();
+            this.idleAnimStates.stopAll();
+        }
+        // in water
+        this.swimmingState.animateWhen(this.isInWaterOrBubble(), this.tickCount);
     }
 
     protected int getIdleAnimationDelay() {
@@ -406,7 +444,7 @@ public abstract class BirdEntity extends Animal {
 
     @Override
     protected BodyRotationControl createBodyControl() {
-        return new BirdBodyControl(this);
+        return new BirdBodyRotationControl(this);
     }
 
     @Override
@@ -423,6 +461,6 @@ public abstract class BirdEntity extends Animal {
     protected void sendDebugPackets() {
         super.sendDebugPackets();
         DebugPackets.sendEntityBrain(this);
-        FowlPlayDebugInfoSender.sendBirdDebugData(this);
+        FowlPlayDebugPackets.sendBirdData(this);
     }
 }

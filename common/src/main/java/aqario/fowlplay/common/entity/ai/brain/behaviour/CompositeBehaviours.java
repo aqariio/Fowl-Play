@@ -1,5 +1,6 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
+import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.PenguinEntity;
 import aqario.fowlplay.common.util.Birds;
@@ -20,6 +21,62 @@ import java.util.function.Predicate;
  */
 public class CompositeBehaviours {
     @SuppressWarnings("unchecked")
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetWaterWalkTarget() {
+        return new AllApplicableBehaviours<>(
+            new SetWaterWalkTarget<E>()
+                .radius(32, 24),
+            new SetRandomFlightTarget<>()
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetNonAirWalkTarget() {
+        return new AllApplicableBehaviours<>(
+            new SetNonAirWalkTarget<E>()
+                .setRadius(32)
+                .dontAvoidWater(),
+            new SetRandomFlightTarget<>()
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetGroundWalkTarget() {
+        return new AllApplicableBehaviours<>(
+            new SetNonAirWalkTarget<E>()
+                .setRadius(32, 16),
+            new SetRandomFlightTarget<>()
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetWaterRestTarget() {
+        return new AllApplicableBehaviours<>(
+            new SetWaterWalkTarget<E>()
+                .radius(64, 32),
+            new SetRandomFlightTarget<>()
+        )
+            .startCondition(Predicate.not(Entity::isInWaterOrBubble))
+            .stopIf(Entity::isInWaterOrBubble);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <E extends BirdEntity> ExtendedBehaviour<E> idleAndLookAround() {
+        return new OneRandomBehaviour<>(
+            new SetRandomLookTarget<>(),
+            new Idle<>()
+                .noTimeout()
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> tryPickUpFood() {
+        return new AllApplicableBehaviours<>(
+            CustomBehaviours.setNearestFoodWalkTarget(),
+            new SetRandomFlightTarget<>()
+        );
+    }
+
+    @SuppressWarnings("unchecked")
     public static ExtendedBehaviour<PenguinEntity> slideToWater() {
         return new AllApplicableBehaviours<>(
             Pair.of(
@@ -38,11 +95,7 @@ public class CompositeBehaviours {
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> tryPerch() {
         return new OneRandomBehaviour<>(
             Pair.of(
-                new OneRandomBehaviour<E>(
-                    new SetRandomLookTarget<>(),
-                    new Idle<>()
-                        .noTimeout()
-                )
+                idleAndLookAround()
                     .runFor(entity -> entity.getRandom().nextIntBetweenInclusive(30, 100))
                     .startCondition(Birds::isPerched)
                     .stopIf(Predicate.not(Birds::isPerched)),
@@ -59,18 +112,14 @@ public class CompositeBehaviours {
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> tryForage() {
         return new OneRandomBehaviour<>(
             Pair.of(
-                new OneRandomBehaviour<>(
-                    new SetRandomLookTarget<>(),
-                    new Idle<>()
-                        .noTimeout()
-                )
+                idleAndLookAround()
                     .runFor(entity -> entity.getRandom().nextIntBetweenInclusive(30, 100))
                     .startCondition(Entity::onGround)
                     .stopIf(Predicate.not(Entity::onGround)),
                 2
             ),
             Pair.of(
-                CustomBehaviours.setGroundWalkTarget(),
+                trySetGroundWalkTarget(),
                 1
             )
         );

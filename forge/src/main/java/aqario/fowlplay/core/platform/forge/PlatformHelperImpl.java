@@ -3,7 +3,7 @@ package aqario.fowlplay.core.platform.forge;
 import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
 import aqario.fowlplay.core.FowlPlay;
-import aqario.fowlplay.core.FowlPlayRegistryKeys;
+import aqario.fowlplay.core.FowlPlayRegistries;
 import aqario.fowlplay.core.platform.CommonRegistry;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -42,27 +42,27 @@ import java.util.function.Supplier;
 public class PlatformHelperImpl {
     public static final Object2ObjectOpenHashMap<Supplier<Item>, ResourceKey<CreativeModeTab>> ITEM_TO_GROUPS = new Object2ObjectOpenHashMap<>();
     public static final DeferredRegister<ChickenVariant> CHICKEN_VARIANTS = DeferredRegister.create(
-        FowlPlayRegistryKeys.CHICKEN_VARIANT.location(),
+        FowlPlayRegistries.CHICKEN_VARIANT.location(),
         FowlPlay.ID
     );
     public static final DeferredRegister<DuckVariant> DUCK_VARIANTS = DeferredRegister.create(
-        FowlPlayRegistryKeys.DUCK_VARIANT.location(),
+        FowlPlayRegistries.DUCK_VARIANT.location(),
         FowlPlay.ID
     );
     public static final DeferredRegister<GooseVariant> GOOSE_VARIANTS = DeferredRegister.create(
-        FowlPlayRegistryKeys.GOOSE_VARIANT,
+        FowlPlayRegistries.GOOSE_VARIANT.location(),
         FowlPlay.ID
     );
     public static final DeferredRegister<GullVariant> GULL_VARIANTS = DeferredRegister.create(
-        FowlPlayRegistryKeys.GULL_VARIANT.location(),
+        FowlPlayRegistries.GULL_VARIANT.location(),
         FowlPlay.ID
     );
     public static final DeferredRegister<PigeonVariant> PIGEON_VARIANTS = DeferredRegister.create(
-        FowlPlayRegistryKeys.PIGEON_VARIANT.location(),
+        FowlPlayRegistries.PIGEON_VARIANT.location(),
         FowlPlay.ID
     );
     public static final DeferredRegister<SparrowVariant> SPARROW_VARIANTS = DeferredRegister.create(
-        FowlPlayRegistryKeys.SPARROW_VARIANT.location(),
+        FowlPlayRegistries.SPARROW_VARIANT.location(),
         FowlPlay.ID
     );
     public static final DeferredRegister<Activity> ACTIVITIES = DeferredRegister.create(

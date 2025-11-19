@@ -2,7 +2,7 @@ package aqario.fowlplay.common.entity.ai.brain;
 
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.core.FowlPlayActivities;
-import aqario.fowlplay.core.FowlPlayMemoryModuleType;
+import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.world.entity.ai.behavior.Behavior;
@@ -51,13 +51,13 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
     @SafeVarargs
     static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> avoidActivity(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(Activity.AVOID).priority(10).behaviours(behaviours)
-            .requireAndWipeMemoriesOnUse(FowlPlayMemoryModuleType.IS_AVOIDING.get());
+            .requireAndWipeMemoriesOnUse(FowlPlayMemoryTypes.IS_AVOIDING.get());
     }
 
     @SafeVarargs
     static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> deliverActivity(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(FowlPlayActivities.DELIVER.get()).priority(10).behaviours(behaviours)
-            .requireAndWipeMemoriesOnUse(FowlPlayMemoryModuleType.RECIPIENT.get());
+            .requireAndWipeMemoriesOnUse(FowlPlayMemoryTypes.RECIPIENT.get());
     }
 
     @SafeVarargs
@@ -84,7 +84,7 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
     @SafeVarargs
     static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> pickupFoodActivity(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(FowlPlayActivities.PICK_UP.get()).priority(10).behaviours(behaviours)
-            .requireAndWipeMemoriesOnUse(FowlPlayMemoryModuleType.SEES_FOOD.get());
+            .requireAndWipeMemoriesOnUse(FowlPlayMemoryTypes.SEES_FOOD.get());
     }
 
     @SafeVarargs

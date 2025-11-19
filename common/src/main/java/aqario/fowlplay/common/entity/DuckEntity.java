@@ -2,19 +2,16 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
-import aqario.fowlplay.common.entity.ai.brain.behaviour.CustomBehaviours;
-import aqario.fowlplay.common.entity.ai.brain.behaviour.FlightBehaviours;
-import aqario.fowlplay.common.entity.ai.brain.behaviour.SetEntityLookTarget;
-import aqario.fowlplay.common.entity.ai.brain.behaviour.SetRandomLookTarget;
+import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.entity.ai.control.BirdFloatMoveControl;
-import aqario.fowlplay.common.entity.ai.pathing.AmphibiousNavigation;
+import aqario.fowlplay.common.entity.ai.navigation.AmphibiousNavigation;
 import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.common.util.CylindricalRadius;
-import aqario.fowlplay.core.FowlPlayRegistries;
+import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
+import aqario.fowlplay.core.FowlPlayEntityDataSerializers;
 import aqario.fowlplay.core.FowlPlaySchedules;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
-import aqario.fowlplay.core.FowlPlayTrackedDataHandlerRegistry;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.datafixers.util.Pair;
@@ -63,12 +60,8 @@ import java.util.List;
 public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEntity>, VariantHolder<DuckVariant>, Flocking {
     private static final EntityDataAccessor<DuckVariant> VARIANT = SynchedEntityData.defineId(
         DuckEntity.class,
-        FowlPlayTrackedDataHandlerRegistry.DUCK_VARIANT
+        FowlPlayEntityDataSerializers.DUCK_VARIANT
     );
-    public final AnimationState standingState = new AnimationState();
-    public final AnimationState glidingState = new AnimationState();
-    public final AnimationState flappingState = new AnimationState();
-    public final AnimationState floatingState = new AnimationState();
 
     public DuckEntity(EntityType<? extends DuckEntity> entityType, Level world) {
         super(entityType, world);
@@ -108,7 +101,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt) {
-        FowlPlayRegistries.DUCK_VARIANT.get()
+        FowlPlayBuiltInRegistries.DUCK_VARIANT.get()
             .fowlplay$getRandom(world.getRandom())
             .ifPresent(this::setVariant);
         return super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityNbt);
@@ -117,11 +110,6 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     @Override
     protected boolean canSwim() {
         return true;
-    }
-
-    @Override
-    public int getFlapFrequency() {
-        return 0;
     }
 
     public static AttributeSupplier.Builder createDuckAttributes() {
@@ -151,13 +139,13 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putString("variant", FowlPlayRegistries.DUCK_VARIANT.get().fowlplay$getId(this.getVariant()).toString());
+        nbt.putString("variant", FowlPlayBuiltInRegistries.DUCK_VARIANT.get().fowlplay$getKey(this.getVariant()).toString());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        DuckVariant variant = FowlPlayRegistries.DUCK_VARIANT.get().fowlplay$get(ResourceLocation.tryParse(nbt.getString("variant")));
+        DuckVariant variant = FowlPlayBuiltInRegistries.DUCK_VARIANT.get().fowlplay$get(ResourceLocation.tryParse(nbt.getString("variant")));
         if(variant != null) {
             this.setVariant(variant);
         }
@@ -187,12 +175,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     public void updateAnimations() {
         this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
         this.flappingState.animateWhen(this.isFlying(), this.tickCount);
-        this.floatingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
-    }
-
-    @Override
-    protected boolean isFlapping() {
-        return this.isFlying();
+        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
     }
 
     @Override
@@ -299,7 +282,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
         return BirdBrain.forageActivity(
             new OneRandomBehaviour<>(
                 Pair.of(
-                    CustomBehaviours.setWaterWalkTarget(),
+                    CompositeBehaviours.trySetWaterWalkTarget(),
                     1
                 ),
                 Pair.of(
@@ -321,7 +304,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
             new SetRandomLookTarget<>()
                 .lookChance(0.02f),
             new OneRandomBehaviour<>(
-                CustomBehaviours.setWaterWalkTarget(),
+                CompositeBehaviours.trySetWaterWalkTarget(),
                 CustomBehaviours.idleIfNotFlying()
                     .runFor(entity -> entity.getRandom().nextIntBetweenInclusive(100, 300))
             )
@@ -331,14 +314,14 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     @Override
     public BrainActivityGroup<? extends DuckEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
-            CustomBehaviours.setNearestFoodWalkTarget()
+            CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
     public BrainActivityGroup<? extends DuckEntity> getRestTasks() {
         return BirdBrain.restActivity(
-            CustomBehaviours.setWaterRestTarget(),
+            CompositeBehaviours.trySetWaterRestTarget(),
             CustomBehaviours.idleIfInWater()
         );
     }

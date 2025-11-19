@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.entity;
 
-import aqario.fowlplay.core.FowlPlayTrackedDataHandlerRegistry;
+import aqario.fowlplay.core.FowlPlayEntityDataSerializers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 public abstract class TrustingBirdEntity extends FlyingBirdEntity {
-    protected static final EntityDataAccessor<List<UUID>> TRUSTED = SynchedEntityData.defineId(TrustingBirdEntity.class, FowlPlayTrackedDataHandlerRegistry.UUID_LIST);
+    protected static final EntityDataAccessor<List<UUID>> TRUSTED = SynchedEntityData.defineId(TrustingBirdEntity.class, FowlPlayEntityDataSerializers.UUID_LIST);
 
     protected TrustingBirdEntity(EntityType<? extends BirdEntity> entityType, Level world) {
         super(entityType, world);

@@ -15,8 +15,11 @@ import java.util.function.Predicate;
 
 public class TargetingUtil {
     @Nullable
-    public static BlockPos validateAny(PathfinderMob entity, BlockPos pos) {
-        BlockPos adjustedPos = RandomPos.moveUpOutOfSolid(pos, entity.level().getMaxBuildHeight(), currentPos ->
+    public static BlockPos tryFindAir(PathfinderMob entity, CylindricalRadius range, BlockPos pos) {
+        BlockPos adjustedPos = RandomPos.generateRandomPosTowardDirection(
+            entity, range.horizontal(), entity.getRandom(), pos
+        );
+        adjustedPos = RandomPos.moveUpOutOfSolid(adjustedPos, entity.level().getMaxBuildHeight(), currentPos ->
             GoalUtils.isSolid(entity, currentPos)
         );
         if(GoalUtils.isWater(entity, adjustedPos)
@@ -29,8 +32,8 @@ public class TargetingUtil {
     }
 
     @Nullable
-    public static BlockPos validateWater(PathfinderMob entity, BlockPos pos) {
-        BlockPos adjustedPos = findSurfacePosition(entity, pos, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, 0, currentPos ->
+    public static BlockPos tryFindWater(PathfinderMob entity, CylindricalRadius range, BlockPos pos) {
+        BlockPos adjustedPos = findSurfacePosition(entity, pos, range, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, 0, currentPos ->
             GoalUtils.isSolid(entity, currentPos)
                 || GoalUtils.isWater(entity, currentPos)
         );
@@ -41,8 +44,8 @@ public class TargetingUtil {
     }
 
     @Nullable
-    public static BlockPos validateNonAir(PathfinderMob entity, BlockPos pos) {
-        BlockPos adjustedPos = findSurfacePosition(entity, pos, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, 1, currentPos ->
+    public static BlockPos tryFindNonAir(PathfinderMob entity, CylindricalRadius range, BlockPos pos) {
+        BlockPos adjustedPos = findSurfacePosition(entity, pos, range, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, 1, currentPos ->
             GoalUtils.isSolid(entity, currentPos)
                 || GoalUtils.isWater(entity, currentPos)
         );
@@ -55,8 +58,8 @@ public class TargetingUtil {
     }
 
     @Nullable
-    public static BlockPos validateGround(PathfinderMob entity, BlockPos pos) {
-        BlockPos adjustedPos = findSurfacePosition(entity, pos, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, 1, currentPos ->
+    public static BlockPos tryFindGround(PathfinderMob entity, CylindricalRadius range, BlockPos pos) {
+        BlockPos adjustedPos = findSurfacePosition(entity, pos, range, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, 1, currentPos ->
             GoalUtils.isSolid(entity, currentPos)
         );
         if(GoalUtils.isWater(entity, adjustedPos)
@@ -69,9 +72,9 @@ public class TargetingUtil {
     }
 
     @Nullable
-    public static BlockPos validatePerch(PathfinderMob entity, BlockPos pos) {
+    public static BlockPos tryFindPerch(PathfinderMob entity, CylindricalRadius range, BlockPos pos) {
         // TODO: this logic still needs fixing
-        BlockPos adjustedPos = findSurfacePosition(entity, pos, Heightmap.Types.MOTION_BLOCKING, 1, currentPos ->
+        BlockPos adjustedPos = findSurfacePosition(entity, pos, range, Heightmap.Types.MOTION_BLOCKING, 1, currentPos ->
             GoalUtils.isSolid(entity, currentPos)
                 && !TargetingUtil.isPerch(entity, currentPos)
         );
@@ -86,39 +89,50 @@ public class TargetingUtil {
             : adjustedPos;
     }
 
-    @Nullable
-    public static BlockPos towardTarget(PathfinderMob entity, int horizontalRange, boolean posTargetInRange, BlockPos relativeInRangePos) {
-        BlockPos adjustedPos = RandomPos.generateRandomPosTowardDirection(entity, horizontalRange, entity.getRandom(), relativeInRangePos);
-        if(GoalUtils.isOutsideLimits(adjustedPos, entity)
-            || GoalUtils.isRestricted(posTargetInRange, entity, adjustedPos)
-        ) {
-            return null;
-        }
-        return adjustedPos;
-    }
-
     public static BlockPos findSurfacePosition(
         final PathfinderMob entity,
         final BlockPos initialPos,
+        CylindricalRadius range,
         final Heightmap.Types heightmap,
         final int blocksAbove,
         final Predicate<BlockPos> predicate
     ) {
-        BlockPos adjustedPos;
+        BlockPos adjustedPos = RandomPos.generateRandomPosTowardDirection(
+            entity, range.horizontal(), entity.getRandom(), initialPos
+        );
         // if position is above the surface, set to surface level
-        if(initialPos.getY() > entity.level().getHeight(heightmap, initialPos.getX(), initialPos.getZ())) {
+        if(adjustedPos.getY() > entity.level().getHeight(heightmap, adjustedPos.getX(), adjustedPos.getZ())) {
             adjustedPos = new BlockPos(
-                initialPos.getX(),
-                entity.level().getHeight(heightmap, initialPos.getX(), initialPos.getZ()) + blocksAbove,
-                initialPos.getZ()
+                adjustedPos.getX(),
+                entity.level().getHeight(heightmap, adjustedPos.getX(), adjustedPos.getZ()) + blocksAbove,
+                adjustedPos.getZ()
             );
         }
         // else, move up until we reach solid ground or water
         else {
-            adjustedPos = RandomPos.moveUpOutOfSolid(initialPos, entity.level().getMaxBuildHeight(), predicate)
+            adjustedPos = RandomPos.moveUpOutOfSolid(adjustedPos, entity.level().getMaxBuildHeight(), predicate)
                 .above(blocksAbove - 1);
         }
         return adjustedPos;
+    }
+
+    @Nullable
+    public static BlockPos validateBlockPos(PathfinderMob entity, @Nullable BlockPos pos, CylindricalRadius range) {
+        if(pos == null) {
+            return null;
+        }
+        if(GoalUtils.isOutsideLimits(pos, entity)
+            || GoalUtils.isRestricted(GoalUtils.mobRestricted(entity, range.horizontal()), entity, pos)
+        ) {
+            return null;
+        }
+        return pos;
+    }
+
+    @Nullable
+    public static Vec3 validatePos(PathfinderMob entity, BlockPos pos, CylindricalRadius range) {
+        BlockPos validPos = validateBlockPos(entity, pos, range);
+        return validPos != null ? Vec3.atBottomCenterOf(validPos) : null;
     }
 
     public static boolean isPerch(PathfinderMob entity, BlockPos pos) {

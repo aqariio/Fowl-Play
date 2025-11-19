@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity;
 
-import aqario.fowlplay.common.entity.ai.pathing.FlightNavigation;
-import aqario.fowlplay.common.entity.ai.pathing.GroundNavigation;
+import aqario.fowlplay.common.entity.ai.navigation.FlightNavigation;
+import aqario.fowlplay.common.entity.ai.navigation.GroundNavigation;
 import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.common.util.CylindricalRadius;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
@@ -16,10 +16,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -41,14 +38,17 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         FlyingBirdEntity.class,
         EntityDataSerializers.BOOLEAN
     );
+    public final AnimationState glidingState = new AnimationState();
+    public final AnimationState flappingState = new AnimationState();
     private boolean isFlightNavigation;
     private float prevRoll;
-    private float visualRoll;
+    private float roll;
     public int timeFlying = 0;
     private static final int ROLL_FACTOR = 4;
     private static final float MIN_HEALTH_TO_FLY = 1.5F;
     private static final int MIN_FLIGHT_TIME = 15;
     private static final double MIN_FLIGHT_VELOCITY = 0.1;
+    private static final float MAX_ROLL_CHANGE = 20;
 
     protected FlyingBirdEntity(EntityType<? extends BirdEntity> entityType, Level world) {
         super(entityType, world);
@@ -126,8 +126,6 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         this.playSound(FowlPlaySoundEvents.ENTITY_BIRD_FLAP.get(), this.getFlapVolume(), this.getFlapPitch());
     }
 
-    public abstract int getFlapFrequency();
-
     public abstract float getFlapVolume();
 
     public abstract float getFlapPitch();
@@ -163,8 +161,14 @@ public abstract class FlyingBirdEntity extends BirdEntity {
                 this.setNavigation(this.isFlying());
             }
         }
-        this.prevRoll = this.visualRoll;
-        this.visualRoll = this.calculateRoll(this.yRotO, this.getYRot());
+        this.prevRoll = this.roll;
+        this.roll = this.rollTowards(this.prevRoll, this.calculateRoll(this.yRotO, this.getYRot()));
+    }
+
+    protected float rollTowards(float from, float to) {
+        float diff = Mth.degreesDifference(from, to);
+        float angle = Mth.clamp(diff, -MAX_ROLL_CHANGE, MAX_ROLL_CHANGE);
+        return from + angle;
     }
 
     private float calculateRoll(float prevYaw, float currentYaw) {
@@ -179,7 +183,42 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     public float getRoll(float tickDelta) {
-        return tickDelta == 1.0F ? this.visualRoll : Mth.lerp(tickDelta, this.prevRoll, this.visualRoll);
+        return tickDelta == 1.0F ? this.roll : Mth.lerp(tickDelta, this.prevRoll, this.roll);
+    }
+
+    @Override
+    protected void updateAnimations() {
+        // on land
+        if(!this.isFlying() && !this.isInWaterOrBubble()) {
+            if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {
+                this.resetIdleAnimationDelay();
+                this.standingState.stop();
+                this.idleAnimStates.stopAll();
+                this.idleAnimStates.startRandom(this.tickCount);
+            }
+            else if(this.isMoving()) {
+                this.idleAnimStates.stopAll();
+            }
+            if(!this.idleAnimStates.containsStarted()) {
+                this.standingState.startIfStopped(this.tickCount);
+            }
+            else {
+                this.standingState.stop();
+            }
+        }
+        else {
+            this.standingState.stop();
+            this.idleAnimStates.stopAll();
+        }
+        // flying
+        this.glidingState.animateWhen(this.isFlying(), this.tickCount);
+        // in water
+        this.swimmingState.animateWhen(this.isInWaterOrBubble() && !this.isFlying(), this.tickCount);
+    }
+
+    @Override
+    protected boolean isFlapping() {
+        return this.isFlying();
     }
 
     protected PathNavigation getLandNavigation() {
@@ -233,14 +272,14 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         if(!this.isFlying()) {
             return super.getWalkTargetValue(pos, world);
         }
-        return this.getFlyingPathfindingFavor(pos, world);
+        return this.getFlyingWalkTargetValue(pos, world);
     }
 
-    public float getFlyingPathfindingFavor(BlockPos pos) {
-        return this.getFlyingPathfindingFavor(pos, this.level());
+    public float getFlyingWalkTargetValue(BlockPos pos) {
+        return this.getFlyingWalkTargetValue(pos, this.level());
     }
 
-    public float getFlyingPathfindingFavor(BlockPos pos, LevelReader world) {
+    public float getFlyingWalkTargetValue(BlockPos pos, LevelReader world) {
         // birds prefer to fly within a certain height range above ground level
         return magicFunction(
             pos.getY() - world.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()),

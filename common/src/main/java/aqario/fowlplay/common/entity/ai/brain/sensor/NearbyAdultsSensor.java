@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.sensor;
 
-import aqario.fowlplay.core.FowlPlayMemoryModuleType;
-import aqario.fowlplay.core.FowlPlaySensorType;
+import aqario.fowlplay.core.FowlPlayMemoryTypes;
+import aqario.fowlplay.core.FowlPlaySensorTypes;
 import com.google.common.collect.Lists;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,12 +17,12 @@ import java.util.function.BiPredicate;
 public class NearbyAdultsSensor<E extends AgeableMob> extends EntityFilteringSensor<List<? extends AgeableMob>, E> {
     @Override
     public SensorType<? extends ExtendedSensor<?>> type() {
-        return FowlPlaySensorType.NEARBY_ADULTS.get();
+        return FowlPlaySensorTypes.NEARBY_ADULTS.get();
     }
 
     @Override
     protected MemoryModuleType<List<? extends AgeableMob>> getMemory() {
-        return FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS.get();
+        return FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get();
     }
 
     @Override

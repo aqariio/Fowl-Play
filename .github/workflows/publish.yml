@@ -6,7 +6,7 @@ on:
             branches:
                 description: "Branches"
                 required: true
-                default: "['arch-1.20.1', 'arch-1.21.1']"
+                default: "['1.20.1', '1.21.1']"
                 type: string
             platform:
                 description: "Platforms"

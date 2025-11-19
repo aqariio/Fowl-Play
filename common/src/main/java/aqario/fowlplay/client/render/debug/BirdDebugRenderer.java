@@ -73,9 +73,9 @@ public class BirdDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
         Player playerEntity = this.client.player;
         // noinspection ConstantConditions
         BlockPos playerPos = BlockPos.containing(playerEntity.getX(), birdData.pos().y(), playerEntity.getZ());
-        BlockPos brainPos = BlockPos.containing(birdData.pos());
+        BlockPos birdPos = BlockPos.containing(birdData.pos());
         // ignores y
-        return playerPos.closerThan(brainPos, 30.0);
+        return playerPos.closerThan(birdPos, 30.0);
     }
 
     private void draw(PoseStack matrices, MultiBufferSource vertexConsumers, double x, double y, double z) {

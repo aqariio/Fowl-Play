@@ -5,9 +5,9 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "LivingEntityMixin",
+    "MobCategoryMixin",
     "RegistryMixin",
-    "SpawnGroupMixin",
-    "SpawnRestrictionLocationMixin"
+    "SpawnPlacementTypeMixin"
   ],
   "client": [
   ],

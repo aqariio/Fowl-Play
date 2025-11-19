@@ -4,40 +4,38 @@ import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
-import aqario.fowlplay.common.entity.ai.pathing.GroundNavigation;
+import aqario.fowlplay.common.entity.ai.navigation.GroundNavigation;
 import aqario.fowlplay.common.util.Birds;
 import aqario.fowlplay.core.*;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.Brain;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
@@ -64,12 +62,8 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     );
     private static final EntityDataAccessor<PigeonVariant> VARIANT = SynchedEntityData.defineId(
         PigeonEntity.class,
-        FowlPlayTrackedDataHandlerRegistry.PIGEON_VARIANT
+        FowlPlayEntityDataSerializers.PIGEON_VARIANT
     );
-    public final AnimationState standingState = new AnimationState();
-    public final AnimationState glidingState = new AnimationState();
-    public final AnimationState flappingState = new AnimationState();
-    public final AnimationState floatingState = new AnimationState();
     public final AnimationState sittingState = new AnimationState();
 
     public PigeonEntity(EntityType<? extends PigeonEntity> entityType, Level world) {
@@ -128,7 +122,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putString("variant", FowlPlayRegistries.PIGEON_VARIANT.get().fowlplay$getId(this.getVariant()).toString());
+        nbt.putString("variant", FowlPlayBuiltInRegistries.PIGEON_VARIANT.get().fowlplay$getKey(this.getVariant()).toString());
         if(this.getRecipientUuid() != null) {
             nbt.putUUID("recipient", this.getRecipientUuid());
         }
@@ -137,7 +131,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        PigeonVariant variant = FowlPlayRegistries.PIGEON_VARIANT.get().fowlplay$get(ResourceLocation.tryParse(nbt.getString("variant")));
+        PigeonVariant variant = FowlPlayBuiltInRegistries.PIGEON_VARIANT.get().fowlplay$get(ResourceLocation.tryParse(nbt.getString("variant")));
         if(variant != null) {
             this.setVariant(variant);
         }
@@ -157,11 +151,6 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     @Override
     public float getWaterline() {
         return 0.45F;
-    }
-
-    @Override
-    public int getFlapFrequency() {
-        return 7;
     }
 
     @Nullable
@@ -283,13 +272,8 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     public void updateAnimations() {
         this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble() && !this.isInSittingPose(), this.tickCount);
         this.flappingState.animateWhen(this.isFlying(), this.tickCount);
-        this.floatingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
         this.sittingState.animateWhen(this.isInSittingPose(), this.tickCount);
-    }
-
-    @Override
-    protected boolean isFlapping() {
-        return this.isFlying();
     }
 
     @Override
@@ -402,8 +386,8 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
             new LookAtTarget<>()
                 .runFor(entity -> entity.getRandom().nextIntBetweenInclusive(45, 90)),
             new MoveToWalkTarget<>()
-                .startCondition(entity -> !BrainUtils.hasMemory(entity, FowlPlayMemoryModuleType.TELEPORT_TARGET.get()))
-                .stopIf(entity -> BrainUtils.hasMemory(entity, FowlPlayMemoryModuleType.TELEPORT_TARGET.get()))
+                .startCondition(entity -> !BrainUtils.hasMemory(entity, FowlPlayMemoryTypes.TELEPORT_TARGET.get()))
+                .stopIf(entity -> BrainUtils.hasMemory(entity, FowlPlayMemoryTypes.TELEPORT_TARGET.get()))
         );
     }
 
@@ -453,7 +437,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     @Override
     public BrainActivityGroup<? extends PigeonEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
-            CustomBehaviours.<PigeonEntity>setNearestFoodWalkTarget()
+            CompositeBehaviours.<PigeonEntity>tryPickUpFood()
                 .startCondition(pigeon -> !pigeon.isSitting())
         );
     }
@@ -474,7 +458,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     private static boolean shouldFlyToRecipient(PigeonEntity pigeon) {
-        UUID recipientUuid = pigeon.getBrain().getMemory(FowlPlayMemoryModuleType.RECIPIENT.get()).orElse(null);
+        UUID recipientUuid = pigeon.getBrain().getMemory(FowlPlayMemoryTypes.RECIPIENT.get()).orElse(null);
         if(recipientUuid == null) {
             return false;
         }
@@ -486,7 +470,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     private static boolean shouldStopFlyingToRecipient(PigeonEntity pigeon) {
-        UUID recipientUuid = pigeon.getBrain().getMemory(FowlPlayMemoryModuleType.RECIPIENT.get()).orElse(null);
+        UUID recipientUuid = pigeon.getBrain().getMemory(FowlPlayMemoryTypes.RECIPIENT.get()).orElse(null);
         if(recipientUuid == null) {
             return true;
         }
@@ -513,7 +497,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
         ItemStack stack = this.getItemBySlot(EquipmentSlot.OFFHAND);
         ServerPlayer recipient = this.getServer().getPlayerList().getPlayerByName(stack.getHoverName().getString());
 
-        if(!(stack.getItem() instanceof BundleItem) || !stack.hasCustomHoverName() || recipient == null || recipient.getUUID() == null) {
+        if(!(stack.getItem() instanceof BundleItem) || !stack.hasCustomHoverName() || recipient == null) {
             this.setRecipientUuid(null);
             return;
         }

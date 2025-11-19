@@ -2,7 +2,7 @@ package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.util.MemoryList;
-import aqario.fowlplay.core.FowlPlayMemoryModuleType;
+import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class TeleportToTarget extends ExtendedBehaviour<BirdEntity> {
     private static final MemoryList MEMORIES = MemoryList.create(1)
-        .present(FowlPlayMemoryModuleType.TELEPORT_TARGET.get());
+        .present(FowlPlayMemoryTypes.TELEPORT_TARGET.get());
 
     @Override
     protected List<Pair<MemoryModuleType<?>, MemoryStatus>> getMemoryRequirements() {
@@ -27,23 +27,23 @@ public class TeleportToTarget extends ExtendedBehaviour<BirdEntity> {
 
     @Override
     protected boolean shouldKeepRunning(BirdEntity entity) {
-        return BrainUtils.hasMemory(entity, FowlPlayMemoryModuleType.TELEPORT_TARGET.get());
+        return BrainUtils.hasMemory(entity, FowlPlayMemoryTypes.TELEPORT_TARGET.get());
     }
 
     @Override
     protected void tick(BirdEntity entity) {
         Brain<?> brain = entity.getBrain();
         if(this.tryTeleport(entity, brain)) {
-            BrainUtils.clearMemory(brain, FowlPlayMemoryModuleType.TELEPORT_TARGET.get());
+            BrainUtils.clearMemory(brain, FowlPlayMemoryTypes.TELEPORT_TARGET.get());
         }
     }
 
     private boolean tryTeleport(BirdEntity entity, Brain<?> brain) {
-        if(!BrainUtils.hasMemory(brain, FowlPlayMemoryModuleType.TELEPORT_TARGET.get())) {
+        if(!BrainUtils.hasMemory(brain, FowlPlayMemoryTypes.TELEPORT_TARGET.get())) {
             return false;
         }
         // noinspection ConstantConditions
-        Entity target = BrainUtils.getMemory(brain, FowlPlayMemoryModuleType.TELEPORT_TARGET.get()).entity();
+        Entity target = BrainUtils.getMemory(brain, FowlPlayMemoryTypes.TELEPORT_TARGET.get()).entity();
         BlockPos pos = target.blockPosition();
 
         for(int i = 0; i < 10; i++) {

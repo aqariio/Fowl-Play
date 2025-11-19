@@ -1,3 +1,10 @@
+## 1.1.0-beta.5
+
+- Update canada goose model and texture
+- More improvements to bird pathing (less midair spinning)
+- Fix jerky movement when birds turn
+- Migrate to Mojang mappings
+
 ## 1.1.0-beta.4
 
 - Fix incompatibility with PerfectParity

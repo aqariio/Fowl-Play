@@ -44,23 +44,11 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEntity> {
-    public final AnimationState standingState = new AnimationState();
-    public final AnimationState glidingState = new AnimationState();
-    public final AnimationState floatingState = new AnimationState();
-    private int timeSinceLastFlap = this.getFlapFrequency();
-    private int flapTime = 0;
-
     public HawkEntity(EntityType<? extends HawkEntity> entityType, Level world) {
         super(entityType, world);
-    }
-
-    @Override
-    public int getFlapFrequency() {
-        return 100;
     }
 
     public static AttributeSupplier.Builder createHawkAttributes() {
@@ -124,7 +112,6 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
 
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
-        // TODO: avoid if the target has hurt this entity and the target is not an attack target
         return entity.getType().is(FowlPlayEntityTypeTags.HAWK_AVOIDS);
     }
 
@@ -139,46 +126,13 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
         if(this.hasLowHealth()) {
             return false;
         }
-        Optional<LivingEntity> hurtBy = this.getBrain().getMemory(MemoryModuleType.HURT_BY_ENTITY);
-        return hurtBy.isPresent() && hurtBy.get().equals(target);
+        LivingEntity hurtBy = BrainUtils.getLastAttacker(this);
+        return hurtBy != null && hurtBy.equals(target);
     }
 
     @Override
     public boolean canBeAffected(MobEffectInstance effect) {
         return effect.getEffect() != MobEffects.HUNGER && super.canBeAffected(effect);
-    }
-
-    @Override
-    public void updateAnimations() {
-        this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
-        this.glidingState.animateWhen(this.isFlying(), this.tickCount);
-        if(this.isFlying()) {
-            if(this.timeSinceLastFlap > this.getFlapFrequency()) {
-                this.timeSinceLastFlap = 0;
-                this.flapTime++;
-            }
-            else if(this.isCurrentlyFlapping()) {
-                this.flapTime++;
-            }
-            else {
-                this.timeSinceLastFlap++;
-                this.flapTime = 0;
-            }
-        }
-        else {
-            this.timeSinceLastFlap = this.getFlapFrequency();
-            this.flapTime = 0;
-        }
-        this.floatingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
-    }
-
-    private boolean isCurrentlyFlapping() {
-        return this.flapTime > 0 && this.flapTime < 60;
-    }
-
-    @Override
-    protected boolean isFlapping() {
-        return this.isFlying();
     }
 
     @Override
@@ -283,7 +237,7 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     @Override
     public BrainActivityGroup<? extends HawkEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
-            CustomBehaviours.setNearestFoodWalkTarget()
+            CompositeBehaviours.tryPickUpFood()
         );
     }
 
@@ -300,7 +254,6 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     public BrainActivityGroup<? extends HawkEntity> getSoarTasks() {
         return BirdBrain.soarActivity(
             new SetRandomFlightTarget<>()
-                .startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
         );
     }
 

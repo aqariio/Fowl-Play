@@ -2,7 +2,7 @@ package aqario.fowlplay.common.world.gen;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.PigeonEntity;
-import aqario.fowlplay.core.FowlPlayEntityType;
+import aqario.fowlplay.core.FowlPlayEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -68,7 +68,7 @@ public class PigeonSpawner implements CustomSpawner {
     }
 
     private int spawn(BlockPos pos, ServerLevel world) {
-        PigeonEntity pigeon = FowlPlayEntityType.PIGEON.get().create(world);
+        PigeonEntity pigeon = FowlPlayEntityTypes.PIGEON.get().create(world);
         if(pigeon == null) {
             return 0;
         }

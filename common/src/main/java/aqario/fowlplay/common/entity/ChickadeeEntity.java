@@ -38,11 +38,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<ChickadeeEntity> {
-    public final AnimationState standingState = new AnimationState();
-    public final AnimationState glidingState = new AnimationState();
-    public final AnimationState flappingState = new AnimationState();
-    public final AnimationState floatingState = new AnimationState();
-
     public ChickadeeEntity(EntityType<? extends ChickadeeEntity> entityType, Level world) {
         super(entityType, world);
     }
@@ -74,20 +69,10 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
     }
 
     @Override
-    public int getFlapFrequency() {
-        return 7;
-    }
-
-    @Override
     protected void updateAnimations() {
         this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
         this.flappingState.animateWhen(this.isFlying(), this.tickCount);
-        this.floatingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
-    }
-
-    @Override
-    protected boolean isFlapping() {
-        return this.isFlying();
+        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
     }
 
     @Override
@@ -206,7 +191,7 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
     @Override
     public BrainActivityGroup<? extends ChickadeeEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
-            CustomBehaviours.setNearestFoodWalkTarget()
+            CompositeBehaviours.tryPickUpFood()
         );
     }
 

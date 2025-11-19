@@ -3,8 +3,8 @@ package aqario.fowlplay.core.forge;
 import aqario.fowlplay.client.forge.FowlPlayForgeClient;
 import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.core.FowlPlay;
+import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
 import aqario.fowlplay.core.FowlPlayRegistries;
-import aqario.fowlplay.core.FowlPlayRegistryKeys;
 import aqario.fowlplay.core.platform.CommonRegistry;
 import aqario.fowlplay.core.platform.forge.PlatformHelperImpl;
 import net.minecraft.resources.ResourceKey;
@@ -60,12 +60,12 @@ public final class FowlPlayForge {
     @SuppressWarnings("unchecked")
     private static void onNewRegistry(NewRegistryEvent event) {
         FowlPlay.earlyInit();
-        FowlPlayRegistries.CHICKEN_VARIANT = (Supplier<CommonRegistry<ChickenVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.CHICKEN_VARIANT.location()));
-        FowlPlayRegistries.DUCK_VARIANT = (Supplier<CommonRegistry<DuckVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.DUCK_VARIANT.location()));
-        FowlPlayRegistries.GULL_VARIANT = (Supplier<CommonRegistry<GullVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.GULL_VARIANT.location()));
-        FowlPlayRegistries.GOOSE_VARIANT = (Supplier<CommonRegistry<GooseVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.GOOSE_VARIANT.location()));
-        FowlPlayRegistries.PIGEON_VARIANT = (Supplier<CommonRegistry<PigeonVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.PIGEON_VARIANT.location()));
-        FowlPlayRegistries.SPARROW_VARIANT = (Supplier<CommonRegistry<SparrowVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistryKeys.SPARROW_VARIANT.location()));
+        FowlPlayBuiltInRegistries.CHICKEN_VARIANT = (Supplier<CommonRegistry<ChickenVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistries.CHICKEN_VARIANT.location()));
+        FowlPlayBuiltInRegistries.DUCK_VARIANT = (Supplier<CommonRegistry<DuckVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistries.DUCK_VARIANT.location()));
+        FowlPlayBuiltInRegistries.GULL_VARIANT = (Supplier<CommonRegistry<GullVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistries.GULL_VARIANT.location()));
+        FowlPlayBuiltInRegistries.GOOSE_VARIANT = (Supplier<CommonRegistry<GooseVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistries.GOOSE_VARIANT.location()));
+        FowlPlayBuiltInRegistries.PIGEON_VARIANT = (Supplier<CommonRegistry<PigeonVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistries.PIGEON_VARIANT.location()));
+        FowlPlayBuiltInRegistries.SPARROW_VARIANT = (Supplier<CommonRegistry<SparrowVariant>>) (Supplier<?>) event.create(RegistryBuilder.of(FowlPlayRegistries.SPARROW_VARIANT.location()));
     }
 
     private static void onRegister(RegisterEvent event) {

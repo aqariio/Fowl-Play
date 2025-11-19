@@ -8,6 +8,5 @@ public final class FowlPlayFabric implements ModInitializer {
     public void onInitialize() {
         FowlPlay.earlyInit();
         FowlPlay.init();
-        FowlPlayDataAttachments.init();
     }
 }

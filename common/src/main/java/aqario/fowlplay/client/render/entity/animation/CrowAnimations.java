@@ -233,7 +233,7 @@ public class CrowAnimations {
         )
         .build();
 
-    public static final AnimationDefinition FLOATING = AnimationDefinition.Builder.withLength(0f).looping()
+    public static final AnimationDefinition SWIMMING = AnimationDefinition.Builder.withLength(0f).looping()
         .addAnimation(
             "neck",
             new AnimationChannel(

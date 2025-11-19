@@ -168,7 +168,7 @@ public class DuckAnimations {
         )
         .build();
 
-    public static final AnimationDefinition FLOATING = AnimationDefinition.Builder.withLength(1f).looping()
+    public static final AnimationDefinition SWIMMING = AnimationDefinition.Builder.withLength(1f).looping()
         .addAnimation(
             "neck",
             new AnimationChannel(

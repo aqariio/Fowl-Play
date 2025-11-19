@@ -84,6 +84,7 @@ jobs:
             -   name: "Checkout repository"
                 uses: actions/checkout@v4
                 with:
+                    ref: ${{ inputs.branch }}
                     fetch-depth: 0
 
             -   name: "Setup Java"
@@ -116,6 +117,7 @@ jobs:
 
                     modrinth-id: ${{ vars.MODRINTH_ID }}
                     modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+                    modrinth-featured: false
 
                     name: Fowl Play ${{ steps.gradle-properties.outputs.MOD_VERSION }}
                     version: ${{ steps.gradle-properties.outputs.MOD_VERSION }}+${{ steps.gradle-properties.outputs.MINECRAFT_VERSION }}-${{ matrix.platform }}

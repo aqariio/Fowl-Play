@@ -61,4 +61,12 @@ public class GroundNavigation extends SmoothGroundNavigation {
         }
         return super.moveTo(path, speed);
     }
+
+    @Override
+    protected void followThePath() {
+        // temporarily set the mob since it gets called in 1.20.1 in NodeEvaluator.getBlockPathType()
+        this.nodeEvaluator.mob = this.mob;
+        super.followThePath();
+        this.nodeEvaluator.mob = null;
+    }
 }

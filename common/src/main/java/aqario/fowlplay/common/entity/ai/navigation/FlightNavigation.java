@@ -21,16 +21,14 @@ import java.util.Set;
 public class FlightNavigation extends GroundPathNavigation implements ExtendedNavigator {
     private static final int NODE_DISTANCE = 2;
     private static final float NODE_REACH_RADIUS = 1.5f;
-    private final FlyingBirdEntity bird;
 
     public FlightNavigation(FlyingBirdEntity bird, Level world) {
         super(bird, world);
-        this.bird = bird;
     }
 
     @Override
     public Mob getMob() {
-        return this.bird;
+        return this.mob;
     }
 
     @Nullable
@@ -48,9 +46,7 @@ public class FlightNavigation extends GroundPathNavigation implements ExtendedNa
             @Nullable
             @Override
             public Path findPath(PathNavigationRegion navigationRegion, Mob mob, Set<BlockPos> targetPositions, float maxRange, int accuracy, float searchDepthMultiplier) {
-                final Path path = super.findPath(navigationRegion, mob, targetPositions, maxRange, accuracy, searchDepthMultiplier);
-
-                return FlightNavigation.this.patchPath(path);
+                return FlightNavigation.this.patchPath(super.findPath(navigationRegion, mob, targetPositions, maxRange, accuracy, searchDepthMultiplier));
             }
         };
     }
@@ -62,7 +58,7 @@ public class FlightNavigation extends GroundPathNavigation implements ExtendedNa
 
         Path newPath = new Path(path.nodes, path.getTarget(), path.canReach()) {
             @Override
-            public Vec3 getEntityPosAtNode(Entity entity1, int nodeIndex) {
+            public Vec3 getEntityPosAtNode(Entity entity, int nodeIndex) {
                 return FlightNavigation.this.getEntityPosAtNode(nodeIndex);
             }
         };
@@ -76,24 +72,24 @@ public class FlightNavigation extends GroundPathNavigation implements ExtendedNa
 
     @Override
     public boolean moveTo(double x, double y, double z, double speed) {
-        this.bird.getMoveControl().setWantedPosition(x, y, z, speed);
+        this.mob.getMoveControl().setWantedPosition(x, y, z, speed);
         return true;
     }
 
     @Override
     public boolean moveTo(Entity entity, double speed) {
-        this.bird.getMoveControl().setWantedPosition(entity.getX(), entity.getY(), entity.getZ(), speed);
+        this.mob.getMoveControl().setWantedPosition(entity.getX(), entity.getY(), entity.getZ(), speed);
         return true;
     }
 
     @Override
     protected boolean canMoveDirectly(Vec3 origin, Vec3 target) {
-        return isClearForMovementBetween(this.bird, origin, target, true);
+        return isClearForMovementBetween(this.mob, origin, target, true);
     }
 
     @Override
     protected boolean canUpdatePath() {
-        return this.canFloat() && this.isInLiquid() || !this.bird.isPassenger();
+        return this.canFloat() && this.isInLiquid() || !this.mob.isPassenger();
     }
 
     @Override
@@ -124,9 +120,9 @@ public class FlightNavigation extends GroundPathNavigation implements ExtendedNa
             }
             else if(this.path != null && !this.path.isDone()) {
                 Vec3 pos = this.getTempMobPos();
-                Vec3 nodePos = this.path.getNextEntityPos(this.bird);
+                Vec3 nodePos = this.path.getNextEntityPos(this.mob);
                 if(pos.y > nodePos.y
-                    && !this.bird.onGround()
+                    && !this.mob.onGround()
                     && Mth.floor(pos.x) == Mth.floor(nodePos.x)
                     && Mth.floor(pos.z) == Mth.floor(nodePos.z)) {
                     this.path.advance();
@@ -135,17 +131,17 @@ public class FlightNavigation extends GroundPathNavigation implements ExtendedNa
             if(this.path != null
                 && this.path.isDone()
                 && this.getTargetPos() != null
-                && this.bird.position().closerThan(Vec3.atBottomCenterOf(this.getTargetPos()), 2)
-                && Birds.shouldLandAtDestination(this.bird, this.getTargetPos())
+                && this.mob.position().closerThan(Vec3.atBottomCenterOf(this.getTargetPos()), 2)
+                && Birds.shouldLandAtDestination((FlyingBirdEntity) this.mob, this.getTargetPos())
             ) {
-                this.bird.stopFlying();
+                ((FlyingBirdEntity) this.mob).stopFlying();
             }
 
             DebugPackets.sendPathFindingPacket(this.level, this.getMob(), this.getPath(), 0.1f);
             if(!this.isDone()) {
                 // noinspection ConstantConditions
-                Vec3 vec3d = this.path.getNextEntityPos(this.bird);
-                this.bird.getMoveControl().setWantedPosition(vec3d.x, vec3d.y, vec3d.z, this.speedModifier);
+                Vec3 vec3d = this.path.getNextEntityPos(this.mob);
+                this.mob.getMoveControl().setWantedPosition(vec3d.x, vec3d.y, vec3d.z, this.speedModifier);
             }
         }
     }
@@ -159,9 +155,12 @@ public class FlightNavigation extends GroundPathNavigation implements ExtendedNa
     protected void followThePath() {
         final Vec3 pos = this.getTempMobPos();
         final int shortcutNodeIndex = this.getClosestVerticalTraversal(Mth.floor(pos.y));
-        this.maxDistanceToWaypoint = this.bird.getBbWidth() > 0.75f ? this.bird.getBbWidth() / 2f : 0.75f - this.bird.getBbWidth() / 2f;
+        this.maxDistanceToWaypoint = this.mob.getBbWidth() > 0.75f ? this.mob.getBbWidth() / 2f : 0.75f - this.mob.getBbWidth() / 2f;
 
+        // temporarily set the mob since it gets called in 1.20.1 in FlyNodeEvaluator.getBlockPathType() if the pathtype is equal to fence
+        this.nodeEvaluator.mob = this.mob;
         if(!this.attemptShortcut(shortcutNodeIndex, pos)) {
+            this.nodeEvaluator.mob = null;
             if(this.isCloseToNextNode(NODE_REACH_RADIUS)) {
                 int nextNodeIndex = this.path.getNextNodeIndex() + NODE_DISTANCE;
                 if(this.path.getNextNodeIndex() < this.path.getNodeCount() - 1 && nextNodeIndex >= this.path.getNodeCount()) {
@@ -181,7 +180,7 @@ public class FlightNavigation extends GroundPathNavigation implements ExtendedNa
         final Vec3 nextNodePos = this.getEntityPosAtNode(this.getPath().getNextNodeIndex());
 
         if(this.path.getNextNodeIndex() + 1 >= this.path.getNodeCount()
-            && Birds.shouldLandAtDestination(this.bird, this.getTargetPos())
+            && Birds.shouldLandAtDestination((FlyingBirdEntity) this.mob, this.getTargetPos())
         ) {
             return this.getTempMobPos().closerThan(nextNodePos, 0.5);
         }

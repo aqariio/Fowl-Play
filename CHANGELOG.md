@@ -1,3 +1,7 @@
+## 1.1.0-beta.6
+
+- Fix seemingly random crash when a bird is pathing
+
 ## 1.1.0-beta.5
 
 - Update canada goose model and texture

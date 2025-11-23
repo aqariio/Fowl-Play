@@ -1,6 +1,6 @@
 ## 1.1.0-beta.6
 
-- Fix seemingly random crash when a bird is pathing
+- Fix seemingly random crash in 1.20.1 when a bird is pathing
 
 ## 1.1.0-beta.5
 

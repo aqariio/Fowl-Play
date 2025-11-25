@@ -2,47 +2,39 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
+import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
-import aqario.fowlplay.common.entity.ai.brain.task.*;
 import aqario.fowlplay.common.util.Birds;
-import aqario.fowlplay.core.FowlPlayActivities;
-import aqario.fowlplay.core.FowlPlayMemoryModuleType;
+import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.FowlPlaySchedules;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.entity.AnimationState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.brain.Activity;
-import net.minecraft.entity.ai.brain.Brain;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.task.LookTargetUtil;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeAttack;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.BreedWithPartner;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.InvalidateMemory;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FloatToSurfaceOfFluid;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowParent;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetAttackTarget;
@@ -59,26 +51,16 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEntity> {
-    public final AnimationState standingState = new AnimationState();
-    public final AnimationState glidingState = new AnimationState();
-    public final AnimationState flappingState = new AnimationState();
-    public final AnimationState floatingState = new AnimationState();
-
-    public CrowEntity(EntityType<? extends CrowEntity> entityType, World world) {
+    public CrowEntity(EntityType<? extends CrowEntity> entityType, Level world) {
         super(entityType, world);
     }
 
-    @Override
-    public int getFlapFrequency() {
-        return 0;
-    }
-
-    public static DefaultAttributeContainer.Builder createCrowAttributes() {
+    public static AttributeSupplier.Builder createCrowAttributes() {
         return FlyingBirdEntity.createFlyingBirdAttributes()
-            .add(EntityAttributes.GENERIC_MAX_HEALTH, 8.0f)
-            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0f)
-            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.225f)
-            .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.22f);
+            .add(Attributes.MAX_HEALTH, 8.0f)
+            .add(Attributes.ATTACK_DAMAGE, 1.0f)
+            .add(Attributes.MOVEMENT_SPEED, 0.225f)
+            .add(Attributes.FLYING_SPEED, 0.22f);
     }
 
     @Override
@@ -94,22 +76,22 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     @Nullable
     @Override
     public LivingEntity getTarget() {
-        return this.getTargetInBrain();
+        return this.getTargetFromBrain();
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
     }
 
     @Override
@@ -119,12 +101,12 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
 
     @Nullable
     @Override
-    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
         return null;
     }
 
     public Ingredient getFood() {
-        return Ingredient.fromTag(FowlPlayItemTags.CROW_FOOD);
+        return Ingredient.of(FowlPlayItemTags.CROW_FOOD);
     }
 
     @Override
@@ -132,29 +114,24 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
         if(this.hasLowHealth()) {
             return false;
         }
-        Optional<LivingEntity> hurtBy = Optional.ofNullable(BrainUtils.getMemory(this, MemoryModuleType.HURT_BY_ENTITY));
-        if(!target.getType().isIn(FowlPlayEntityTypeTags.CROW_ATTACK_TARGETS) && (hurtBy.isEmpty() || !hurtBy.get().equals(target))) {
+        LivingEntity hurtBy = BrainUtils.getLastAttacker(this);
+        if(!target.getType().is(FowlPlayEntityTypeTags.CROW_ATTACK_TARGETS) && (hurtBy == null || !hurtBy.equals(target))) {
             return false;
         }
-        Optional<List<? extends PassiveEntity>> nearbyAdults = Optional.ofNullable(BrainUtils.getMemory(this, FowlPlayMemoryModuleType.NEAREST_VISIBLE_ADULTS.get()));
+        Optional<List<? extends AgeableMob>> nearbyAdults = Optional.ofNullable(BrainUtils.getMemory(this, FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get()));
         return nearbyAdults.filter(passiveEntities -> passiveEntities.size() >= 4).isPresent();
     }
 
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
-        return entity.getType().isIn(FowlPlayEntityTypeTags.CROW_AVOIDS);
+        return entity.getType().is(FowlPlayEntityTypeTags.CROW_AVOIDS);
     }
 
     @Override
     public void updateAnimations() {
-        this.standingState.setRunning(!this.isFlying() && !this.isInsideWaterOrBubbleColumn(), this.age);
-        this.flappingState.setRunning(this.isFlying(), this.age);
-        this.floatingState.setRunning(!this.isFlying() && this.isInsideWaterOrBubbleColumn(), this.age);
-    }
-
-    @Override
-    protected boolean isFlappingWings() {
-        return this.isFlying();
+        this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
+        this.flappingState.animateWhen(this.isFlying(), this.tickCount);
+        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
     }
 
     @Override
@@ -173,8 +150,8 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     }
 
     @Override
-    public Vec3d getLeashOffset() {
-        return new Vec3d(0.0, 0.5f * this.getStandingEyeHeight(), this.getWidth() * 0.4f);
+    public Vec3 getLeashOffset() {
+        return new Vec3(0.0, 0.5f * this.getEyeHeight(), this.getBbWidth() * 0.4f);
     }
 
     @Nullable
@@ -200,7 +177,7 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     }
 
     @Override
-    protected Brain.Profile<CrowEntity> createBrainProfile() {
+    protected Brain.Provider<CrowEntity> brainProvider() {
         return new SmartBrainProvider<>(this);
     }
 
@@ -212,10 +189,8 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
             new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new InWaterSensor<>(),
-            new AttackedSensor<CrowEntity>()
-                .setScanRate(bird -> 10),
-            new AvoidTargetSensor<CrowEntity>()
-                .setScanRate(bird -> 10),
+            new AttackedSensor<>(),
+            new AvoidTargetSensor<>(),
             new AttackTargetSensor<>()
         );
     }
@@ -225,11 +200,11 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
         return BirdBrain.coreActivity(
             new FloatToSurfaceOfFluid<>()
                 .riseChance(0.5F),
-            FlightTasks.stopFalling(),
-            new SetAttackTarget<CrowEntity>()
-                .attackPredicate(Birds::canAttack),
+            FlightBehaviours.stopFalling(),
+            new SetAttackTarget<>(),
+            SetEntityLookTarget.create(Birds::isPlayerHoldingFood),
             new LookAtTarget<>()
-                .runFor(entity -> entity.getRandom().nextBetween(45, 90)),
+                .runForBetween(45, 90),
             new MoveToWalkTarget<>()
         );
     }
@@ -237,11 +212,7 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     @Override
     public BrainActivityGroup<? extends CrowEntity> getAvoidTasks() {
         return BirdBrain.avoidActivity(
-            MoveAwayFromTargetTask.entity(
-                MemoryModuleType.AVOID_TARGET,
-                entity -> Birds.FAST_SPEED,
-                true
-            )
+            CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
@@ -249,81 +220,49 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     public BrainActivityGroup<? extends CrowEntity> getFightTasks() {
         return BirdBrain.fightActivity(
             new InvalidateAttackTarget<>(),
-            FlightTasks.startFlying(),
+            FlightBehaviours.startFlying(),
             new SetWalkTargetToAttackTarget<>(),
-            new AnimatableMeleeAttack<>(0),
-            new InvalidateMemory<CrowEntity, LivingEntity>(MemoryModuleType.ATTACK_TARGET)
-                .invalidateIf((entity, memory) -> LookTargetUtil.hasBreedTarget(entity))
+            new AnimatableMeleeAttack<>(0)
         );
     }
 
     @Override
     public BrainActivityGroup<? extends CrowEntity> getForageTasks() {
         return BirdBrain.forageActivity(
-            new SetRandomWalkTarget<>()
-                .setRadius(32, 16),
-            new Idle<>()
-                .runFor(entity -> entity.getRandom().nextBetween(100, 300))
-        );
-    }
-
-    @Override
-    public BrainActivityGroup<? extends CrowEntity> getIdleTasks() {
-        return BirdBrain.idleActivity(
-            new BreedWithPartner<>(),
-            new FollowParent<>(),
-            SetEntityLookTargetTask.create(Birds::isPlayerHoldingFood),
-            new LookAroundTask<>()
+            new OneRandomBehaviour<>(
+                CompositeBehaviours.tryForage(),
+                CompositeBehaviours.tryPerch()
+            )
         );
     }
 
     @Override
     public BrainActivityGroup<? extends CrowEntity> getPerchTasks() {
         return BirdBrain.perchActivity(
-            new LeaderlessFlockTask(
+            new LeaderlessFlocking(
                 3,
                 0.03f,
                 0.6f,
                 0.05f,
                 3f
             ),
-            new PerchTask<>()
-                .startCondition(Predicate.not(Birds::isPerched)),
-            new OneRandomBehaviour<>(
-                Pair.of(
-                    new Idle<>()
-                        .runFor(entity -> entity.getRandom().nextBetween(300, 1000)),
-                    8
-                ),
-                Pair.of(
-                    new PerchTask<>(),
-                    1
-                )
-            )
-                .startCondition(Birds::isPerched)
-                .stopIf(Predicate.not(Birds::isPerched))
+            CompositeBehaviours.tryPerch()
         );
     }
 
     @Override
     public BrainActivityGroup<? extends CrowEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
-            GoToNearestItemTask.create(
-                Birds::canPickupFood,
-                entity -> Birds.FAST_SPEED,
-                true,
-                Birds.ITEM_PICK_UP_RANGE
-            )
+            CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
     public BrainActivityGroup<? extends CrowEntity> getRestTasks() {
         return BirdBrain.restActivity(
-            new PerchTask<>()
+            new SetPerchWalkTarget<>()
                 .startCondition(Predicate.not(Birds::isPerched)),
-            new Idle<CrowEntity>()
-                .startCondition(Birds::isPerched)
+            CustomBehaviours.idleIfPerched()
         );
     }
 
@@ -334,18 +273,13 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     }
 
     @Override
-    public Activity getDefaultActivity() {
-        return FowlPlayActivities.PERCH.get();
-    }
-
-    @Override
-    protected void mobTick() {
+    protected void customServerAiStep() {
         Brain<?> brain = this.getBrain();
-        Activity activity = brain.getFirstPossibleNonCoreActivity().orElse(null);
+        Activity activity = brain.getActiveNonCoreActivity().orElse(null);
         this.tickBrain(this);
-        if(activity == Activity.FIGHT && brain.getFirstPossibleNonCoreActivity().orElse(null) != Activity.FIGHT) {
-            brain.remember(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, 2400L);
+        if(activity == Activity.FIGHT && brain.getActiveNonCoreActivity().orElse(null) != Activity.FIGHT) {
+            brain.setMemoryWithExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, 2400L);
         }
-        super.mobTick();
+        super.customServerAiStep();
     }
 }

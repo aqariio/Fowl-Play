@@ -1,88 +1,88 @@
 package aqario.fowlplay.common.entity;
 
-import aqario.fowlplay.core.FowlPlayTrackedDataHandlerRegistry;
-import net.minecraft.entity.EntityStatuses;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.world.World;
+import aqario.fowlplay.core.FowlPlayEntityDataSerializers;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.EntityEvent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public abstract class TrustingBirdEntity extends FlyingBirdEntity {
-    protected static final TrackedData<List<UUID>> TRUSTED = DataTracker.registerData(TrustingBirdEntity.class, FowlPlayTrackedDataHandlerRegistry.UUID_LIST);
+    protected static final EntityDataAccessor<List<UUID>> TRUSTED = SynchedEntityData.defineId(TrustingBirdEntity.class, FowlPlayEntityDataSerializers.UUID_LIST);
 
-    protected TrustingBirdEntity(EntityType<? extends BirdEntity> entityType, World world) {
+    protected TrustingBirdEntity(EntityType<? extends BirdEntity> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
     public int getFleeRange(LivingEntity target) {
-        return !this.getTrustedUuids().isEmpty() && target instanceof PlayerEntity ? 8 : super.getFleeRange(target);
+        return !this.getTrustedUuids().isEmpty() && target instanceof Player ? 8 : super.getFleeRange(target);
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(TRUSTED, new ArrayList<>());
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(TRUSTED, new ArrayList<>());
     }
 
-    protected NbtList toNbtList(List<UUID> uuids) {
-        NbtList nbtList = new NbtList();
+    protected ListTag toNbtList(List<UUID> uuids) {
+        ListTag nbtList = new ListTag();
 
         for (UUID uuid : uuids) {
-            nbtList.add(NbtHelper.fromUuid(uuid));
+            nbtList.add(NbtUtils.createUUID(uuid));
         }
 
         return nbtList;
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.put("trusted", this.toNbtList(this.getTrustedUuids()));
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
         if (nbt.contains("trusted")) {
-            NbtList list = (NbtList) nbt.get("trusted");
+            ListTag list = (ListTag) nbt.get("trusted");
             if (list != null) {
-                list.forEach(element -> this.addTrustedUuid(NbtHelper.toUuid(element)));
+                list.forEach(element -> this.addTrustedUuid(NbtUtils.loadUUID(element)));
             }
         }
     }
 
     @Override
-    protected void loot(ItemEntity item) {
-        super.loot(item);
-        UUID thrower = item.getOwner() != null ? item.getOwner().getUuid() : null;
+    protected void pickUpItem(ItemEntity item) {
+        super.pickUpItem(item);
+        UUID thrower = item.getOwner() != null ? item.getOwner().getUUID() : null;
         if (thrower != null && !this.trustsUuid(thrower)) {
             if (this.random.nextInt(3) == 0) {
                 this.addTrustedUuid(thrower);
-                this.getWorld().sendEntityStatus(this, EntityStatuses.ADD_VILLAGER_HAPPY_PARTICLES);
+                this.level().broadcastEntityEvent(this, EntityEvent.VILLAGER_HAPPY);
             }
         }
     }
 
     @Override
-    public void handleStatus(byte status) {
-        if (status == EntityStatuses.ADD_VILLAGER_HAPPY_PARTICLES) {
-            if (this.happyTicksRemaining == 0) {
-                this.happyTicksRemaining = 20;
+    public void handleEntityEvent(byte status) {
+        if (status == EntityEvent.VILLAGER_HAPPY) {
+            if (this.forcedAgeTimer == 0) {
+                this.forcedAgeTimer = 20;
             }
         }
         else {
-            super.handleStatus(status);
+            super.handleEntityEvent(status);
         }
     }
 
@@ -95,40 +95,40 @@ public abstract class TrustingBirdEntity extends FlyingBirdEntity {
     }
 
     public List<UUID> getTrustedUuids() {
-        return this.dataTracker.get(TRUSTED);
+        return this.entityData.get(TRUSTED);
     }
 
     public void addTrustedUuid(UUID uuid) {
-        List<UUID> trusted = this.dataTracker.get(TRUSTED);
+        List<UUID> trusted = this.entityData.get(TRUSTED);
         trusted.add(uuid);
-        this.dataTracker.set(TRUSTED, trusted);
+        this.entityData.set(TRUSTED, trusted);
     }
 
     public void removeTrustedUuid(UUID uuid) {
-        List<UUID> trusted = this.dataTracker.get(TRUSTED);
+        List<UUID> trusted = this.entityData.get(TRUSTED);
         trusted.remove(uuid);
-        this.dataTracker.set(TRUSTED, trusted);
+        this.entityData.set(TRUSTED, trusted);
     }
 
-    public void stopTrusting(PlayerEntity player) {
-        this.removeTrustedUuid(player.getUuid());
+    public void stopTrusting(Player player) {
+        this.removeTrustedUuid(player.getUUID());
     }
 
-    public List<PlayerEntity> getTrusted() {
+    public List<Player> getTrusted() {
         List<UUID> uuids = this.getTrustedUuids();
-        List<PlayerEntity> entities = new ArrayList<>();
+        List<Player> entities = new ArrayList<>();
         for (UUID uuid : uuids) {
-            entities.add(this.getWorld().getPlayerByUuid(uuid));
+            entities.add(this.level().getPlayerByUUID(uuid));
         }
         return entities;
     }
 
     @Override
-    public boolean canTarget(LivingEntity target) {
-        return (!(target instanceof PlayerEntity player) || !this.trusts(player)) && super.canTarget(target);
+    public boolean canAttack(LivingEntity target) {
+        return (!(target instanceof Player player) || !this.trusts(player)) && super.canAttack(target);
     }
 
-    public boolean trusts(PlayerEntity player) {
+    public boolean trusts(Player player) {
         return this.getTrusted().contains(player);
     }
 

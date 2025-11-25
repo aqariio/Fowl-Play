@@ -1,15 +1,15 @@
 package aqario.fowlplay.mixin;
 
 import aqario.fowlplay.common.util.Birds;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.EntityShapeContext;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.WallBlock;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,27 +23,27 @@ import java.util.Map;
 public class WallBlockMixin {
     @Shadow
     @Final
-    private Map<BlockState, VoxelShape> collisionShapeMap;
+    private Map<BlockState, VoxelShape> collisionShapeByIndex;
 
     @Shadow
     @Final
-    private Map<BlockState, VoxelShape> shapeMap;
+    private Map<BlockState, VoxelShape> shapeByIndex;
 
     @Inject(method = "getCollisionShape", at = @At(value = "RETURN"), cancellable = true)
-    private void fowlplay$lowerWallHeight(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
-        if(context instanceof EntityShapeContext entityContext
+    private void fowlplay$lowerWallHeight(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir) {
+        if(context instanceof EntityCollisionContext entityContext
             && entityContext.getEntity() != null
             && Birds.isNotFlightless(entityContext.getEntity())
         ) {
-            VoxelShape originalShape = this.collisionShapeMap.get(state);
-            if(originalShape.getMax(Direction.Axis.Y) > 1) {
-                cir.setReturnValue(VoxelShapes.cuboid(
-                    originalShape.getMin(Direction.Axis.X),
-                    originalShape.getMin(Direction.Axis.Y),
-                    originalShape.getMin(Direction.Axis.Z),
-                    originalShape.getMax(Direction.Axis.X),
-                    this.shapeMap.get(state).getMax(Direction.Axis.Y),
-                    originalShape.getMax(Direction.Axis.Z)
+            VoxelShape originalShape = this.collisionShapeByIndex.get(state);
+            if(originalShape.max(Direction.Axis.Y) > 1) {
+                cir.setReturnValue(Shapes.box(
+                    originalShape.min(Direction.Axis.X),
+                    originalShape.min(Direction.Axis.Y),
+                    originalShape.min(Direction.Axis.Z),
+                    originalShape.max(Direction.Axis.X),
+                    this.shapeByIndex.get(state).max(Direction.Axis.Y),
+                    originalShape.max(Direction.Axis.Z)
                 ));
             }
         }

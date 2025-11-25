@@ -9,6 +9,12 @@ body:
             value: |
                 <br/>
                 
+                ### Hello! Thanks for taking the time to report an issue!
+                
+                If you meant to request a new feature or ask a question instead, please make a post on the **[Discussions](https://github.com/aqariio/Fowl-Play/discussions)** page!
+                
+                <br/>
+                
                 ### Before you create your bug / crash report:
                 
                 1. Use the search function to make sure your issue or crash hasn't already been reported
@@ -37,7 +43,7 @@ body:
                 **Add a description**
                 
                 - Clearly describe what the issue is and how to reproduce it (if possible)
-                - Include the latest log if the issue causes a crash (found in <instance>/logs/latest.log)
+                - Include the latest log if the issue causes a crash (usually found in \<instance>/logs/latest.log)
                 - Screenshots and videos are very helpful!
 
     -   type: textarea

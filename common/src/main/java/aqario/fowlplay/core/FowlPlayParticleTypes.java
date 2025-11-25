@@ -1,7 +1,7 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.core.platform.PlatformHelper;
-import net.minecraft.particle.SimpleParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 
 import java.util.function.Supplier;
 

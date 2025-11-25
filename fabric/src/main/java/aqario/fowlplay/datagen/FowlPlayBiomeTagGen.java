@@ -4,41 +4,41 @@ import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 
 import java.util.concurrent.CompletableFuture;
 
 public class FowlPlayBiomeTagGen extends FabricTagProvider<Biome> {
-    private static final Identifier WHITE_CLIFFS = Identifier.of("natures_spirit", "white_cliffs");
-    private static final Identifier IS_ALPINE = Identifier.of("natures_spirit", "is_alpine");
-    private static final Identifier IS_AUTUMN = Identifier.of("natures_spirit", "is_autumn");
-    private static final Identifier IS_COAST = Identifier.of("natures_spirit", "is_coast");
-    private static final Identifier IS_COLD = Identifier.of("natures_spirit", "is_cold");
-    private static final Identifier IS_CYPRESS = Identifier.of("natures_spirit", "is_cypress");
-    private static final Identifier IS_FIELD = Identifier.of("natures_spirit", "is_field");
-    private static final Identifier IS_FRONTIER = Identifier.of("natures_spirit", "is_frontier");
-    private static final Identifier IS_FREEZING = Identifier.of("natures_spirit", "is_freezing");
-    private static final Identifier IS_WETLAND = Identifier.of("natures_spirit", "is_wetland");
-    private static final Identifier BEACH = Identifier.of("c", "beach");
-    private static final Identifier FOREST = Identifier.of("c", "forest");
-    private static final Identifier RIVER = Identifier.of("c", "river");
-    private static final Identifier SWAMP = Identifier.of("c", "swamp");
-    private static final Identifier TREE_CONIFEROUS = Identifier.of("c", "tree_coniferous");
-    private static final Identifier TREE_DECIDUOUS = Identifier.of("c", "tree_deciduous");
-    private static final Identifier VEGETATION_SPARSE = Identifier.of("c", "vegetation_sparse");
-    private static final Identifier IS_TREE_CONIFEROUS = Identifier.of("c", "is_tree_coniferous");
-    private static final Identifier IS_TREE_DECIDUOUS = Identifier.of("c", "is_tree_deciduous");
+    private static final ResourceLocation WHITE_CLIFFS = ResourceLocation.fromNamespaceAndPath("natures_spirit", "white_cliffs");
+    private static final ResourceLocation IS_ALPINE = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_alpine");
+    private static final ResourceLocation IS_AUTUMN = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_autumn");
+    private static final ResourceLocation IS_COAST = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_coast");
+    private static final ResourceLocation IS_COLD = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_cold");
+    private static final ResourceLocation IS_CYPRESS = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_cypress");
+    private static final ResourceLocation IS_FIELD = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_field");
+    private static final ResourceLocation IS_FRONTIER = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_frontier");
+    private static final ResourceLocation IS_FREEZING = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_freezing");
+    private static final ResourceLocation IS_WETLAND = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_wetland");
+    private static final ResourceLocation BEACH = ResourceLocation.fromNamespaceAndPath("c", "beach");
+    private static final ResourceLocation FOREST = ResourceLocation.fromNamespaceAndPath("c", "forest");
+    private static final ResourceLocation RIVER = ResourceLocation.fromNamespaceAndPath("c", "river");
+    private static final ResourceLocation SWAMP = ResourceLocation.fromNamespaceAndPath("c", "swamp");
+    private static final ResourceLocation TREE_CONIFEROUS = ResourceLocation.fromNamespaceAndPath("c", "tree_coniferous");
+    private static final ResourceLocation TREE_DECIDUOUS = ResourceLocation.fromNamespaceAndPath("c", "tree_deciduous");
+    private static final ResourceLocation VEGETATION_SPARSE = ResourceLocation.fromNamespaceAndPath("c", "vegetation_sparse");
+    private static final ResourceLocation IS_TREE_CONIFEROUS = ResourceLocation.fromNamespaceAndPath("c", "is_tree_coniferous");
+    private static final ResourceLocation IS_TREE_DECIDUOUS = ResourceLocation.fromNamespaceAndPath("c", "is_tree_deciduous");
 
-    public FowlPlayBiomeTagGen(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
-        super(output, RegistryKeys.BIOME, registriesFuture);
+    public FowlPlayBiomeTagGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+        super(output, Registries.BIOME, registriesFuture);
     }
 
     @Override
-    protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
+    protected void addTags(HolderLookup.Provider wrapperLookup) {
         this.getOrCreateTagBuilder(FowlPlayBiomeTags.SPAWNS_BLUE_JAYS)
             .addOptionalTag(IS_ALPINE)
             .addOptionalTag(IS_AUTUMN)
@@ -145,16 +145,16 @@ public class FowlPlayBiomeTagGen extends FabricTagProvider<Biome> {
             .addOptionalTag(VEGETATION_SPARSE)
             .addOptionalTag(ConventionalBiomeTags.IS_VEGETATION_SPARSE)
             .addOptionalTag(ConventionalBiomeTags.IS_VEGETATION_SPARSE_OVERWORLD)
-            .add(BiomeKeys.PLAINS)
-            .add(BiomeKeys.SAVANNA)
-            .add(BiomeKeys.SAVANNA_PLATEAU)
-            .add(BiomeKeys.SPARSE_JUNGLE)
-            .add(BiomeKeys.SUNFLOWER_PLAINS)
-            .add(BiomeKeys.WINDSWEPT_FOREST)
-            .add(BiomeKeys.WINDSWEPT_HILLS);
+            .add(Biomes.PLAINS)
+            .add(Biomes.SAVANNA)
+            .add(Biomes.SAVANNA_PLATEAU)
+            .add(Biomes.SPARSE_JUNGLE)
+            .add(Biomes.SUNFLOWER_PLAINS)
+            .add(Biomes.WINDSWEPT_FOREST)
+            .add(Biomes.WINDSWEPT_HILLS);
         this.getOrCreateTagBuilder(FowlPlayBiomeTags.SPAWNS_PENGUINS)
-            .add(BiomeKeys.SNOWY_PLAINS)
-            .add(BiomeKeys.SNOWY_BEACH);
+            .add(Biomes.SNOWY_PLAINS)
+            .add(Biomes.SNOWY_BEACH);
         this.getOrCreateTagBuilder(FowlPlayBiomeTags.SPAWNS_PIGEONS)
             .addOptionalTag(ConventionalBiomeTags.IS_STONY_SHORES)
             .addOptional(WHITE_CLIFFS);

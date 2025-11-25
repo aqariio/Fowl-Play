@@ -1,66 +1,59 @@
 package aqario.fowlplay.common.util;
 
-import aqario.fowlplay.common.entity.BirdEntity;
 import com.google.common.collect.ImmutableSet;
 import dev.architectury.registry.level.entity.EntityAttributeRegistry;
 import dev.architectury.registry.level.entity.SpawnPlacementsRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.datafixer.TypeReferences;
-import net.minecraft.entity.*;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.resource.featuretoggle.FeatureFlag;
-import net.minecraft.resource.featuretoggle.FeatureFlags;
-import net.minecraft.resource.featuretoggle.FeatureSet;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.Heightmap;
+import net.minecraft.Util;
+import net.minecraft.util.datafix.fixes.References;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.flag.FeatureFlag;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
 public class EntityTypeBuilder<T extends Entity> {
     private final EntityType.EntityFactory<T> factory;
-    private final SpawnGroup spawnGroup;
-    private ImmutableSet<Block> canSpawnInside = ImmutableSet.of();
-    private boolean saveable = true;
-    private boolean summonable = true;
+    private final MobCategory category;
+    private ImmutableSet<Block> immuneTo = ImmutableSet.of();
+    private boolean serialize = true;
+    private boolean summon = true;
     private boolean fireImmune;
-    private boolean spawnableFarFromPlayer;
-    private int maxTrackingRange = 5;
-    private int trackingTickInterval = 3;
-    private EntityDimensions dimensions = EntityDimensions.changing(0.6F, 1.8F);
-    private float spawnBoxScale = 1.0F;
+    private boolean canSpawnFarFromPlayer;
+    private int clientTrackingRange = 5;
+    private int updateInterval = 3;
+    private EntityDimensions dimensions = EntityDimensions.scalable(0.6F, 1.8F);
+    private float spawnDimensionsScale = 1.0F;
     private EntityAttachments.Builder attachments = EntityAttachments.builder();
-    private FeatureSet requiredFeatures;
+    private FeatureFlagSet requiredFeatures = FeatureFlags.VANILLA_SET;
     @Nullable
-    private Supplier<DefaultAttributeContainer.Builder> attributeBuilder;
-    private SpawnLocation location;
-    private Heightmap.Type heightmap;
-    private SpawnRestriction.SpawnPredicate<T> spawnPredicate;
+    private Supplier<AttributeSupplier.Builder> attributeBuilder;
+    private SpawnPlacementType spawnPlacement;
+    private Heightmap.Types heightmap;
+    private SpawnPlacements.SpawnPredicate<T> spawnPredicate;
 
-    private EntityTypeBuilder(EntityType.EntityFactory<T> factory, SpawnGroup spawnGroup) {
-        this.requiredFeatures = FeatureFlags.VANILLA_FEATURES;
+    private EntityTypeBuilder(EntityType.EntityFactory<T> factory, MobCategory category) {
         this.factory = factory;
-        this.spawnGroup = spawnGroup;
-        this.spawnableFarFromPlayer = spawnGroup == SpawnGroup.CREATURE || spawnGroup == SpawnGroup.MISC;
+        this.category = category;
+        this.canSpawnFarFromPlayer = category == MobCategory.CREATURE || category == MobCategory.MISC;
     }
 
-    public static <T extends BirdEntity> EntityTypeBuilder<T> create(EntityType.EntityFactory<T> factory, SpawnGroup spawnGroup) {
+    public static <T extends Entity> EntityTypeBuilder<T> of(EntityType.EntityFactory<T> factory, MobCategory spawnGroup) {
         return new EntityTypeBuilder<>(factory, spawnGroup);
     }
 
-    public static <T extends BirdEntity> EntityTypeBuilder<T> create(SpawnGroup spawnGroup) {
-        return new EntityTypeBuilder<>((type, world) -> null, spawnGroup);
-    }
-
-    public EntityTypeBuilder<T> dimensions(float width, float height) {
-        this.dimensions = EntityDimensions.changing(width, height);
+    public EntityTypeBuilder<T> sized(float width, float height) {
+        this.dimensions = EntityDimensions.scalable(width, height);
         return this;
     }
 
-    public EntityTypeBuilder<T> spawnBoxScale(float spawnBoxScale) {
-        this.spawnBoxScale = spawnBoxScale;
+    public EntityTypeBuilder<T> spawnDimensionsScale(float spawnBoxScale) {
+        this.spawnDimensionsScale = spawnBoxScale;
         return this;
     }
 
@@ -71,89 +64,89 @@ public class EntityTypeBuilder<T extends Entity> {
 
     public EntityTypeBuilder<T> passengerAttachments(float... offsetYs) {
         for(float f : offsetYs) {
-            this.attachments = this.attachments.add(EntityAttachmentType.PASSENGER, 0.0F, f, 0.0F);
+            this.attachments = this.attachments.attach(EntityAttachment.PASSENGER, 0.0F, f, 0.0F);
         }
 
         return this;
     }
 
-    public EntityTypeBuilder<T> passengerAttachments(Vec3d... passengerAttachments) {
-        for(Vec3d vec3d : passengerAttachments) {
-            this.attachments = this.attachments.add(EntityAttachmentType.PASSENGER, vec3d);
+    public EntityTypeBuilder<T> passengerAttachments(Vec3... passengerAttachments) {
+        for(Vec3 vec3d : passengerAttachments) {
+            this.attachments = this.attachments.attach(EntityAttachment.PASSENGER, vec3d);
         }
 
         return this;
     }
 
-    public EntityTypeBuilder<T> vehicleAttachment(Vec3d vehicleAttachment) {
-        return this.attachment(EntityAttachmentType.VEHICLE, vehicleAttachment);
+    public EntityTypeBuilder<T> vehicleAttachment(Vec3 vehicleAttachment) {
+        return this.attach(EntityAttachment.VEHICLE, vehicleAttachment);
     }
 
-    public EntityTypeBuilder<T> vehicleAttachment(float offsetY) {
-        return this.attachment(EntityAttachmentType.VEHICLE, 0.0F, -offsetY, 0.0F);
+    public EntityTypeBuilder<T> ridingOffset(float offsetY) {
+        return this.attach(EntityAttachment.VEHICLE, 0.0F, -offsetY, 0.0F);
     }
 
-    public EntityTypeBuilder<T> nameTagAttachment(float offsetY) {
-        return this.attachment(EntityAttachmentType.NAME_TAG, 0.0F, offsetY, 0.0F);
+    public EntityTypeBuilder<T> nameTagOffset(float offsetY) {
+        return this.attach(EntityAttachment.NAME_TAG, 0.0F, offsetY, 0.0F);
     }
 
-    public EntityTypeBuilder<T> attachment(EntityAttachmentType type, float offsetX, float offsetY, float offsetZ) {
-        this.attachments = this.attachments.add(type, offsetX, offsetY, offsetZ);
+    public EntityTypeBuilder<T> attach(EntityAttachment type, float offsetX, float offsetY, float offsetZ) {
+        this.attachments = this.attachments.attach(type, offsetX, offsetY, offsetZ);
         return this;
     }
 
-    public EntityTypeBuilder<T> attachment(EntityAttachmentType type, Vec3d offset) {
-        this.attachments = this.attachments.add(type, offset);
+    public EntityTypeBuilder<T> attach(EntityAttachment type, Vec3 offset) {
+        this.attachments = this.attachments.attach(type, offset);
         return this;
     }
 
-    public EntityTypeBuilder<T> disableSummon() {
-        this.summonable = false;
+    public EntityTypeBuilder<T> noSummon() {
+        this.summon = false;
         return this;
     }
 
-    public EntityTypeBuilder<T> disableSaving() {
-        this.saveable = false;
+    public EntityTypeBuilder<T> noSave() {
+        this.serialize = false;
         return this;
     }
 
-    public EntityTypeBuilder<T> makeFireImmune() {
+    public EntityTypeBuilder<T> fireImmune() {
         this.fireImmune = true;
         return this;
     }
 
-    public EntityTypeBuilder<T> allowSpawningInside(Block... blocks) {
-        this.canSpawnInside = ImmutableSet.copyOf(blocks);
+    public EntityTypeBuilder<T> immuneTo(Block... blocks) {
+        this.immuneTo = ImmutableSet.copyOf(blocks);
         return this;
     }
 
-    public EntityTypeBuilder<T> spawnableFarFromPlayer() {
-        this.spawnableFarFromPlayer = true;
+    public EntityTypeBuilder<T> canSpawnFarFromPlayer() {
+        this.canSpawnFarFromPlayer = true;
         return this;
     }
 
-    public EntityTypeBuilder<T> maxTrackingRange(int maxTrackingRange) {
-        this.maxTrackingRange = maxTrackingRange;
+    public EntityTypeBuilder<T> clientTrackingRange(int maxTrackingRange) {
+        this.clientTrackingRange = maxTrackingRange;
         return this;
     }
 
-    public EntityTypeBuilder<T> trackingTickInterval(int trackingTickInterval) {
-        this.trackingTickInterval = trackingTickInterval;
+    public EntityTypeBuilder<T> updateInterval(int ticks) {
+        this.updateInterval = ticks;
         return this;
     }
 
-    public EntityTypeBuilder<T> requires(FeatureFlag... features) {
-        this.requiredFeatures = FeatureFlags.FEATURE_MANAGER.featureSetOf(features);
+    public EntityTypeBuilder<T> requiredFeatures(FeatureFlag... features) {
+        this.requiredFeatures = FeatureFlags.REGISTRY.subset(features);
         return this;
     }
 
-    public EntityTypeBuilder<T> attributes(Supplier<DefaultAttributeContainer.Builder> attributeBuilder) {
+    public EntityTypeBuilder<T> attributes(Supplier<AttributeSupplier.Builder> attributeBuilder) {
         this.attributeBuilder = attributeBuilder;
         return this;
     }
 
-    public EntityTypeBuilder<T> spawnRestriction(SpawnLocation location, Heightmap.Type heightmap, SpawnRestriction.SpawnPredicate<T> spawnPredicate) {
-        this.location = location;
+    public EntityTypeBuilder<T> spawnRestriction(SpawnPlacementType location, Heightmap.Types heightmap, SpawnPlacements.SpawnPredicate<T> spawnPredicate) {
+        this.spawnPlacement = location;
         this.heightmap = heightmap;
         this.spawnPredicate = spawnPredicate;
         return this;
@@ -165,22 +158,22 @@ public class EntityTypeBuilder<T extends Entity> {
 
     @SuppressWarnings("unchecked")
     public EntityType<T> build(String id) {
-        if(this.saveable) {
-            Util.getChoiceType(TypeReferences.ENTITY_TREE, id);
+        if(this.serialize) {
+            Util.fetchChoiceType(References.ENTITY_TREE, id);
         }
 
         EntityType<T> type = new EntityType<>(
             this.factory,
-            this.spawnGroup,
-            this.saveable,
-            this.summonable,
+            this.category,
+            this.serialize,
+            this.summon,
             this.fireImmune,
-            this.spawnableFarFromPlayer,
-            this.canSpawnInside,
+            this.canSpawnFarFromPlayer,
+            this.immuneTo,
             this.dimensions.withAttachments(this.attachments),
-            this.spawnBoxScale,
-            this.maxTrackingRange,
-            this.trackingTickInterval,
+            this.spawnDimensionsScale,
+            this.clientTrackingRange,
+            this.updateInterval,
             this.requiredFeatures
         );
 
@@ -190,9 +183,9 @@ public class EntityTypeBuilder<T extends Entity> {
             }
         }
 
-        if(type.getBaseClass().isAssignableFrom(MobEntity.class)) {
+        if(type.getBaseClass().isAssignableFrom(Mob.class)) {
             if(this.spawnPredicate != null) {
-                SpawnPlacementsRegistry.register(() -> (EntityType<MobEntity>) type, this.location, this.heightmap, (SpawnRestriction.SpawnPredicate<MobEntity>) this.spawnPredicate);
+                SpawnPlacementsRegistry.register(() -> (EntityType<Mob>) type, this.spawnPlacement, this.heightmap, (SpawnPlacements.SpawnPredicate<Mob>) this.spawnPredicate);
             }
         }
 

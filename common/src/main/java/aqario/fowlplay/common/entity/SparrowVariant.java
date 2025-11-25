@@ -1,23 +1,23 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.core.FowlPlay;
-import aqario.fowlplay.core.FowlPlayRegistryKeys;
+import aqario.fowlplay.core.FowlPlayRegistries;
 import aqario.fowlplay.core.platform.PlatformHelper;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Holder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 
-public record SparrowVariant(Identifier texture) {
-    public static final PacketCodec<RegistryByteBuf, RegistryEntry<SparrowVariant>> PACKET_CODEC = PacketCodecs.registryEntry(FowlPlayRegistryKeys.SPARROW_VARIANT);
-    public static final RegistryKey<SparrowVariant> BROWN = register("brown");
-    public static final RegistryKey<SparrowVariant> PALE = register("pale");
+public record SparrowVariant(ResourceLocation texture) {
+    public static final StreamCodec<RegistryFriendlyByteBuf, Holder<SparrowVariant>> PACKET_CODEC = ByteBufCodecs.holderRegistry(FowlPlayRegistries.SPARROW_VARIANT);
+    public static final ResourceKey<SparrowVariant> BROWN = register("brown");
+    public static final ResourceKey<SparrowVariant> PALE = register("pale");
 
-    private static RegistryKey<SparrowVariant> register(String id) {
-        RegistryKey<SparrowVariant> key = RegistryKey.of(FowlPlayRegistryKeys.SPARROW_VARIANT, Identifier.of(FowlPlay.ID, id));
-        Identifier texture = Identifier.of(FowlPlay.ID, "textures/entity/sparrow/" + key.getValue().getPath() + "_sparrow.png");
+    private static ResourceKey<SparrowVariant> register(String id) {
+        ResourceKey<SparrowVariant> key = ResourceKey.create(FowlPlayRegistries.SPARROW_VARIANT, FowlPlay.id(id));
+        ResourceLocation texture = FowlPlay.id("textures/entity/sparrow/" + key.location().getPath() + "_sparrow.png");
         PlatformHelper.registerVariant(id, key, () -> new SparrowVariant(texture));
         return key;
     }

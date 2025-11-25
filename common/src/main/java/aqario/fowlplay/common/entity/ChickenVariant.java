@@ -1,22 +1,33 @@
 package aqario.fowlplay.common.entity;
 
+import aqario.fowlplay.common.util.PathBuilder;
 import aqario.fowlplay.core.FowlPlay;
-import aqario.fowlplay.core.FowlPlayRegistryKeys;
+import aqario.fowlplay.core.FowlPlayRegistries;
 import aqario.fowlplay.core.platform.PlatformHelper;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Holder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 
 public record ChickenVariant(String id) {
-    public static final PacketCodec<RegistryByteBuf, RegistryEntry<ChickenVariant>> PACKET_CODEC = PacketCodecs.registryEntry(FowlPlayRegistryKeys.CHICKEN_VARIANT);
-    public static final RegistryKey<ChickenVariant> WHITE = register("white");
-    public static final RegistryKey<ChickenVariant> RED_JUNGLEFOWL = register("red_junglefowl");
+    public static final StreamCodec<RegistryFriendlyByteBuf, Holder<ChickenVariant>> PACKET_CODEC = ByteBufCodecs.holderRegistry(FowlPlayRegistries.CHICKEN_VARIANT);
+    public static final ResourceKey<ChickenVariant> WHITE = register("white");
+    public static final ResourceKey<ChickenVariant> RED_JUNGLEFOWL = register("red_junglefowl");
 
-    private static RegistryKey<ChickenVariant> register(String id) {
-        RegistryKey<ChickenVariant> key = RegistryKey.of(FowlPlayRegistryKeys.CHICKEN_VARIANT, Identifier.of(FowlPlay.ID, id));
+    public ResourceLocation texture(boolean isBaby) {
+        return FowlPlay.id(new PathBuilder()
+            .add("textures/entity/chicken/")
+            .add(this.id)
+            .add("_chicken")
+            .addIf("_baby", isBaby)
+            .add(".png")
+        );
+    }
+
+    private static ResourceKey<ChickenVariant> register(String id) {
+        ResourceKey<ChickenVariant> key = ResourceKey.create(FowlPlayRegistries.CHICKEN_VARIANT, FowlPlay.id(id));
         PlatformHelper.registerVariant(id, key, () -> new ChickenVariant(id));
         return key;
     }

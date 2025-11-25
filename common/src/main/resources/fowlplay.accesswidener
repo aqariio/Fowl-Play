@@ -1,69 +1,69 @@
 accessWidener v2 named
 
-accessible field net/minecraft/entity/ai/pathing/Path nodes Ljava/util/List;
+accessible field net/minecraft/world/level/pathfinder/Path nodes Ljava/util/List;
 
-accessible method net/minecraft/entity/ai/brain/sensor/SensorType <init> (Ljava/util/function/Supplier;)V
-accessible method net/minecraft/entity/ai/brain/Activity <init> (Ljava/lang/String;)V
-accessible method net/minecraft/particle/SimpleParticleType <init> (Z)V
-accessible method net/minecraft/entity/ai/pathing/Path setDebugInfo ([Lnet/minecraft/entity/ai/pathing/PathNode;[Lnet/minecraft/entity/ai/pathing/PathNode;Ljava/util/Set;)V
+accessible method net/minecraft/world/entity/ai/sensing/SensorType <init> (Ljava/util/function/Supplier;)V
+accessible method net/minecraft/world/entity/schedule/Activity <init> (Ljava/lang/String;)V
+accessible method net/minecraft/core/particles/SimpleParticleType <init> (Z)V
+accessible method net/minecraft/world/level/pathfinder/Path setDebug ([Lnet/minecraft/world/level/pathfinder/Node;[Lnet/minecraft/world/level/pathfinder/Node;Ljava/util/Set;)V
 
 # The following fields are from SBL
 # Brain
-accessible field net/minecraft/entity/ai/brain/Brain sensors Ljava/util/Map;
-accessible method net/minecraft/entity/ai/brain/Brain streamMemories ()Ljava/util/stream/Stream;
-accessible field net/minecraft/entity/ai/brain/Brain memories Ljava/util/Map;
-accessible field net/minecraft/entity/ai/brain/Brain requiredActivityMemories Ljava/util/Map;
-accessible field net/minecraft/entity/ai/brain/Brain forgettingActivityMemories Ljava/util/Map;
-accessible field net/minecraft/entity/ai/brain/Brain tasks Ljava/util/Map;
-accessible field net/minecraft/entity/ai/brain/task/MultiTickTask requiredMemoryStates Ljava/util/Map;
-accessible class net/minecraft/entity/ai/brain/Brain$Profile
-extendable class net/minecraft/entity/ai/brain/Brain$Profile
-accessible method net/minecraft/entity/ai/brain/Brain$Profile <init> (Ljava/util/Collection;Ljava/util/Collection;)V
-accessible method net/minecraft/entity/ai/brain/Brain setMemory (Lnet/minecraft/entity/ai/brain/MemoryModuleType;Ljava/util/Optional;)V
-accessible method net/minecraft/entity/ai/brain/Brain$MemoryEntry apply (Lnet/minecraft/entity/ai/brain/Brain;)V
-accessible method net/minecraft/entity/ai/brain/Brain tickMemories ()V
-extendable method net/minecraft/entity/ai/brain/Brain tickMemories ()V
-accessible field net/minecraft/entity/ai/brain/Brain coreActivities Ljava/util/Set;
-accessible method net/minecraft/entity/ai/brain/Brain setCoreActivities (Ljava/util/Set;)V
-extendable method net/minecraft/entity/ai/brain/Brain canDoActivity (Lnet/minecraft/entity/ai/brain/Activity;)Z
-extendable method net/minecraft/entity/ai/brain/Brain resetPossibleActivities (Lnet/minecraft/entity/ai/brain/Activity;)V
+accessible field net/minecraft/world/entity/ai/Brain sensors Ljava/util/Map;
+accessible method net/minecraft/world/entity/ai/Brain memories ()Ljava/util/stream/Stream;
+accessible field net/minecraft/world/entity/ai/Brain memories Ljava/util/Map;
+accessible field net/minecraft/world/entity/ai/Brain activityRequirements Ljava/util/Map;
+accessible field net/minecraft/world/entity/ai/Brain activityMemoriesToEraseWhenStopped Ljava/util/Map;
+accessible field net/minecraft/world/entity/ai/Brain availableBehaviorsByPriority Ljava/util/Map;
+accessible field net/minecraft/world/entity/ai/behavior/Behavior entryCondition Ljava/util/Map;
+accessible class net/minecraft/world/entity/ai/Brain$Provider
+extendable class net/minecraft/world/entity/ai/Brain$Provider
+accessible method net/minecraft/world/entity/ai/Brain$Provider <init> (Ljava/util/Collection;Ljava/util/Collection;)V
+accessible method net/minecraft/world/entity/ai/Brain setMemoryInternal (Lnet/minecraft/world/entity/ai/memory/MemoryModuleType;Ljava/util/Optional;)V
+accessible method net/minecraft/world/entity/ai/Brain$MemoryValue setMemoryInternal (Lnet/minecraft/world/entity/ai/Brain;)V
+accessible method net/minecraft/world/entity/ai/Brain forgetOutdatedMemories ()V
+extendable method net/minecraft/world/entity/ai/Brain forgetOutdatedMemories ()V
+accessible field net/minecraft/world/entity/ai/Brain coreActivities Ljava/util/Set;
+accessible method net/minecraft/world/entity/ai/Brain setCoreActivities (Ljava/util/Set;)V
+extendable method net/minecraft/world/entity/ai/Brain activityRequirementsAreMet (Lnet/minecraft/world/entity/schedule/Activity;)Z
+extendable method net/minecraft/world/entity/ai/Brain setActiveActivity (Lnet/minecraft/world/entity/schedule/Activity;)V
 
 # Behaviour
-accessible method net/minecraft/entity/ai/brain/task/MultiTickTask tryStarting (Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;J)Z
-extendable method net/minecraft/entity/ai/brain/task/MultiTickTask tryStarting (Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;J)Z
-accessible field net/minecraft/entity/ai/brain/task/MultiTickTask endTime J
-accessible field net/minecraft/entity/ai/brain/task/MultiTickTask status Lnet/minecraft/entity/ai/brain/task/MultiTickTask$Status;
-accessible method net/minecraft/entity/ai/brain/task/MultiTickTask getStatus ()Lnet/minecraft/entity/ai/brain/task/MultiTickTask$Status;
-accessible method net/minecraft/entity/ai/brain/task/MultiTickTask hasRequiredMemoryState (Lnet/minecraft/entity/LivingEntity;)Z
-extendable method net/minecraft/entity/ai/brain/task/MultiTickTask hasRequiredMemoryState (Lnet/minecraft/entity/LivingEntity;)Z
-accessible field net/minecraft/entity/ai/brain/task/CompositeTask tasks Lnet/minecraft/util/collection/WeightedList;
+accessible method net/minecraft/world/entity/ai/behavior/Behavior tryStart (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;J)Z
+extendable method net/minecraft/world/entity/ai/behavior/Behavior tryStart (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;J)Z
+accessible field net/minecraft/world/entity/ai/behavior/Behavior endTimestamp J
+accessible field net/minecraft/world/entity/ai/behavior/Behavior status Lnet/minecraft/world/entity/ai/behavior/Behavior$Status;
+accessible method net/minecraft/world/entity/ai/behavior/Behavior getStatus ()Lnet/minecraft/world/entity/ai/behavior/Behavior$Status;
+accessible method net/minecraft/world/entity/ai/behavior/Behavior hasRequiredMemories (Lnet/minecraft/world/entity/LivingEntity;)Z
+extendable method net/minecraft/world/entity/ai/behavior/Behavior hasRequiredMemories (Lnet/minecraft/world/entity/LivingEntity;)Z
+accessible field net/minecraft/world/entity/ai/behavior/GateBehavior behaviors Lnet/minecraft/world/entity/ai/behavior/ShufflingList;
 
 # Sensor
-accessible method net/minecraft/entity/ai/brain/sensor/Sensor tick (Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;)V
-extendable method net/minecraft/entity/ai/brain/sensor/Sensor tick (Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;)V
-accessible field net/minecraft/entity/ai/brain/sensor/Sensor senseInterval I
-accessible field net/minecraft/entity/ai/brain/sensor/Sensor RANDOM Lnet/minecraft/util/math/random/Random;
+accessible method net/minecraft/world/entity/ai/sensing/Sensor tick (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;)V
+extendable method net/minecraft/world/entity/ai/sensing/Sensor tick (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;)V
+accessible field net/minecraft/world/entity/ai/sensing/Sensor scanRate I
+accessible field net/minecraft/world/entity/ai/sensing/Sensor RANDOM Lnet/minecraft/util/RandomSource;
 
 # World
-accessible method net/minecraft/world/World getEntityLookup ()Lnet/minecraft/world/entity/EntityLookup;
-accessible method net/minecraft/client/world/ClientWorld getEntityLookup ()Lnet/minecraft/world/entity/EntityLookup;
-accessible field net/minecraft/world/entity/SimpleEntityLookup cache Lnet/minecraft/world/entity/SectionedEntityCache;
-accessible field net/minecraft/world/entity/SectionedEntityCache trackedPositions Lit/unimi/dsi/fastutil/longs/LongSortedSet;
-accessible field net/minecraft/world/entity/EntityTrackingSection collection Lnet/minecraft/util/collection/TypeFilterableList;
+accessible method net/minecraft/world/level/Level getEntities ()Lnet/minecraft/world/level/entity/LevelEntityGetter;
+accessible method net/minecraft/client/multiplayer/ClientLevel getEntities ()Lnet/minecraft/world/level/entity/LevelEntityGetter;
+accessible field net/minecraft/world/level/entity/LevelEntityGetterAdapter sectionStorage Lnet/minecraft/world/level/entity/EntitySectionStorage;
+accessible field net/minecraft/world/level/entity/EntitySectionStorage sectionIds Lit/unimi/dsi/fastutil/longs/LongSortedSet;
+accessible field net/minecraft/world/level/entity/EntitySection storage Lnet/minecraft/util/ClassInstanceMultiMap;
 
 # Entities
-accessible method net/minecraft/entity/Entity setFlag (IZ)V
+accessible method net/minecraft/world/entity/Entity setSharedFlag (IZ)V
 
 # Schedule
-accessible field net/minecraft/entity/ai/brain/Schedule scheduleRules Ljava/util/Map;
+accessible field net/minecraft/world/entity/schedule/Schedule timelines Ljava/util/Map;
 
 # Navigation
-extendable method net/minecraft/entity/ai/pathing/MobNavigation getPathfindingY ()I
-accessible field net/minecraft/entity/ai/pathing/SwimNavigation canJumpOutOfWater Z
+extendable method net/minecraft/world/entity/ai/navigation/GroundPathNavigation getSurfaceY ()I
+accessible field net/minecraft/world/entity/ai/navigation/WaterBoundPathNavigation allowBreaching Z
 
 # Other
-accessible field net/minecraft/entity/ai/brain/LivingTargetCache entities Ljava/util/List;
-mutable field net/minecraft/entity/ai/brain/LivingTargetCache entities Ljava/util/List;
-accessible field net/minecraft/entity/ai/brain/LivingTargetCache targetPredicate Ljava/util/function/Predicate;
-mutable field net/minecraft/entity/ai/brain/LivingTargetCache targetPredicate Ljava/util/function/Predicate;
-accessible method net/minecraft/entity/ai/brain/LivingTargetCache <init> ()V
+accessible field net/minecraft/world/entity/ai/memory/NearestVisibleLivingEntities nearbyEntities Ljava/util/List;
+mutable field net/minecraft/world/entity/ai/memory/NearestVisibleLivingEntities nearbyEntities Ljava/util/List;
+accessible field net/minecraft/world/entity/ai/memory/NearestVisibleLivingEntities lineOfSightTest Ljava/util/function/Predicate;
+mutable field net/minecraft/world/entity/ai/memory/NearestVisibleLivingEntities lineOfSightTest Ljava/util/function/Predicate;
+accessible method net/minecraft/world/entity/ai/memory/NearestVisibleLivingEntities <init> ()V

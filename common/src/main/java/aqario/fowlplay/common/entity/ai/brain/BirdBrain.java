@@ -2,13 +2,13 @@ package aqario.fowlplay.common.entity.ai.brain;
 
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.core.FowlPlayActivities;
-import aqario.fowlplay.core.FowlPlayMemoryModuleType;
+import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import net.minecraft.entity.ai.brain.Activity;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.task.MultiTickTask;
+import net.minecraft.world.entity.ai.behavior.Behavior;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.schedule.Activity;
 import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 
@@ -46,56 +46,56 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> coreActivity(MultiTickTask<? super T>... behaviours) {
+    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> coreActivity(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(Activity.CORE).priority(0).behaviours(behaviours);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> avoidActivity(MultiTickTask<? super T>... behaviours) {
+    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> avoidActivity(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(Activity.AVOID).priority(10).behaviours(behaviours)
-            .requireAndWipeMemoriesOnUse(FowlPlayMemoryModuleType.IS_AVOIDING.get());
+            .requireAndWipeMemoriesOnUse(FowlPlayMemoryTypes.IS_AVOIDING.get());
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> deliverActivity(MultiTickTask<? super T>... behaviours) {
+    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> deliverActivity(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(FowlPlayActivities.DELIVER.get()).priority(10).behaviours(behaviours)
-            .requireAndWipeMemoriesOnUse(FowlPlayMemoryModuleType.RECIPIENT.get());
+            .requireAndWipeMemoriesOnUse(FowlPlayMemoryTypes.RECIPIENT.get());
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> fightActivity(MultiTickTask<? super T>... behaviours) {
+    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> fightActivity(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(Activity.FIGHT).priority(10).behaviours(behaviours)
             .requireAndWipeMemoriesOnUse(MemoryModuleType.ATTACK_TARGET);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> forageActivity(MultiTickTask<? super T>... behaviours) {
+    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> forageActivity(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(FowlPlayActivities.FORAGE.get()).priority(10).behaviours(behaviours);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> idleActivity(MultiTickTask<? super T>... behaviours) {
+    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> idleActivity(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(Activity.IDLE).priority(10).behaviours(behaviours);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> perchActivity(MultiTickTask<? super T>... behaviours) {
+    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> perchActivity(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(FowlPlayActivities.PERCH.get()).priority(10).behaviours(behaviours);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> pickupFoodActivity(MultiTickTask<? super T>... behaviours) {
+    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> pickupFoodActivity(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(FowlPlayActivities.PICK_UP.get()).priority(10).behaviours(behaviours)
-            .requireAndWipeMemoriesOnUse(FowlPlayMemoryModuleType.SEES_FOOD.get());
+            .requireAndWipeMemoriesOnUse(FowlPlayMemoryTypes.SEES_FOOD.get());
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> restActivity(MultiTickTask<? super T>... behaviours) {
+    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> restActivity(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(Activity.REST).priority(10).behaviours(behaviours);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> soarActivity(MultiTickTask<? super T>... behaviours) {
+    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> soarActivity(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(FowlPlayActivities.SOAR.get()).priority(10).behaviours(behaviours);
     }
 
@@ -155,5 +155,10 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
             Activity.FIGHT,
             FowlPlayActivities.PICK_UP.get()
         );
+    }
+
+    @Override
+    default Activity getDefaultActivity() {
+        return Activity.REST;
     }
 }

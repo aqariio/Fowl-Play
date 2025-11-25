@@ -11,12 +11,16 @@ on:
                 description: "Branches"
                 required: true
                 type: string
+permissions: { }
 
 jobs:
     build:
         runs-on: ubuntu-latest
         name: Build ${{ inputs.branch }}
         timeout-minutes: 30
+        permissions:
+            pull-requests: read
+            contents: write
         outputs:
             matrix: ${{ steps.gen-matrix.outputs.matrix }}
 
@@ -30,6 +34,9 @@ jobs:
             -   name: "Parse gradle properties"
                 id: gradle-properties
                 run: ./.github/scripts/parse-gradle-properties.sh
+
+            -   name: "Parse changelog"
+                run: ./.github/scripts/parse-changelog.sh ${{ steps.gradle-properties.outputs.MOD_VERSION }}
 
             -   name: "Setup Java"
                 uses: actions/setup-java@v4
@@ -52,7 +59,9 @@ jobs:
                     name: built-jars-${{ inputs.branch }}
                     if-no-files-found: error
                     path: |
-                        ./**/build/libs/*[0-9].jar
+                        ./**/build/libs/*-fabric.jar
+                        ./**/build/libs/*-forge.jar
+                        ./**/build/libs/*-neoforge.jar
 
             -   name: "Generate matrix for publishing"
                 id: gen-matrix
@@ -64,6 +73,7 @@ jobs:
         name: "Publish ${{ inputs.branch }} ${{ matrix.platform }}"
         timeout-minutes: 30
         permissions:
+            pull-requests: read
             contents: write
         strategy:
             max-parallel: 2
@@ -74,6 +84,7 @@ jobs:
             -   name: "Checkout repository"
                 uses: actions/checkout@v4
                 with:
+                    ref: ${{ inputs.branch }}
                     fetch-depth: 0
 
             -   name: "Setup Java"
@@ -92,6 +103,9 @@ jobs:
                 id: gradle-properties
                 run: ./.github/scripts/parse-gradle-properties.sh
 
+            -   name: "Parse changelog"
+                run: ./.github/scripts/parse-changelog.sh ${{ steps.gradle-properties.outputs.MOD_VERSION }}
+
             -   name: "Run build"
                 run: ./gradlew ${{ matrix.platform }}:build
 
@@ -101,18 +115,17 @@ jobs:
                     curseforge-id: ${{ vars.CURSEFORGE_ID }}
                     curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
-                    modrinth-featured: true
                     modrinth-id: ${{ vars.MODRINTH_ID }}
                     modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+                    modrinth-featured: false
+                    modrinth-unfeature-mode: none
+                    modrinth-fail-mode: warn
 
                     name: Fowl Play ${{ steps.gradle-properties.outputs.MOD_VERSION }}
                     version: ${{ steps.gradle-properties.outputs.MOD_VERSION }}+${{ steps.gradle-properties.outputs.MINECRAFT_VERSION }}-${{ matrix.platform }}
                     loaders: ${{ join(matrix.loaders, ' ') }}
                     game-versions: |
                         ${{ steps.gradle-properties.outputs.MINECRAFT_VERSION }}
-                    changelog-file: CHANGELOG.*
+                    changelog-file: RELEASE_CHANGELOG.md
                     files: |
                         ${{ matrix.platform }}/build/libs/!(*-@(dev|dev-shadow|sources|javadoc)).jar
-
-                    retry-attempts: 6
-                    retry-delay: 30000

@@ -1,6 +1,17 @@
 {
   "values": [
-    "minecraft:player",
-    "fowlplay:hawk"
+    "minecraft:chicken",
+    "minecraft:rabbit",
+    "fowlplay:blue_jay",
+    "fowlplay:cardinal",
+    "fowlplay:chickadee",
+    "fowlplay:crow",
+    "fowlplay:duck",
+    "fowlplay:goose",
+    "fowlplay:gull",
+    "fowlplay:hawk",
+    "fowlplay:pigeon",
+    "fowlplay:robin",
+    "fowlplay:sparrow"
   ]
 }

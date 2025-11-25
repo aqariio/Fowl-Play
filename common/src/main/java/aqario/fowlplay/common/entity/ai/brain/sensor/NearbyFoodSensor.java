@@ -2,15 +2,15 @@ package aqario.fowlplay.common.entity.ai.brain.sensor;
 
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.util.Birds;
-import aqario.fowlplay.core.FowlPlayMemoryModuleType;
+import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.ai.brain.Brain;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Unit;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.sensing.SensorType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.PredicateSensor;
 import net.tslat.smartbrainlib.registry.SBLMemoryTypes;
@@ -24,7 +24,7 @@ public class NearbyFoodSensor<E extends BirdEntity> extends PredicateSensor<Item
     private static final List<MemoryModuleType<?>> MEMORIES = ObjectArrayList.of(SBLMemoryTypes.NEARBY_ITEMS.get());
 
     public NearbyFoodSensor() {
-        super((item, bird) -> bird.canGather(item.getStack()) && bird.canSee(item));
+        super((item, bird) -> bird.wantsToPickUp(item.getItem()) && bird.hasLineOfSight(item));
     }
 
     @Override
@@ -38,17 +38,17 @@ public class NearbyFoodSensor<E extends BirdEntity> extends PredicateSensor<Item
     }
 
     @Override
-    protected void sense(ServerWorld world, E bird) {
+    protected void doTick(ServerLevel world, E bird) {
         Brain<?> brain = bird.getBrain();
-        double radius = bird.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE);
+        double radius = bird.getAttributeValue(Attributes.FOLLOW_RANGE);
         List<ItemEntity> nearbyItems = EntityRetrievalUtil.getEntities(bird, radius, ItemEntity.class, item -> predicate().test(item, bird));
         BrainUtils.setMemory(brain, SBLMemoryTypes.NEARBY_ITEMS.get(), nearbyItems);
 
         if(Birds.canPickupFood(bird)) {
-            BrainUtils.setMemory(brain, FowlPlayMemoryModuleType.SEES_FOOD.get(), Unit.INSTANCE);
+            BrainUtils.setMemory(brain, FowlPlayMemoryTypes.SEES_FOOD.get(), Unit.INSTANCE);
         }
         else {
-            BrainUtils.clearMemory(brain, FowlPlayMemoryModuleType.SEES_FOOD.get());
+            BrainUtils.clearMemory(brain, FowlPlayMemoryTypes.SEES_FOOD.get());
         }
     }
 }

@@ -45,10 +45,8 @@ configurations {
 dependencies {
     // Mappings
     mappings loom.layered {
-        it.mappings("net.fabricmc:yarn:$rootProject.yarn_mappings_version:v2")
-        it.mappings("dev.architectury:yarn-mappings-patch-neoforge:$rootProject.yarn_mappings_patch_neoforge_version")
-//        officialMojangMappings()
-//        parchment("org.parchmentmc.data:parchment-${project.parchment_mappings_version}@zip")
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${project.parchment_mappings_version}@zip")
     }
 
     // Neoforge
@@ -67,11 +65,21 @@ dependencies {
         transitive = false
     }
 
+    // Kotlin For Forge
+//    modRuntimeOnly("maven.modrinth:kotlin-for-forge:${project.kotlin_for_forge_version}")
+
     // NBT Autocomplete
     modRuntimeOnly("maven.modrinth:nbt-autocomplete:${project.nbt_autocomplete_version}-neoforge,1.21.1")
 
+    // Observable
+//    modRuntimeOnly("maven.modrinth:observable:${project.observable_version}+neoforge")
+
     // Smart Brain Lib
     modImplementation("net.tslat.smartbrainlib:SmartBrainLib-neoforge-${project.minecraft_version}:${project.sbl_version}")
+
+    // Spark
+    modRuntimeOnly("me.lucko:fabric-permissions-api:${project.fabric_permissions_api_version}")
+    modRuntimeOnly("maven.modrinth:spark:${project.spark_version}-neoforge")
 
     // Suggestion Tweaker
     modRuntimeOnly("maven.modrinth:suggestion-tweaker:${project.suggestion_tweaker_version}+neoforge")

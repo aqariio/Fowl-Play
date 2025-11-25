@@ -1,23 +1,23 @@
 package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.core.FowlPlay;
-import aqario.fowlplay.core.FowlPlayRegistryKeys;
+import aqario.fowlplay.core.FowlPlayRegistries;
 import aqario.fowlplay.core.platform.PlatformHelper;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Holder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 
-public record DuckVariant(Identifier texture) {
-    public static final PacketCodec<RegistryByteBuf, RegistryEntry<DuckVariant>> PACKET_CODEC = PacketCodecs.registryEntry(FowlPlayRegistryKeys.DUCK_VARIANT);
-    public static final RegistryKey<DuckVariant> GREEN_HEADED = register("green_headed");
-    public static final RegistryKey<DuckVariant> BROWN = register("brown");
+public record DuckVariant(ResourceLocation texture) {
+    public static final StreamCodec<RegistryFriendlyByteBuf, Holder<DuckVariant>> PACKET_CODEC = ByteBufCodecs.holderRegistry(FowlPlayRegistries.DUCK_VARIANT);
+    public static final ResourceKey<DuckVariant> GREEN_HEADED = register("green_headed");
+    public static final ResourceKey<DuckVariant> BROWN = register("brown");
 
-    private static RegistryKey<DuckVariant> register(String id) {
-        RegistryKey<DuckVariant> key = RegistryKey.of(FowlPlayRegistryKeys.DUCK_VARIANT, Identifier.of(FowlPlay.ID, id));
-        Identifier texture = Identifier.of(FowlPlay.ID, "textures/entity/duck/" + key.getValue().getPath() + "_duck.png");
+    private static ResourceKey<DuckVariant> register(String id) {
+        ResourceKey<DuckVariant> key = ResourceKey.create(FowlPlayRegistries.DUCK_VARIANT, FowlPlay.id(id));
+        ResourceLocation texture = FowlPlay.id("textures/entity/duck/" + key.location().getPath() + "_duck.png");
         PlatformHelper.registerVariant(id, key, () -> new DuckVariant(texture));
         return key;
     }

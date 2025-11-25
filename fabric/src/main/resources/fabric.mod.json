@@ -12,7 +12,9 @@
     "Disketaa",
     "owen233666",
     "sanduicheirainox",
-    "Gnom1112"
+    "Gnom1112",
+    "xz123456xz",
+    "sunbatheproductions"
   ],
   "contact": {
     "homepage": "https://modrinth.com/mod/fowlplay",
@@ -47,5 +49,13 @@
     "architectury": ">=${architectury_version}",
     "smartbrainlib": ">=${sbl_version}",
     "yet_another_config_lib_v3": ">=${yacl_version}"
+  },
+  "custom": {
+    "mc-publish": {
+      "dependencies": [
+        "architectury-api(required)",
+        "yacl(required)"
+      ]
+    }
   }
 }

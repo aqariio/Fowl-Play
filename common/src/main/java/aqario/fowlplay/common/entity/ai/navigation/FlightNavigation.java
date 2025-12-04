@@ -46,7 +46,11 @@ public class FlightNavigation extends GroundPathNavigation implements ExtendedNa
             @Nullable
             @Override
             public Path findPath(PathNavigationRegion navigationRegion, Mob mob, Set<BlockPos> targetPositions, float maxRange, int accuracy, float searchDepthMultiplier) {
-                return FlightNavigation.this.patchPath(super.findPath(navigationRegion, mob, targetPositions, maxRange, accuracy, searchDepthMultiplier));
+                FlightNavigation.this.nodeEvaluator.mob = FlightNavigation.this.mob;
+                final Path path = super.findPath(navigationRegion, mob, targetPositions, maxRange, accuracy, searchDepthMultiplier);
+                FlightNavigation.this.nodeEvaluator.mob = null;
+
+                return FlightNavigation.this.patchPath(path);
             }
         };
     }

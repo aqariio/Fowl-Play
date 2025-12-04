@@ -28,7 +28,9 @@ public class GroundNavigation extends SmoothGroundNavigation {
             @Nullable
             @Override
             public Path findPath(PathNavigationRegion navigationRegion, Mob mob, Set<BlockPos> targetPositions, float maxRange, int accuracy, float searchDepthMultiplier) {
+                GroundNavigation.this.nodeEvaluator.mob = GroundNavigation.this.mob;
                 final Path path = super.findPath(navigationRegion, mob, targetPositions, maxRange, accuracy, searchDepthMultiplier);
+                GroundNavigation.this.nodeEvaluator.mob = null;
 
                 return GroundNavigation.this.patchPath(path);
             }

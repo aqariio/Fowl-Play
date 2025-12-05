@@ -14,7 +14,6 @@ import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
@@ -48,7 +47,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEntity> {
     public CrowEntity(EntityType<? extends CrowEntity> entityType, Level world) {
@@ -73,12 +71,6 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
         return Pair.of(12, 16);
     }
 
-    @Nullable
-    @Override
-    public LivingEntity getTarget() {
-        return this.getTargetFromBrain();
-    }
-
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
@@ -97,12 +89,6 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     @Override
     public boolean isBaby() {
         return false;
-    }
-
-    @Nullable
-    @Override
-    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
-        return null;
     }
 
     public Ingredient getFood() {
@@ -142,11 +128,6 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     @Override
     public float getFlapPitch() {
         return 0.9f;
-    }
-
-    @Override
-    public float getWaterline() {
-        return 0.5F;
     }
 
     @Override
@@ -260,8 +241,7 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     @Override
     public BrainActivityGroup<? extends CrowEntity> getRestTasks() {
         return BirdBrain.restActivity(
-            new SetPerchWalkTarget<>()
-                .startCondition(Predicate.not(Birds::isPerched)),
+            CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );
     }

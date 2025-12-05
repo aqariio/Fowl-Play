@@ -19,7 +19,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
@@ -91,13 +90,14 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
 
     @Override
     protected PathNavigation getLandNavigation() {
-        return new AmphibiousNavigation(this, this.level());
+        return new AmphibiousNavigation(this, this.level())
+            .setSurfaceOnly();
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData) {
-        FowlPlayBuiltInRegistries.GULL_VARIANT.getRandom(world.getRandom()).ifPresent(this::setVariant);
-        return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+        FowlPlayBuiltInRegistries.GULL_VARIANT.getRandom(level.getRandom()).ifPresent(this::setVariant);
+        return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
     }
 
     @Override
@@ -112,12 +112,6 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
             .add(Attributes.MOVEMENT_SPEED, 0.225f)
             .add(Attributes.FLYING_SPEED, 0.22f)
             .add(Attributes.WATER_MOVEMENT_EFFICIENCY, 0.5f);
-    }
-
-    @Nullable
-    @Override
-    public LivingEntity getTarget() {
-        return this.getTargetFromBrain();
     }
 
     @Override
@@ -154,12 +148,6 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     @Override
     public boolean isBaby() {
         return false;
-    }
-
-    @Nullable
-    @Override
-    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
-        return null;
     }
 
     public Ingredient getFood() {
@@ -228,13 +216,8 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     }
 
     @Override
-    public float getWaterline() {
-        return 0.35F;
-    }
-
-    @Override
     public CylindricalRadius getWalkRange() {
-        return new CylindricalRadius(24, 12);
+        return new CylindricalRadius(24, 8);
     }
 
     @Override

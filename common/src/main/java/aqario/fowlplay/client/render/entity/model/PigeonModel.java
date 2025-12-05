@@ -7,8 +7,6 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.util.Mth;
 
 public class PigeonModel extends FlyingBirdModel<PigeonEntity> {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("pigeon"), "main");
@@ -17,7 +15,7 @@ public class PigeonModel extends FlyingBirdModel<PigeonEntity> {
         super(root);
     }
 
-    public static LayerDefinition getTexturedModelData() {
+    public static LayerDefinition createBodyLayer() {
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         PartDefinition root = modelPartData.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 21.0F, -1.0F));
@@ -62,52 +60,14 @@ public class PigeonModel extends FlyingBirdModel<PigeonEntity> {
     }
 
     @Override
-    public void prepareMobModel(PigeonEntity pigeon, float limbAngle, float limbDistance, float tickDelta) {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
-        super.prepareMobModel(pigeon, limbAngle, limbDistance, tickDelta);
-        float ageInTicks = pigeon.tickCount + tickDelta;
-        float bodyYaw = Mth.rotLerp(tickDelta, pigeon.yBodyRotO, pigeon.yBodyRot);
-        float headYaw = Mth.rotLerp(tickDelta, pigeon.yHeadRotO, pigeon.yHeadRot);
-        float relativeHeadYaw = Mth.wrapDegrees(headYaw - bodyYaw);
-
-        float headPitch = Mth.lerp(tickDelta, pigeon.xRotO, pigeon.getXRot());
-        if (LivingEntityRenderer.isEntityUpsideDown(pigeon)) {
-            headPitch *= -1.0F;
-            relativeHeadYaw *= -1.0F;
+    protected void setAnimations(PigeonEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+        if(!entity.isFlying() && !entity.isInWaterOrBubble() && !entity.isInSittingPose()) {
+            this.animateWalk(PigeonAnimations.WALKING, limbSwing, limbSwingAmount, 5F, 5F);
         }
-        if (!pigeon.isFlying()) {
-            this.updateHeadRotation(relativeHeadYaw, headPitch);
-        }
-        if (pigeon.isFlying()) {
-            this.root.xRot = pigeon.getViewXRot(tickDelta) * (float) (Math.PI / 180.0);
-            this.root.zRot = pigeon.getRoll(tickDelta) * (float) (Math.PI / 180.0);
-        }
-        if (pigeon.isFlying()) {
-            this.leftWingOpen.visible = true;
-            this.rightWingOpen.visible = true;
-            this.leftWing.visible = false;
-            this.rightWing.visible = false;
-        }
-        else {
-            this.leftWingOpen.visible = false;
-            this.rightWingOpen.visible = false;
-            this.leftWing.visible = true;
-            this.rightWing.visible = true;
-        }
-        if (!pigeon.isFlying() && !pigeon.isInWaterOrBubble() && !pigeon.isInSittingPose()) {
-            this.animateWalk(PigeonAnimations.WALKING, limbAngle, limbDistance, 5F, 5F);
-        }
-        this.animate(pigeon.standingState, PigeonAnimations.STANDING, ageInTicks);
-        this.animate(pigeon.swimmingState, PigeonAnimations.SWIMMING, ageInTicks);
-        this.animate(pigeon.glidingState, PigeonAnimations.GLIDING, ageInTicks);
-        this.animate(pigeon.flappingState, PigeonAnimations.FLAPPING, ageInTicks);
-        this.animate(pigeon.sittingState, PigeonAnimations.SITTING, ageInTicks);
-    }
-
-    private void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = Mth.clamp(headYaw, -135.0F, 135.0F);
-        headPitch = Mth.clamp(headPitch, -25.0F, 45.0F);
-        this.neck.yRot = headYaw * (float) (Math.PI / 180.0);
-        this.neck.xRot = headPitch * (float) (Math.PI / 180.0);
+        this.animate(entity.standingState, PigeonAnimations.STANDING, ageInTicks);
+        this.animate(entity.swimmingState, PigeonAnimations.SWIMMING, ageInTicks);
+        this.animate(entity.glidingState, PigeonAnimations.GLIDING, ageInTicks);
+        this.animate(entity.flappingState, PigeonAnimations.FLAPPING, ageInTicks);
+        this.animate(entity.sittingState, PigeonAnimations.SITTING, ageInTicks);
     }
 }

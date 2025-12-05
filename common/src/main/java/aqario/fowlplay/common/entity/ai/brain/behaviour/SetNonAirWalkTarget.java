@@ -23,11 +23,11 @@ public class SetNonAirWalkTarget<E extends BirdEntity> extends SpeedModifiableBe
     protected CylindricalRadius radius = new CylindricalRadius(32, 16);
     protected BiPredicate<E, Vec3> positionPredicate = (entity, pos) -> true;
 
-    public SetNonAirWalkTarget<E> setRadius(int radius) {
-        return this.setRadius(radius, radius);
+    public SetNonAirWalkTarget<E> radius(int radius) {
+        return this.radius(radius, radius);
     }
 
-    public SetNonAirWalkTarget<E> setRadius(int xz, int y) {
+    public SetNonAirWalkTarget<E> radius(int xz, int y) {
         this.radius = new CylindricalRadius(xz, y);
 
         return this;
@@ -62,11 +62,11 @@ public class SetNonAirWalkTarget<E extends BirdEntity> extends SpeedModifiableBe
             targetPos = null;
         }
 
-        if(targetPos == null) {
-            BrainUtils.clearMemory(entity, MemoryModuleType.WALK_TARGET);
+        if(targetPos != null) {
+            BrainUtils.setMemory(entity, MemoryModuleType.WALK_TARGET, new WalkTarget(targetPos, this.speedModifier.apply(entity, targetPos), 0));
         }
         else {
-            BrainUtils.setMemory(entity, MemoryModuleType.WALK_TARGET, new WalkTarget(targetPos, this.speedModifier.apply(entity, targetPos), 0));
+            BrainUtils.clearMemory(entity, MemoryModuleType.WALK_TARGET);
         }
     }
 

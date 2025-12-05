@@ -132,16 +132,10 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
         return new AmphibiousNavigation(this, this.level());
     }
 
-    @Nullable
     @Override
-    public LivingEntity getTarget() {
-        return this.getTargetFromBrain();
-    }
-
-    @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData) {
-        this.initLastPoseTick(world.getLevel().getGameTime());
-        return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+        this.initLastPoseTick(level.getLevel().getGameTime());
+        return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
     }
 
     @Nullable
@@ -451,13 +445,16 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
         return !this.isVehicle();
     }
 
-    public boolean canBreed() {
+    public boolean isReadyToBreed() {
         return !this.isVehicle() && !this.isPassenger() && !this.isBaby() && this.getHealth() >= this.getMaxHealth() && this.isInLove();
     }
 
     @Override
     public boolean canMate(Animal other) {
-        return other != this && other instanceof PenguinEntity penguin && this.canBreed() && penguin.canBreed();
+        return other != this
+            && other instanceof PenguinEntity penguin
+            && this.isReadyToBreed()
+            && penguin.isReadyToBreed();
     }
 
     public boolean shouldStepDown() {
@@ -533,11 +530,6 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     @Override
     protected int increaseAirSupply(int air) {
         return this.getMaxAirSupply();
-    }
-
-    @Override
-    public float getWaterline() {
-        return 0F;
     }
 
     @Override

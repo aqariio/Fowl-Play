@@ -1,7 +1,7 @@
 package aqario.fowlplay.mixin;
 
 import aqario.fowlplay.common.entity.ChickenVariant;
-import aqario.fowlplay.common.util.ChickenAnimationStates;
+import aqario.fowlplay.common.util.ChickenAnimationHolder;
 import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
 import aqario.fowlplay.core.platform.DataAttachmentHelper;
 import net.minecraft.core.Holder;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(value = Chicken.class, priority = 999)
-public abstract class ChickenMixin extends Animal implements VariantHolder<Holder<ChickenVariant>>, ChickenAnimationStates {
+public abstract class ChickenMixin extends Animal implements VariantHolder<Holder<ChickenVariant>>, ChickenAnimationHolder {
     @Unique
     private final AnimationState fowlplay$standingState = new AnimationState();
     @Unique

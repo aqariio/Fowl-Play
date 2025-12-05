@@ -24,10 +24,10 @@ public class DuckRenderer extends MobRenderer<DuckEntity, DuckModel> {
 
     @Override
     public ResourceLocation getTextureLocation(DuckEntity duck) {
-        String string = ChatFormatting.stripFormatting(duck.getName().getString());
-        if ("Quackers".equals(string)) {
+        String customName = ChatFormatting.stripFormatting(duck.getName().getString());
+        if(customName.equals("Quackers")) {
             return QUACKERS_TEXTURE;
         }
-        return duck.getVariant().value().texture();
+        return duck.getVariant().value().texture(false);
     }
 }

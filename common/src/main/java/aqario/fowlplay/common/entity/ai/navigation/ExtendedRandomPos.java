@@ -8,6 +8,14 @@ import net.minecraft.world.phys.Vec3;
 import java.util.function.DoubleUnaryOperator;
 
 public class ExtendedRandomPos {
+    public static BlockPos generatePreferNear(
+        final RandomSource random,
+        final int horizontalRange,
+        final int verticalRange
+    ) {
+        return generate(random, d -> Math.pow(d, 2), horizontalRange, verticalRange);
+    }
+
     public static BlockPos generatePreferFar(
         final RandomSource random,
         final int horizontalRange,
@@ -22,7 +30,7 @@ public class ExtendedRandomPos {
         final int horizontalRange,
         final int verticalRange
     ) {
-        double angle = random.nextDouble() * Mth.TWO_PI;
+        double angle = random.nextDouble() * Math.TAU;
         double dist = distanceFunction.applyAsDouble(random.nextDouble()) * horizontalRange;
         double x = -dist * Math.sin(angle);
         double z = dist * Math.cos(angle);

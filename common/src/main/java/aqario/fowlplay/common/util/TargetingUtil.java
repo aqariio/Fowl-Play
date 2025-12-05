@@ -1,8 +1,12 @@
 package aqario.fowlplay.common.util;
 
+import aqario.fowlplay.common.entity.FlyingBirdEntity;
 import aqario.fowlplay.core.tags.FowlPlayBlockTags;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.util.GoalUtils;
 import net.minecraft.world.entity.ai.util.RandomPos;
@@ -15,16 +19,25 @@ import java.util.function.Predicate;
 
 public class TargetingUtil {
     @Nullable
-    public static BlockPos tryFindAir(PathfinderMob entity, CylindricalRadius range, BlockPos pos) {
+    public static BlockPos tryFindAir(FlyingBirdEntity entity, CylindricalRadius range, BlockPos pos) {
         BlockPos adjustedPos = RandomPos.generateRandomPosTowardDirection(
             entity, range.horizontal(), entity.getRandom(), pos
         );
-        adjustedPos = RandomPos.moveUpOutOfSolid(adjustedPos, entity.level().getMaxBuildHeight(), currentPos ->
-            GoalUtils.isSolid(entity, currentPos)
-        );
-        if(GoalUtils.isWater(entity, adjustedPos)
+        adjustedPos = shiftPosTowardsFlyHeightRange(entity, adjustedPos);
+        int surfaceY = entity.level().getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, adjustedPos.getX(), adjustedPos.getZ());
+        if(adjustedPos.getY() < surfaceY && entity.getY() >= surfaceY) {
+            adjustedPos = adjustedPos.atY(
+                surfaceY + 12
+            );
+        }
+        else if(entity.getY() < surfaceY) {
+            adjustedPos = RandomPos.moveUpOutOfSolid(adjustedPos, entity.level().getMaxBuildHeight(), currentPos ->
+                GoalUtils.isSolid(entity, currentPos) || GoalUtils.isWater(entity, currentPos)
+            );
+        }
+        if(GoalUtils.isSolid(entity, adjustedPos)
+            || GoalUtils.isWater(entity, adjustedPos)
             || GoalUtils.hasMalus(entity, adjustedPos)
-            || GoalUtils.isNotStable(entity.getNavigation(), adjustedPos)
         ) {
             return null;
         }
@@ -45,7 +58,7 @@ public class TargetingUtil {
 
     @Nullable
     public static BlockPos tryFindNonAir(PathfinderMob entity, CylindricalRadius range, BlockPos pos) {
-        BlockPos adjustedPos = findSurfacePosition(entity, pos, range, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, 1, currentPos ->
+        BlockPos adjustedPos = findSurfacePosition(entity, pos, range, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, 0, currentPos ->
             GoalUtils.isSolid(entity, currentPos)
                 || GoalUtils.isWater(entity, currentPos)
         );
@@ -54,7 +67,7 @@ public class TargetingUtil {
         ) {
             return null;
         }
-        return entity.level().isWaterAt(adjustedPos.below()) ? adjustedPos.below() : adjustedPos;
+        return entity.level().isWaterAt(adjustedPos) ? adjustedPos : adjustedPos.above();
     }
 
     @Nullable
@@ -64,7 +77,7 @@ public class TargetingUtil {
         );
         if(GoalUtils.isWater(entity, adjustedPos)
             || GoalUtils.hasMalus(entity, adjustedPos)
-            || !TargetingUtil.isPositionGrounded(entity, adjustedPos)
+            || !TargetingUtil.isPositionGrounded(entity, adjustedPos.below())
         ) {
             return null;
         }
@@ -73,20 +86,29 @@ public class TargetingUtil {
 
     @Nullable
     public static BlockPos tryFindPerch(PathfinderMob entity, CylindricalRadius range, BlockPos pos) {
-        // TODO: this logic still needs fixing
-        BlockPos adjustedPos = findSurfacePosition(entity, pos, range, Heightmap.Types.MOTION_BLOCKING, 1, currentPos ->
-            GoalUtils.isSolid(entity, currentPos)
-                && !TargetingUtil.isPerch(entity, currentPos)
-        );
-        if(GoalUtils.isWater(entity, adjustedPos.below())
+        BlockPos adjustedPos = findSurfacePosition(entity, pos, range, Heightmap.Types.MOTION_BLOCKING, 0, currentPos -> {
+            boolean isLeaves = entity.level().getBlockState(currentPos.below()).getBlock() instanceof LeavesBlock;
+            boolean isValidLeavesPerch = isLeaves
+                && !entity.level().getBlockState(currentPos.below(2)).isAir();
+            boolean isValidPerch = isPerch(entity, currentPos.below())
+                && entity.level().getBlockState(currentPos).isAir();
+            if(isLeaves && !isValidLeavesPerch) {
+                return true;
+            }
+            if(isValidLeavesPerch) {
+                return false;
+            }
+            return !isValidPerch;
+        });
+        if(!TargetingUtil.isPerch(entity, adjustedPos)
+            || GoalUtils.isWater(entity, adjustedPos)
             || GoalUtils.hasMalus(entity, adjustedPos)
-            || !TargetingUtil.isPerch(entity, adjustedPos)
         ) {
             return null;
         }
         return entity.level().getBlockState(adjustedPos).getBlock() instanceof LeavesBlock
-            ? adjustedPos.below()
-            : adjustedPos;
+            ? adjustedPos
+            : adjustedPos.above();
     }
 
     public static BlockPos findSurfacePosition(
@@ -100,18 +122,17 @@ public class TargetingUtil {
         BlockPos adjustedPos = RandomPos.generateRandomPosTowardDirection(
             entity, range.horizontal(), entity.getRandom(), initialPos
         );
-        // if position is above the surface, set to surface level
-        if(adjustedPos.getY() > entity.level().getHeight(heightmap, adjustedPos.getX(), adjustedPos.getZ())) {
-            adjustedPos = new BlockPos(
-                adjustedPos.getX(),
-                entity.level().getHeight(heightmap, adjustedPos.getX(), adjustedPos.getZ()) + blocksAbove,
-                adjustedPos.getZ()
+        int surfaceY = entity.level().getHeight(heightmap, adjustedPos.getX(), adjustedPos.getZ());
+        // if position is above the surface, set to surface level, and vertically offset final position by blocksAbove
+        if(adjustedPos.getY() >= surfaceY) {
+            adjustedPos = adjustedPos.atY(
+                surfaceY + blocksAbove - 1
             );
         }
-        // else, move up until we reach solid ground or water
+        // else, move up based on provided predicate, and vertically offset final position by blocksAbove
         else {
-            adjustedPos = RandomPos.moveUpOutOfSolid(adjustedPos, entity.level().getMaxBuildHeight(), predicate)
-                .above(blocksAbove - 1);
+            adjustedPos = RandomPos.moveUpOutOfSolid(adjustedPos, surfaceY, predicate)
+                .relative(Direction.Axis.Y, blocksAbove - 1);
         }
         return adjustedPos;
     }
@@ -130,9 +151,24 @@ public class TargetingUtil {
     }
 
     @Nullable
-    public static Vec3 validatePos(PathfinderMob entity, BlockPos pos, CylindricalRadius range) {
+    public static Vec3 validatePos(PathfinderMob entity, @Nullable BlockPos pos, CylindricalRadius range) {
         BlockPos validPos = validateBlockPos(entity, pos, range);
         return validPos != null ? validPos.getBottomCenter() : null;
+    }
+
+    public static BlockPos shiftPosTowardsFlyHeightRange(FlyingBirdEntity bird, BlockPos pos) {
+        int posY = pos.getY();
+        RandomSource random = bird.getRandom();
+        Pair<Integer, Integer> flyHeightRange = bird.getFlyHeightRange();
+        int lower = flyHeightRange.getFirst();
+        int upper = flyHeightRange.getSecond();
+        if(posY < lower) {
+            return pos.above(Math.min(random.nextIntBetweenInclusive(5, 10), lower - posY));
+        }
+        if(posY > upper) {
+            return pos.below(Math.min(random.nextIntBetweenInclusive(5, 10), posY - upper));
+        }
+        return pos;
     }
 
     public static boolean isPerch(PathfinderMob entity, BlockPos pos) {
@@ -140,13 +176,11 @@ public class TargetingUtil {
     }
 
     public static boolean isPositionNonAir(PathfinderMob entity, BlockPos pos) {
-        BlockPos belowPos = pos.below();
-        return isFullBlockAt(entity, belowPos) || GoalUtils.isWater(entity, belowPos);
+        return isFullBlockAt(entity, pos) || GoalUtils.isWater(entity, pos);
     }
 
     public static boolean isPositionGrounded(PathfinderMob entity, BlockPos pos) {
-        BlockPos belowPos = pos.below();
-        return isFullBlockAt(entity, belowPos);
+        return isFullBlockAt(entity, pos);
     }
 
     public static boolean isFullBlockAt(PathfinderMob entity, BlockPos pos) {

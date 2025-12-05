@@ -2,6 +2,7 @@ package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.*;
+import aqario.fowlplay.common.util.PathBuilder;
 import aqario.fowlplay.common.world.gen.PigeonSpawner;
 import aqario.fowlplay.common.world.gen.SparrowSpawner;
 import dev.architectury.event.events.common.TickEvent;
@@ -14,6 +15,10 @@ import org.slf4j.LoggerFactory;
 public class FowlPlay {
     public static final Logger LOGGER = LoggerFactory.getLogger("Fowl Play");
     public static final String ID = "fowlplay";
+
+    public static ResourceLocation id(PathBuilder path) {
+        return ResourceLocation.fromNamespaceAndPath(ID, path.build());
+    }
 
     public static ResourceLocation id(String id) {
         return ResourceLocation.fromNamespaceAndPath(ID, id);

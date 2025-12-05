@@ -7,8 +7,6 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.util.Mth;
 
 public class CardinalModel extends FlyingBirdModel<CardinalEntity> {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("cardinal"), "main");
@@ -19,7 +17,7 @@ public class CardinalModel extends FlyingBirdModel<CardinalEntity> {
         this.crest = this.head.getChild("crest");
     }
 
-    public static LayerDefinition getTexturedModelData() {
+    public static LayerDefinition createBodyLayer() {
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         PartDefinition root = modelPartData.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 21.0F, -1.0F));
@@ -63,51 +61,13 @@ public class CardinalModel extends FlyingBirdModel<CardinalEntity> {
     }
 
     @Override
-    public void prepareMobModel(CardinalEntity cardinal, float limbAngle, float limbDistance, float tickDelta) {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
-        super.prepareMobModel(cardinal, limbAngle, limbDistance, tickDelta);
-        float ageInTicks = cardinal.tickCount + tickDelta;
-        float bodyYaw = Mth.rotLerp(tickDelta, cardinal.yBodyRotO, cardinal.yBodyRot);
-        float headYaw = Mth.rotLerp(tickDelta, cardinal.yHeadRotO, cardinal.yHeadRot);
-        float relativeHeadYaw = Mth.wrapDegrees(headYaw - bodyYaw);
-
-        float headPitch = Mth.lerp(tickDelta, cardinal.xRotO, cardinal.getXRot());
-        if(LivingEntityRenderer.isEntityUpsideDown(cardinal)) {
-            headPitch *= -1.0F;
-            relativeHeadYaw *= -1.0F;
+    protected void setAnimations(CardinalEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+        if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
+            this.animateWalk(CardinalAnimations.WALKING, limbSwing, limbSwingAmount, 6F, 6F);
         }
-        if(!cardinal.isFlying()) {
-            this.updateHeadRotation(relativeHeadYaw, headPitch);
-        }
-        if(cardinal.isFlying()) {
-            this.root.xRot = cardinal.getViewXRot(tickDelta) * (float) (Math.PI / 180.0);
-            this.root.zRot = cardinal.getRoll(tickDelta) * (float) (Math.PI / 180.0);
-        }
-        if(cardinal.isFlying()) {
-            this.leftWingOpen.visible = true;
-            this.rightWingOpen.visible = true;
-            this.leftWing.visible = false;
-            this.rightWing.visible = false;
-        }
-        else {
-            this.leftWingOpen.visible = false;
-            this.rightWingOpen.visible = false;
-            this.leftWing.visible = true;
-            this.rightWing.visible = true;
-        }
-        if(!cardinal.isFlying() && !cardinal.isInWaterOrBubble()) {
-            this.animateWalk(CardinalAnimations.WALKING, limbAngle, limbDistance, 6F, 6F);
-        }
-        this.animate(cardinal.standingState, CardinalAnimations.STANDING, ageInTicks);
-        this.animate(cardinal.swimmingState, CardinalAnimations.SWIMMING, ageInTicks);
-        this.animate(cardinal.glidingState, CardinalAnimations.GLIDING, ageInTicks);
-        this.animate(cardinal.flappingState, CardinalAnimations.FLAPPING, ageInTicks);
-    }
-
-    private void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = Mth.clamp(headYaw, -135.0F, 135.0F);
-        headPitch = Mth.clamp(headPitch, -25.0F, 45.0F);
-        this.neck.yRot = headYaw * (float) (Math.PI / 180.0);
-        this.neck.xRot = headPitch * (float) (Math.PI / 180.0);
+        this.animate(entity.standingState, CardinalAnimations.STANDING, ageInTicks);
+        this.animate(entity.swimmingState, CardinalAnimations.SWIMMING, ageInTicks);
+        this.animate(entity.glidingState, CardinalAnimations.GLIDING, ageInTicks);
+        this.animate(entity.flappingState, CardinalAnimations.FLAPPING, ageInTicks);
     }
 }

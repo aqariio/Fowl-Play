@@ -1,6 +1,8 @@
 package aqario.fowlplay.client.render.entity;
 
 import aqario.fowlplay.client.render.entity.layer.BirdHeldItemLayer;
+import aqario.fowlplay.client.render.entity.model.AdultBabyModelPair;
+import aqario.fowlplay.client.render.entity.model.BabyGooseModel;
 import aqario.fowlplay.client.render.entity.model.DomesticGooseModel;
 import aqario.fowlplay.client.render.entity.model.GooseModel;
 import aqario.fowlplay.common.entity.GooseEntity;
@@ -15,7 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Map;
 
 public class GooseRenderer extends MobRenderer<GooseEntity, GooseModel> {
-    private final Map<GooseVariant.ModelType, GooseModel> models;
+    private final Map<GooseVariant.ModelType, AdultBabyModelPair<GooseModel>> models;
 
     public GooseRenderer(EntityRendererProvider.Context context) {
         super(context, new GooseModel(context.bakeLayer(GooseModel.MODEL_LAYER)), 0.3f);
@@ -27,23 +29,30 @@ public class GooseRenderer extends MobRenderer<GooseEntity, GooseModel> {
         this.models = bakeModels(context);
     }
 
-    private static Map<GooseVariant.ModelType, GooseModel> bakeModels(EntityRendererProvider.Context context) {
+    private static Map<GooseVariant.ModelType, AdultBabyModelPair<GooseModel>> bakeModels(EntityRendererProvider.Context context) {
         return Map.of(
             GooseVariant.ModelType.WILD,
-            new GooseModel(context.bakeLayer(GooseModel.MODEL_LAYER)),
+            new AdultBabyModelPair<>(
+                new GooseModel(context.bakeLayer(GooseModel.MODEL_LAYER)),
+                new BabyGooseModel(context.bakeLayer(BabyGooseModel.MODEL_LAYER))
+            ),
             GooseVariant.ModelType.DOMESTIC,
-            new DomesticGooseModel(context.bakeLayer(DomesticGooseModel.MODEL_LAYER))
+            new AdultBabyModelPair<>(
+                new DomesticGooseModel(context.bakeLayer(DomesticGooseModel.MODEL_LAYER)),
+                new BabyGooseModel(context.bakeLayer(BabyGooseModel.MODEL_LAYER))
+            )
         );
     }
 
     @Override
     public void render(GooseEntity goose, float f, float g, PoseStack matrices, MultiBufferSource vertexConsumerProvider, int i) {
-        this.model = this.models.get(goose.getVariant().value().modelType());
+        this.model = this.models.get(goose.getVariant().value().modelType())
+            .getModel(goose.isBaby());
         super.render(goose, f, g, matrices, vertexConsumerProvider, i);
     }
 
     @Override
     public ResourceLocation getTextureLocation(GooseEntity goose) {
-        return goose.getVariant().value().texture();
+        return goose.getVariant().value().texture(goose.isBaby());
     }
 }

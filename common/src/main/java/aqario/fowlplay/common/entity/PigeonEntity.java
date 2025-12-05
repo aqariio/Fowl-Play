@@ -19,7 +19,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
@@ -56,7 +55,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 public class PigeonEntity extends TameableBirdEntity implements BirdBrain<PigeonEntity>, VariantHolder<Holder<PigeonVariant>>, Flocking {
     private static final EntityDataAccessor<Optional<UUID>> RECIPIENT = SynchedEntityData.defineId(
@@ -74,8 +72,8 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData) {
-        float f = world.getRandom().nextFloat();
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+        float f = level.getRandom().nextFloat();
         if(f < 0.5f) { // 50% chance for banded
             FowlPlayBuiltInRegistries.PIGEON_VARIANT.getHolder(PigeonVariant.BANDED).ifPresent(this::setVariant);
         }
@@ -91,7 +89,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
         else { // 1% chance for white
             FowlPlayBuiltInRegistries.PIGEON_VARIANT.getHolder(PigeonVariant.WHITE).ifPresent(this::setVariant);
         }
-        return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
+        return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
     }
 
     @Override
@@ -145,17 +143,6 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     @Override
     public Pair<Integer, Integer> getFlyHeightRange() {
         return Pair.of(10, 12);
-    }
-
-    @Override
-    public float getWaterline() {
-        return 0.45F;
-    }
-
-    @Nullable
-    @Override
-    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
-        return null;
     }
 
     @Override
@@ -443,8 +430,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     @Override
     public BrainActivityGroup<? extends PigeonEntity> getRestTasks() {
         return BirdBrain.restActivity(
-            new SetPerchWalkTarget<>()
-                .startCondition(Predicate.not(Birds::isPerched)),
+            CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );
     }

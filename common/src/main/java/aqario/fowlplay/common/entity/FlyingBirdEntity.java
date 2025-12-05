@@ -24,7 +24,6 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -265,36 +264,6 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     // min and max flying height relative to ground level
     public Pair<Integer, Integer> getFlyHeightRange() {
         return Pair.of(5, 10);
-    }
-
-    @Override
-    public float getWalkTargetValue(BlockPos pos, LevelReader world) {
-        if(!this.isFlying()) {
-            return super.getWalkTargetValue(pos, world);
-        }
-        return this.getFlyingWalkTargetValue(pos, world);
-    }
-
-    public float getFlyingWalkTargetValue(BlockPos pos) {
-        return this.getFlyingWalkTargetValue(pos, this.level());
-    }
-
-    public float getFlyingWalkTargetValue(BlockPos pos, LevelReader world) {
-        // birds prefer to fly within a certain height range above ground level
-        return magicFunction(
-            pos.getY() - world.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()),
-            this.getFlyHeightRange()
-        );
-    }
-
-    private static float magicFunction(float posY, Pair<Integer, Integer> flyHeightRange) {
-        if(posY < flyHeightRange.getFirst()) {
-            return posY - flyHeightRange.getFirst();
-        }
-        if(posY > flyHeightRange.getSecond()) {
-            return flyHeightRange.getSecond() - posY;
-        }
-        return 0;
     }
 
     @Override

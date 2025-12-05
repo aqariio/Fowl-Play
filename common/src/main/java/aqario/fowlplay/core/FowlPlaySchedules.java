@@ -7,6 +7,7 @@ import net.minecraft.world.entity.schedule.Activity;
 import java.util.function.Supplier;
 
 public class FowlPlaySchedules {
+    // TODO: have separate schedules for babies and adults, and separate schedules for domestic and wild variants
     public static final Supplier<ExtendedSchedule> FORAGER = register("forager", new ExtendedSchedule()
         .activityAt(0, FowlPlayActivities.PERCH)
         .activityAt(1000, FowlPlayActivities.FORAGE)

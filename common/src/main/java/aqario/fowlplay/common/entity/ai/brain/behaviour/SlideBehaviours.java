@@ -9,7 +9,7 @@ import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
 public class SlideBehaviours {
     public static <E extends PenguinEntity> ExtendedBehaviour<E> startSliding() {
         return new AnonymousBehaviour<E>(
-            (bird, brain) -> {
+            bird -> {
                 bird.startSliding();
                 return true;
             }
@@ -19,7 +19,7 @@ public class SlideBehaviours {
 
     public static <E extends PenguinEntity> ExtendedBehaviour<E> stopSliding() {
         return new AnonymousBehaviour<E>(
-            (bird, brain) -> {
+            bird -> {
                 bird.stopSliding();
                 return true;
             }
@@ -29,7 +29,7 @@ public class SlideBehaviours {
 
     public static <E extends PenguinEntity> ExtendedBehaviour<E> toggleSliding(int seconds) {
         return new AnonymousBehaviour<E>(
-            (bird, brain) -> {
+            bird -> {
                 if(bird.isSliding()) {
                     bird.stopSliding();
                 }

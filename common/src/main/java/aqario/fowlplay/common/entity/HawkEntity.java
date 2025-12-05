@@ -13,12 +13,10 @@ import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.Brain;
@@ -47,7 +45,6 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEntity> {
     public HawkEntity(EntityType<? extends HawkEntity> entityType, Level world) {
@@ -78,12 +75,6 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
         return Pair.of(40, 48);
     }
 
-    @Nullable
-    @Override
-    public LivingEntity getTarget() {
-        return this.getTargetFromBrain();
-    }
-
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
@@ -102,12 +93,6 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     @Override
     public boolean isBaby() {
         return false;
-    }
-
-    @Nullable
-    @Override
-    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
-        return null;
     }
 
     public Ingredient getFood() {
@@ -147,11 +132,6 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     @Override
     public float getFlapPitch() {
         return 0.6f;
-    }
-
-    @Override
-    public float getWaterline() {
-        return 0.5F;
     }
 
     @Override
@@ -248,8 +228,7 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     @Override
     public BrainActivityGroup<? extends HawkEntity> getRestTasks() {
         return BirdBrain.restActivity(
-            new SetPerchWalkTarget<>()
-                .startCondition(Predicate.not(Birds::isPerched)),
+            CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );
     }

@@ -7,8 +7,6 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.util.Mth;
 
 public class HawkModel extends FlyingBirdModel<HawkEntity> {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("hawk"), "main");
@@ -17,7 +15,7 @@ public class HawkModel extends FlyingBirdModel<HawkEntity> {
         super(root);
     }
 
-    public static LayerDefinition getTexturedModelData() {
+    public static LayerDefinition createBodyLayer() {
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         PartDefinition root = modelPartData.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 19.0F, 0.0F));
@@ -73,53 +71,20 @@ public class HawkModel extends FlyingBirdModel<HawkEntity> {
     }
 
     @Override
-    public void prepareMobModel(HawkEntity hawk, float limbAngle, float limbDistance, float tickDelta) {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
-        super.prepareMobModel(hawk, limbAngle, limbDistance, tickDelta);
-        float ageInTicks = hawk.tickCount + tickDelta;
-        float bodyYaw = Mth.rotLerp(tickDelta, hawk.yBodyRotO, hawk.yBodyRot);
-        float headYaw = Mth.rotLerp(tickDelta, hawk.yHeadRotO, hawk.yHeadRot);
-        float relativeHeadYaw = Mth.wrapDegrees(headYaw - bodyYaw);
-
-        float headPitch = Mth.lerp(tickDelta, hawk.xRotO, hawk.getXRot());
-        if (LivingEntityRenderer.isEntityUpsideDown(hawk)) {
-            headPitch *= -1.0F;
-            relativeHeadYaw *= -1.0F;
+    protected void setAnimations(HawkEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+        if(entity.isFlying()) {
+            this.animateWalk(HawkAnimations.FLAPPING, limbSwing, limbSwingAmount, 1.5F, 1.5F);
         }
-        if (!hawk.isFlying()) {
-            this.updateHeadRotation(relativeHeadYaw, headPitch);
+        else if(!entity.isInWaterOrBubble()) {
+            this.animateWalk(HawkAnimations.WALKING, limbSwing, limbSwingAmount, 2.5F, 4F);
         }
-        if (hawk.isFlying()) {
-            this.root.xRot = hawk.getViewXRot(tickDelta) * (float) (Math.PI / 180.0);
-            this.root.zRot = hawk.getRoll(tickDelta) * (float) (Math.PI / 180.0);
-        }
-        if (hawk.isFlying() || hawk.isInWaterOrBubble()) {
-            this.leftWingOpen.visible = true;
-            this.rightWingOpen.visible = true;
-            this.leftWing.visible = false;
-            this.rightWing.visible = false;
-        }
-        else {
-            this.leftWingOpen.visible = false;
-            this.rightWingOpen.visible = false;
-            this.leftWing.visible = true;
-            this.rightWing.visible = true;
-        }
-        if (hawk.isFlying()) {
-            this.animateWalk(HawkAnimations.FLAPPING, limbAngle, limbDistance, 1.5F, 1.5F);
-        }
-        else if (!hawk.isInWaterOrBubble()) {
-            this.animateWalk(HawkAnimations.WALKING, limbAngle, limbDistance, 2.5F, 4F);
-        }
-        this.animate(hawk.standingState, HawkAnimations.STANDING, ageInTicks);
-        this.animate(hawk.swimmingState, HawkAnimations.SWIMMING, ageInTicks);
-        this.animate(hawk.glidingState, HawkAnimations.GLIDING, ageInTicks);
+        this.animate(entity.standingState, HawkAnimations.STANDING, ageInTicks);
+        this.animate(entity.swimmingState, HawkAnimations.SWIMMING, ageInTicks);
+        this.animate(entity.glidingState, HawkAnimations.GLIDING, ageInTicks);
     }
 
-    private void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = Mth.clamp(headYaw, -135.0F, 135.0F);
-        headPitch = Mth.clamp(headPitch, -25.0F, 45.0F);
-        this.neck.yRot = headYaw * (float) (Math.PI / 180.0);
-        this.neck.xRot = headPitch * (float) (Math.PI / 180.0);
+    @Override
+    protected boolean shouldRenderWings(HawkEntity entity) {
+        return super.shouldRenderWings(entity) || entity.isInWaterOrBubble();
     }
 }

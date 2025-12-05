@@ -1,22 +1,19 @@
 package aqario.fowlplay.common.entity;
 
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.scores.PlayerTeam;
-import net.minecraft.server.players.OldUsersConverter;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -41,7 +38,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        if (this.getOwnerUUID() != null) {
+        if(this.getOwnerUUID() != null) {
             nbt.putUUID("owner", this.getOwnerUUID());
         }
 
@@ -51,23 +48,10 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        UUID uuid;
-        if (nbt.hasUUID("owner")) {
-            uuid = nbt.getUUID("owner");
-        }
-        else {
-            String string = nbt.getString("owner");
-            uuid = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), string);
-        }
-
-        if (uuid != null) {
-            try {
-                this.setOwnerUuid(uuid);
-                this.setTamed(true);
-            }
-            catch (Throwable throwable) {
-                this.setTamed(false);
-            }
+        if(nbt.hasUUID("owner")) {
+            UUID uuid = nbt.getUUID("owner");
+            this.setOwnerUuid(uuid);
+            this.setTamed(true);
         }
 
         this.sitting = nbt.getBoolean("sitting");
@@ -76,11 +60,11 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
 
     protected void showEmoteParticle(boolean positive) {
         ParticleOptions particleEffect = ParticleTypes.HEART;
-        if (!positive) {
+        if(!positive) {
             particleEffect = ParticleTypes.SMOKE;
         }
 
-        for (int i = 0; i < 7; ++i) {
+        for(int i = 0; i < 7; ++i) {
             double d = this.random.nextGaussian() * 0.02;
             double e = this.random.nextGaussian() * 0.02;
             double f = this.random.nextGaussian() * 0.02;
@@ -90,10 +74,10 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
 
     @Override
     public void handleEntityEvent(byte status) {
-        if (status == EntityEvent.TAMING_SUCCEEDED) {
+        if(status == EntityEvent.TAMING_SUCCEEDED) {
             this.showEmoteParticle(true);
         }
-        else if (status == EntityEvent.TAMING_FAILED) {
+        else if(status == EntityEvent.TAMING_FAILED) {
             this.showEmoteParticle(false);
         }
         else {
@@ -107,7 +91,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
 
     public void setTamed(boolean tamed) {
         byte b = this.entityData.get(TAMEABLE_FLAGS);
-        if (tamed) {
+        if(tamed) {
             this.entityData.set(TAMEABLE_FLAGS, (byte) (b | 4));
         }
         else {
@@ -126,7 +110,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
 
     public void setInSittingPose(boolean inSittingPose) {
         byte b = this.entityData.get(TAMEABLE_FLAGS);
-        if (inSittingPose) {
+        if(inSittingPose) {
             this.entityData.set(TAMEABLE_FLAGS, (byte) (b | 1));
         }
         else {
@@ -136,7 +120,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (!this.level().isClientSide && !this.isInvulnerableTo(source)) {
+        if(!this.level().isClientSide() && !this.isInvulnerableTo(source)) {
             this.setSitting(false);
         }
         return super.hurt(source, amount);
@@ -145,17 +129,19 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
     @Override
     public void tick() {
         super.tick();
-        if (this.getOwnerUUID() != null) {
-            this.addTrustedUuid(this.getOwnerUUID());
-            if (!this.isPersistenceRequired()) {
+        if(this.getOwnerUUID() != null) {
+            if(!this.trustsUuid(this.getOwnerUUID())) {
+                this.addTrustedUuid(this.getOwnerUUID());
+            }
+            if(!this.isPersistenceRequired()) {
                 this.setPersistenceRequired();
             }
         }
-        if (this.isFlying()) {
+        if(this.isFlying()) {
             this.setSitting(false);
         }
-        if (!this.level().isClientSide) {
-            if (this.isSitting()) {
+        if(!this.level().isClientSide()) {
+            if(this.isSitting()) {
                 this.getNavigation().stop();
                 this.setInSittingPose(true);
             }
@@ -163,11 +149,6 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
                 this.setInSittingPose(false);
             }
         }
-    }
-
-    @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        return this.trusts(player) ? super.mobInteract(player, hand) : InteractionResult.PASS;
     }
 
     @Nullable
@@ -183,7 +164,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
     public void setOwner(Player player) {
         this.setTamed(true);
         this.setOwnerUuid(player.getUUID());
-        if (player instanceof ServerPlayer) {
+        if(player instanceof ServerPlayer) {
             CriteriaTriggers.TAME_ANIMAL.trigger((ServerPlayer) player, this);
         }
     }
@@ -194,7 +175,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
             UUID uuid = this.getOwnerUUID();
             return uuid == null ? null : this.level().getPlayerByUUID(uuid);
         }
-        catch (IllegalArgumentException var2) {
+        catch(IllegalArgumentException var2) {
             return null;
         }
     }
@@ -210,9 +191,9 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
 
     @Override
     public PlayerTeam getTeam() {
-        if (this.isTamed()) {
+        if(this.isTamed()) {
             LivingEntity livingEntity = this.getOwner();
-            if (livingEntity != null) {
+            if(livingEntity != null) {
                 return livingEntity.getTeam();
             }
         }
@@ -222,13 +203,13 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
 
     @Override
     public boolean isAlliedTo(Entity other) {
-        if (this.isTamed()) {
+        if(this.isTamed()) {
             LivingEntity livingEntity = this.getOwner();
-            if (other == livingEntity) {
+            if(other == livingEntity) {
                 return true;
             }
 
-            if (livingEntity != null) {
+            if(livingEntity != null) {
                 return livingEntity.isAlliedTo(other);
             }
         }
@@ -238,7 +219,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
 
     @Override
     public void die(DamageSource source) {
-        if (!this.level().isClientSide && this.level().getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES) && this.getOwner() instanceof ServerPlayer) {
+        if(!this.level().isClientSide() && this.level().getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES) && this.getOwner() instanceof ServerPlayer) {
             this.getOwner().sendSystemMessage(this.getCombatTracker().getDeathMessage());
         }
 

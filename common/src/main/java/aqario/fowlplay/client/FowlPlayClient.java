@@ -39,28 +39,42 @@ public class FowlPlayClient {
     }
 
     public static void registerModelLayers() {
-        PlatformHelper.registerModelLayer(BlueJayModel.MODEL_LAYER, BlueJayModel::getTexturedModelData);
-        PlatformHelper.registerModelLayer(CardinalModel.MODEL_LAYER, CardinalModel::getTexturedModelData);
-        PlatformHelper.registerModelLayer(ChickadeeModel.MODEL_LAYER, ChickadeeModel::getTexturedModelData);
-        PlatformHelper.registerModelLayer(CrowModel.MODEL_LAYER, CrowModel::getTexturedModelData);
-        PlatformHelper.registerModelLayer(DuckModel.MODEL_LAYER, DuckModel::getTexturedModelData);
-        PlatformHelper.registerModelLayer(GooseModel.MODEL_LAYER, GooseModel::getTexturedModelData);
-        PlatformHelper.registerModelLayer(DomesticGooseModel.MODEL_LAYER, DomesticGooseModel::getTexturedModelData);
-        PlatformHelper.registerModelLayer(GullModel.MODEL_LAYER, GullModel::getTexturedModelData);
-        PlatformHelper.registerModelLayer(HawkModel.MODEL_LAYER, HawkModel::getTexturedModelData);
-        PlatformHelper.registerModelLayer(PenguinModel.MODEL_LAYER, PenguinModel::getTexturedModelData);
-        PlatformHelper.registerModelLayer(BabyPenguinModel.MODEL_LAYER, BabyPenguinModel::getTexturedModelData);
-        PlatformHelper.registerModelLayer(PigeonModel.MODEL_LAYER, PigeonModel::getTexturedModelData);
-        PlatformHelper.registerModelLayer(RavenModel.MODEL_LAYER, RavenModel::getTexturedModelData);
-        PlatformHelper.registerModelLayer(RobinModel.MODEL_LAYER, RobinModel::getTexturedModelData);
-        PlatformHelper.registerModelLayer(SparrowModel.MODEL_LAYER, SparrowModel::getTexturedModelData);
-        PlatformHelper.registerModelLayer(ScarecrowModel.MODEL_LAYER, ScarecrowModel::getTexturedModelData);
-        PlatformHelper.registerModelLayer(ScarecrowModel.INNER_ARMOR, () -> ScarecrowArmorModel.getTexturedModelData(HAT_DILATION));
-        PlatformHelper.registerModelLayer(ScarecrowModel.OUTER_ARMOR, () -> ScarecrowArmorModel.getTexturedModelData(ARMOR_DILATION));
+        PlatformHelper.registerModelLayer(BlueJayModel.MODEL_LAYER, BlueJayModel::createBodyLayer);
+
+        PlatformHelper.registerModelLayer(CardinalModel.MODEL_LAYER, CardinalModel::createBodyLayer);
+
+        PlatformHelper.registerModelLayer(ChickadeeModel.MODEL_LAYER, ChickadeeModel::createBodyLayer);
+
+        PlatformHelper.registerModelLayer(CrowModel.MODEL_LAYER, CrowModel::createBodyLayer);
+
+        PlatformHelper.registerModelLayer(DuckModel.MODEL_LAYER, DuckModel::createBodyLayer);
+
+        PlatformHelper.registerModelLayer(GooseModel.MODEL_LAYER, GooseModel::createBodyLayer);
+        PlatformHelper.registerModelLayer(DomesticGooseModel.MODEL_LAYER, DomesticGooseModel::createBodyLayer);
+        PlatformHelper.registerModelLayer(BabyGooseModel.MODEL_LAYER, BabyGooseModel::createBodyLayer);
+
+        PlatformHelper.registerModelLayer(GullModel.MODEL_LAYER, GullModel::createBodyLayer);
+
+        PlatformHelper.registerModelLayer(HawkModel.MODEL_LAYER, HawkModel::createBodyLayer);
+
+        PlatformHelper.registerModelLayer(PenguinModel.MODEL_LAYER, PenguinModel::createBodyLayer);
+        PlatformHelper.registerModelLayer(BabyPenguinModel.MODEL_LAYER, BabyPenguinModel::createBodyLayer);
+
+        PlatformHelper.registerModelLayer(PigeonModel.MODEL_LAYER, PigeonModel::createBodyLayer);
+
+        PlatformHelper.registerModelLayer(RavenModel.MODEL_LAYER, RavenModel::createBodyLayer);
+
+        PlatformHelper.registerModelLayer(RobinModel.MODEL_LAYER, RobinModel::createBodyLayer);
+
+        PlatformHelper.registerModelLayer(SparrowModel.MODEL_LAYER, SparrowModel::createBodyLayer);
+
+        PlatformHelper.registerModelLayer(ScarecrowModel.MODEL_LAYER, ScarecrowModel::createBodyLayer);
+        PlatformHelper.registerModelLayer(ScarecrowModel.INNER_ARMOR, () -> ScarecrowArmorModel.createBodyLayer(HAT_DILATION));
+        PlatformHelper.registerModelLayer(ScarecrowModel.OUTER_ARMOR, () -> ScarecrowArmorModel.createBodyLayer(ARMOR_DILATION));
 
         if(FowlPlayConfig.getInstance().customChickenModel) {
-            PlatformHelper.registerModelLayer(CustomChickenModel.MODEL_LAYER, CustomChickenModel::getTexturedModelData);
-            PlatformHelper.registerModelLayer(CustomBabyChickenModel.MODEL_LAYER, CustomBabyChickenModel::getTexturedModelData);
+            PlatformHelper.registerModelLayer(CustomChickenModel.MODEL_LAYER, CustomChickenModel::createBodyLayer);
+            PlatformHelper.registerModelLayer(CustomBabyChickenModel.MODEL_LAYER, CustomBabyChickenModel::createBodyLayer);
         }
     }
 

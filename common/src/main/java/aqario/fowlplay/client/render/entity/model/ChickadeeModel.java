@@ -7,8 +7,6 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.util.Mth;
 
 public class ChickadeeModel extends FlyingBirdModel<ChickadeeEntity> {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("chickadee"), "main");
@@ -17,7 +15,7 @@ public class ChickadeeModel extends FlyingBirdModel<ChickadeeEntity> {
         super(root);
     }
 
-    public static LayerDefinition getTexturedModelData() {
+    public static LayerDefinition createBodyLayer() {
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         PartDefinition root = modelPartData.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 21.0F, -1.0F));
@@ -59,51 +57,13 @@ public class ChickadeeModel extends FlyingBirdModel<ChickadeeEntity> {
     }
 
     @Override
-    public void prepareMobModel(ChickadeeEntity chickadee, float limbAngle, float limbDistance, float tickDelta) {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
-        super.prepareMobModel(chickadee, limbAngle, limbDistance, tickDelta);
-        float ageInTicks = chickadee.tickCount + tickDelta;
-        float bodyYaw = Mth.rotLerp(tickDelta, chickadee.yBodyRotO, chickadee.yBodyRot);
-        float headYaw = Mth.rotLerp(tickDelta, chickadee.yHeadRotO, chickadee.yHeadRot);
-        float relativeHeadYaw = Mth.wrapDegrees(headYaw - bodyYaw);
-
-        float headPitch = Mth.lerp(tickDelta, chickadee.xRotO, chickadee.getXRot());
-        if (LivingEntityRenderer.isEntityUpsideDown(chickadee)) {
-            headPitch *= -1.0F;
-            relativeHeadYaw *= -1.0F;
+    protected void setAnimations(ChickadeeEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+        if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
+            this.animateWalk(ChickadeeAnimations.WALKING, limbSwing, limbSwingAmount, 6F, 6F);
         }
-        if (!chickadee.isFlying()) {
-            this.updateHeadRotation(relativeHeadYaw, headPitch);
-        }
-        if (chickadee.isFlying()) {
-            this.root.xRot = chickadee.getViewXRot(tickDelta) * (float) (Math.PI / 180.0);
-            this.root.zRot = chickadee.getRoll(tickDelta) * (float) (Math.PI / 180.0);
-        }
-        if (chickadee.isFlying()) {
-            this.leftWingOpen.visible = true;
-            this.rightWingOpen.visible = true;
-            this.leftWing.visible = false;
-            this.rightWing.visible = false;
-        }
-        else {
-            this.leftWingOpen.visible = false;
-            this.rightWingOpen.visible = false;
-            this.leftWing.visible = true;
-            this.rightWing.visible = true;
-        }
-        if (!chickadee.isFlying() && !chickadee.isInWaterOrBubble()) {
-            this.animateWalk(ChickadeeAnimations.WALKING, limbAngle, limbDistance, 6F, 6F);
-        }
-        this.animate(chickadee.standingState, ChickadeeAnimations.STANDING, ageInTicks);
-        this.animate(chickadee.swimmingState, ChickadeeAnimations.SWIMMING, ageInTicks);
-        this.animate(chickadee.glidingState, ChickadeeAnimations.GLIDING, ageInTicks);
-        this.animate(chickadee.flappingState, ChickadeeAnimations.FLAPPING, ageInTicks);
-    }
-
-    private void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = Mth.clamp(headYaw, -135.0F, 135.0F);
-        headPitch = Mth.clamp(headPitch, -25.0F, 45.0F);
-        this.neck.yRot = headYaw * (float) (Math.PI / 180.0);
-        this.neck.xRot = headPitch * (float) (Math.PI / 180.0);
+        this.animate(entity.standingState, ChickadeeAnimations.STANDING, ageInTicks);
+        this.animate(entity.swimmingState, ChickadeeAnimations.SWIMMING, ageInTicks);
+        this.animate(entity.glidingState, ChickadeeAnimations.GLIDING, ageInTicks);
+        this.animate(entity.flappingState, ChickadeeAnimations.FLAPPING, ageInTicks);
     }
 }

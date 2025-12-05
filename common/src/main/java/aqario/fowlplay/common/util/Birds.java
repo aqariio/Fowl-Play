@@ -1,6 +1,7 @@
 package aqario.fowlplay.common.util;
 
 import aqario.fowlplay.common.entity.BirdEntity;
+import aqario.fowlplay.common.entity.Domesticatable;
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.TrustingBirdEntity;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
@@ -54,8 +55,8 @@ public final class Birds {
         // noinspection ConstantConditions
         if(bird.canStartFlying()
             && (shouldFlyToDestination(bird, path, path.getTarget().getCenter())
-            && !(bird.getType().is(FowlPlayEntityTypeTags.WATERBIRDS)
-            && bird.isInWaterOrBubble())
+//            && !(bird.getType().is(FowlPlayEntityTypeTags.WATERBIRDS)
+//            && bird.isInWaterOrBubble())
             || shouldFlyFromAvoidTarget(bird))
         ) {
             bird.startFlying();
@@ -156,8 +157,13 @@ public final class Birds {
         if(!(bird.shouldAvoid(target) && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target)) && !wasHurtBy(bird, target)) {
             return false;
         }
-        if(target instanceof Player player && bird instanceof TrustingBirdEntity trusting && trusting.trusts(player)) {
-            return false;
+        if(target instanceof Player player) {
+            if(bird instanceof TrustingBirdEntity trusting && trusting.trusts(player)) {
+                return false;
+            }
+            if(bird instanceof Domesticatable domestic && domestic.isDomestic()) {
+                return false;
+            }
         }
         LivingEntity attackTarget = BrainUtils.getMemory(brain, MemoryModuleType.ATTACK_TARGET);
         if(attackTarget != null && attackTarget.equals(target)) {

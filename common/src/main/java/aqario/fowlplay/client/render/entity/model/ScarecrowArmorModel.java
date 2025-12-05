@@ -12,7 +12,7 @@ public class ScarecrowArmorModel extends HumanoidModel<ScarecrowEntity> {
         super(root);
     }
 
-    public static LayerDefinition getTexturedModelData(CubeDeformation dilation) {
+    public static LayerDefinition createBodyLayer(CubeDeformation dilation) {
         MeshDefinition modelData = HumanoidModel.createMesh(dilation, 0.0F);
         PartDefinition modelPartData = modelData.getRoot();
         modelPartData.addOrReplaceChild(

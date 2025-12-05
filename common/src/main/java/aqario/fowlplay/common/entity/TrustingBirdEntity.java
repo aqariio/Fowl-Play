@@ -6,6 +6,8 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -87,11 +89,13 @@ public abstract class TrustingBirdEntity extends FlyingBirdEntity {
     }
 
     @Override
-    public void tick() {
-        super.tick();
-        if(this.isAmbient() && !this.getTrustedUuids().isEmpty()) {
-            this.setAmbient(false);
-        }
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        return this.trusts(player) ? super.mobInteract(player, hand) : InteractionResult.PASS;
+    }
+
+    @Override
+    protected boolean shouldBeAmbient() {
+        return super.shouldBeAmbient() && this.getTrustedUuids().isEmpty();
     }
 
     public List<UUID> getTrustedUuids() {

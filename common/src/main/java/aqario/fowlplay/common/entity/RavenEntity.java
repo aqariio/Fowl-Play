@@ -13,7 +13,6 @@ import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -45,7 +44,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEntity> {
     public RavenEntity(EntityType<? extends RavenEntity> entityType, Level world) {
@@ -95,12 +93,6 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
         return false;
     }
 
-    @Nullable
-    @Override
-    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
-        return null;
-    }
-
     public Ingredient getFood() {
         return Ingredient.of(FowlPlayItemTags.RAVEN_FOOD);
     }
@@ -144,11 +136,6 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     @Override
     public float getFlapPitch() {
         return 0.6f;
-    }
-
-    @Override
-    public float getWaterline() {
-        return 0.5F;
     }
 
     @Override
@@ -256,8 +243,7 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     @Override
     public BrainActivityGroup<? extends RavenEntity> getRestTasks() {
         return BirdBrain.restActivity(
-            new SetPerchWalkTarget<>()
-                .startCondition(Predicate.not(Birds::isPerched)),
+            CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );
     }

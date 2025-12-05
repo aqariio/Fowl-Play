@@ -8,6 +8,14 @@ import net.minecraft.world.phys.Vec3;
 import java.util.function.DoubleUnaryOperator;
 
 public class ExtendedRandomPos {
+    public static BlockPos generatePreferNear(
+        final RandomSource random,
+        final int horizontalRange,
+        final int verticalRange
+    ) {
+        return generate(random, d -> Math.pow(d, 2), horizontalRange, verticalRange);
+    }
+
     public static BlockPos generatePreferFar(
         final RandomSource random,
         final int horizontalRange,

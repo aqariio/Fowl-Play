@@ -1,8 +1,11 @@
 package aqario.fowlplay.common.entity;
 
+import aqario.fowlplay.common.util.PathBuilder;
+import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.platform.PlatformHelper;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Supplier;
 
@@ -14,6 +17,15 @@ public record ChickenVariant(String id) {
     );
     public static final Supplier<ChickenVariant> WHITE = register("white");
     public static final Supplier<ChickenVariant> RED_JUNGLEFOWL = register("red_junglefowl");
+
+    public ResourceLocation texture(boolean isBaby) {
+        return FowlPlay.id(new PathBuilder()
+            .add("textures/entity/chicken/")
+            .addIf("baby_", isBaby)
+            .add(this.id)
+            .add("_chicken.png")
+        );
+    }
 
     private static Supplier<ChickenVariant> register(String id) {
         return PlatformHelper.registerVariant(id, () -> new ChickenVariant(id));

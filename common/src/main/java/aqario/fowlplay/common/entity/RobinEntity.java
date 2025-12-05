@@ -2,7 +2,10 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
-import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
+import aqario.fowlplay.common.entity.ai.brain.behaviour.CompositeBehaviours;
+import aqario.fowlplay.common.entity.ai.brain.behaviour.CustomBehaviours;
+import aqario.fowlplay.common.entity.ai.brain.behaviour.FlightBehaviours;
+import aqario.fowlplay.common.entity.ai.brain.behaviour.SetEntityLookTarget;
 import aqario.fowlplay.common.entity.ai.brain.sensor.AttackedSensor;
 import aqario.fowlplay.common.entity.ai.brain.sensor.AvoidTargetSensor;
 import aqario.fowlplay.common.entity.ai.brain.sensor.NearbyAdultsSensor;
@@ -17,7 +20,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -39,7 +41,6 @@ import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEntity>, VariantHolder<RobinEntity.Variant> {
     private static final EntityDataAccessor<String> VARIANT = SynchedEntityData.defineId(RobinEntity.class, EntityDataSerializers.STRING);
@@ -83,12 +84,6 @@ public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEnti
         }
     }
 
-    @Nullable
-    @Override
-    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
-        return null;
-    }
-
     @Override
     public boolean isBaby() {
         return false;
@@ -119,11 +114,6 @@ public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEnti
     @Override
     public float getFlapPitch() {
         return 1.0f;
-    }
-
-    @Override
-    public float getWaterline() {
-        return 0.45F;
     }
 
     @Override
@@ -234,8 +224,7 @@ public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEnti
     @Override
     public BrainActivityGroup<? extends RobinEntity> getRestTasks() {
         return BirdBrain.restActivity(
-            new SetPerchWalkTarget<>()
-                .startCondition(Predicate.not(Birds::isPerched)),
+            CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );
     }

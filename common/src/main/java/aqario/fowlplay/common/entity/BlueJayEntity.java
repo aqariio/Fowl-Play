@@ -2,7 +2,10 @@ package aqario.fowlplay.common.entity;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
-import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
+import aqario.fowlplay.common.entity.ai.brain.behaviour.CompositeBehaviours;
+import aqario.fowlplay.common.entity.ai.brain.behaviour.CustomBehaviours;
+import aqario.fowlplay.common.entity.ai.brain.behaviour.FlightBehaviours;
+import aqario.fowlplay.common.entity.ai.brain.behaviour.SetEntityLookTarget;
 import aqario.fowlplay.common.entity.ai.brain.sensor.AttackedSensor;
 import aqario.fowlplay.common.entity.ai.brain.sensor.AvoidTargetSensor;
 import aqario.fowlplay.common.entity.ai.brain.sensor.NearbyAdultsSensor;
@@ -13,10 +16,12 @@ import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
@@ -34,7 +39,6 @@ import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 public class BlueJayEntity extends FlyingBirdEntity implements BirdBrain<BlueJayEntity> {
     public BlueJayEntity(EntityType<? extends BirdEntity> entityType, Level world) {
@@ -56,12 +60,6 @@ public class BlueJayEntity extends FlyingBirdEntity implements BirdBrain<BlueJay
         return entity.getType().is(FowlPlayEntityTypeTags.BLUE_JAY_AVOIDS);
     }
 
-    @Nullable
-    @Override
-    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
-        return null;
-    }
-
     @Override
     protected void updateAnimations() {
         this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
@@ -77,11 +75,6 @@ public class BlueJayEntity extends FlyingBirdEntity implements BirdBrain<BlueJay
     @Override
     public float getFlapPitch() {
         return 1.0f;
-    }
-
-    @Override
-    public float getWaterline() {
-        return 0.45F;
     }
 
     @Nullable
@@ -171,8 +164,7 @@ public class BlueJayEntity extends FlyingBirdEntity implements BirdBrain<BlueJay
     @Override
     public BrainActivityGroup<? extends BlueJayEntity> getRestTasks() {
         return BirdBrain.restActivity(
-            new SetPerchWalkTarget<>()
-                .startCondition(Predicate.not(Birds::isPerched)),
+            CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );
     }

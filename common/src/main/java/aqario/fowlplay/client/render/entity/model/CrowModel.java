@@ -7,8 +7,6 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.util.Mth;
 
 public class CrowModel extends FlyingBirdModel<CrowEntity> {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("crow"), "main");
@@ -17,7 +15,7 @@ public class CrowModel extends FlyingBirdModel<CrowEntity> {
         super(root);
     }
 
-    public static LayerDefinition getTexturedModelData() {
+    public static LayerDefinition createBodyLayer() {
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         PartDefinition root = modelPartData.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 21.0F, -1.0F));
@@ -63,51 +61,18 @@ public class CrowModel extends FlyingBirdModel<CrowEntity> {
     }
 
     @Override
-    public void prepareMobModel(CrowEntity crow, float limbAngle, float limbDistance, float tickDelta) {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
-        super.prepareMobModel(crow, limbAngle, limbDistance, tickDelta);
-        float ageInTicks = crow.tickCount + tickDelta;
-        float bodyYaw = Mth.rotLerp(tickDelta, crow.yBodyRotO, crow.yBodyRot);
-        float headYaw = Mth.rotLerp(tickDelta, crow.yHeadRotO, crow.yHeadRot);
-        float relativeHeadYaw = Mth.wrapDegrees(headYaw - bodyYaw);
-
-        float headPitch = Mth.lerp(tickDelta, crow.xRotO, crow.getXRot());
-        if (LivingEntityRenderer.isEntityUpsideDown(crow)) {
-            headPitch *= -1.0F;
-            relativeHeadYaw *= -1.0F;
+    protected void setAnimations(CrowEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+        if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
+            this.animateWalk(CrowAnimations.WALKING, limbSwing, limbSwingAmount, 5F, 5F);
         }
-        if (!crow.isFlying()) {
-            this.updateHeadRotation(relativeHeadYaw, headPitch);
-        }
-        if (crow.isFlying()) {
-            this.root.xRot = crow.getViewXRot(tickDelta) * (float) (Math.PI / 180.0);
-            this.root.zRot = crow.getRoll(tickDelta) * (float) (Math.PI / 180.0);
-        }
-        if (crow.isFlying() || crow.isInWaterOrBubble()) {
-            this.leftWingOpen.visible = true;
-            this.rightWingOpen.visible = true;
-            this.leftWing.visible = false;
-            this.rightWing.visible = false;
-        }
-        else {
-            this.leftWingOpen.visible = false;
-            this.rightWingOpen.visible = false;
-            this.leftWing.visible = true;
-            this.rightWing.visible = true;
-        }
-        if (!crow.isFlying() && !crow.isInWaterOrBubble()) {
-            this.animateWalk(CrowAnimations.WALKING, limbAngle, limbDistance, 5F, 5F);
-        }
-        this.animate(crow.standingState, CrowAnimations.STANDING, ageInTicks);
-        this.animate(crow.swimmingState, CrowAnimations.SWIMMING, ageInTicks);
-        this.animate(crow.glidingState, CrowAnimations.GLIDING, ageInTicks);
-        this.animate(crow.flappingState, CrowAnimations.FLAPPING, ageInTicks);
+        this.animate(entity.standingState, CrowAnimations.STANDING, ageInTicks);
+        this.animate(entity.swimmingState, CrowAnimations.SWIMMING, ageInTicks);
+        this.animate(entity.glidingState, CrowAnimations.GLIDING, ageInTicks);
+        this.animate(entity.flappingState, CrowAnimations.FLAPPING, ageInTicks);
     }
 
-    private void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = Mth.clamp(headYaw, -135.0F, 135.0F);
-        headPitch = Mth.clamp(headPitch, -25.0F, 45.0F);
-        this.neck.yRot = headYaw * (float) (Math.PI / 180.0);
-        this.neck.xRot = headPitch * (float) (Math.PI / 180.0);
+    @Override
+    protected boolean shouldRenderWings(CrowEntity entity) {
+        return super.shouldRenderWings(entity) || entity.isInWaterOrBubble();
     }
 }

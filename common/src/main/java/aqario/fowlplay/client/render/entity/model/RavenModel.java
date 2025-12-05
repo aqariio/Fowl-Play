@@ -7,8 +7,6 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.util.Mth;
 
 public class RavenModel extends FlyingBirdModel<RavenEntity> {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("raven"), "main");
@@ -17,7 +15,7 @@ public class RavenModel extends FlyingBirdModel<RavenEntity> {
         super(root);
     }
 
-    public static LayerDefinition getTexturedModelData() {
+    public static LayerDefinition createBodyLayer() {
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         PartDefinition root = modelPartData.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 19.0F, 0.0F));
@@ -72,53 +70,20 @@ public class RavenModel extends FlyingBirdModel<RavenEntity> {
     }
 
     @Override
-    public void prepareMobModel(RavenEntity raven, float limbAngle, float limbDistance, float tickDelta) {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
-        super.prepareMobModel(raven, limbAngle, limbDistance, tickDelta);
-        float ageInTicks = raven.tickCount + tickDelta;
-        float bodyYaw = Mth.rotLerp(tickDelta, raven.yBodyRotO, raven.yBodyRot);
-        float headYaw = Mth.rotLerp(tickDelta, raven.yHeadRotO, raven.yHeadRot);
-        float relativeHeadYaw = Mth.wrapDegrees(headYaw - bodyYaw);
-
-        float headPitch = Mth.lerp(tickDelta, raven.xRotO, raven.getXRot());
-        if (LivingEntityRenderer.isEntityUpsideDown(raven)) {
-            headPitch *= -1.0F;
-            relativeHeadYaw *= -1.0F;
+    protected void setAnimations(RavenEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+        if(entity.isFlying()) {
+            this.animateWalk(RavenAnimations.FLAPPING, limbSwing, limbSwingAmount, 1.5F, 1.5F);
         }
-        if (!raven.isFlying()) {
-            this.updateHeadRotation(relativeHeadYaw, headPitch);
+        else if(!entity.isInWaterOrBubble()) {
+            this.animateWalk(RavenAnimations.WALKING, limbSwing, limbSwingAmount, 2.5F, 4F);
         }
-        if (raven.isFlying()) {
-            this.root.xRot = raven.getViewXRot(tickDelta) * (float) (Math.PI / 180.0);
-            this.root.zRot = raven.getRoll(tickDelta) * (float) (Math.PI / 180.0);
-        }
-        if (raven.isFlying() || raven.isInWaterOrBubble()) {
-            this.leftWingOpen.visible = true;
-            this.rightWingOpen.visible = true;
-            this.leftWing.visible = false;
-            this.rightWing.visible = false;
-        }
-        else {
-            this.leftWingOpen.visible = false;
-            this.rightWingOpen.visible = false;
-            this.leftWing.visible = true;
-            this.rightWing.visible = true;
-        }
-        if (raven.isFlying()) {
-            this.animateWalk(RavenAnimations.FLAPPING, limbAngle, limbDistance, 1.5F, 1.5F);
-        }
-        else if (!raven.isInWaterOrBubble()) {
-            this.animateWalk(RavenAnimations.WALKING, limbAngle, limbDistance, 2.5F, 4F);
-        }
-        this.animate(raven.standingState, RavenAnimations.STANDING, ageInTicks);
-        this.animate(raven.swimmingState, RavenAnimations.SWIMMING, ageInTicks);
-        this.animate(raven.glidingState, RavenAnimations.GLIDING, ageInTicks);
+        this.animate(entity.standingState, RavenAnimations.STANDING, ageInTicks);
+        this.animate(entity.swimmingState, RavenAnimations.SWIMMING, ageInTicks);
+        this.animate(entity.glidingState, RavenAnimations.GLIDING, ageInTicks);
     }
 
-    private void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = Mth.clamp(headYaw, -135.0F, 135.0F);
-        headPitch = Mth.clamp(headPitch, -25.0F, 45.0F);
-        this.neck.yRot = headYaw * (float) (Math.PI / 180.0);
-        this.neck.xRot = headPitch * (float) (Math.PI / 180.0);
+    @Override
+    protected boolean shouldRenderWings(RavenEntity entity) {
+        return super.shouldRenderWings(entity) || entity.isInWaterOrBubble();
     }
 }

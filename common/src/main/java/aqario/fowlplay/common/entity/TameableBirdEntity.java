@@ -8,9 +8,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.players.OldUsersConverter;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
@@ -51,23 +48,10 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        UUID uuid;
         if(nbt.hasUUID("owner")) {
-            uuid = nbt.getUUID("owner");
-        }
-        else {
-            String string = nbt.getString("owner");
-            uuid = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), string);
-        }
-
-        if(uuid != null) {
-            try {
-                this.setOwnerUuid(uuid);
-                this.setTamed(true);
-            }
-            catch(Throwable throwable) {
-                this.setTamed(false);
-            }
+            UUID uuid = nbt.getUUID("owner");
+            this.setOwnerUuid(uuid);
+            this.setTamed(true);
         }
 
         this.sitting = nbt.getBoolean("sitting");
@@ -136,7 +120,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if(!this.level().isClientSide && !this.isInvulnerableTo(source)) {
+        if(!this.level().isClientSide() && !this.isInvulnerableTo(source)) {
             this.setSitting(false);
         }
         return super.hurt(source, amount);
@@ -146,7 +130,9 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
     public void tick() {
         super.tick();
         if(this.getOwnerUUID() != null) {
-            this.addTrustedUuid(this.getOwnerUUID());
+            if(!this.trustsUuid(this.getOwnerUUID())) {
+                this.addTrustedUuid(this.getOwnerUUID());
+            }
             if(!this.isPersistenceRequired()) {
                 this.setPersistenceRequired();
             }
@@ -163,11 +149,6 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
                 this.setInSittingPose(false);
             }
         }
-    }
-
-    @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        return this.trusts(player) ? super.mobInteract(player, hand) : InteractionResult.PASS;
     }
 
     @Nullable
@@ -238,7 +219,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
 
     @Override
     public void die(DamageSource source) {
-        if(!this.level().isClientSide && this.level().getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES) && this.getOwner() instanceof ServerPlayer) {
+        if(!this.level().isClientSide() && this.level().getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES) && this.getOwner() instanceof ServerPlayer) {
             this.getOwner().sendSystemMessage(this.getCombatTracker().getDeathMessage());
         }
 

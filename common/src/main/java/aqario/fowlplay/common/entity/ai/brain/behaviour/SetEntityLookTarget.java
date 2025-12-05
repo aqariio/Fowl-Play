@@ -7,7 +7,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.behavior.EntityTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.Optional;
 import java.util.function.BiPredicate;
@@ -30,14 +29,13 @@ public class SetEntityLookTarget {
             MemoryList.create(2)
                 .absent(MemoryModuleType.LOOK_TARGET)
                 .present(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES),
-            (bird, brain) -> {
-                // noinspection ConstantConditions
-                Optional<LivingEntity> targetEntity = BrainUtils.getMemory(brain, MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES)
+            bird -> {
+                Optional<LivingEntity> targetEntity = bird.getPresentMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES)
                     .findClosest(target -> predicate.test(bird, target) && !bird.hasPassenger(target));
                 if(targetEntity.isEmpty()) {
                     return false;
                 }
-                BrainUtils.setMemory(brain, MemoryModuleType.LOOK_TARGET, new EntityTracker(targetEntity.get(), true));
+                bird.setMemory(MemoryModuleType.LOOK_TARGET, new EntityTracker(targetEntity.get(), true));
                 return true;
             }
         );

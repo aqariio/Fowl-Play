@@ -1,7 +1,7 @@
 package aqario.fowlplay.mixin;
 
 import aqario.fowlplay.common.entity.ChickenVariant;
-import aqario.fowlplay.common.util.ChickenAnimationStates;
+import aqario.fowlplay.common.util.ChickenAnimationHolder;
 import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
 import aqario.fowlplay.core.FowlPlayEntityDataSerializers;
 import net.minecraft.nbt.CompoundTag;
@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = Chicken.class, priority = 999)
-public abstract class ChickenMixin extends Animal implements VariantHolder<ChickenVariant>, ChickenAnimationStates {
+public abstract class ChickenMixin extends Animal implements VariantHolder<ChickenVariant>, ChickenAnimationHolder {
     @Unique
     private static final EntityDataAccessor<ChickenVariant> fowlplay$VARIANT = SynchedEntityData.defineId(
         Chicken.class,

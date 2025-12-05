@@ -118,6 +118,8 @@ jobs:
                     modrinth-id: ${{ vars.MODRINTH_ID }}
                     modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
                     modrinth-featured: false
+                    modrinth-unfeature-mode: none
+                    modrinth-fail-mode: warn
 
                     name: Fowl Play ${{ steps.gradle-properties.outputs.MOD_VERSION }}
                     version: ${{ steps.gradle-properties.outputs.MOD_VERSION }}+${{ steps.gradle-properties.outputs.MINECRAFT_VERSION }}-${{ matrix.platform }}

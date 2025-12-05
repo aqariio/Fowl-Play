@@ -4,7 +4,6 @@ import aqario.fowlplay.client.render.entity.model.AdultBabyModelPair;
 import aqario.fowlplay.client.render.entity.model.CustomBabyChickenModel;
 import aqario.fowlplay.client.render.entity.model.CustomChickenModel;
 import aqario.fowlplay.common.entity.ChickenVariant;
-import aqario.fowlplay.core.FowlPlay;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -40,8 +39,6 @@ public class CustomChickenRenderer extends MobRenderer<Chicken, CustomChickenMod
     @SuppressWarnings("unchecked")
     @Override
     public ResourceLocation getTextureLocation(Chicken chicken) {
-        return chicken.isBaby()
-            ? FowlPlay.id("textures/entity/chicken/" + ((VariantHolder<ChickenVariant>) chicken).getVariant().id() + "_baby_chicken.png")
-            : FowlPlay.id("textures/entity/chicken/" + ((VariantHolder<ChickenVariant>) chicken).getVariant().id() + "_chicken.png");
+        return ((VariantHolder<ChickenVariant>) chicken).getVariant().texture(chicken.isBaby());
     }
 }

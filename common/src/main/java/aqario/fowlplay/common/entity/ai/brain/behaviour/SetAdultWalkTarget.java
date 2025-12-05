@@ -8,7 +8,6 @@ import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.ai.behavior.EntityTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
-import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 
@@ -20,9 +19,8 @@ public class SetAdultWalkTarget {
                 .present(FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get())
                 .registered(MemoryModuleType.LOOK_TARGET)
                 .absent(MemoryModuleType.WALK_TARGET),
-            (bird, brain) -> {
-                List<BirdEntity> nearbyAdults = (List<BirdEntity>) BrainUtils.getMemory(brain, FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
-                // noinspection ConstantConditions
+            bird -> {
+                List<BirdEntity> nearbyAdults = (List<BirdEntity>) bird.getPresentMemory(FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
                 if(nearbyAdults.isEmpty()) {
                     return false;
                 }
@@ -32,8 +30,8 @@ public class SetAdultWalkTarget {
                     WalkTarget newWalkTarget = new WalkTarget(
                         new EntityTracker(nearest, false), 1.0F, executionRange.getMinValue() - 1
                     );
-                    BrainUtils.setMemory(brain, MemoryModuleType.LOOK_TARGET, new EntityTracker(nearest, true));
-                    BrainUtils.setMemory(brain, MemoryModuleType.WALK_TARGET, newWalkTarget);
+                    bird.setMemory(MemoryModuleType.LOOK_TARGET, new EntityTracker(nearest, true));
+                    bird.setMemory(MemoryModuleType.WALK_TARGET, newWalkTarget);
                     return true;
                 }
                 return false;

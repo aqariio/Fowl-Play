@@ -10,7 +10,7 @@ import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.CustomBehaviour;
 
 import java.util.List;
-import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 /**
  * A behaviour that operates through invoking a callback, with specified memory requirements.
@@ -19,9 +19,9 @@ import java.util.function.BiPredicate;
  */
 public class AnonymousBehaviour<E extends BirdEntity> extends ExtendedBehaviour<E> {
     private final List<Pair<MemoryModuleType<?>, MemoryStatus>> requiredMemories;
-    private final BiPredicate<E, Brain<?>> callback; // TODO: phase out Predicate in favor of Consumer, run conditions should be handled through startCondition()
+    private final Predicate<E> callback; // TODO: phase out Predicate in favor of Consumer, run conditions should be handled through startCondition()
 
-    public AnonymousBehaviour(List<Pair<MemoryModuleType<?>, MemoryStatus>> requiredMemories, BiPredicate<E, Brain<?>> callback) {
+    public AnonymousBehaviour(List<Pair<MemoryModuleType<?>, MemoryStatus>> requiredMemories, Predicate<E> callback) {
         this.requiredMemories = requiredMemories;
         this.callback = callback;
         for(Pair<MemoryModuleType<?>, MemoryStatus> memory : requiredMemories) {
@@ -29,7 +29,7 @@ public class AnonymousBehaviour<E extends BirdEntity> extends ExtendedBehaviour<
         }
     }
 
-    public AnonymousBehaviour(BiPredicate<E, Brain<?>> callback) {
+    public AnonymousBehaviour(Predicate<E> callback) {
         this.requiredMemories = List.of();
         this.callback = callback;
     }
@@ -47,6 +47,6 @@ public class AnonymousBehaviour<E extends BirdEntity> extends ExtendedBehaviour<
                 return false;
             }
         }
-        return this.callback.test(entity, entity.getBrain());
+        return this.callback.test(entity);
     }
 }

@@ -25,7 +25,7 @@ public class ScarecrowModel extends ScarecrowArmorModel {
         this.rightLeg.visible = false;
     }
 
-    public static LayerDefinition getTexturedModelData() {
+    public static LayerDefinition createBodyLayer() {
         MeshDefinition modelData = HumanoidModel.createMesh(CubeDeformation.NONE, 0.0F);
         PartDefinition modelPartData = modelData.getRoot();
         modelPartData.addOrReplaceChild(

@@ -13,6 +13,10 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.DebugPackets;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.DifficultyInstance;
@@ -23,6 +27,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.BodyRotationControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -34,7 +39,11 @@ import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 public abstract class BirdEntity extends Animal {
+    private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(BirdEntity.class, EntityDataSerializers.BOOLEAN);
     public final AnimationState standingState = new AnimationState();
     public final AnimationState swimmingState = new AnimationState();
     public final AnimationStateList idleAnimStates = this.createIdleAnimations();
@@ -66,20 +75,37 @@ public abstract class BirdEntity extends Animal {
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt) {
-        this.setYRot(world.getRandom().nextFloat() * 360.0F);
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag nbt) {
+        this.setYRot(level.getRandom().nextFloat() * 360.0F);
         this.setYBodyRot(this.getYRot());
         this.setYHeadRot(this.getYRot());
-        if(this.getType().getCategory() == CustomMobCategory.ambientBirds()) {
+        if(this.shouldSpawnAsAmbient(spawnType)) {
             this.setAmbient(true);
         }
-        return super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityNbt);
+        return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData, nbt);
+    }
+
+    protected boolean shouldSpawnAsAmbient(MobSpawnType spawnType) {
+        return this.shouldBeAmbient()
+            && (spawnType == MobSpawnType.NATURAL
+            || spawnType == MobSpawnType.CHUNK_GENERATION);
+    }
+
+    protected boolean shouldBeAmbient() {
+        return this.getType().getCategory() == CustomMobCategory.ambientBirds();
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(SLEEPING, false);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putBoolean("ambient", this.ambient);
+        nbt.putBoolean("sleeping", this.isSleeping());
     }
 
     @Override
@@ -89,8 +115,9 @@ public abstract class BirdEntity extends Animal {
             this.setAmbient(nbt.getBoolean("ambient"));
         }
         else {
-            this.setAmbient(this.getType().getCategory() == CustomMobCategory.ambientBirds());
+            this.setAmbient(this.shouldBeAmbient());
         }
+        this.setSleeping(nbt.getBoolean("sleeping"));
     }
 
     /**
@@ -111,7 +138,7 @@ public abstract class BirdEntity extends Animal {
 
     @Override
     public int getMaxSpawnClusterSize() {
-        return 8;
+        return 6;
     }
 
     @Override
@@ -121,6 +148,12 @@ public abstract class BirdEntity extends Animal {
             return false;
         }
         return equipmentSlot == EquipmentSlot.MAINHAND && super.canTakeItem(stack);
+    }
+
+    @Nullable
+    @Override
+    public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
+        return null;
     }
 
     @Override
@@ -168,14 +201,28 @@ public abstract class BirdEntity extends Animal {
     }
 
     public boolean isBelowWaterline() {
-        return this.isUnderWater() || this.getFluidHeight(FluidTags.WATER) > this.getWaterline();
+        return this.isUnderWater() || this.getFluidHeight(FluidTags.WATER) > this.getBoundingBox().getYsize() * 0.35;
     }
 
-    // how much of the hitbox the water should cover (from the bottom)
-    public abstract float getWaterline();
+    @Override
+    public boolean isSleeping() {
+        return this.entityData.get(SLEEPING);
+    }
+
+    private void setSleeping(boolean sleeping) {
+        this.entityData.set(SLEEPING, sleeping);
+    }
+
+    private void goToSleep() {
+        this.setSleeping(true);
+    }
+
+    private void wakeUp() {
+        this.setSleeping(false);
+    }
 
     private boolean canEat(ItemStack stack) {
-        return this.getFood().test(stack)/* && !this.isSleeping()*/;
+        return this.getFood().test(stack) && !this.isSleeping();
     }
 
     public abstract Ingredient getFood();
@@ -299,6 +346,9 @@ public abstract class BirdEntity extends Animal {
             this.updateAnimations();
         }
         super.tick();
+        if(this.isAmbient() && !this.shouldBeAmbient()) {
+            this.setAmbient(false);
+        }
     }
 
     protected boolean isMoving() {
@@ -462,5 +512,29 @@ public abstract class BirdEntity extends Animal {
         super.sendDebugPackets();
         DebugPackets.sendEntityBrain(this);
         FowlPlayDebugPackets.sendBirdData(this);
+    }
+
+    public <U> void isMemoryPresent(MemoryModuleType<U> memoryType) {
+        this.brain.hasMemoryValue(memoryType);
+    }
+
+    public <U> U getPresentMemory(MemoryModuleType<U> memoryType) {
+        return this.getMemory(memoryType).orElseThrow();
+    }
+
+    public <U> Optional<U> getMemory(MemoryModuleType<U> memoryType) {
+        return this.brain.getMemory(memoryType);
+    }
+
+    public <U> U getMemoryOrDefault(MemoryModuleType<U> memory, Supplier<U> fallback) {
+        return this.brain.getMemory(memory).orElseGet(fallback);
+    }
+
+    public <U> void setMemory(MemoryModuleType<U> memoryType, U value) {
+        this.brain.setMemory(memoryType, value);
+    }
+
+    public <U> void clearMemory(MemoryModuleType<U> memoryType) {
+        this.brain.eraseMemory(memoryType);
     }
 }

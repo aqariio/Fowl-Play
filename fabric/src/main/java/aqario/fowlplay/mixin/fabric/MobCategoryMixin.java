@@ -29,10 +29,10 @@ public class MobCategoryMixin {
         String enumname,
         int ordinal,
         String name,
-        int spawnCap,
-        boolean peaceful,
-        boolean rare,
-        int immediateDespawnRange
+        int max,
+        boolean isFriendly,
+        boolean isPersistent,
+        int despawnDistance
     ) {
         throw new AssertionError();
     }
@@ -54,10 +54,10 @@ public class MobCategoryMixin {
             CustomMobCategory.AMBIENT_BIRDS_INTERNAL_NAME,
             vanillaLength + 1,
             CustomMobCategory.AMBIENT_BIRDS_NAME,
-            CustomMobCategory.AMBIENT_BIRDS_SPAWN_CAP,
-            CustomMobCategory.AMBIENT_BIRDS_PEACEFUL,
-            CustomMobCategory.AMBIENT_BIRDS_RARE,
-            CustomMobCategory.AMBIENT_BIRDS_IMMEDIATE_DESPAWN_RANGE
+            CustomMobCategory.AMBIENT_BIRDS_MAX,
+            CustomMobCategory.AMBIENT_BIRDS_IS_FRIENDLY,
+            CustomMobCategory.AMBIENT_BIRDS_IS_PERSISTENT,
+            CustomMobCategory.AMBIENT_BIRDS_DESPAWN_DISTANCE
         );
         CustomMobCategoryImpl.AMBIENT_BIRDS = ambientBirdsCategory;
         category.add(ambientBirdsCategory);
@@ -66,10 +66,10 @@ public class MobCategoryMixin {
             CustomMobCategory.BIRDS_INTERNAL_NAME,
             vanillaLength + 2,
             CustomMobCategory.BIRDS_NAME,
-            CustomMobCategory.BIRDS_SPAWN_CAP,
-            CustomMobCategory.BIRDS_PEACEFUL,
-            CustomMobCategory.BIRDS_RARE,
-            CustomMobCategory.BIRDS_IMMEDIATE_DESPAWN_RANGE
+            CustomMobCategory.BIRDS_MAX,
+            CustomMobCategory.BIRDS_IS_FRIENDLY,
+            CustomMobCategory.BIRDS_IS_PERSISTENT,
+            CustomMobCategory.BIRDS_DESPAWN_DISTANCE
         );
         CustomMobCategoryImpl.BIRDS = birdsCategory;
         category.add(birdsCategory);

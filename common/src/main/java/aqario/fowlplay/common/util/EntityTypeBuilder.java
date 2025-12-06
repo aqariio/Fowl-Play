@@ -1,5 +1,6 @@
 package aqario.fowlplay.common.util;
 
+import aqario.fowlplay.core.platform.CustomMobCategory;
 import com.google.common.collect.ImmutableSet;
 import dev.architectury.registry.level.entity.EntityAttributeRegistry;
 import dev.architectury.registry.level.entity.SpawnPlacementsRegistry;
@@ -37,7 +38,7 @@ public class EntityTypeBuilder<T extends Entity> {
     private EntityTypeBuilder(EntityType.EntityFactory<T> factory, MobCategory category) {
         this.factory = factory;
         this.category = category;
-        this.canSpawnFarFromPlayer = category == MobCategory.CREATURE || category == MobCategory.MISC;
+        this.canSpawnFarFromPlayer = category == CustomMobCategory.birds() || category == MobCategory.CREATURE || category == MobCategory.MISC;
     }
 
     public static <T extends Entity> EntityTypeBuilder<T> of(EntityType.EntityFactory<T> factory, MobCategory spawnGroup) {

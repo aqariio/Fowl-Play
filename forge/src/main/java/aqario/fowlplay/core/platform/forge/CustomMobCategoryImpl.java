@@ -14,10 +14,10 @@ public final class CustomMobCategoryImpl {
             category = MobCategory.create(
                 CustomMobCategory.AMBIENT_BIRDS_NAME,
                 CustomMobCategory.AMBIENT_BIRDS_NAME,
-                CustomMobCategory.AMBIENT_BIRDS_SPAWN_CAP,
-                CustomMobCategory.AMBIENT_BIRDS_PEACEFUL,
-                CustomMobCategory.AMBIENT_BIRDS_RARE,
-                CustomMobCategory.AMBIENT_BIRDS_IMMEDIATE_DESPAWN_RANGE
+                CustomMobCategory.AMBIENT_BIRDS_MAX,
+                CustomMobCategory.AMBIENT_BIRDS_IS_FRIENDLY,
+                CustomMobCategory.AMBIENT_BIRDS_IS_PERSISTENT,
+                CustomMobCategory.AMBIENT_BIRDS_DESPAWN_DISTANCE
             );
         }
 
@@ -31,10 +31,10 @@ public final class CustomMobCategoryImpl {
             category = MobCategory.create(
                 CustomMobCategory.BIRDS_NAME,
                 CustomMobCategory.BIRDS_NAME,
-                CustomMobCategory.BIRDS_SPAWN_CAP,
-                CustomMobCategory.BIRDS_PEACEFUL,
-                CustomMobCategory.BIRDS_RARE,
-                CustomMobCategory.BIRDS_IMMEDIATE_DESPAWN_RANGE
+                CustomMobCategory.BIRDS_MAX,
+                CustomMobCategory.BIRDS_IS_FRIENDLY,
+                CustomMobCategory.BIRDS_IS_PERSISTENT,
+                CustomMobCategory.BIRDS_DESPAWN_DISTANCE
             );
         }
 

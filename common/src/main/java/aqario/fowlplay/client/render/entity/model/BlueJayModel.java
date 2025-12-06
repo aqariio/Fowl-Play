@@ -62,7 +62,7 @@ public class BlueJayModel extends FlyingBirdModel<BlueJayEntity> {
 
     @Override
     protected void setAnimations(BlueJayEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
-        if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
+        if(!entity.isFlying() && !entity.isInWater()) {
             this.animateWalk(BlueJayAnimations.WALKING, limbSwing, limbSwingAmount, 6F, 6F);
         }
         this.animate(entity.standingState, BlueJayAnimations.STANDING, ageInTicks);

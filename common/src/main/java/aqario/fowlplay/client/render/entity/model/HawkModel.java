@@ -75,7 +75,7 @@ public class HawkModel extends FlyingBirdModel<HawkEntity> {
         if(entity.isFlying()) {
             this.animateWalk(HawkAnimations.FLAPPING, limbSwing, limbSwingAmount, 1.5F, 1.5F);
         }
-        else if(!entity.isInWaterOrBubble()) {
+        else if(!entity.isInWater()) {
             this.animateWalk(HawkAnimations.WALKING, limbSwing, limbSwingAmount, 2.5F, 4F);
         }
         this.animate(entity.standingState, HawkAnimations.STANDING, ageInTicks);
@@ -85,6 +85,6 @@ public class HawkModel extends FlyingBirdModel<HawkEntity> {
 
     @Override
     protected boolean shouldRenderWings(HawkEntity entity) {
-        return super.shouldRenderWings(entity) || entity.isInWaterOrBubble();
+        return super.shouldRenderWings(entity) || entity.isInWater();
     }
 }

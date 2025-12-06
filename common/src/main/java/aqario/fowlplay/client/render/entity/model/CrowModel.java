@@ -62,7 +62,7 @@ public class CrowModel extends FlyingBirdModel<CrowEntity> {
 
     @Override
     protected void setAnimations(CrowEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
-        if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
+        if(!entity.isFlying() && !entity.isInWater()) {
             this.animateWalk(CrowAnimations.WALKING, limbSwing, limbSwingAmount, 5F, 5F);
         }
         this.animate(entity.standingState, CrowAnimations.STANDING, ageInTicks);
@@ -73,6 +73,6 @@ public class CrowModel extends FlyingBirdModel<CrowEntity> {
 
     @Override
     protected boolean shouldRenderWings(CrowEntity entity) {
-        return super.shouldRenderWings(entity) || entity.isInWaterOrBubble();
+        return super.shouldRenderWings(entity) || entity.isInWater();
     }
 }

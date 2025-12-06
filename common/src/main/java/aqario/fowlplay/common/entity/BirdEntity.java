@@ -3,26 +3,25 @@ package aqario.fowlplay.common.entity;
 import aqario.fowlplay.common.entity.ai.control.BirdBodyRotationControl;
 import aqario.fowlplay.common.entity.ai.control.BirdLookControl;
 import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;
-import aqario.fowlplay.common.network.FowlPlayDebugPackets;
 import aqario.fowlplay.common.util.AnimationStateList;
 import aqario.fowlplay.common.util.Birds;
+import aqario.fowlplay.common.util.DebugBirdData;
+import aqario.fowlplay.core.FowlPlayDebugSubscriptions;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.BodyRotationControl;
@@ -35,8 +34,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -81,7 +81,7 @@ public abstract class BirdEntity extends Animal {
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnType, @Nullable SpawnGroupData spawnGroupData) {
         this.setYRot(level.getRandom().nextFloat() * 360.0F);
         this.setYBodyRot(this.getYRot());
         this.setYHeadRot(this.getYRot());
@@ -91,10 +91,10 @@ public abstract class BirdEntity extends Animal {
         return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
     }
 
-    protected boolean shouldSpawnAsAmbient(MobSpawnType spawnType) {
+    protected boolean shouldSpawnAsAmbient(EntitySpawnReason spawnType) {
         return this.shouldBeAmbient()
-            && (spawnType == MobSpawnType.NATURAL
-            || spawnType == MobSpawnType.CHUNK_GENERATION);
+            && (spawnType == EntitySpawnReason.NATURAL
+            || spawnType == EntitySpawnReason.CHUNK_GENERATION);
     }
 
     protected boolean shouldBeAmbient() {
@@ -108,22 +108,22 @@ public abstract class BirdEntity extends Animal {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
-        super.addAdditionalSaveData(nbt);
-        nbt.putBoolean("ambient", this.ambient);
-        nbt.putBoolean("sleeping", this.isSleeping());
+    public void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putBoolean("ambient", this.ambient);
+        output.putBoolean("sleeping", this.isSleeping());
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
-        super.readAdditionalSaveData(nbt);
-        if(nbt.contains("ambient")) {
-            this.setAmbient(nbt.getBoolean("ambient"));
+    public void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        if(input.contains("ambient")) {
+            this.setAmbient(input.getBooleanOr("ambient", false));
         }
         else {
             this.setAmbient(this.shouldBeAmbient());
         }
-        this.setSleeping(nbt.getBoolean("sleeping"));
+        this.setSleeping(input.getBooleanOr("sleeping", false));
     }
 
     /**
@@ -145,15 +145,6 @@ public abstract class BirdEntity extends Animal {
     @Override
     public int getMaxSpawnClusterSize() {
         return 6;
-    }
-
-    @Override
-    public boolean canTakeItem(ItemStack stack) {
-        EquipmentSlot equipmentSlot = this.getEquipmentSlotForItem(stack);
-        if(!this.getItemBySlot(equipmentSlot).isEmpty()) {
-            return false;
-        }
-        return equipmentSlot == EquipmentSlot.MAINHAND && super.canTakeItem(stack);
     }
 
     @Nullable
@@ -186,7 +177,7 @@ public abstract class BirdEntity extends Animal {
     }
 
     @Override
-    protected void pickUpItem(ItemEntity item) {
+    protected void pickUpItem(ServerLevel level, ItemEntity item) {
         Entity thrower = item.getOwner();
         ItemStack stack = item.getItem();
         if(this.canHoldItem(stack)) {
@@ -194,15 +185,14 @@ public abstract class BirdEntity extends Animal {
             if(i > 1) {
                 this.dropWithoutDelay(stack.split(i - 1), thrower);
             }
-            this.spawnAtLocation(this.getItemBySlot(EquipmentSlot.MAINHAND));
+            this.spawnAtLocation(level, this.getItemBySlot(EquipmentSlot.MAINHAND));
             this.onItemPickup(item);
             this.setItemSlot(EquipmentSlot.MAINHAND, stack.split(1));
             this.setGuaranteedDrop(EquipmentSlot.MAINHAND);
             this.take(item, stack.getCount());
             item.discard();
             this.eatingTime = 0;
-            Brain<?> brain = this.getBrain();
-            BrainUtils.clearMemory(brain, FowlPlayMemoryTypes.SEES_FOOD.get());
+            this.clearMemory(FowlPlayMemoryTypes.SEES_FOOD.get());
         }
     }
 
@@ -261,7 +251,7 @@ public abstract class BirdEntity extends Animal {
     @Override
     public void aiStep() {
         super.aiStep();
-        if(!this.level().isClientSide() && this.isAlive()) {
+        if(this.level() instanceof ServerLevel level && this.isAlive()) {
             ++this.eatingTime;
             ItemStack stack = this.getItemBySlot(EquipmentSlot.MAINHAND);
             if(this.canEat(stack)) {
@@ -277,19 +267,19 @@ public abstract class BirdEntity extends Animal {
                     if(!usedStack.isEmpty()) {
                         this.setItemSlot(EquipmentSlot.MAINHAND, usedStack);
                     }
-                    this.playSound(this.getEatingSound(stack), 1.0f, 1.0f);
+                    this.playSound(this.getEatingSound(), 1.0f, 1.0f);
                     this.level().broadcastEntityEvent(this, EntityEvent.FOX_EAT);
                     this.eatingTime = 0;
                     return;
                 }
                 if(this.eatingTime > 20 && this.random.nextFloat() < 0.05f) {
-                    this.playSound(this.getEatingSound(stack), 1.0f, 1.0f);
+                    this.playSound(this.getEatingSound(), 1.0f, 1.0f);
                     this.level().broadcastEntityEvent(this, EntityEvent.FOX_EAT);
                 }
             }
             else if(this.shouldDropBeakItem(stack)) {
                 if(this.random.nextFloat() < 0.1f) {
-                    this.spawnAtLocation(this.getItemBySlot(EquipmentSlot.MAINHAND));
+                    this.spawnAtLocation(level, this.getItemBySlot(EquipmentSlot.MAINHAND));
                     this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
                 }
             }
@@ -325,7 +315,7 @@ public abstract class BirdEntity extends Animal {
     @Override
     public void baseTick() {
         super.baseTick();
-        this.level().getProfiler().push("birdBaseTick");
+        Profiler.get().push("birdBaseTick");
         if(this.isAlive() && this.random.nextInt(1000) < this.callChance++) {
             this.resetCallDelay();
             if(this.canCall()) {
@@ -339,7 +329,7 @@ public abstract class BirdEntity extends Animal {
             }
         }
 
-        this.level().getProfiler().pop();
+        Profiler.get().pop();
     }
 
     protected AnimationStateList createIdleAnimations() {
@@ -363,7 +353,7 @@ public abstract class BirdEntity extends Animal {
 
     protected void updateAnimations() {
         // on land
-        if(!this.isInWaterOrBubble()) {
+        if(!this.isInWater()) {
             if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {
                 this.resetIdleAnimationDelay();
                 this.standingState.stop();
@@ -385,7 +375,7 @@ public abstract class BirdEntity extends Animal {
             this.idleAnimStates.stopAll();
         }
         // in water
-        this.swimmingState.animateWhen(this.isInWaterOrBubble(), this.tickCount);
+        this.swimmingState.animateWhen(this.isInWater(), this.tickCount);
     }
 
     protected int getIdleAnimationDelay() {
@@ -466,8 +456,7 @@ public abstract class BirdEntity extends Animal {
         return null;
     }
 
-    @Override
-    public SoundEvent getEatingSound(ItemStack stack) {
+    public SoundEvent getEatingSound() {
         return FowlPlaySoundEvents.ENTITY_BIRD_EAT.get();
     }
 
@@ -514,14 +503,13 @@ public abstract class BirdEntity extends Animal {
     }
 
     @Override
-    protected void sendDebugPackets() {
-        super.sendDebugPackets();
-        DebugPackets.sendEntityBrain(this);
-        FowlPlayDebugPackets.sendBirdData(this);
+    public void registerDebugValues(ServerLevel level, Registration registration) {
+        super.registerDebugValues(level, registration);
+        registration.register(FowlPlayDebugSubscriptions.BIRDS, () -> DebugBirdData.takeBirdData(level, this));
     }
 
-    public <U> void isMemoryPresent(MemoryModuleType<U> memoryType) {
-        this.brain.hasMemoryValue(memoryType);
+    public <U> boolean isMemoryPresent(MemoryModuleType<U> memoryType) {
+        return this.brain.hasMemoryValue(memoryType);
     }
 
     public <U> U getPresentMemory(MemoryModuleType<U> memoryType) {

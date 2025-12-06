@@ -1,67 +1,56 @@
 package aqario.fowlplay.client.render.debug;
 
-import aqario.fowlplay.client.FowlPlayClient;
-import aqario.fowlplay.common.network.s2c.BirdDebugPayload;
+import aqario.fowlplay.common.util.DebugBirdData;
+import aqario.fowlplay.core.FowlPlayDebugSubscriptions;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.debug.BrainDebugRenderer;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.client.renderer.debug.PathfindingRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.util.CommonColors;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.util.debug.DebugPoiInfo;
+import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.UUID;
 
 public class BirdDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
-    public static final BirdDebugRenderer INSTANCE = new BirdDebugRenderer();
     private final Minecraft client;
-    private final Map<UUID, BirdDebugPayload.BirdData> birds = Maps.newHashMap();
     @Nullable
     private UUID targetedEntity;
 
-    private BirdDebugRenderer() {
-        this.client = Minecraft.getInstance();
+    public BirdDebugRenderer(Minecraft minecraft) {
+        this.client = minecraft;
     }
 
-    @Override
-    public void clear() {
-        this.targetedEntity = null;
-    }
-
-    public void addBird(BirdDebugPayload.BirdData birdData) {
-        this.birds.put(birdData.uuid(), birdData);
-    }
-
-    private boolean isTargeted(BirdDebugPayload.BirdData birdData) {
+    private boolean isTargeted(DebugBirdData birdData) {
         return Objects.equals(this.targetedEntity, birdData.uuid());
     }
 
     @Override
-    public void render(PoseStack matrices, MultiBufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ) {
-        if(!FowlPlayClient.DEBUG_BIRD) {
-            return;
-        }
-        this.removeRemovedBirds();
-        this.draw(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+    public void render(
+        PoseStack poseStack, MultiBufferSource bufferSource, double camX, double camY, double camZ, DebugValueAccess debugValueAccess, Frustum frustum
+    ) {
+        this.doRender(poseStack, bufferSource, camX, camY, camZ, debugValueAccess);
         this.updateTargetedEntity();
     }
 
-    private void removeRemovedBirds() {
-        this.birds.entrySet().removeIf(entry -> {
-            // noinspection ConstantConditions
-            Entity entity = this.client.level.getEntity(entry.getValue().entityId());
-            return entity == null || entity.isRemoved();
+    private void doRender(PoseStack poseStack, MultiBufferSource bufferSource, double camX, double camY, double camZ, DebugValueAccess debugValueAccess) {
+        debugValueAccess.forEachEntity(FowlPlayDebugSubscriptions.BIRDS, (entity, birdData) -> {
+            if(this.client.player != null && this.client.player.closerThan(entity, 30.0)) {
+                drawBirdData(poseStack, bufferSource, birdData, this.isTargeted(birdData), camX, camY, camZ);
+            }
         });
     }
 
@@ -69,25 +58,8 @@ public class BirdDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
         DebugRenderer.getTargetedEntity(this.client.getCameraEntity(), 8).ifPresent(entity -> this.targetedEntity = entity.getUUID());
     }
 
-    private boolean isClose(BirdDebugPayload.BirdData birdData) {
-        Player playerEntity = this.client.player;
-        // noinspection ConstantConditions
-        BlockPos playerPos = BlockPos.containing(playerEntity.getX(), birdData.pos().y(), playerEntity.getZ());
-        BlockPos birdPos = BlockPos.containing(birdData.pos());
-        // ignores y
-        return playerPos.closerThan(birdPos, 30.0);
-    }
-
-    private void draw(PoseStack matrices, MultiBufferSource vertexConsumers, double x, double y, double z) {
-        this.birds.values().forEach(birdData -> {
-            if(this.isClose(birdData)) {
-                drawBirdData(matrices, vertexConsumers, birdData, this.isTargeted(birdData), x, y, z);
-            }
-        });
-    }
-
     private static void drawBirdData(
-        PoseStack matrices, MultiBufferSource vertexConsumers, BirdDebugPayload.BirdData birdData, boolean targeted, double cameraX, double cameraY, double cameraZ
+        PoseStack matrices, MultiBufferSource vertexConsumers, DebugBirdData birdData, boolean targeted, double cameraX, double cameraY, double cameraZ
     ) {
         int i = 0;
         drawString(matrices, vertexConsumers, birdData.pos(), i, birdData.name(), -1, 0.03F);
@@ -147,7 +119,7 @@ public class BirdDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
     }
 
     private static void drawPath(
-        PoseStack matrices, MultiBufferSource vertexConsumers, BirdDebugPayload.BirdData birdData, double cameraX, double cameraY, double cameraZ
+        PoseStack matrices, MultiBufferSource vertexConsumers, DebugBirdData birdData, double cameraX, double cameraY, double cameraZ
     ) {
         if(birdData.path() != null) {
             if(birdData.flying()) {
@@ -297,9 +269,9 @@ public class BirdDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
     }
 
     private static void drawString(
-        PoseStack matrices, MultiBufferSource vertexConsumers, String string, BrainDebugRenderer.PoiInfo pointOfInterest, int offsetY, int color
+        PoseStack matrices, MultiBufferSource vertexConsumers, String string, DebugPoiInfo pointOfInterest, int offsetY, int color
     ) {
-        drawString(matrices, vertexConsumers, string, pointOfInterest.pos, offsetY, color);
+        drawString(matrices, vertexConsumers, string, pointOfInterest.pos(), offsetY, color);
     }
 
     private static void drawString(PoseStack matrices, MultiBufferSource vertexConsumers, String string, BlockPos pos, int offsetY, int color) {

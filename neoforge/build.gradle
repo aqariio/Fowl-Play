@@ -69,7 +69,7 @@ dependencies {
 //    modRuntimeOnly("maven.modrinth:kotlin-for-forge:${project.kotlin_for_forge_version}")
 
     // NBT Autocomplete
-    modRuntimeOnly("maven.modrinth:nbt-autocomplete:${project.nbt_autocomplete_version}-neoforge,1.21.1")
+    modRuntimeOnly("maven.modrinth:nbt-autocomplete:${project.nbt_autocomplete_version}-neoforge-1.21.9")
 
     // Observable
 //    modRuntimeOnly("maven.modrinth:observable:${project.observable_version}+neoforge")

@@ -114,7 +114,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnType, @Nullable SpawnGroupData spawnGroupData) {
         FowlPlayBuiltInRegistries.GOOSE_VARIANT
             .getRandomElementOf(FowlPlayVariantTags.Goose.NATURAL, level.getRandom())
             .ifPresent(this::setVariant);
@@ -276,18 +276,18 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
             if(!this.level().isClientSide()) {
                 this.setClippedWings(true);
                 this.level().playSound(null, this, SoundEvents.SHEEP_SHEAR, this.getSoundSource(), 1.0f, 1.0f);
-                item.hurtAndBreak(1, player, getSlotForHand(hand));
+                item.hurtAndBreak(1, player, hand.asEquipmentSlot());
             }
-            return InteractionResult.sidedSuccess(this.level().isClientSide());
+            return InteractionResult.SUCCESS;
         }
         return super.mobInteract(player, hand);
     }
 
     @Override
     public void updateAnimations() {
-        this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
+        this.standingState.animateWhen(!this.isFlying() && !this.isInWater(), this.tickCount);
         this.flappingState.animateWhen(this.isFlying(), this.tickCount);
-        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+        this.swimmingState.animateWhen(!this.isFlying() && this.isInWater(), this.tickCount);
     }
 
     @Override
@@ -466,9 +466,10 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
         return FowlPlaySchedules.WATERFOWL.get();
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     @Override
-    protected void customServerAiStep() {
+    protected void customServerAiStep(ServerLevel level) {
         this.tickBrain(this);
-        super.customServerAiStep();
+        super.customServerAiStep(level);
     }
 }

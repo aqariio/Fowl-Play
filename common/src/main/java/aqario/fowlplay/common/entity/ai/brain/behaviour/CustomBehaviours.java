@@ -44,14 +44,14 @@ public class CustomBehaviours {
     public static <E extends BirdEntity> ExtendedBehaviour<E> idleIfInWater() {
         return new Idle<E>()
             .noTimeout()
-            .startCondition(Entity::isInWaterOrBubble)
-            .stopIf(Predicate.not(Entity::isInWaterOrBubble));
+            .startCondition(Entity::isInWater)
+            .stopIf(Predicate.not(Entity::isInWater));
     }
 
     public static <E extends BirdEntity> ExtendedBehaviour<E> forgetUnderwaterAttackTarget() {
         return new InvalidateMemory<E, LivingEntity>(MemoryModuleType.ATTACK_TARGET)
             .invalidateIf(((entity, target) ->
-                entity.isInWaterOrBubble() && target.isUnderWater() && target.position().y < entity.position().y
+                entity.isInWater() && target.isUnderWater() && target.position().y < entity.position().y
             ));
     }
 }

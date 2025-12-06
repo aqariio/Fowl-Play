@@ -62,7 +62,7 @@ public class DuckModel extends FlyingBirdModel<DuckEntity> {
 
     @Override
     protected void setAnimations(DuckEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
-        if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
+        if(!entity.isFlying() && !entity.isInWater()) {
             this.animateWalk(DuckAnimations.WALKING, limbSwing, limbSwingAmount, 4F, 4F);
         }
         this.animate(entity.standingState, DuckAnimations.STANDING, ageInTicks);

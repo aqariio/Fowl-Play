@@ -1,17 +1,15 @@
-package aqario.fowlplay.common.network;
+package aqario.fowlplay.common.util;
 
-import aqario.fowlplay.client.FowlPlayClient;
 import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.entity.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.TrustingBirdEntity;
-import aqario.fowlplay.common.network.s2c.BirdDebugPayload;
-import aqario.fowlplay.common.util.Birds;
-import aqario.fowlplay.core.FowlPlay;
 import com.google.common.collect.Lists;
 import dev.architectury.networking.NetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.protocol.game.DebugEntityNameGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -32,21 +30,87 @@ import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.pathfinder.Path;
-import net.tslat.smartbrainlib.util.BrainUtils;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class FowlPlayDebugPackets {
-    @SuppressWarnings("deprecation")
-    public static void sendBirdData(BirdEntity bird) {
-        if(!FowlPlay.isDebugUtilsLoaded()
-            || bird.level().isClientSide()
-            || !FowlPlayClient.DEBUG_BIRD
-        ) {
-            return;
-        }
+public record DebugBirdData(
+    UUID uuid,
+    int entityId,
+    String name,
+    String moveControl,
+    String navigation,
+    float health,
+    float maxHealth,
+    Vec3 pos,
+    String inventory,
+    @Nullable Path path,
+    List<String> trusting,
+    boolean flying,
+    boolean ambient,
+    boolean perched,
+    List<String> possibleActivities,
+    List<String> runningTasks,
+    List<String> memories,
+    @Nullable String schedule,
+    Set<BlockPos> pois,
+    Set<BlockPos> potentialPois
+) {
+    public static final StreamCodec<FriendlyByteBuf, DebugBirdData> STREAM_CODEC = StreamCodec.of(
+        (buf, birdData) -> birdData.write(buf), DebugBirdData::new
+    );
 
+    public DebugBirdData(FriendlyByteBuf buf) {
+        this(
+            buf.readUUID(),
+            buf.readInt(),
+            buf.readUtf(),
+            buf.readUtf(),
+            buf.readUtf(),
+            buf.readFloat(),
+            buf.readFloat(),
+            buf.readVec3(),
+            buf.readUtf(),
+            buf.readNullable(Path::createFromStream),
+            buf.readList(FriendlyByteBuf::readUtf),
+            buf.readBoolean(),
+            buf.readBoolean(),
+            buf.readBoolean(),
+            buf.readList(FriendlyByteBuf::readUtf),
+            buf.readList(FriendlyByteBuf::readUtf),
+            buf.readList(FriendlyByteBuf::readUtf),
+            buf.readNullable(FriendlyByteBuf::readUtf),
+            buf.readCollection(HashSet::new, BlockPos.STREAM_CODEC),
+            buf.readCollection(HashSet::new, BlockPos.STREAM_CODEC)
+        );
+    }
+
+    public void write(FriendlyByteBuf buf) {
+        buf.writeUUID(this.uuid);
+        buf.writeInt(this.entityId);
+        buf.writeUtf(this.name);
+        buf.writeUtf(this.moveControl);
+        buf.writeUtf(this.navigation);
+        buf.writeFloat(this.health);
+        buf.writeFloat(this.maxHealth);
+        buf.writeVec3(this.pos);
+        buf.writeUtf(this.inventory);
+        buf.writeNullable(this.path, (bufx, path) -> path.writeToStream(bufx));
+        buf.writeCollection(this.trusting, FriendlyByteBuf::writeUtf);
+        buf.writeBoolean(this.flying);
+        buf.writeBoolean(this.ambient);
+        buf.writeBoolean(this.perched);
+        buf.writeCollection(this.possibleActivities, FriendlyByteBuf::writeUtf);
+        buf.writeCollection(this.runningTasks, FriendlyByteBuf::writeUtf);
+        buf.writeCollection(this.memories, FriendlyByteBuf::writeUtf);
+        buf.writeNullable(this.schedule, FriendlyByteBuf::writeUtf);
+        buf.writeCollection(this.pois, BlockPos.STREAM_CODEC);
+        buf.writeCollection(this.potentialPois, BlockPos.STREAM_CODEC);
+    }
+
+    @SuppressWarnings("deprecation")
+    public static DebugBirdData takeBirdData(ServerLevel level, BirdEntity bird) {
         Brain<?> brain = bird.getBrain();
         String name = DebugEntityNameGenerator.getEntityName(bird);
         String inventory = "";
@@ -55,8 +119,8 @@ public class FowlPlayDebugPackets {
         if(bird instanceof InventoryCarrier inventoryOwner) {
             inventory = inventoryOwner.getInventory().isEmpty() ? "" : inventoryOwner.getInventory().toString();
         }
-        if(BrainUtils.hasMemory(brain, MemoryModuleType.PATH)) {
-            path = BrainUtils.getMemory(brain, MemoryModuleType.PATH);
+        if(bird.isMemoryPresent(MemoryModuleType.PATH)) {
+            path = bird.getPresentMemory(MemoryModuleType.PATH);
         }
         List<String> trusting = new ArrayList<>();
         if(bird instanceof TrustingBirdEntity trustingBird) {
@@ -78,7 +142,7 @@ public class FowlPlayDebugPackets {
         Set<BlockPos> pois = Set.of();
         Set<BlockPos> potentialPois = Set.of();
 
-        BirdDebugPayload.BirdData data = new BirdDebugPayload.BirdData(
+        return new DebugBirdData(
             bird.getUUID(),
             bird.getId(),
             name,
@@ -100,8 +164,6 @@ public class FowlPlayDebugPackets {
             pois,
             potentialPois
         );
-        BirdDebugPayload payload = new BirdDebugPayload(data);
-        sendToAll((ServerLevel) bird.level(), payload);
     }
 
     @SuppressWarnings("deprecation")

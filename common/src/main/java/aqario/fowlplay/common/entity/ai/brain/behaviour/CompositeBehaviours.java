@@ -76,8 +76,8 @@ public class CompositeBehaviours {
                 .startCondition(FlyingBirdEntity::isFlying)
                 .stopIf(Predicate.not(FlyingBirdEntity::isFlying))
         )
-            .startCondition(Predicate.not(Entity::isInWaterOrBubble))
-            .stopIf(Entity::isInWaterOrBubble);
+            .startCondition(Predicate.not(Entity::isInWater))
+            .stopIf(Entity::isInWater);
     }
 
     public static <E extends BirdEntity> ExtendedBehaviour<E> idleAndLookAround() {

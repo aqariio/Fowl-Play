@@ -4,37 +4,24 @@ import aqario.fowlplay.client.render.debug.BirdDebugRenderer;
 import aqario.fowlplay.client.render.entity.*;
 import aqario.fowlplay.client.render.entity.model.*;
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.network.s2c.BirdDebugPayload;
 import aqario.fowlplay.core.FowlPlay;
+import aqario.fowlplay.core.FowlPlayDebugSubscriptions;
 import aqario.fowlplay.core.FowlPlayEntityTypes;
 import aqario.fowlplay.core.platform.PlatformHelper;
 import com.google.common.base.Suppliers;
-import dev.architectury.networking.NetworkManager;
+import io.github.flemmli97.debugutils.api.DebugRenderHolder;
 import io.github.flemmli97.debugutils.api.RegisterDebugRenderers;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 
 @SuppressWarnings("unused")
 public class FowlPlayClient {
     private static final CubeDeformation ARMOR_DILATION = new CubeDeformation(1.0F);
     private static final CubeDeformation HAT_DILATION = new CubeDeformation(0.5F);
-    public static boolean DEBUG_BIRD = false;
 
     public static void init() {
         if(FowlPlay.isDebugUtilsLoaded()) {
-            ResourceLocation debugBirdId = FowlPlay.id("debug/bird");
-            RegisterDebugRenderers.registerCustomDebugRenderer(debugBirdId, BirdDebugRenderer.INSTANCE);
-            RegisterDebugRenderers.registerServerToggle(debugBirdId);
-            RegisterDebugRenderers.registerClientHandler(debugBirdId, b -> FowlPlayClient.DEBUG_BIRD = b);
-
-            NetworkManager.registerReceiver(
-                NetworkManager.Side.S2C,
-                BirdDebugPayload.TYPE,
-                BirdDebugPayload.STREAM_CODEC,
-                (payload, context) ->
-                    BirdDebugPayload.onReceive(payload)
-            );
+            RegisterDebugRenderers.registerCustomDebugRenderer(FowlPlayDebugSubscriptions.BIRDS, new DebugRenderHolder(() -> false, BirdDebugRenderer::new));
         }
     }
 

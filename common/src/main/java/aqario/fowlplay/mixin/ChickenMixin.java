@@ -6,7 +6,10 @@ import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
 import aqario.fowlplay.core.platform.DataAttachmentHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.level.Level;
@@ -29,7 +32,7 @@ public abstract class ChickenMixin extends Animal implements VariantHolder<Holde
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @Nullable SpawnGroupData entityData) {
         switch(spawnReason) {
             case BREEDING ->
                 FowlPlayBuiltInRegistries.CHICKEN_VARIANT.getHolder(ChickenVariant.WHITE).ifPresent(this::setVariant);
@@ -69,9 +72,9 @@ public abstract class ChickenMixin extends Animal implements VariantHolder<Holde
     @Override
     public void tick() {
         if(this.level().isClientSide()) {
-            this.fowlplay$standingState.animateWhen(this.onGround() && !this.isInWaterOrBubble(), this.tickCount);
-            this.fowlplay$flappingState.animateWhen(!this.onGround() && !this.isInWaterOrBubble(), this.tickCount);
-            this.fowlplay$swimmingState.animateWhen(this.isInWaterOrBubble(), this.tickCount);
+            this.fowlplay$standingState.animateWhen(this.onGround() && !this.isInWater(), this.tickCount);
+            this.fowlplay$flappingState.animateWhen(!this.onGround() && !this.isInWater(), this.tickCount);
+            this.fowlplay$swimmingState.animateWhen(this.isInWater(), this.tickCount);
         }
         super.tick();
         if(!this.level().isClientSide()) {

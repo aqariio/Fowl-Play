@@ -8,7 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -41,7 +41,7 @@ public class ScarecrowItem extends Item {
 
         if(world instanceof ServerLevel serverWorld) {
             ScarecrowEntity scarecrow = FowlPlayEntityTypes.SCARECROW.get()
-                .create(serverWorld, null, blockPos, MobSpawnType.SPAWN_EGG, true, true);
+                .create(serverWorld, null, blockPos, EntitySpawnReason.SPAWN_EGG, true, true);
             if(scarecrow == null) {
                 return InteractionResult.FAIL;
             }

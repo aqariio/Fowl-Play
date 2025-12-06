@@ -6,7 +6,7 @@ import aqario.fowlplay.core.FowlPlayEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.player.Player;
@@ -23,58 +23,52 @@ public class PigeonSpawner implements CustomSpawner {
 
     @SuppressWarnings("deprecation")
     @Override
-    public int tick(ServerLevel world, boolean spawnMonsters, boolean spawnAnimals) {
-        if (!spawnAnimals
-            || !world.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)
+    public void tick(ServerLevel level, boolean spawnEnemies) {
+        if(!level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)
             || FowlPlayConfig.getInstance().pigeonSpawnWeight <= 0
         ) {
-            return 0;
+            return;
         }
         this.ticksUntilNextSpawn--;
-        if (this.ticksUntilNextSpawn > 0) {
-            return 0;
+        if(this.ticksUntilNextSpawn > 0) {
+            return;
         }
         this.ticksUntilNextSpawn = SPAWN_COOLDOWN;
-        Player player = world.getRandomPlayer();
-        if (player == null) {
-            return 0;
+        Player player = level.getRandomPlayer();
+        if(player == null) {
+            return;
         }
-        RandomSource random = world.random;
+        RandomSource random = level.random;
         int x = (8 + random.nextInt(24)) * (random.nextBoolean() ? -1 : 1);
         int z = (8 + random.nextInt(24)) * (random.nextBoolean() ? -1 : 1);
         BlockPos pos = player.blockPosition().offset(x, 0, z);
-        if (!world.hasChunksAt(pos.getX() - 10, pos.getZ() - 10, pos.getX() + 10, pos.getZ() + 10)) {
-            return 0;
+        if(!level.hasChunksAt(pos.getX() - 10, pos.getZ() - 10, pos.getX() + 10, pos.getZ() + 10)) {
+            return;
         }
-        if (world.isCloseToVillage(pos, 2)) {
-            return this.spawnNearPoi(world, pos);
+        if(level.isCloseToVillage(pos, 2)) {
+            this.spawnNearPoi(level, pos);
         }
-
-        return 0;
     }
 
-    private int spawnNearPoi(ServerLevel world, BlockPos pos) {
-        if (world.getPoiManager()
+    private void spawnNearPoi(ServerLevel level, BlockPos pos) {
+        if(level.getPoiManager()
             .getCountInRange(holder -> holder.is(PoiTypes.HOME), pos, 48, PoiManager.Occupancy.IS_OCCUPIED)
             > 4L) {
-            List<PigeonEntity> nearbyPigeons = world.getEntitiesOfClass(PigeonEntity.class, new AABB(pos).inflate(48.0, 8.0, 48.0));
-            if (nearbyPigeons.size() < MAX_PIGEONS
-                && world.canSeeSky(pos)) {
-                return this.spawn(pos, world);
+            List<PigeonEntity> nearbyPigeons = level.getEntitiesOfClass(PigeonEntity.class, new AABB(pos).inflate(48.0, 8.0, 48.0));
+            if(nearbyPigeons.size() < MAX_PIGEONS
+                && level.canSeeSky(pos)) {
+                this.spawn(pos, level);
             }
         }
-
-        return 0;
     }
 
-    private int spawn(BlockPos pos, ServerLevel world) {
-        PigeonEntity pigeon = FowlPlayEntityTypes.PIGEON.get().create(world);
-        if (pigeon == null) {
-            return 0;
+    private void spawn(BlockPos pos, ServerLevel level) {
+        PigeonEntity pigeon = FowlPlayEntityTypes.PIGEON.get().create(level, EntitySpawnReason.NATURAL);
+        if(pigeon == null) {
+            return;
         }
-        pigeon.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.NATURAL, null);
-        pigeon.moveTo(pos, 0.0F, 0.0F);
-        world.addFreshEntityWithPassengers(pigeon);
-        return 1;
+        pigeon.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.NATURAL, null);
+        pigeon.snapTo(pos, 0.0F, 0.0F);
+        level.addFreshEntityWithPassengers(pigeon);
     }
 }

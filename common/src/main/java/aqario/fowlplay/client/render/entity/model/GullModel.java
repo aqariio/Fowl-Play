@@ -65,7 +65,7 @@ public class GullModel extends FlyingBirdModel<GullEntity> {
         if(entity.isFlying()) {
             this.animateWalk(GullAnimations.FLAPPING, limbSwing, limbSwingAmount, 2F, 2F);
         }
-        else if(!entity.isInWaterOrBubble()) {
+        else if(!entity.isInWater()) {
             this.animateWalk(GullAnimations.WALKING, limbSwing, limbSwingAmount, 4F, 4F);
         }
         this.animate(entity.standingState, GullAnimations.STANDING, ageInTicks);

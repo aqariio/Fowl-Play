@@ -85,7 +85,7 @@ public class CustomChickenModel extends HierarchicalModel<Chicken> {
     public void setupAnim(Chicken chicken, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
         this.updateHeadRotation(netHeadYaw, headPitch);
-        if(chicken.onGround() || chicken.isInWaterOrBubble()) {
+        if(chicken.onGround() || chicken.isInWater()) {
             this.leftWingOpen.visible = false;
             this.rightWingOpen.visible = false;
             this.leftWing.visible = true;
@@ -98,7 +98,7 @@ public class CustomChickenModel extends HierarchicalModel<Chicken> {
             this.rightWing.visible = false;
         }
 
-        if(chicken.onGround() && !chicken.isInWaterOrBubble()) {
+        if(chicken.onGround() && !chicken.isInWater()) {
             this.animateWalk(ChickenAnimations.WALKING, limbSwing, limbSwingAmount, 3F, 3F);
         }
         this.animate(((ChickenAnimationHolder) chicken).fowlplay$getStandingState(), ChickenAnimations.STANDING, ageInTicks);

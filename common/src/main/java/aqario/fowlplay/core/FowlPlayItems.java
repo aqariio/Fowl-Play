@@ -8,102 +8,89 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SpawnEggItem;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public final class FowlPlayItems {
     public static final Supplier<Item> BLUE_JAY_SPAWN_EGG = registerSpawnEgg(
         "blue_jay_spawn_egg",
-        FowlPlayEntityTypes.BLUE_JAY,
-        0x598FCC,
-        0xCED8E5
+        FowlPlayEntityTypes.BLUE_JAY
     );
     public static final Supplier<Item> CARDINAL_SPAWN_EGG = registerSpawnEgg(
         "cardinal_spawn_egg",
-        FowlPlayEntityTypes.CARDINAL,
-        0xDB2929,
-        0x42312F
+        FowlPlayEntityTypes.CARDINAL
     );
     public static final Supplier<Item> CHICKADEE_SPAWN_EGG = registerSpawnEgg(
         "chickadee_spawn_egg",
-        FowlPlayEntityTypes.CHICKADEE,
-        0xE8E5E1,
-        0x8A8B8E
+        FowlPlayEntityTypes.CHICKADEE
     );
     public static final Supplier<Item> CROW_SPAWN_EGG = registerSpawnEgg(
         "crow_spawn_egg",
-        FowlPlayEntityTypes.CROW,
-        0x3B3B3D,
-        0x1C1C1E
+        FowlPlayEntityTypes.CROW
     );
     public static final Supplier<Item> DUCK_SPAWN_EGG = registerSpawnEgg(
         "duck_spawn_egg",
-        FowlPlayEntityTypes.DUCK,
-        0xA58C7C,
-        0x1D7F3C
+        FowlPlayEntityTypes.DUCK
     );
     public static final Supplier<Item> GOOSE_SPAWN_EGG = registerSpawnEgg(
         "goose_spawn_egg",
-        FowlPlayEntityTypes.GOOSE,
-        0xC6BFBC,
-        0xA3958F
+        FowlPlayEntityTypes.GOOSE
     );
     public static final Supplier<Item> GULL_SPAWN_EGG = registerSpawnEgg(
         "gull_spawn_egg",
-        FowlPlayEntityTypes.GULL,
-        0xeaedf0,
-        0xffd850
+        FowlPlayEntityTypes.GULL
     );
     public static final Supplier<Item> HAWK_SPAWN_EGG = registerSpawnEgg(
         "hawk_spawn_egg",
-        FowlPlayEntityTypes.HAWK,
-        0x544135,
-        0xE5D8C0
+        FowlPlayEntityTypes.HAWK
     );
     public static final Supplier<Item> PENGUIN_SPAWN_EGG = registerSpawnEgg(
         "penguin_spawn_egg",
-        FowlPlayEntityTypes.PENGUIN,
-        0x151419,
-        0xfafafa
+        FowlPlayEntityTypes.PENGUIN
     );
     public static final Supplier<Item> PIGEON_SPAWN_EGG = registerSpawnEgg(
         "pigeon_spawn_egg",
-        FowlPlayEntityTypes.PIGEON,
-        0xBBBDBF,
-        0x467A58
+        FowlPlayEntityTypes.PIGEON
     );
     public static final Supplier<Item> RAVEN_SPAWN_EGG = registerSpawnEgg(
         "raven_spawn_egg",
-        FowlPlayEntityTypes.RAVEN,
-        0x3B3B3D,
-        0x1C1C1E
+        FowlPlayEntityTypes.RAVEN
     );
     public static final Supplier<Item> ROBIN_SPAWN_EGG = registerSpawnEgg(
         "robin_spawn_egg",
-        FowlPlayEntityTypes.ROBIN,
-        0x66696A,
-        0xFF823F
+        FowlPlayEntityTypes.ROBIN
     );
     public static final Supplier<Item> SPARROW_SPAWN_EGG = registerSpawnEgg(
         "sparrow_spawn_egg",
-        FowlPlayEntityTypes.SPARROW,
-        0x5B3423,
-        0xBCAE91
+        FowlPlayEntityTypes.SPARROW
     );
     public static final Supplier<Item> SCARECROW = register(
         "scarecrow",
-        () -> new ScarecrowItem(new Item.Properties()
-            .stacksTo(16)
-        ),
+        props -> () -> new ScarecrowItem(props),
+        new Item.Properties()
+            .stacksTo(16),
         CreativeModeTabs.FUNCTIONAL_BLOCKS
     );
 
-    private static <T extends Mob> Supplier<Item> registerSpawnEgg(String id, Supplier<EntityType<T>> type, int backgroundColor, int highlightColor) {
-        return PlatformHelper.registerSpawnEggItem(id, type, backgroundColor, highlightColor);
+    private static <T extends Mob> Supplier<Item> registerSpawnEgg(String id, Supplier<EntityType<T>> type) {
+        return register(
+            id,
+            props -> () -> new SpawnEggItem(props),
+            new Item.Properties()
+                .spawnEgg(type.get()),
+            CreativeModeTabs.SPAWN_EGGS
+        );
     }
 
-    private static Supplier<Item> register(String id, Supplier<Item> item, ResourceKey<CreativeModeTab> group) {
-        return PlatformHelper.registerItem(id, item, group);
+    private static Supplier<Item> register(
+        String id,
+        Function<Item.Properties, Supplier<Item>> factory,
+        Item.Properties properties,
+        ResourceKey<CreativeModeTab> group
+    ) {
+        return PlatformHelper.registerItem(id, factory.apply(properties), group);
     }
 
     public static void init() {

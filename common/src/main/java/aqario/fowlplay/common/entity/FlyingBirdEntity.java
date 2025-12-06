@@ -74,7 +74,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     @SuppressWarnings("unused")
-    public static boolean canSpawnPasserines(EntityType<? extends BirdEntity> type, LevelAccessor world, MobSpawnType spawnReason, BlockPos pos, RandomSource random) {
+    public static boolean canSpawnPasserines(EntityType<? extends BirdEntity> type, LevelAccessor world, EntitySpawnReason spawnReason, BlockPos pos, RandomSource random) {
         return hasSkyAccess(world, pos)
             && ((world.getBlockState(pos.below()).getBlock() instanceof LeavesBlock
             && world.getBlockState(pos.below()).getValue(BlockStateProperties.DISTANCE) < 7)
@@ -82,7 +82,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     @SuppressWarnings("unused")
-    public static boolean canSpawnShorebirds(EntityType<? extends BirdEntity> type, LevelAccessor world, MobSpawnType spawnReason, BlockPos pos, RandomSource random) {
+    public static boolean canSpawnShorebirds(EntityType<? extends BirdEntity> type, LevelAccessor world, EntitySpawnReason spawnReason, BlockPos pos, RandomSource random) {
         return hasSkyAccess(world, pos)
             && (world.getBlockState(pos.below()).is(FowlPlayBlockTags.SHOREBIRDS_SPAWNABLE_ON)
             || world.getFluidState(pos.below()).is(FluidTags.WATER)
@@ -90,7 +90,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     @SuppressWarnings("unused")
-    public static boolean canSpawnWaterfowl(EntityType<? extends BirdEntity> type, LevelAccessor world, MobSpawnType spawnReason, BlockPos pos, RandomSource random) {
+    public static boolean canSpawnWaterfowl(EntityType<? extends BirdEntity> type, LevelAccessor world, EntitySpawnReason spawnReason, BlockPos pos, RandomSource random) {
         return hasSkyAccess(world, pos)
             && (world.getFluidState(pos.below()).is(FluidTags.WATER)
             || isMidairSpawn(world, pos));
@@ -188,7 +188,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     @Override
     protected void updateAnimations() {
         // on land
-        if(!this.isFlying() && !this.isInWaterOrBubble()) {
+        if(!this.isFlying() && !this.isInWater()) {
             if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {
                 this.resetIdleAnimationDelay();
                 this.standingState.stop();
@@ -212,7 +212,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         // flying
         this.glidingState.animateWhen(this.isFlying(), this.tickCount);
         // in water
-        this.swimmingState.animateWhen(this.isInWaterOrBubble() && !this.isFlying(), this.tickCount);
+        this.swimmingState.animateWhen(this.isInWater() && !this.isFlying(), this.tickCount);
     }
 
     @Override

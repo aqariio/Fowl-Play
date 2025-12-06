@@ -56,7 +56,7 @@ public final class Birds {
         if(bird.canStartFlying()
             && (shouldFlyToDestination(bird, path, path.getTarget().getCenter())
 //            && !(bird.getType().is(FowlPlayEntityTypeTags.WATERBIRDS)
-//            && bird.isInWaterOrBubble())
+//            && bird.isInWater())
             || shouldFlyFromAvoidTarget(bird))
         ) {
             bird.startFlying();

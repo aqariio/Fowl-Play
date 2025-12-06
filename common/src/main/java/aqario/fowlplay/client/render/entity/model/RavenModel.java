@@ -74,7 +74,7 @@ public class RavenModel extends FlyingBirdModel<RavenEntity> {
         if(entity.isFlying()) {
             this.animateWalk(RavenAnimations.FLAPPING, limbSwing, limbSwingAmount, 1.5F, 1.5F);
         }
-        else if(!entity.isInWaterOrBubble()) {
+        else if(!entity.isInWater()) {
             this.animateWalk(RavenAnimations.WALKING, limbSwing, limbSwingAmount, 2.5F, 4F);
         }
         this.animate(entity.standingState, RavenAnimations.STANDING, ageInTicks);
@@ -84,6 +84,6 @@ public class RavenModel extends FlyingBirdModel<RavenEntity> {
 
     @Override
     protected boolean shouldRenderWings(RavenEntity entity) {
-        return super.shouldRenderWings(entity) || entity.isInWaterOrBubble();
+        return super.shouldRenderWings(entity) || entity.isInWater();
     }
 }

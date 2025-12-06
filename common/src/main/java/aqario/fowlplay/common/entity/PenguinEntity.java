@@ -104,7 +104,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @Override
     protected float getFlyingSpeed() {
-        return this.isInWaterOrBubble() ? this.getSpeed() : super.getFlyingSpeed();
+        return this.isInWater() ? this.getSpeed() : super.getFlyingSpeed();
     }
 
     @Override
@@ -119,12 +119,12 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @Override
     public int getMaxHeadXRot() {
-        return this.isInWaterOrBubble() ? 1 : super.getMaxHeadXRot();
+        return this.isInWater() ? 1 : super.getMaxHeadXRot();
     }
 
     @Override
     public int getMaxHeadYRot() {
-        return this.isInWaterOrBubble() ? 1 : super.getMaxHeadYRot();
+        return this.isInWater() ? 1 : super.getMaxHeadYRot();
     }
 
     @Override
@@ -133,7 +133,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnType, @Nullable SpawnGroupData spawnGroupData) {
         this.initLastPoseTick(level.getLevel().getGameTime());
         return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
     }
@@ -225,16 +225,16 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @Override
     public void tick() {
-        if(this.getControllingPassenger() != null && this.isInWaterOrBubble()) {
+        if(this.getControllingPassenger() != null && this.isInWater()) {
             this.getControllingPassenger().stopRiding();
         }
-        if(this.isInWaterOrBubble() && !this.isSliding()) {
+        if(this.isInWater() && !this.isSliding()) {
             this.setSliding();
         }
 
         super.tick();
 
-        if(this.level().isClientSide() && this.isInWaterOrBubble() && this.getDeltaMovement().lengthSqr() > 0.02) {
+        if(this.level().isClientSide() && this.isInWater() && this.getDeltaMovement().lengthSqr() > 0.02) {
             this.addSwimParticles();
         }
 
@@ -266,9 +266,9 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @Override
     protected void updateAnimations() {
-        this.standingState.animateWhen(this.onGround() && !this.isInWaterOrBubble() && !this.isSliding(), this.tickCount);
+        this.standingState.animateWhen(this.onGround() && !this.isInWater() && !this.isSliding(), this.tickCount);
 
-        if(this.isInWaterOrBubble()) {
+        if(this.isInWater()) {
             this.standingState.stop();
             this.swimmingState.startIfStopped(this.tickCount);
         }
@@ -276,7 +276,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
             this.swimmingState.stop();
         }
 
-        if(this.shouldUpdateSlidingAnimations() && !this.isInWaterOrBubble()) {
+        if(this.shouldUpdateSlidingAnimations() && !this.isInWater()) {
             this.standingState.stop();
             if(this.shouldPlaySlidingTransition()) {
                 this.slidingTransitionState.startIfStopped(this.tickCount);
@@ -304,7 +304,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     public boolean canStartSliding() {
-        return !this.isInWaterOrBubble()
+        return !this.isInWater()
             && !this.isVehicle()
             && this.onGround()
             && (this.level().getBlockState(this.blockPosition().below()).is(FowlPlayBlockTags.PENGUINS_SLIDE_ON)
@@ -370,7 +370,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @Override
     public void updateSwimming() {
-        this.setSwimming(this.isInWaterOrBubble() && !this.isPassenger());
+        this.setSwimming(this.isInWater() && !this.isPassenger());
     }
 
     protected void clampPassengerYaw(Entity entity) {
@@ -489,7 +489,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @SuppressWarnings("unused")
-    public static boolean canSpawnPenguins(EntityType<? extends BirdEntity> type, LevelAccessor world, MobSpawnType spawnReason, BlockPos pos, RandomSource random) {
+    public static boolean canSpawnPenguins(EntityType<? extends BirdEntity> type, LevelAccessor world, EntitySpawnReason spawnReason, BlockPos pos, RandomSource random) {
         return world.getBiome(pos).is(FowlPlayBiomeTags.SPAWNS_PENGUINS) && world.getBlockState(pos.below()).is(FowlPlayBlockTags.PENGUINS_SPAWNABLE_ON);
     }
 
@@ -554,7 +554,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @Override
     protected boolean canCall() {
-        return !this.isInWaterOrBubble() && super.canCall();
+        return !this.isInWater() && super.canCall();
     }
 
     @Nullable
@@ -650,7 +650,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
                         .setRadius(32, 16),
                     2
                 )
-            ).startCondition(entity -> entity.isInWaterOrBubble() && !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET)),
+            ).startCondition(entity -> entity.isInWater() && !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET)),
             new OneRandomBehaviour<>(
                 Pair.of(
                     new SetRandomWalkTarget<>()
@@ -674,7 +674,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
                     CompositeBehaviours.slideToWater(),
                     6
                 )
-            ).startCondition(entity -> !entity.isInWaterOrBubble() && !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
+            ).startCondition(entity -> !entity.isInWater() && !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
         );
     }
 
@@ -694,13 +694,13 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    protected void customServerAiStep() {
+    protected void customServerAiStep(ServerLevel level) {
         Brain<?> brain = this.getBrain();
         Activity activity = brain.getActiveNonCoreActivity().orElse(null);
         this.tickBrain(this);
         if(activity == Activity.FIGHT && brain.getActiveNonCoreActivity().orElse(null) != Activity.FIGHT) {
             brain.setMemoryWithExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, 2400L);
         }
-        super.customServerAiStep();
+        super.customServerAiStep(level);
     }
 }

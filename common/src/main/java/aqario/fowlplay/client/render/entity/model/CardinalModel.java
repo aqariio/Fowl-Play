@@ -62,7 +62,7 @@ public class CardinalModel extends FlyingBirdModel<CardinalEntity> {
 
     @Override
     protected void setAnimations(CardinalEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
-        if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
+        if(!entity.isFlying() && !entity.isInWater()) {
             this.animateWalk(CardinalAnimations.WALKING, limbSwing, limbSwingAmount, 6F, 6F);
         }
         this.animate(entity.standingState, CardinalAnimations.STANDING, ageInTicks);

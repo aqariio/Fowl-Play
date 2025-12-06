@@ -25,7 +25,7 @@ public class BirdAquaticMoveControl extends BirdMoveControl {
 
     @Override
     public void tick() {
-        if(this.bird.isInWaterOrBubble() && !this.bird.isBaby()) {
+        if(this.bird.isInWater() && !this.bird.isBaby()) {
             this.tickSwimming();
         }
         else {

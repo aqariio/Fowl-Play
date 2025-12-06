@@ -16,6 +16,7 @@ import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -61,9 +62,9 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
 
     @Override
     protected void updateAnimations() {
-        this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
+        this.standingState.animateWhen(!this.isFlying() && !this.isInWater(), this.tickCount);
         this.flappingState.animateWhen(this.isFlying(), this.tickCount);
-        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+        this.swimmingState.animateWhen(!this.isFlying() && this.isInWater(), this.tickCount);
     }
 
     @Override
@@ -195,8 +196,8 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
     }
 
     @Override
-    protected void customServerAiStep() {
+    protected void customServerAiStep(ServerLevel level) {
         this.tickBrain(this);
-        super.customServerAiStep();
+        super.customServerAiStep(level);
     }
 }

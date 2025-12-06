@@ -59,7 +59,7 @@ public class CustomBabyChickenModel extends CustomChickenModel {
         this.root().getAllParts().forEach(ModelPart::resetPose);
         this.updateHeadRotation(netHeadYaw, headPitch);
 
-        if(chicken.onGround() && !chicken.isInWaterOrBubble()) {
+        if(chicken.onGround() && !chicken.isInWater()) {
             this.animateWalk(ChickenAnimations.WALKING, limbSwing, limbSwingAmount, 3F, 3F);
         }
         this.animate(((ChickenAnimationHolder) chicken).fowlplay$getStandingState(), ChickenAnimations.STANDING, ageInTicks);

@@ -4,6 +4,9 @@ import com.google.common.collect.ImmutableSet;
 import dev.architectury.registry.level.entity.EntityAttributeRegistry;
 import dev.architectury.registry.level.entity.SpawnPlacementsRegistry;
 import net.minecraft.Util;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.DependantName;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -12,9 +15,11 @@ import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class EntityTypeBuilder<T extends Entity> {
@@ -31,6 +36,11 @@ public class EntityTypeBuilder<T extends Entity> {
     private float spawnDimensionsScale = 1.0F;
     private EntityAttachments.Builder attachments = EntityAttachments.builder();
     private FeatureFlagSet requiredFeatures = FeatureFlags.VANILLA_SET;
+    private DependantName<EntityType<?>, Optional<ResourceKey<LootTable>>> lootTable = resourceKey -> Optional.of(
+        ResourceKey.create(Registries.LOOT_TABLE, resourceKey.location().withPrefix("entities/"))
+    );
+    private final DependantName<EntityType<?>, String> descriptionId = resourceKey -> Util.makeDescriptionId("entity", resourceKey.location());
+    private boolean allowedInPeaceful = true;
     @Nullable
     private Supplier<AttributeSupplier.Builder> attributeBuilder;
     private SpawnPlacementType spawnPlacement;
@@ -140,6 +150,16 @@ public class EntityTypeBuilder<T extends Entity> {
         return this;
     }
 
+    public EntityTypeBuilder<T> noLootTable() {
+        this.lootTable = DependantName.fixed(Optional.empty());
+        return this;
+    }
+
+    public EntityTypeBuilder<T> notInPeaceful() {
+        this.allowedInPeaceful = false;
+        return this;
+    }
+
     public EntityTypeBuilder<T> attributes(Supplier<AttributeSupplier.Builder> attributeBuilder) {
         this.attributeBuilder = attributeBuilder;
         return this;
@@ -152,14 +172,10 @@ public class EntityTypeBuilder<T extends Entity> {
         return this;
     }
 
-    public EntityType<T> build() {
-        return this.build(null);
-    }
-
     @SuppressWarnings("unchecked")
-    public EntityType<T> build(String id) {
+    public EntityType<T> build(ResourceKey<EntityType<?>> entityType) {
         if(this.serialize) {
-            Util.fetchChoiceType(References.ENTITY_TREE, id);
+            Util.fetchChoiceType(References.ENTITY_TREE, entityType.location().toString());
         }
 
         EntityType<T> type = new EntityType<>(
@@ -174,7 +190,10 @@ public class EntityTypeBuilder<T extends Entity> {
             this.spawnDimensionsScale,
             this.clientTrackingRange,
             this.updateInterval,
-            this.requiredFeatures
+            this.descriptionId.get(entityType),
+            this.lootTable.get(entityType),
+            this.requiredFeatures,
+            this.allowedInPeaceful
         );
 
         if(type.getBaseClass().isAssignableFrom(LivingEntity.class)) {

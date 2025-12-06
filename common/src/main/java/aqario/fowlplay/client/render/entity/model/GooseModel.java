@@ -70,7 +70,7 @@ public class GooseModel extends FlyingBirdModel<GooseEntity> {
 
     @Override
     protected void setAnimations(GooseEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
-        if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
+        if(!entity.isFlying() && !entity.isInWater()) {
             this.animateWalk(GooseAnimations.WALKING, limbSwing, limbSwingAmount, 3F, 3F);
         }
         this.animate(entity.standingState, GooseAnimations.STANDING, ageInTicks);

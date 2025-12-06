@@ -47,6 +47,7 @@ public class FowlPlay {
 
         FowlPlayActivities.init();
         FowlPlayEntityTypes.init();
+        FowlPlayDebugSubscriptions.init();
         FowlPlayItems.init();
         FowlPlayMemoryTypes.init();
         FowlPlayParticleTypes.init();
@@ -65,13 +66,11 @@ public class FowlPlay {
         TickEvent.SERVER_LEVEL_POST.register(world -> {
             pigeonSpawner.tick(
                 world,
-                world.getServer().isSpawningMonsters(),
-                world.getServer().isSpawningAnimals()
+                world.getServer().isSpawningMonsters()
             );
             sparrowSpawner.tick(
                 world,
-                world.getServer().isSpawningMonsters(),
-                world.getServer().isSpawningAnimals()
+                world.getServer().isSpawningMonsters()
             );
         });
     }

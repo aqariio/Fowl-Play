@@ -21,16 +21,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegistryBuilder;
@@ -68,8 +65,7 @@ public class PlatformHelperImpl {
         BuiltInRegistries.ACTIVITY,
         FowlPlay.ID
     );
-    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(
-        BuiltInRegistries.ENTITY_TYPE,
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.createEntities(
         FowlPlay.ID
     );
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.createItems(
@@ -137,10 +133,6 @@ public class PlatformHelperImpl {
         Supplier<Item> registry = ITEMS.register(id, item);
         addItemToItemGroup(registry, group);
         return registry;
-    }
-
-    public static <T extends Mob> Supplier<Item> registerSpawnEggItem(String id, Supplier<EntityType<T>> entityType, int backgroundColor, int highlightColor) {
-        return registerItem(id, () -> new DeferredSpawnEggItem(entityType, backgroundColor, highlightColor, new Item.Properties()), CreativeModeTabs.SPAWN_EGGS);
     }
 
     public static <T> Supplier<MemoryModuleType<T>> registerMemoryModuleType(String id, Supplier<MemoryModuleType<T>> memoryModuleType) {

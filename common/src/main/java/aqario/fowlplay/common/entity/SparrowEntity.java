@@ -14,6 +14,7 @@ import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
@@ -80,7 +81,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     @Override
     protected void updateAnimations() {
         // on land
-        if(!this.isFlying() && !this.isInWaterOrBubble()) {
+        if(!this.isFlying() && !this.isInWater()) {
             if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {
                 this.resetIdleAnimationDelay();
                 this.standingState.stop();
@@ -134,7 +135,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
             this.glidingState.stop();
         }
         // in water
-        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+        this.swimmingState.animateWhen(!this.isFlying() && this.isInWater(), this.tickCount);
     }
 
     private boolean isAnimatingFlapping() {
@@ -287,9 +288,9 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    protected void customServerAiStep() {
+    protected void customServerAiStep(ServerLevel level) {
         this.tickBrain(this);
-        super.customServerAiStep();
+        super.customServerAiStep(level);
     }
 
     @Override

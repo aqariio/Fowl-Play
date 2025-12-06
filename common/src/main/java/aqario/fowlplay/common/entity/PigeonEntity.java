@@ -19,6 +19,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
@@ -72,7 +73,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnType, @Nullable SpawnGroupData spawnGroupData) {
         float f = level.getRandom().nextFloat();
         if(f < 0.5f) { // 50% chance for banded
             FowlPlayBuiltInRegistries.PIGEON_VARIANT.getHolder(PigeonVariant.BANDED).ifPresent(this::setVariant);
@@ -256,9 +257,9 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
 
     @Override
     public void updateAnimations() {
-        this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble() && !this.isInSittingPose(), this.tickCount);
+        this.standingState.animateWhen(!this.isFlying() && !this.isInWater() && !this.isInSittingPose(), this.tickCount);
         this.flappingState.animateWhen(this.isFlying(), this.tickCount);
-        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+        this.swimmingState.animateWhen(!this.isFlying() && this.isInWater(), this.tickCount);
         this.sittingState.animateWhen(this.isInSittingPose(), this.tickCount);
     }
 
@@ -466,26 +467,20 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     @Override
-    protected void customServerAiStep() {
+    protected void customServerAiStep(ServerLevel level) {
         this.tickBrain(this);
-        super.customServerAiStep();
+        super.customServerAiStep(level);
 
-        if(this.getServer() == null) {
-            return;
+        if(this.isTamed()) {
+            ItemStack stack = this.getItemBySlot(EquipmentSlot.OFFHAND);
+            ServerPlayer recipient = level.getServer().getPlayerList().getPlayerByName(stack.getHoverName().getString());
+
+            if(!(stack.getItem() instanceof BundleItem) || !stack.getComponents().has(DataComponents.CUSTOM_NAME) || recipient == null) {
+                this.setRecipientUuid(null);
+                return;
+            }
+
+            this.setRecipientUuid(recipient.getUUID());
         }
-
-        if(!this.isTamed()) {
-            return;
-        }
-
-        ItemStack stack = this.getItemBySlot(EquipmentSlot.OFFHAND);
-        ServerPlayer recipient = this.getServer().getPlayerList().getPlayerByName(stack.getHoverName().getString());
-
-        if(!(stack.getItem() instanceof BundleItem) || !stack.getComponents().has(DataComponents.CUSTOM_NAME) || recipient == null) {
-            this.setRecipientUuid(null);
-            return;
-        }
-
-        this.setRecipientUuid(recipient.getUUID());
     }
 }

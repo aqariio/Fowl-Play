@@ -7,6 +7,8 @@ import aqario.fowlplay.common.world.gen.CustomSpawnPlacementTypes;
 import aqario.fowlplay.core.platform.PlatformHelper;
 import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
 import dev.architectury.registry.level.biome.BiomeModifications;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -226,7 +228,8 @@ public final class FowlPlayEntityTypes {
     );
 
     private static <T extends Entity> Supplier<EntityType<T>> register(String id, EntityTypeBuilder<T> builder) {
-        return PlatformHelper.registerEntityType(id, () -> builder.build(id));
+        ResourceKey<EntityType<?>> key = ResourceKey.create(Registries.ENTITY_TYPE, FowlPlay.id(id));
+        return PlatformHelper.registerEntityType(id, () -> builder.build(key));
     }
 
     public static void init() {
@@ -360,10 +363,10 @@ public final class FowlPlayEntityTypes {
                 spawnGroup,
                 new MobSpawnSettings.SpawnerData(
                     type.get(),
-                    weight,
                     minGroupSize,
                     maxGroupSize
-                )
+                ),
+                weight
             )
         );
     }

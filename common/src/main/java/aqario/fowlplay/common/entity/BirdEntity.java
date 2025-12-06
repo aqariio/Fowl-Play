@@ -47,6 +47,8 @@ public abstract class BirdEntity extends Animal {
     public final AnimationState standingState = new AnimationState();
     public final AnimationState swimmingState = new AnimationState();
     public final AnimationStateList idleAnimStates = this.createIdleAnimations();
+    private static final String AMBIENT_TAG = "ambient";
+    private static final String SLEEPING_TAG = "sleeping";
     private boolean ambient;
     private int eatingTime;
     protected int idleAnimationChance;
@@ -110,24 +112,19 @@ public abstract class BirdEntity extends Animal {
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putBoolean("ambient", this.ambient);
-        nbt.putBoolean("sleeping", this.isSleeping());
+        nbt.putBoolean(AMBIENT_TAG, this.isAmbient());
+        nbt.putBoolean(SLEEPING_TAG, this.isSleeping());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        if(nbt.contains("ambient")) {
-            this.setAmbient(nbt.getBoolean("ambient"));
-        }
-        else {
-            this.setAmbient(this.shouldBeAmbient());
-        }
-        this.setSleeping(nbt.getBoolean("sleeping"));
+        this.setAmbient(nbt.getBoolean(AMBIENT_TAG));
+        this.setSleeping(nbt.getBoolean(SLEEPING_TAG));
     }
 
     /**
-     * non-ambient birds count towards the mob cap, but they don't despawn
+     * ambient birds are able to despawn when far enough from the player, or when the chunks are unloaded
      */
     public boolean isAmbient() {
         return this.ambient;

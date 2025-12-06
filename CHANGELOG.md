@@ -1,3 +1,7 @@
+## 1.1.1
+
+- Fix birds not being saved to chunk when unloaded in 1.20.1
+
 ## 1.1.0
 
 - **Bird AI has been completely overhauled**

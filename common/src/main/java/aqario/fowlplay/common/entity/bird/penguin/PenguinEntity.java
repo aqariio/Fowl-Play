@@ -1,5 +1,27 @@
 package aqario.fowlplay.common.entity.bird.penguin;
 
+import aqario.archaeopteryx.common.ai.ActivityGroup;
+import aqario.archaeopteryx.common.ai.ExtendedBrainProvider;
+import aqario.archaeopteryx.common.ai.behaviour.OneRandomBehaviour;
+import aqario.archaeopteryx.common.ai.behaviour.attack.AnimatableMeleeAttack;
+import aqario.archaeopteryx.common.ai.behaviour.look.LookAtTarget;
+import aqario.archaeopteryx.common.ai.behaviour.misc.BreedWithPartner;
+import aqario.archaeopteryx.common.ai.behaviour.misc.Idle;
+import aqario.archaeopteryx.common.ai.behaviour.misc.InvalidateMemory;
+import aqario.archaeopteryx.common.ai.behaviour.move.FollowParent;
+import aqario.archaeopteryx.common.ai.behaviour.move.FollowTemptation;
+import aqario.archaeopteryx.common.ai.behaviour.move.MoveToWalkTarget;
+import aqario.archaeopteryx.common.ai.behaviour.path.SetRandomSwimTarget;
+import aqario.archaeopteryx.common.ai.behaviour.path.SetRandomWalkTarget;
+import aqario.archaeopteryx.common.ai.behaviour.path.SetWalkTargetToAttackTarget;
+import aqario.archaeopteryx.common.ai.behaviour.target.InvalidateAttackTarget;
+import aqario.archaeopteryx.common.ai.behaviour.target.SetAttackTarget;
+import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
+import aqario.archaeopteryx.common.ai.sensing.vanilla.InWaterSensor;
+import aqario.archaeopteryx.common.ai.sensing.vanilla.ItemTemptingSensor;
+import aqario.archaeopteryx.common.ai.sensing.vanilla.NearbyLivingEntitySensor;
+import aqario.archaeopteryx.common.ai.sensing.vanilla.NearbyPlayersSensor;
+import aqario.archaeopteryx.core.util.BrainUtils;
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -53,28 +75,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
-import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
-import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeAttack;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.BreedWithPartner;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.InvalidateMemory;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowParent;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowTemptation;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomSwimTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetAttackTarget;
-import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.InWaterSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.ItemTemptingSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
-import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -581,7 +581,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @Override
     protected Brain.Provider<PenguinEntity> brainProvider() {
-        return new SmartBrainProvider<>(this);
+        return new ExtendedBrainProvider<>(this);
     }
 
     @Override
@@ -601,25 +601,25 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    public BrainActivityGroup<? extends PenguinEntity> getCoreTasks() {
+    public ActivityGroup<? extends PenguinEntity> getCoreTasks() {
         return BirdBrain.coreActivity(
             new SetBreatheTarget<>(),
             new SetAttackTarget<>(),
             new LookAtTarget<>()
-                .runFor(entity -> entity.getRandom().nextIntBetweenInclusive(45, 90)),
+                .runForBetween(45, 90),
             new MoveToWalkTarget<>()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends PenguinEntity> getAvoidTasks() {
+    public ActivityGroup<? extends PenguinEntity> getAvoidTasks() {
         return BirdBrain.avoidActivity(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends PenguinEntity> getFightTasks() {
+    public ActivityGroup<? extends PenguinEntity> getFightTasks() {
         return BirdBrain.fightActivity(
             new InvalidateAttackTarget<>(),
             SlideBehaviours.startSliding(),
@@ -632,7 +632,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    public BrainActivityGroup<? extends PenguinEntity> getIdleTasks() {
+    public ActivityGroup<? extends PenguinEntity> getIdleTasks() {
         return BirdBrain.idleActivity(
             new BreedWithPartner<>(),
             new FollowParent<>(),
@@ -680,7 +680,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    public BrainActivityGroup<? extends PenguinEntity> getPickupFoodTasks() {
+    public ActivityGroup<? extends PenguinEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
             SlideBehaviours.startSliding(),
             CustomBehaviours.setNearestFoodWalkTarget()
@@ -688,7 +688,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    public BrainActivityGroup<? extends PenguinEntity> getRestTasks() {
+    public ActivityGroup<? extends PenguinEntity> getRestTasks() {
         return BirdBrain.restActivity(
             new Idle<>()
         );

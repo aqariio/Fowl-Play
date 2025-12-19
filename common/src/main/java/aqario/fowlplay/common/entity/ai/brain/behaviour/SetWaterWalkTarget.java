@@ -1,21 +1,20 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
+import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.navigation.BirdRandomPos;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.util.CylindricalRadius;
-import aqario.fowlplay.common.util.MemoryList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.BiPredicate;
 
-public class SetWaterWalkTarget<E extends BirdEntity> extends SpeedModifiableBehaviour<E> {
+public class SetWaterWalkTarget<E extends BirdEntity & BirdBrain<E>> extends SpeedModifiableBehaviour<E> {
     private static final MemoryList MEMORIES = MemoryList.create(1)
         .absent(MemoryModuleType.WALK_TARGET);
     protected CylindricalRadius radius = new CylindricalRadius(32, 16);
@@ -51,10 +50,10 @@ public class SetWaterWalkTarget<E extends BirdEntity> extends SpeedModifiableBeh
         }
 
         if(targetPos != null) {
-            BrainUtils.setMemory(entity, MemoryModuleType.WALK_TARGET, new WalkTarget(targetPos, this.speedModifier.apply(entity, targetPos), 0));
+            entity.setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(targetPos, this.speedModifier.apply(entity, targetPos), 0));
         }
         else {
-            BrainUtils.clearMemory(entity, MemoryModuleType.WALK_TARGET);
+            entity.clearMemory(MemoryModuleType.WALK_TARGET);
         }
     }
 

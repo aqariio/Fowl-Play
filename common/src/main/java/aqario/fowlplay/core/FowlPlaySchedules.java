@@ -1,6 +1,6 @@
 package aqario.fowlplay.core;
 
-import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
+import aqario.archaeopteryx.common.ai.schedule.ExtendedSchedule;
 import aqario.fowlplay.core.platform.PlatformHelper;
 import net.minecraft.world.entity.schedule.Activity;
 

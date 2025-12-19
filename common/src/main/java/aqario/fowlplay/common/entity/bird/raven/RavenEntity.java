@@ -1,5 +1,19 @@
 package aqario.fowlplay.common.entity.bird.raven;
 
+import aqario.archaeopteryx.common.ai.ActivityGroup;
+import aqario.archaeopteryx.common.ai.behaviour.OneRandomBehaviour;
+import aqario.archaeopteryx.common.ai.behaviour.attack.AnimatableMeleeAttack;
+import aqario.archaeopteryx.common.ai.behaviour.look.LookAtTarget;
+import aqario.archaeopteryx.common.ai.behaviour.move.FloatToSurfaceOfFluid;
+import aqario.archaeopteryx.common.ai.behaviour.move.MoveToWalkTarget;
+import aqario.archaeopteryx.common.ai.behaviour.path.SetWalkTargetToAttackTarget;
+import aqario.archaeopteryx.common.ai.behaviour.target.InvalidateAttackTarget;
+import aqario.archaeopteryx.common.ai.behaviour.target.SetAttackTarget;
+import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
+import aqario.archaeopteryx.common.ai.sensing.vanilla.InWaterSensor;
+import aqario.archaeopteryx.common.ai.sensing.vanilla.NearbyLivingEntitySensor;
+import aqario.archaeopteryx.common.ai.sensing.vanilla.NearbyPlayersSensor;
+import aqario.archaeopteryx.core.util.BrainUtils;
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -29,22 +43,8 @@ import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
-import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeAttack;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FloatToSurfaceOfFluid;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetAttackTarget;
 import net.tslat.smartbrainlib.api.core.schedule.SmartBrainSchedule;
-import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.InWaterSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
-import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -185,7 +185,7 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     }
 
     @Override
-    public BrainActivityGroup<? extends RavenEntity> getCoreTasks() {
+    public ActivityGroup<? extends RavenEntity> getCoreTasks() {
         return BirdBrain.coreActivity(
             new FloatToSurfaceOfFluid<>()
                 .riseChance(0.5F),
@@ -199,14 +199,14 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     }
 
     @Override
-    public BrainActivityGroup<? extends RavenEntity> getAvoidTasks() {
+    public ActivityGroup<? extends RavenEntity> getAvoidTasks() {
         return BirdBrain.avoidActivity(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends RavenEntity> getFightTasks() {
+    public ActivityGroup<? extends RavenEntity> getFightTasks() {
         return BirdBrain.fightActivity(
             new InvalidateAttackTarget<>(),
             FlightBehaviours.startFlying(),
@@ -216,7 +216,7 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     }
 
     @Override
-    public BrainActivityGroup<? extends RavenEntity> getForageTasks() {
+    public ActivityGroup<? extends RavenEntity> getForageTasks() {
         return BirdBrain.forageActivity(
             new OneRandomBehaviour<>(
                 CompositeBehaviours.tryForage(),
@@ -226,21 +226,21 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     }
 
     @Override
-    public BrainActivityGroup<? extends RavenEntity> getPerchTasks() {
+    public ActivityGroup<? extends RavenEntity> getPerchTasks() {
         return BirdBrain.perchActivity(
             CompositeBehaviours.tryPerch()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends RavenEntity> getPickupFoodTasks() {
+    public ActivityGroup<? extends RavenEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends RavenEntity> getRestTasks() {
+    public ActivityGroup<? extends RavenEntity> getRestTasks() {
         return BirdBrain.restActivity(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
@@ -248,7 +248,7 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     }
 
     @Override
-    public BrainActivityGroup<? extends RavenEntity> getSoarTasks() {
+    public ActivityGroup<? extends RavenEntity> getSoarTasks() {
         return BirdBrain.soarActivity(
             new OneRandomBehaviour<>(
                 Pair.of(

@@ -1,5 +1,6 @@
 package aqario.fowlplay.core;
 
+import aqario.archaeopteryx.core.util.EntityTypeBuilder;
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ScarecrowEntity;
 import aqario.fowlplay.common.entity.bird.CustomMobCategory;
@@ -17,7 +18,6 @@ import aqario.fowlplay.common.entity.bird.pigeon.PigeonEntity;
 import aqario.fowlplay.common.entity.bird.raven.RavenEntity;
 import aqario.fowlplay.common.entity.bird.robin.RobinEntity;
 import aqario.fowlplay.common.entity.bird.sparrow.SparrowEntity;
-import aqario.fowlplay.common.util.EntityTypeBuilder;
 import aqario.fowlplay.common.world.gen.CustomSpawnPlacementTypes;
 import aqario.fowlplay.core.platform.PlatformHelper;
 import aqario.fowlplay.core.tags.FowlPlayBiomeTags;

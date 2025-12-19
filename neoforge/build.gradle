@@ -52,6 +52,9 @@ dependencies {
     // Neoforge
     neoForge "net.neoforged:neoforge:$rootProject.neoforge_version"
 
+    // Archaeopteryx
+    modImplementation("aqario.archaeopteryx:archaeopteryx:${project.archaeopteryx_version}-neoforge")
+
     // Architectury
     modImplementation("dev.architectury:architectury-neoforge:${rootProject.architectury_version}") {
         transitive = false
@@ -73,9 +76,6 @@ dependencies {
 
     // Observable
 //    modRuntimeOnly("maven.modrinth:observable:${project.observable_version}+neoforge")
-
-    // Smart Brain Lib
-    modImplementation("net.tslat.smartbrainlib:SmartBrainLib-neoforge-${project.minecraft_version}:${project.sbl_version}")
 
     // Spark
     modRuntimeOnly("me.lucko:fabric-permissions-api:${project.fabric_permissions_api_version}")

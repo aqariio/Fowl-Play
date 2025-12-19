@@ -22,12 +22,10 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.BodyRotationControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -36,11 +34,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
-import java.util.function.Supplier;
 
 public abstract class BirdEntity extends Animal {
     private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(
@@ -206,8 +200,7 @@ public abstract class BirdEntity extends Animal {
             this.take(item, stack.getCount());
             item.discard();
             this.eatingTime = 0;
-            Brain<?> brain = this.getBrain();
-            BrainUtils.clearMemory(brain, FowlPlayMemoryTypes.SEES_FOOD.get());
+            this.getBrain().eraseMemory(FowlPlayMemoryTypes.SEES_FOOD.get());
         }
     }
 
@@ -523,29 +516,5 @@ public abstract class BirdEntity extends Animal {
         super.sendDebugPackets();
         DebugPackets.sendEntityBrain(this);
         FowlPlayDebugPackets.sendBirdData(this);
-    }
-
-    public <U> void isMemoryPresent(MemoryModuleType<U> memoryType) {
-        this.brain.hasMemoryValue(memoryType);
-    }
-
-    public <U> U getPresentMemory(MemoryModuleType<U> memoryType) {
-        return this.getMemory(memoryType).orElseThrow();
-    }
-
-    public <U> Optional<U> getMemory(MemoryModuleType<U> memoryType) {
-        return this.brain.getMemory(memoryType);
-    }
-
-    public <U> U getMemoryOrDefault(MemoryModuleType<U> memory, Supplier<U> fallback) {
-        return this.brain.getMemory(memory).orElseGet(fallback);
-    }
-
-    public <U> void setMemory(MemoryModuleType<U> memoryType, U value) {
-        this.brain.setMemory(memoryType, value);
-    }
-
-    public <U> void clearMemory(MemoryModuleType<U> memoryType) {
-        this.brain.eraseMemory(memoryType);
     }
 }

@@ -1,5 +1,21 @@
 package aqario.fowlplay.common.entity.bird.goose;
 
+import aqario.archaeopteryx.common.ai.ActivityGroup;
+import aqario.archaeopteryx.common.ai.ExtendedBrainProvider;
+import aqario.archaeopteryx.common.ai.behaviour.OneRandomBehaviour;
+import aqario.archaeopteryx.common.ai.behaviour.attack.AnimatableMeleeAttack;
+import aqario.archaeopteryx.common.ai.behaviour.look.LookAtTarget;
+import aqario.archaeopteryx.common.ai.behaviour.misc.BreedWithPartner;
+import aqario.archaeopteryx.common.ai.behaviour.move.FollowParent;
+import aqario.archaeopteryx.common.ai.behaviour.move.MoveToWalkTarget;
+import aqario.archaeopteryx.common.ai.behaviour.path.SetWalkTargetToAttackTarget;
+import aqario.archaeopteryx.common.ai.behaviour.target.InvalidateAttackTarget;
+import aqario.archaeopteryx.common.ai.behaviour.target.SetAttackTarget;
+import aqario.archaeopteryx.common.ai.schedule.ExtendedSchedule;
+import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
+import aqario.archaeopteryx.common.ai.sensing.vanilla.InWaterSensor;
+import aqario.archaeopteryx.common.ai.sensing.vanilla.NearbyLivingEntitySensor;
+import aqario.archaeopteryx.common.ai.sensing.vanilla.NearbyPlayersSensor;
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -49,22 +65,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
-import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
-import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeAttack;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.BreedWithPartner;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowParent;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetAttackTarget;
-import net.tslat.smartbrainlib.api.core.schedule.SmartBrainSchedule;
-import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.InWaterSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -358,7 +358,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
 
     @Override
     protected Brain.Provider<GooseEntity> brainProvider() {
-        return new SmartBrainProvider<>(this);
+        return new ExtendedBrainProvider<>(this);
     }
 
     @Override
@@ -376,7 +376,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> getCoreTasks() {
+    public ActivityGroup<? extends GooseEntity> getCoreTasks() {
         return BirdBrain.coreActivity(
             FlightBehaviours.stopFalling(),
             new SetAttackTarget<>(),
@@ -387,14 +387,14 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> getAvoidTasks() {
+    public ActivityGroup<? extends GooseEntity> getAvoidTasks() {
         return BirdBrain.avoidActivity(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> getFightTasks() {
+    public ActivityGroup<? extends GooseEntity> getFightTasks() {
         return BirdBrain.fightActivity(
             new InvalidateAttackTarget<>(),
             new SetWalkTargetToAttackTarget<>()
@@ -404,7 +404,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> getForageTasks() {
+    public ActivityGroup<? extends GooseEntity> getForageTasks() {
         return BirdBrain.forageActivity(
             new LeaderlessFlocking(
                 5,
@@ -428,7 +428,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> getIdleTasks() {
+    public ActivityGroup<? extends GooseEntity> getIdleTasks() {
         return BirdBrain.idleActivity(
             new BreedWithPartner<>(),
             new FollowParent<>(),
@@ -444,14 +444,14 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> getPickupFoodTasks() {
+    public ActivityGroup<? extends GooseEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> getRestTasks() {
+    public ActivityGroup<? extends GooseEntity> getRestTasks() {
         return BirdBrain.restActivity(
             CompositeBehaviours.trySetWaterRestTarget(),
             CustomBehaviours.idleIfInWater()
@@ -460,7 +460,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
 
     @Nullable
     @Override
-    public SmartBrainSchedule getSchedule() {
+    public ExtendedSchedule getSchedule() {
         return FowlPlaySchedules.WATERFOWL.get();
     }
 

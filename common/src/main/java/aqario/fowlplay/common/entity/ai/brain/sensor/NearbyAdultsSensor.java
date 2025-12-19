@@ -1,5 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.sensor;
 
+import aqario.archaeopteryx.common.ai.sensing.EntityFilteringSensor;
+import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.FowlPlaySensorTypes;
 import com.google.common.collect.Lists;
@@ -8,8 +10,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
 import net.minecraft.world.entity.ai.sensing.SensorType;
-import net.tslat.smartbrainlib.api.core.sensor.EntityFilteringSensor;
-import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 
 import java.util.List;
 import java.util.function.BiPredicate;

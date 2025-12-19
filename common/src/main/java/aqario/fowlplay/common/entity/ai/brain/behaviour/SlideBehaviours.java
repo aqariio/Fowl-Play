@@ -1,23 +1,24 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
+import aqario.archaeopteryx.common.ai.behaviour.AnonymousBehaviour;
+import aqario.archaeopteryx.common.ai.behaviour.ExtendedBehaviour;
+import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.bird.penguin.PenguinEntity;
-import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
 
 /**
  * A collection of behaviours that control the sliding behaviour of penguins.
  */
 public class SlideBehaviours {
-    public static <E extends PenguinEntity> ExtendedBehaviour<E> startSliding() {
+    public static <E extends PenguinEntity & BirdBrain<E>> ExtendedBehaviour<E> startSliding() {
         return new AnonymousBehaviour<E>(
             bird -> {
                 bird.startSliding();
-                return true;
             }
         )
             .startCondition(bird -> !bird.isSliding() && bird.canStartSliding());
     }
 
-    public static <E extends PenguinEntity> ExtendedBehaviour<E> stopSliding() {
+    public static <E extends PenguinEntity & BirdBrain<E>> ExtendedBehaviour<E> stopSliding() {
         return new AnonymousBehaviour<E>(
             bird -> {
                 bird.stopSliding();
@@ -27,7 +28,7 @@ public class SlideBehaviours {
             .startCondition(PenguinEntity::isSliding);
     }
 
-    public static <E extends PenguinEntity> ExtendedBehaviour<E> toggleSliding(int seconds) {
+    public static <E extends PenguinEntity & BirdBrain<E>> ExtendedBehaviour<E> toggleSliding(int seconds) {
         return new AnonymousBehaviour<E>(
             bird -> {
                 if(bird.isSliding()) {

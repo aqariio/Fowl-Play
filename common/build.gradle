@@ -18,16 +18,16 @@ dependencies {
     // Do NOT use other classes from Fabric Loader.
     modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
 
+    // Archaeopteryx
+    modImplementation("aqario.archaeopteryx:archaeopteryx:${project.archaeopteryx_version}-fabric")
+
     // Architectury
-    modImplementation("dev.architectury:architectury-fabric:${rootProject.architectury_version}")
+    modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
 
     // Debug Utils
     modImplementation("io.github.flemmli97:debugutils:${project.debugutils_version}-fabric") {
         transitive = false
     }
-
-    // Smart Brain Lib
-    modImplementation("net.tslat.smartbrainlib:SmartBrainLib-fabric-${project.minecraft_version}:${project.sbl_version}")
 
     // Yet Another Config Lib
     modImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric")

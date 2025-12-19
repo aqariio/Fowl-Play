@@ -1,5 +1,14 @@
 package aqario.fowlplay.common.entity.bird.sparrow;
 
+import aqario.archaeopteryx.common.ai.ActivityGroup;
+import aqario.archaeopteryx.common.ai.behaviour.OneRandomBehaviour;
+import aqario.archaeopteryx.common.ai.behaviour.look.LookAtTarget;
+import aqario.archaeopteryx.common.ai.behaviour.move.FloatToSurfaceOfFluid;
+import aqario.archaeopteryx.common.ai.behaviour.move.MoveToWalkTarget;
+import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
+import aqario.archaeopteryx.common.ai.sensing.vanilla.InWaterSensor;
+import aqario.archaeopteryx.common.ai.sensing.vanilla.NearbyLivingEntitySensor;
+import aqario.archaeopteryx.common.ai.sensing.vanilla.NearbyPlayersSensor;
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -25,17 +34,8 @@ import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
-import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FloatToSurfaceOfFluid;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
 import net.tslat.smartbrainlib.api.core.schedule.SmartBrainSchedule;
-import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.InWaterSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -225,7 +225,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    public BrainActivityGroup<? extends SparrowEntity> getCoreTasks() {
+    public ActivityGroup<? extends SparrowEntity> getCoreTasks() {
         return BirdBrain.coreActivity(
             new FloatToSurfaceOfFluid<>(),
             FlightBehaviours.stopFalling(),
@@ -237,14 +237,14 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    public BrainActivityGroup<? extends SparrowEntity> getAvoidTasks() {
+    public ActivityGroup<? extends SparrowEntity> getAvoidTasks() {
         return BirdBrain.avoidActivity(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends SparrowEntity> getForageTasks() {
+    public ActivityGroup<? extends SparrowEntity> getForageTasks() {
         return BirdBrain.forageActivity(
             new OneRandomBehaviour<>(
                 CompositeBehaviours.tryForage(),
@@ -254,7 +254,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    public BrainActivityGroup<? extends SparrowEntity> getPerchTasks() {
+    public ActivityGroup<? extends SparrowEntity> getPerchTasks() {
         return BirdBrain.perchActivity(
             new LeaderlessFlocking(
                 3,
@@ -268,14 +268,14 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    public BrainActivityGroup<? extends SparrowEntity> getPickupFoodTasks() {
+    public ActivityGroup<? extends SparrowEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends SparrowEntity> getRestTasks() {
+    public ActivityGroup<? extends SparrowEntity> getRestTasks() {
         return BirdBrain.restActivity(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()

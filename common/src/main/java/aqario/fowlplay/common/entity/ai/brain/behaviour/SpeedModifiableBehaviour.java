@@ -1,12 +1,13 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
+import aqario.archaeopteryx.common.ai.BrainHolder;
+import aqario.archaeopteryx.common.ai.behaviour.ExtendedBehaviour;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
 
 import java.util.function.BiFunction;
 
-public abstract class SpeedModifiableBehaviour<E extends LivingEntity> extends ExtendedBehaviour<E> {
+public abstract class SpeedModifiableBehaviour<E extends LivingEntity & BrainHolder<E>> extends ExtendedBehaviour<E> {
     protected BiFunction<E, Vec3, Float> speedModifier = (entity, targetPos) -> 1f;
 
     public SpeedModifiableBehaviour<E> speed(float modifier) {

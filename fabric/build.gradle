@@ -41,6 +41,9 @@ dependencies {
     // Fabric API
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
+    // Archaeopteryx
+    modImplementation("aqario.archaeopteryx:archaeopteryx:${project.archaeopteryx_version}-fabric")
+
     // Architectury
     modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
 
@@ -65,9 +68,6 @@ dependencies {
 
     // Observable
     modRuntimeOnly("maven.modrinth:observable:${project.observable_version}+fabric")
-
-    // Smart Brain Lib
-    modImplementation("net.tslat.smartbrainlib:SmartBrainLib-fabric-${project.minecraft_version}:${project.sbl_version}")
 
     // Spark
     modRuntimeOnly("me.lucko:fabric-permissions-api:${project.fabric_permissions_api_version}")

@@ -1,5 +1,8 @@
 package aqario.fowlplay.common.entity.ai.brain.sensor;
 
+import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
+import aqario.archaeopteryx.common.ai.sensing.PredicateSensor;
+import aqario.archaeopteryx.core.util.BrainUtils;
 import aqario.fowlplay.common.entity.bird.pigeon.PigeonEntity;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.FowlPlaySensorTypes;
@@ -7,9 +10,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.SensorType;
-import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
-import net.tslat.smartbrainlib.api.core.sensor.PredicateSensor;
-import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 import java.util.UUID;

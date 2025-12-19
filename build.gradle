@@ -76,6 +76,10 @@ subprojects {
             name = 'Kotlin for Forge'
             url = 'https://thedarkcolour.github.io/KotlinForForge/'
         }
+        maven {
+            name = "Archaeopteryx"
+            url = "https://dl.cloudsmith.io/public/aqariio/archaeopteryx/maven/"
+        }
     }
 
     dependencies {

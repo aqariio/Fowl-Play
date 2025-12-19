@@ -1,6 +1,6 @@
 package aqario.fowlplay.core.platform;
 
-import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
+import aqario.archaeopteryx.common.ai.schedule.ExtendedSchedule;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;

@@ -1,17 +1,16 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
-import aqario.fowlplay.common.util.MemoryList;
+import aqario.archaeopteryx.common.ai.behaviour.ExtendedBehaviour;
+import aqario.archaeopteryx.core.util.BrainUtils;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.world.entity.ai.memory.MemoryStatus;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.valueproviders.ConstantFloat;
 import net.minecraft.util.valueproviders.FloatProvider;
-import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.tslat.smartbrainlib.object.FreePositionTracker;
-import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 

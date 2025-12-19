@@ -1,6 +1,6 @@
 package aqario.fowlplay.core.platform.fabric;
 
-import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
+import aqario.archaeopteryx.common.ai.schedule.ExtendedSchedule;
 import aqario.fowlplay.common.entity.bird.ChickenVariant;
 import aqario.fowlplay.common.entity.bird.duck.DuckVariant;
 import aqario.fowlplay.common.entity.bird.goose.GooseVariant;

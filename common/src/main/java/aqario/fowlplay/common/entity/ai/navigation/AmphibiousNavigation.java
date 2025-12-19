@@ -1,5 +1,6 @@
 package aqario.fowlplay.common.entity.ai.navigation;
 
+import aqario.archaeopteryx.common.ai.navigation.SmoothAmphibiousPathNavigation;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.util.BirdUtils;
 import net.minecraft.core.BlockPos;
@@ -10,7 +11,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.api.core.navigation.SmoothAmphibiousPathNavigation;
 import org.jetbrains.annotations.Nullable;
 
 public class AmphibiousNavigation extends SmoothAmphibiousPathNavigation {

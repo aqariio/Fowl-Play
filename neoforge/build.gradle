@@ -53,7 +53,7 @@ dependencies {
     neoForge "net.neoforged:neoforge:$rootProject.neoforge_version"
 
     // Archaeopteryx
-    modImplementation("aqario.archaeopteryx:archaeopteryx:${project.archaeopteryx_version}-neoforge")
+    modImplementation include("aqario.archaeopteryx:archaeopteryx:${project.archaeopteryx_version}-neoforge")
 
     // Architectury
     modImplementation("dev.architectury:architectury-neoforge:${rootProject.architectury_version}") {

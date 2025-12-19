@@ -19,7 +19,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
 
     // Archaeopteryx
-    modImplementation("aqario.archaeopteryx:archaeopteryx:${project.archaeopteryx_version}-fabric")
+    modImplementation include("aqario.archaeopteryx:archaeopteryx:${project.archaeopteryx_version}-fabric")
 
     // Architectury
     modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")

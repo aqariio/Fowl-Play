@@ -1,7 +1,10 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
+import aqario.archaeopteryx.common.ai.BrainHolder;
 import aqario.archaeopteryx.common.ai.behaviour.ExtendedBehaviour;
 import aqario.archaeopteryx.core.util.BrainUtils;
+import aqario.archaeopteryx.core.util.FixedPositionTracker;
+import aqario.archaeopteryx.core.util.MemoryList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -10,11 +13,10 @@ import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
-import net.tslat.smartbrainlib.object.FreePositionTracker;
 
 import java.util.List;
 
-public class SetRandomLookTarget<E extends Mob> extends ExtendedBehaviour<E> {
+public class SetRandomLookTarget<E extends Mob & BrainHolder<E>> extends ExtendedBehaviour<E> {
     private static final MemoryList MEMORIES = MemoryList.create(1)
         .absent(
             MemoryModuleType.LOOK_TARGET,
@@ -25,7 +27,7 @@ public class SetRandomLookTarget<E extends Mob> extends ExtendedBehaviour<E> {
     private long timeUntilNextLook = 0L;
 
     public SetRandomLookTarget() {
-        this.runtimeProvider = entity -> entity.getRandom().nextIntBetweenInclusive(20, 60);
+        this.runForBetween(20, 60);
     }
 
     public SetRandomLookTarget<E> lookChance(float chance) {
@@ -65,6 +67,6 @@ public class SetRandomLookTarget<E extends Mob> extends ExtendedBehaviour<E> {
 
         int lookTime = entity.getRandom().nextIntBetweenInclusive(15, 60);
         this.timeUntilNextLook = entity.level().getGameTime() + lookTime;
-        BrainUtils.setForgettableMemory(entity, MemoryModuleType.LOOK_TARGET, new FreePositionTracker(entity.getEyePosition().add(Math.cos(angle), 0, Math.sin(angle))), lookTime);
+        BrainUtils.setForgettableMemory(entity, MemoryModuleType.LOOK_TARGET, new FixedPositionTracker(entity.getEyePosition().add(Math.cos(angle), 0, Math.sin(angle))), lookTime);
     }
 }

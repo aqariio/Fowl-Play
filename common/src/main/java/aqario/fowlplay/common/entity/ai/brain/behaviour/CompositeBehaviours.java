@@ -23,7 +23,7 @@ public class CompositeBehaviours {
     public static <E extends FlyingBirdEntity & BirdBrain<E>> ExtendedBehaviour<E> trySetPerchWalkTarget() {
         return new AllApplicableBehaviours<>(
             new SetPerchWalkTarget<>(),
-            new SetRandomFlightTarget<>()
+            new SetRandomFlightTarget<E>()
                 .startCondition(FlyingBirdEntity::isFlying)
                 .stopCondition(Predicate.not(FlyingBirdEntity::isFlying))
         );
@@ -33,7 +33,7 @@ public class CompositeBehaviours {
         return new AllApplicableBehaviours<>(
             new SetWaterWalkTarget<E>()
                 .radius(32, 24),
-            new SetRandomFlightTarget<>()
+            new SetRandomFlightTarget<E>()
                 .startCondition(FlyingBirdEntity::isFlying)
                 .stopCondition(Predicate.not(FlyingBirdEntity::isFlying))
         );
@@ -44,9 +44,9 @@ public class CompositeBehaviours {
             new SetNonAirWalkTarget<E>()
                 .radius(32)
                 .dontAvoidWater(),
-            new SetRandomFlightTarget<>()
+            new SetRandomFlightTarget<E>()
                 .startCondition(FlyingBirdEntity::isFlying)
-                .stopIf(Predicate.not(FlyingBirdEntity::isFlying))
+                .stopCondition(Predicate.not(FlyingBirdEntity::isFlying))
         );
     }
 
@@ -54,16 +54,16 @@ public class CompositeBehaviours {
         return new AllApplicableBehaviours<>(
             new SetNonAirWalkTarget<E>()
                 .radius(32, 16),
-            new SetRandomFlightTarget<>()
+            new SetRandomFlightTarget<E>()
                 .startCondition(FlyingBirdEntity::isFlying)
-                .stopIf(Predicate.not(FlyingBirdEntity::isFlying))
+                .stopCondition(Predicate.not(FlyingBirdEntity::isFlying))
         );
     }
 
     public static <E extends FlyingBirdEntity & BirdBrain<E>> ExtendedBehaviour<E> trySetPerchRestTarget() {
         return CompositeBehaviours.<E>trySetPerchWalkTarget()
             .startCondition(Predicate.not(BirdUtils::isPerched))
-            .stopIf(BirdUtils::isPerched);
+            .stopCondition(BirdUtils::isPerched);
     }
 
     public static <E extends FlyingBirdEntity & BirdBrain<E>> ExtendedBehaviour<E> trySetWaterRestTarget() {
@@ -72,26 +72,26 @@ public class CompositeBehaviours {
                 .radius(64, 32),
             new SetNonAirWalkTarget<>()
                 .radius(64, 32),
-            new SetRandomFlightTarget<>()
+            new SetRandomFlightTarget<E>()
                 .startCondition(FlyingBirdEntity::isFlying)
-                .stopIf(Predicate.not(FlyingBirdEntity::isFlying))
+                .stopCondition(Predicate.not(FlyingBirdEntity::isFlying))
         )
             .startCondition(Predicate.not(Entity::isInWaterOrBubble))
-            .stopIf(Entity::isInWaterOrBubble);
+            .stopCondition(Entity::isInWaterOrBubble);
     }
 
     public static <E extends BirdEntity & BirdBrain<E>> ExtendedBehaviour<E> idleAndLookAround() {
         return new OneRandomBehaviour<>(
-            new SetRandomLookTarget<>(),
-            new Idle<>()
+            new SetRandomLookTarget<E>(),
+            new Idle<E>()
                 .noTimeout()
         );
     }
 
     public static <E extends FlyingBirdEntity & BirdBrain<E>> ExtendedBehaviour<E> tryPickUpFood() {
-        return new AllApplicableBehaviours<>(
+        return new AllApplicableBehaviours<E>(
             CustomBehaviours.setNearestFoodWalkTarget(),
-            new SetRandomFlightTarget<>()
+            new SetRandomFlightTarget<E>()
                 .startCondition(FlyingBirdEntity::isFlying)
         );
     }
@@ -103,36 +103,36 @@ public class CompositeBehaviours {
                 1
             ),
             Pair.of(
-                new SetRandomSwimTarget<>()
+                new SetRandomSwimTarget<PenguinEntity>()
                     .setRadius(64, 24),
                 2
             )
         ).startCondition(entity -> !entity.isMemoryPresent(MemoryModuleType.HAS_HUNTING_COOLDOWN));
     }
 
-    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> tryPerch() {
+    public static <E extends FlyingBirdEntity & BirdBrain<E>> ExtendedBehaviour<E> tryPerch() {
         return new OneRandomBehaviour<>(
             Pair.of(
-                idleAndLookAround()
+                CompositeBehaviours.<E>idleAndLookAround()
                     .runForBetween(30, 100)
                     .startCondition(BirdUtils::isPerched)
-                    .stopIf(Predicate.not(BirdUtils::isPerched)),
+                    .stopCondition(Predicate.not(BirdUtils::isPerched)),
                 8
             ),
             Pair.of(
-                trySetPerchWalkTarget(),
+                CompositeBehaviours.trySetPerchWalkTarget(),
                 1
             )
         );
     }
 
-    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> tryForage() {
+    public static <E extends FlyingBirdEntity & BirdBrain<E>> ExtendedBehaviour<E> tryForage() {
         return new OneRandomBehaviour<>(
             Pair.of(
-                idleAndLookAround()
+                CompositeBehaviours.<E>idleAndLookAround()
                     .runForBetween(30, 100)
                     .startCondition(Entity::onGround)
-                    .stopIf(Predicate.not(Entity::onGround)),
+                    .stopCondition(Predicate.not(Entity::onGround)),
                 2
             ),
             Pair.of(

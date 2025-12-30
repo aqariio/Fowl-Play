@@ -379,10 +379,10 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     public ActivityGroup<? extends GooseEntity> getCoreTasks() {
         return BirdBrain.coreActivity(
             FlightBehaviours.stopFalling(),
-            new SetAttackTarget<>(),
-            new LookAtTarget<>()
+            new SetAttackTarget<GooseEntity>(),
+            new LookAtTarget<GooseEntity>()
                 .runForBetween(45, 90),
-            new MoveToWalkTarget<>()
+            new MoveToWalkTarget<GooseEntity>()
         );
     }
 
@@ -395,9 +395,9 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
 
     @Override
     public ActivityGroup<? extends GooseEntity> getFightTasks() {
-        return BirdBrain.fightActivity(
+        return BirdBrain.<GooseEntity>fightActivity(
             new InvalidateAttackTarget<>(),
-            new SetWalkTargetToAttackTarget<>()
+            new SetWalkTargetToAttackTarget<GooseEntity>()
                 .speedMod((entity, target) -> BirdUtils.FAST_SPEED),
             new AnimatableMeleeAttack<>(0)
         );
@@ -413,7 +413,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
                 0.06f,
                 3f
             ),
-            new OneRandomBehaviour<>(
+            new OneRandomBehaviour<GooseEntity>(
                 Pair.of(
                     CompositeBehaviours.trySetWaterWalkTarget(),
                     1
@@ -430,14 +430,14 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     public ActivityGroup<? extends GooseEntity> getIdleTasks() {
         return BirdBrain.idleActivity(
-            new BreedWithPartner<>(),
-            new FollowParent<>(),
-            SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
-            new SetRandomLookTarget<>()
+            new BreedWithPartner<GooseEntity>(),
+            new FollowParent<GooseEntity>(),
+            SetEntityLookTarget.<GooseEntity>create(BirdUtils::isPlayerHoldingFood),
+            new SetRandomLookTarget<GooseEntity>()
                 .lookChance(0.02f),
             new OneRandomBehaviour<>(
-                CompositeBehaviours.trySetWaterWalkTarget(),
-                CustomBehaviours.idleIfNotFlying()
+                CompositeBehaviours.<GooseEntity>trySetWaterWalkTarget(),
+                CustomBehaviours.<GooseEntity>idleIfNotFlying()
                     .runForBetween(100, 300)
             )
         );
@@ -446,14 +446,14 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     public ActivityGroup<? extends GooseEntity> getPickupFoodTasks() {
         return BirdBrain.pickupFoodActivity(
-            CompositeBehaviours.tryPickUpFood()
+            CompositeBehaviours.<GooseEntity>tryPickUpFood()
         );
     }
 
     @Override
     public ActivityGroup<? extends GooseEntity> getRestTasks() {
         return BirdBrain.restActivity(
-            CompositeBehaviours.trySetWaterRestTarget(),
+            CompositeBehaviours.<GooseEntity>trySetWaterRestTarget(),
             CustomBehaviours.idleIfInWater()
         );
     }

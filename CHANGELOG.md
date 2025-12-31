@@ -2,6 +2,7 @@
 
 - Fix geese sometimes not breeding
 - Fix pigeon not following its owner
+- Add Turkish localization
 - Lower the minimum version for Fabric loader
 
 ## 1.1.1

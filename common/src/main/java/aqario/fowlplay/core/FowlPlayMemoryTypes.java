@@ -19,6 +19,7 @@ public final class FowlPlayMemoryTypes {
     public static final Supplier<MemoryModuleType<Boolean>> CANNOT_PICKUP_FOOD = register("cannot_pickup_food", Codec.BOOL);
     public static final Supplier<MemoryModuleType<Unit>> IS_AVOIDING = register("is_avoiding", Unit.CODEC);
     public static final Supplier<MemoryModuleType<TeleportTarget>> TELEPORT_TARGET = register("teleport_target");
+    public static final Supplier<MemoryModuleType<Unit>> IS_FOLLOWING = register("is_following", Unit.CODEC);
     public static final Supplier<MemoryModuleType<UUID>> RECIPIENT = register("recipient", UUIDUtil.CODEC);
 
     private static <U> Supplier<MemoryModuleType<U>> register(String id, Codec<U> codec) {

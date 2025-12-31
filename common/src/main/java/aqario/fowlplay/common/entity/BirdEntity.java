@@ -517,8 +517,8 @@ public abstract class BirdEntity extends Animal {
         FowlPlayDebugPackets.sendBirdData(this);
     }
 
-    public <U> void isMemoryPresent(MemoryModuleType<U> memoryType) {
-        this.brain.hasMemoryValue(memoryType);
+    public <U> boolean isMemoryPresent(MemoryModuleType<U> memoryType) {
+        return this.brain.hasMemoryValue(memoryType);
     }
 
     public <U> U getPresentMemory(MemoryModuleType<U> memoryType) {

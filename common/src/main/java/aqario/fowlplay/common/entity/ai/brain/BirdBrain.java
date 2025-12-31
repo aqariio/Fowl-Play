@@ -23,6 +23,10 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
         return BrainActivityGroup.empty();
     }
 
+    default BrainActivityGroup<? extends E> getFollowTasks() {
+        return BrainActivityGroup.empty();
+    }
+
     default BrainActivityGroup<? extends E> getForageTasks() {
         return BrainActivityGroup.empty();
     }
@@ -64,6 +68,12 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
     static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> fightActivity(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(Activity.FIGHT).priority(10).behaviours(behaviours)
             .requireAndWipeMemoriesOnUse(MemoryModuleType.ATTACK_TARGET);
+    }
+
+    @SafeVarargs
+    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> followActivity(Behavior<? super T>... behaviours) {
+        return new BrainActivityGroup<T>(FowlPlayActivities.FOLLOW.get()).priority(10).behaviours(behaviours)
+            .requireAndWipeMemoriesOnUse(FowlPlayMemoryTypes.IS_FOLLOWING.get());
     }
 
     @SafeVarargs
@@ -110,6 +120,9 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
             taskList.put(Activity.AVOID, activityGroup);
         }
         // fight is already handled
+        if(!(activityGroup = this.getFollowTasks()).getBehaviours().isEmpty()) {
+            taskList.put(FowlPlayActivities.FOLLOW.get(), activityGroup);
+        }
         if(!(activityGroup = this.getPickupFoodTasks()).getBehaviours().isEmpty()) {
             taskList.put(FowlPlayActivities.PICK_UP.get(), activityGroup);
         }
@@ -136,6 +149,7 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
             FowlPlayActivities.DELIVER.get(),
             Activity.AVOID,
             Activity.FIGHT,
+            FowlPlayActivities.FOLLOW.get(),
             FowlPlayActivities.PICK_UP.get(),
             FowlPlayActivities.FORAGE.get(),
             FowlPlayActivities.SOAR.get(),

@@ -349,7 +349,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     public CylindricalRadius getWalkRange() {
         return this.isDomestic()
-            ? new CylindricalRadius(64, 8)
+            ? new CylindricalRadius(64, 16)
             : new CylindricalRadius(32, 8);
     }
 
@@ -413,6 +413,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     public BrainActivityGroup<? extends GooseEntity> getForageTasks() {
         return BirdBrain.forageActivity(
+            new BreedWithPartner<>(),
             new LeaderlessFlocking(
                 5,
                 0.04f,
@@ -469,7 +470,9 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Nullable
     @Override
     public SmartBrainSchedule getSchedule() {
-        return FowlPlaySchedules.WATERFOWL.get();
+        return this.isDomestic()
+            ? FowlPlaySchedules.WATERFOWL_DOMESTIC.get()
+            : FowlPlaySchedules.WATERFOWL.get();
     }
 
     @Override

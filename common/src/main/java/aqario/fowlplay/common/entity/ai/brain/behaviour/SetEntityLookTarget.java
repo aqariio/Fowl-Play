@@ -1,5 +1,8 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
+import aqario.archaeopteryx.common.ai.behaviour.AnonymousBehaviour;
+import aqario.archaeopteryx.core.util.MemoryList;
+import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,19 +14,19 @@ import java.util.Optional;
 import java.util.function.BiPredicate;
 
 public class SetEntityLookTarget {
-    public static <E extends BirdEntity> AnonymousBehaviour<E> create() {
+    public static <E extends BirdEntity & BirdBrain<E>> AnonymousBehaviour<E> create() {
         return create((entity, target) -> true);
     }
 
-    public static <E extends BirdEntity> AnonymousBehaviour<E> create(MobCategory spawnGroup) {
+    public static <E extends BirdEntity & BirdBrain<E>> AnonymousBehaviour<E> create(MobCategory spawnGroup) {
         return create((entity, target) -> spawnGroup.equals(target.getType().getCategory()));
     }
 
-    public static <E extends BirdEntity> AnonymousBehaviour<E> create(EntityType<?> type) {
+    public static <E extends BirdEntity & BirdBrain<E>> AnonymousBehaviour<E> create(EntityType<?> type) {
         return create((entity, target) -> type.equals(target.getType()));
     }
 
-    public static <E extends BirdEntity> AnonymousBehaviour<E> create(BiPredicate<E, LivingEntity> predicate) {
+    public static <E extends BirdEntity & BirdBrain<E>> AnonymousBehaviour<E> create(BiPredicate<E, LivingEntity> predicate) {
         return new AnonymousBehaviour<>(
             MemoryList.create(2)
                 .absent(MemoryModuleType.LOOK_TARGET)
@@ -32,10 +35,9 @@ public class SetEntityLookTarget {
                 Optional<LivingEntity> targetEntity = bird.getPresentMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES)
                     .findClosest(target -> predicate.test(bird, target) && !bird.hasPassenger(target));
                 if(targetEntity.isEmpty()) {
-                    return false;
+                    return;
                 }
                 bird.setMemory(MemoryModuleType.LOOK_TARGET, new EntityTracker(targetEntity.get(), true));
-                return true;
             }
         );
     }

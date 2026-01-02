@@ -1,6 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.archaeopteryx.core.util.BrainUtils;
+import aqario.archaeopteryx.core.util.MemoryList;
 import aqario.fowlplay.common.entity.ai.brain.TeleportTarget;
 import aqario.fowlplay.common.entity.bird.pigeon.PigeonEntity;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
@@ -39,7 +40,7 @@ public class SetOwnerTarget extends SpeedModifiableBehaviour<PigeonEntity> {
     }
 
     @Override
-    protected boolean checkExtraStartConditions(ServerLevel world, PigeonEntity pigeon) {
+    protected boolean canStart(ServerLevel world, PigeonEntity pigeon) {
         LivingEntity owner = pigeon.getOwner();
         if(owner == null) {
             return false;

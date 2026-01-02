@@ -2,7 +2,7 @@ package aqario.fowlplay.client.render.entity;
 
 import aqario.fowlplay.client.render.entity.layer.BirdHeldItemLayer;
 import aqario.fowlplay.client.render.entity.model.ChickadeeModel;
-import aqario.fowlplay.common.entity.ChickadeeEntity;
+import aqario.fowlplay.common.entity.bird.chickadee.ChickadeeEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;

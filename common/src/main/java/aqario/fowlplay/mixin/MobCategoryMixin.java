@@ -1,6 +1,6 @@
 package aqario.fowlplay.mixin;
 
-import aqario.fowlplay.common.entity.CustomMobCategory;
+import aqario.fowlplay.common.entity.bird.CustomMobCategory;
 import net.minecraft.world.entity.MobCategory;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;

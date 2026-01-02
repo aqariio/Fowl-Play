@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.entity.ai.control;
 
-import aqario.fowlplay.common.entity.BirdEntity;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class BirdFloatMoveControl extends BirdMoveControl {

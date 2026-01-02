@@ -1,6 +1,6 @@
 package aqario.fowlplay.core.platform.fabric;
 
-import aqario.fowlplay.common.entity.ChickenVariant;
+import aqario.fowlplay.common.entity.bird.ChickenVariant;
 import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
 import aqario.fowlplay.core.fabric.FowlPlayDataAttachments;
 import net.minecraft.core.Holder;

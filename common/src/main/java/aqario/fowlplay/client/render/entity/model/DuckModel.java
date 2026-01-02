@@ -1,14 +1,12 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.DuckAnimations;
-import aqario.fowlplay.common.entity.DuckEntity;
+import aqario.fowlplay.common.entity.bird.duck.DuckEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.util.Mth;
 
 public class DuckModel extends FlyingBirdModel<DuckEntity> {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("duck"), "main");
@@ -63,51 +61,13 @@ public class DuckModel extends FlyingBirdModel<DuckEntity> {
     }
 
     @Override
-    public void prepareMobModel(DuckEntity duck, float limbAngle, float limbDistance, float tickDelta) {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
-        super.prepareMobModel(duck, limbAngle, limbDistance, tickDelta);
-        float ageInTicks = duck.tickCount + tickDelta;
-        float bodyYaw = Mth.rotLerp(tickDelta, duck.yBodyRotO, duck.yBodyRot);
-        float headYaw = Mth.rotLerp(tickDelta, duck.yHeadRotO, duck.yHeadRot);
-        float relativeHeadYaw = Mth.wrapDegrees(headYaw - bodyYaw);
-
-        float headPitch = Mth.lerp(tickDelta, duck.xRotO, duck.getXRot());
-        if (LivingEntityRenderer.isEntityUpsideDown(duck)) {
-            headPitch *= -1.0F;
-            relativeHeadYaw *= -1.0F;
+    protected void setAnimations(DuckEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+        if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
+            this.animateWalk(DuckAnimations.WALKING, limbSwing, limbSwingAmount, 4F, 4F);
         }
-        if (!duck.isFlying()) {
-            this.updateHeadRotation(relativeHeadYaw, headPitch);
-        }
-        if (duck.isFlying()) {
-            this.root.xRot = duck.getViewXRot(tickDelta) * (float) (Math.PI / 180.0);
-            this.root.zRot = duck.getRoll(tickDelta) * (float) (Math.PI / 180.0);
-        }
-        if (duck.isFlying()) {
-            this.leftWingOpen.visible = true;
-            this.rightWingOpen.visible = true;
-            this.leftWing.visible = false;
-            this.rightWing.visible = false;
-        }
-        else {
-            this.leftWingOpen.visible = false;
-            this.rightWingOpen.visible = false;
-            this.leftWing.visible = true;
-            this.rightWing.visible = true;
-        }
-        if (!duck.isFlying() && !duck.isInWaterOrBubble()) {
-            this.animateWalk(DuckAnimations.WALKING, limbAngle, limbDistance, 4F, 4F);
-        }
-        this.animate(duck.standingState, DuckAnimations.STANDING, ageInTicks);
-        this.animate(duck.swimmingState, DuckAnimations.SWIMMING, ageInTicks);
-        this.animate(duck.glidingState, DuckAnimations.GLIDING, ageInTicks);
-        this.animate(duck.flappingState, DuckAnimations.FLAPPING, ageInTicks);
-    }
-
-    private void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = Mth.clamp(headYaw, -100.0F, 100.0F);
-        headPitch = Mth.clamp(headPitch, -25.0F, 45.0F);
-        this.neck.yRot = headYaw * (float) (Math.PI / 180.0);
-        this.neck.xRot = headPitch * (float) (Math.PI / 180.0);
+        this.animate(entity.standingState, DuckAnimations.STANDING, ageInTicks);
+        this.animate(entity.swimmingState, DuckAnimations.SWIMMING, ageInTicks);
+        this.animate(entity.glidingState, DuckAnimations.GLIDING, ageInTicks);
+        this.animate(entity.flappingState, DuckAnimations.FLAPPING, ageInTicks);
     }
 }

@@ -1,14 +1,12 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.BlueJayAnimations;
-import aqario.fowlplay.common.entity.BlueJayEntity;
+import aqario.fowlplay.common.entity.bird.blue_jay.BlueJayEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.util.Mth;
 
 public class BlueJayModel extends FlyingBirdModel<BlueJayEntity> {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("blue_jay"), "main");
@@ -63,51 +61,13 @@ public class BlueJayModel extends FlyingBirdModel<BlueJayEntity> {
     }
 
     @Override
-    public void prepareMobModel(BlueJayEntity blueJay, float limbAngle, float limbDistance, float tickDelta) {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
-        super.prepareMobModel(blueJay, limbAngle, limbDistance, tickDelta);
-        float ageInTicks = blueJay.tickCount + tickDelta;
-        float bodyYaw = Mth.rotLerp(tickDelta, blueJay.yBodyRotO, blueJay.yBodyRot);
-        float headYaw = Mth.rotLerp(tickDelta, blueJay.yHeadRotO, blueJay.yHeadRot);
-        float relativeHeadYaw = Mth.wrapDegrees(headYaw - bodyYaw);
-
-        float headPitch = Mth.lerp(tickDelta, blueJay.xRotO, blueJay.getXRot());
-        if (LivingEntityRenderer.isEntityUpsideDown(blueJay)) {
-            headPitch *= -1.0F;
-            relativeHeadYaw *= -1.0F;
+    protected void setAnimations(BlueJayEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+        if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
+            this.animateWalk(BlueJayAnimations.WALKING, limbSwing, limbSwingAmount, 6F, 6F);
         }
-        if (!blueJay.isFlying()) {
-            this.updateHeadRotation(relativeHeadYaw, headPitch);
-        }
-        if (blueJay.isFlying()) {
-            this.root.xRot = blueJay.getViewXRot(tickDelta) * (float) (Math.PI / 180.0);
-            this.root.zRot = blueJay.getRoll(tickDelta) * (float) (Math.PI / 180.0);
-        }
-        if (blueJay.isFlying()) {
-            this.leftWingOpen.visible = true;
-            this.rightWingOpen.visible = true;
-            this.leftWing.visible = false;
-            this.rightWing.visible = false;
-        }
-        else {
-            this.leftWingOpen.visible = false;
-            this.rightWingOpen.visible = false;
-            this.leftWing.visible = true;
-            this.rightWing.visible = true;
-        }
-        if (!blueJay.isFlying() && !blueJay.isInWaterOrBubble()) {
-            this.animateWalk(BlueJayAnimations.WALKING, limbAngle, limbDistance, 6F, 6F);
-        }
-        this.animate(blueJay.standingState, BlueJayAnimations.STANDING, ageInTicks);
-        this.animate(blueJay.swimmingState, BlueJayAnimations.SWIMMING, ageInTicks);
-        this.animate(blueJay.glidingState, BlueJayAnimations.GLIDING, ageInTicks);
-        this.animate(blueJay.flappingState, BlueJayAnimations.FLAPPING, ageInTicks);
-    }
-
-    private void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = Mth.clamp(headYaw, -135.0F, 135.0F);
-        headPitch = Mth.clamp(headPitch, -25.0F, 45.0F);
-        this.neck.yRot = headYaw * (float) (Math.PI / 180.0);
-        this.neck.xRot = headPitch * (float) (Math.PI / 180.0);
+        this.animate(entity.standingState, BlueJayAnimations.STANDING, ageInTicks);
+        this.animate(entity.swimmingState, BlueJayAnimations.SWIMMING, ageInTicks);
+        this.animate(entity.glidingState, BlueJayAnimations.GLIDING, ageInTicks);
+        this.animate(entity.flappingState, BlueJayAnimations.FLAPPING, ageInTicks);
     }
 }

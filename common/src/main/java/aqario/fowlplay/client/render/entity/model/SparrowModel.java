@@ -1,14 +1,12 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.SparrowAnimations;
-import aqario.fowlplay.common.entity.SparrowEntity;
+import aqario.fowlplay.common.entity.bird.sparrow.SparrowEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.util.Mth;
 
 public class SparrowModel extends FlyingBirdModel<SparrowEntity> {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("sparrow"), "main");
@@ -59,53 +57,20 @@ public class SparrowModel extends FlyingBirdModel<SparrowEntity> {
     }
 
     @Override
-    public void prepareMobModel(SparrowEntity sparrow, float limbAngle, float limbDistance, float tickDelta) {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
-        super.prepareMobModel(sparrow, limbAngle, limbDistance, tickDelta);
-        float ageInTicks = sparrow.tickCount + tickDelta;
-        float bodyYaw = Mth.rotLerp(tickDelta, sparrow.yBodyRotO, sparrow.yBodyRot);
-        float headYaw = Mth.rotLerp(tickDelta, sparrow.yHeadRotO, sparrow.yHeadRot);
-        float relativeHeadYaw = Mth.wrapDegrees(headYaw - bodyYaw);
-
-        float headPitch = Mth.lerp(tickDelta, sparrow.xRotO, sparrow.getXRot());
-        if (LivingEntityRenderer.isEntityUpsideDown(sparrow)) {
-            headPitch *= -1.0F;
-            relativeHeadYaw *= -1.0F;
+    protected void setAnimations(SparrowEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+        if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
+            this.animateWalk(SparrowAnimations.WALKING, limbSwing, limbSwingAmount, 6F, 6F);
         }
-        if (!sparrow.isFlying()) {
-            this.updateHeadRotation(relativeHeadYaw, headPitch);
-        }
-        if (sparrow.isFlying()) {
-            this.root.xRot = sparrow.getViewXRot(tickDelta) * (float) (Math.PI / 180.0);
-            this.root.zRot = sparrow.getRoll(tickDelta) * (float) (Math.PI / 180.0);
-        }
-        if (sparrow.isFlying() && sparrow.flappingState.isStarted()) {
-            this.leftWingOpen.visible = true;
-            this.rightWingOpen.visible = true;
-            this.leftWing.visible = false;
-            this.rightWing.visible = false;
-        }
-        else {
-            this.leftWingOpen.visible = false;
-            this.rightWingOpen.visible = false;
-            this.leftWing.visible = true;
-            this.rightWing.visible = true;
-        }
-        if (!sparrow.isFlying() && !sparrow.isInWaterOrBubble()) {
-            this.animateWalk(SparrowAnimations.WALKING, limbAngle, limbDistance, 6F, 6F);
-        }
-        this.animate(sparrow.standingState, SparrowAnimations.STANDING, ageInTicks);
-        this.animate(sparrow.swimmingState, SparrowAnimations.SWIMMING, ageInTicks);
-        this.animate(sparrow.glidingState, SparrowAnimations.GLIDING, ageInTicks);
-        this.animate(sparrow.flappingState, SparrowAnimations.FLAPPING, ageInTicks);
-        this.animate(sparrow.preeningState, SparrowAnimations.PREENING, ageInTicks);
-        this.animate(sparrow.scratchingState, SparrowAnimations.SCRATCHING, ageInTicks);
+        this.animate(entity.standingState, SparrowAnimations.STANDING, ageInTicks);
+        this.animate(entity.swimmingState, SparrowAnimations.SWIMMING, ageInTicks);
+        this.animate(entity.glidingState, SparrowAnimations.GLIDING, ageInTicks);
+        this.animate(entity.flappingState, SparrowAnimations.FLAPPING, ageInTicks);
+        this.animate(entity.preeningState, SparrowAnimations.PREENING, ageInTicks);
+        this.animate(entity.scratchingState, SparrowAnimations.SCRATCHING, ageInTicks);
     }
 
-    private void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = Mth.clamp(headYaw, -135.0F, 135.0F);
-        headPitch = Mth.clamp(headPitch, -25.0F, 45.0F);
-        this.neck.yRot = headYaw * (float) (Math.PI / 180.0);
-        this.neck.xRot = headPitch * (float) (Math.PI / 180.0);
+    @Override
+    protected boolean shouldRenderWings(SparrowEntity entity) {
+        return super.shouldRenderWings(entity) && entity.flappingState.isStarted();
     }
 }

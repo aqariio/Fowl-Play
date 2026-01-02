@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.entity.ai.brain;
 
-import aqario.fowlplay.common.entity.BirdEntity;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.core.FowlPlayActivities;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;

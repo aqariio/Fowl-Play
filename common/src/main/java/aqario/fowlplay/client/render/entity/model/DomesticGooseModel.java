@@ -1,5 +1,7 @@
 package aqario.fowlplay.client.render.entity.model;
 
+import aqario.fowlplay.client.render.entity.animation.DomesticGooseAnimations;
+import aqario.fowlplay.common.entity.bird.goose.GooseEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -58,5 +60,16 @@ public class DomesticGooseModel extends GooseModel {
             .texOffs(-1, 0).addBox(-1.5F, 4.0F, -3.0F, 3.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.25F, 1.0F, 2.5F));
 
         return LayerDefinition.create(modelData, 64, 64);
+    }
+
+    @Override
+    protected void setAnimations(GooseEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+        if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
+            this.animateWalk(DomesticGooseAnimations.WALKING, limbSwing, limbSwingAmount, 3F, 3F);
+        }
+        this.animate(entity.standingState, DomesticGooseAnimations.STANDING, ageInTicks);
+        this.animate(entity.swimmingState, DomesticGooseAnimations.SWIMMING, ageInTicks);
+        this.animate(entity.glidingState, DomesticGooseAnimations.GLIDING, ageInTicks);
+        this.animate(entity.flappingState, DomesticGooseAnimations.FLAPPING, ageInTicks);
     }
 }

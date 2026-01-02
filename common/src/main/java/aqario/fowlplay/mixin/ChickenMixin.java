@@ -1,10 +1,11 @@
 package aqario.fowlplay.mixin;
 
-import aqario.fowlplay.common.entity.ChickenVariant;
+import aqario.fowlplay.common.entity.bird.ChickenVariant;
 import aqario.fowlplay.common.util.ChickenAnimationHolder;
 import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
 import aqario.fowlplay.core.platform.DataAttachmentHelper;
 import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Animal;
@@ -14,6 +15,9 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = Chicken.class, priority = 999)
 public abstract class ChickenMixin extends Animal implements VariantHolder<Holder<ChickenVariant>>, ChickenAnimationHolder {
@@ -29,32 +33,39 @@ public abstract class ChickenMixin extends Animal implements VariantHolder<Holde
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData) {
-        switch(spawnReason) {
-            case BREEDING ->
-                FowlPlayBuiltInRegistries.CHICKEN_VARIANT.getHolder(ChickenVariant.WHITE).ifPresent(this::setVariant);
-            case CHUNK_GENERATION ->
-                FowlPlayBuiltInRegistries.CHICKEN_VARIANT.getHolder(ChickenVariant.RED_JUNGLEFOWL).ifPresent(this::setVariant);
-            default -> FowlPlayBuiltInRegistries.CHICKEN_VARIANT.getRandom(world.getRandom()).ifPresent(this::setVariant);
-        }
-        return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData) {
+        FowlPlayBuiltInRegistries.CHICKEN_VARIANT
+            .getHolder(ChickenVariant.RED_JUNGLEFOWL)
+            .ifPresent(this::setVariant);
+
+        return super.finalizeSpawn(level, difficulty, spawnReason, entityData);
     }
 
 //    @Inject(
-//        method = "createChild(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/passive/PassiveEntity;)Lnet/minecraft/entity/passive/ChickenEntity;",
+//        method = "registerGoals",
 //        at = @At("HEAD"),
 //        cancellable = true
 //    )
-//    private void fowlplay$createChild(ServerWorld serverWorld, PassiveEntity otherParent, CallbackInfoReturnable<ChickenEntity> cir) {
-//        ChickenEntity chicken = EntityType.CHICKEN.create(serverWorld);
-//        if(chicken != null) {
-//            FowlPlayRegistries.CHICKEN_VARIANT.getEntry(ChickenVariant.WHITE).ifPresent(
-//                variant ->
-//                    DataAttachmentHelper.setChickenVariant(chicken, variant)
-//            );
-//        }
-//        cir.setReturnValue(chicken);
+//    private void fowlplay$removeGoals(CallbackInfo ci) {
+//        this.goalSelector.removeAllGoals(goal -> true);
+//        this.targetSelector.removeAllGoals(goal -> true);
+//        ci.cancel();
 //    }
+
+    @Inject(
+        method = "getBreedOffspring(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/AgeableMob;)Lnet/minecraft/world/entity/animal/Chicken;",
+        at = @At("HEAD"),
+        cancellable = true
+    )
+    private void fowlplay$createChild(ServerLevel level, AgeableMob otherParent, CallbackInfoReturnable<Chicken> cir) {
+        Chicken child = EntityType.CHICKEN.create(level);
+        if(child != null) {
+            FowlPlayBuiltInRegistries.CHICKEN_VARIANT.getHolder(ChickenVariant.WHITE).ifPresent(
+                variant -> DataAttachmentHelper.setChickenVariant(child, variant)
+            );
+        }
+        cir.setReturnValue(child);
+    }
 
     @Override
     public Holder<ChickenVariant> getVariant() {

@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.ai.control;
 
-import aqario.fowlplay.common.entity.BirdEntity;
-import aqario.fowlplay.common.util.Birds;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
+import aqario.fowlplay.common.util.BirdUtils;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
@@ -51,7 +51,7 @@ public class BirdAquaticMoveControl extends BirdMoveControl {
                 this.mob.setYRot(this.rotlerp(this.mob.getYRot(), h, this.yawChange));
                 this.mob.yBodyRot = this.mob.getYRot();
                 this.mob.yHeadRot = this.mob.getYRot();
-                float speed = (float) (/*this.speed * */this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED) * Birds.SWIM_SPEED);
+                float speed = (float) (/*this.speed * */this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED) * BirdUtils.SWIM_SPEED);
                 if(this.mob.isInWater()) {
                     this.mob.setSpeed(speed * this.speedInWater);
                     double j = Math.sqrt(d * d + f * f);

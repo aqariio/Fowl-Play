@@ -32,12 +32,12 @@ public class AnimationStateList implements Iterable<AnimationState> {
     }
 
     public void startRandom(int tickCount) {
-        this.randomize().getFirst()
+        this.randomize().peek()
             .ifPresent(animState -> animState.start(tickCount));
     }
 
     @NotNull
-    public Optional<AnimationState> getFirst() {
+    public Optional<AnimationState> peek() {
         return Optional.ofNullable(this.entries.isEmpty() ? null : this.entries.getFirst())
             .map(Entry::getState);
     }

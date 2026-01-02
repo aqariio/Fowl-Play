@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.world.gen;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.PigeonEntity;
+import aqario.fowlplay.common.entity.bird.pigeon.PigeonEntity;
 import aqario.fowlplay.core.FowlPlayEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

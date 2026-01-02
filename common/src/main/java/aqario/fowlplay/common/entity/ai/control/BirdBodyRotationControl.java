@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.entity.ai.control;
 
-import aqario.fowlplay.common.entity.BirdEntity;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.control.BodyRotationControl;

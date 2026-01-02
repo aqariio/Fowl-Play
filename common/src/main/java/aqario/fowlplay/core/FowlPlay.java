@@ -1,7 +1,12 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.*;
+import aqario.fowlplay.common.entity.bird.ChickenVariant;
+import aqario.fowlplay.common.entity.bird.duck.DuckVariant;
+import aqario.fowlplay.common.entity.bird.goose.GooseVariant;
+import aqario.fowlplay.common.entity.bird.gull.GullVariant;
+import aqario.fowlplay.common.entity.bird.pigeon.PigeonVariant;
+import aqario.fowlplay.common.entity.bird.sparrow.SparrowVariant;
 import aqario.fowlplay.common.util.PathBuilder;
 import aqario.fowlplay.common.world.gen.PigeonSpawner;
 import aqario.fowlplay.common.world.gen.SparrowSpawner;
@@ -47,6 +52,7 @@ public class FowlPlay {
         SparrowVariant.init();
 
         FowlPlayActivities.init();
+        FowlPlayBlocks.init();
         FowlPlayEntityTypes.init();
         FowlPlayItems.init();
         FowlPlayMemoryTypes.init();

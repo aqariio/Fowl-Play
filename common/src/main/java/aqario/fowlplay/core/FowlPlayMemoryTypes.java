@@ -1,5 +1,6 @@
 package aqario.fowlplay.core;
 
+import aqario.fowlplay.common.entity.ai.brain.RememberedPositions;
 import aqario.fowlplay.common.entity.ai.brain.TeleportTarget;
 import aqario.fowlplay.core.platform.PlatformHelper;
 import com.mojang.serialization.Codec;
@@ -20,6 +21,7 @@ public final class FowlPlayMemoryTypes {
     public static final Supplier<MemoryModuleType<Unit>> IS_AVOIDING = register("is_avoiding", Unit.CODEC);
     public static final Supplier<MemoryModuleType<TeleportTarget>> TELEPORT_TARGET = register("teleport_target");
     public static final Supplier<MemoryModuleType<UUID>> RECIPIENT = register("recipient", UUIDUtil.CODEC);
+    public static final Supplier<MemoryModuleType<RememberedPositions>> REMEMBERED_POSITIONS = register("remembered_positions", RememberedPositions.CODEC);
 
     private static <U> Supplier<MemoryModuleType<U>> register(String id, Codec<U> codec) {
         return PlatformHelper.registerMemoryModuleType(id, () -> new MemoryModuleType<>(Optional.of(codec)));

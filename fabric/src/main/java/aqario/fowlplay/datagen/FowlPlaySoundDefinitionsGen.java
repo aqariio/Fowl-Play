@@ -38,8 +38,12 @@ public class FowlPlaySoundDefinitionsGen extends SoundDefinitionsProvider {
         this.addVarious(FowlPlaySoundEvents.ENTITY_DUCK_CALL.get(), "mob/duck/call", 2);
         this.addVarious(FowlPlaySoundEvents.ENTITY_DUCK_HURT.get(), "mob/duck/call", 2);
 
-        this.addVarious(FowlPlaySoundEvents.ENTITY_GOOSE_CALL.get(), "mob/goose/call", 2);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_GOOSE_HURT.get(), "mob/goose/call", 2);
+        this.addVarious(FowlPlaySoundEvents.ENTITY_CANADA_GOOSE_CALL.get(), "mob/goose/canada/call", 8);
+        this.addVarious(FowlPlaySoundEvents.ENTITY_CANADA_GOOSE_HURT.get(), "mob/goose/canada/call", 8);
+        this.addVarious(FowlPlaySoundEvents.ENTITY_GREYLAG_GOOSE_CALL.get(), "mob/goose/greylag/call", 4);
+        this.addVarious(FowlPlaySoundEvents.ENTITY_GREYLAG_GOOSE_HURT.get(), "mob/goose/greylag/call", 4);
+        this.addVarious(FowlPlaySoundEvents.ENTITY_SWAN_GOOSE_CALL.get(), "mob/goose/greylag/call", 4);
+        this.addVarious(FowlPlaySoundEvents.ENTITY_SWAN_GOOSE_HURT.get(), "mob/goose/greylag/call", 4);
 
         this.addVarious(FowlPlaySoundEvents.ENTITY_GULL_CALL.get(), "mob/gull/call", 4);
         this.addVarious(FowlPlaySoundEvents.ENTITY_GULL_LONG_CALL.get(), "mob/gull/long_call", 3);
@@ -71,7 +75,7 @@ public class FowlPlaySoundDefinitionsGen extends SoundDefinitionsProvider {
 
     private void addVarious(SoundEvent soundEvent, String location, int start, int end) {
         SoundDefinition definition = SoundDefinition.builder();
-        for (int i = start; i <= end; i++) {
+        for(int i = start; i <= end; i++) {
             definition.with(sound(FowlPlay.id(location + i)));
         }
         definition.subtitle("subtitles." + soundEvent.getLocation().getPath());
@@ -91,7 +95,7 @@ public class FowlPlaySoundDefinitionsGen extends SoundDefinitionsProvider {
 
     private void addVariousVanilla(SoundEvent soundEvent, String location, int start, int end) {
         SoundDefinition definition = SoundDefinition.builder();
-        for (int i = start; i <= end; i++) {
+        for(int i = start; i <= end; i++) {
             definition.with(sound(ResourceLocation.withDefaultNamespace(location + i)));
         }
         definition.subtitle("subtitles." + soundEvent.getLocation().getPath());

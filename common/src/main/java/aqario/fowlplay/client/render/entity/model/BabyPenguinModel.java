@@ -1,13 +1,10 @@
 package aqario.fowlplay.client.render.entity.model;
 
-import aqario.fowlplay.client.render.entity.animation.PenguinAnimations;
-import aqario.fowlplay.common.entity.PenguinEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.util.Mth;
 
 public class BabyPenguinModel extends PenguinModel {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("baby_penguin"), "main");
@@ -46,31 +43,5 @@ public class BabyPenguinModel extends PenguinModel {
         root.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(30, 0).addBox(-1.0F, 0.0F, -3.0F, 2.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-1.5F, 10.0F, 0.0F));
 
         return LayerDefinition.create(modelData, 64, 64);
-    }
-
-    @Override
-    public void setupAnim(PenguinEntity penguin, float limbAngle, float limbDistance, float ageInTicks, float headYaw, float headPitch) {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
-        if (penguin.isSwimming()) {
-            this.root.yRot = headYaw * (float) (Math.PI / 180.0);
-            this.root.xRot = headPitch * (float) (Math.PI / 180.0);
-        }
-        if (!penguin.isSwimming() && !penguin.isSliding()) {
-            this.updateHeadRotation(headYaw, headPitch);
-            this.animateWalk(PenguinAnimations.WALKING, limbAngle, limbDistance, 7F, 7F);
-        }
-        this.animate(penguin.standingState, PenguinAnimations.STANDING, ageInTicks);
-        this.animate(penguin.slidingState, PenguinAnimations.SLIDING, ageInTicks);
-        this.animate(penguin.slidingTransitionState, PenguinAnimations.SLIDING_TRANSITION, ageInTicks, 1.0F);
-        this.animate(penguin.standingTransitionState, PenguinAnimations.STANDING_TRANSITION, ageInTicks, 1.0F);
-        this.animate(penguin.swimmingState, PenguinAnimations.SWIMMING, ageInTicks);
-        this.animate(penguin.dancingState, PenguinAnimations.DANCING, ageInTicks);
-    }
-
-    private void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = Mth.clamp(headYaw, -75.0F, 75.0F);
-        headPitch = Mth.clamp(headPitch, -45.0F, 45.0F);
-        this.neck.yRot = headYaw * (float) (Math.PI / 180.0);
-        this.neck.xRot = headPitch * (float) (Math.PI / 180.0);
     }
 }

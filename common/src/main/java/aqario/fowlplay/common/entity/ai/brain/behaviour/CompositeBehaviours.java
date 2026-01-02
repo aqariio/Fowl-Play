@@ -1,9 +1,9 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
-import aqario.fowlplay.common.entity.BirdEntity;
-import aqario.fowlplay.common.entity.FlyingBirdEntity;
-import aqario.fowlplay.common.entity.PenguinEntity;
-import aqario.fowlplay.common.util.Birds;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
+import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
+import aqario.fowlplay.common.entity.bird.penguin.PenguinEntity;
+import aqario.fowlplay.common.util.BirdUtils;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
@@ -20,36 +20,61 @@ import java.util.function.Predicate;
  * A collection of preconfigured group behaviours for ease of use.
  */
 public class CompositeBehaviours {
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetPerchWalkTarget() {
+        return new AllApplicableBehaviours<>(
+            new SetPerchWalkTarget<>(),
+            new SetRandomFlightTarget<>()
+                .startCondition(FlyingBirdEntity::isFlying)
+                .stopIf(Predicate.not(FlyingBirdEntity::isFlying))
+        );
+    }
+
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetWaterWalkTarget() {
         return new AllApplicableBehaviours<>(
             new SetWaterWalkTarget<E>()
                 .radius(32, 24),
             new SetRandomFlightTarget<>()
+                .startCondition(FlyingBirdEntity::isFlying)
+                .stopIf(Predicate.not(FlyingBirdEntity::isFlying))
         );
     }
 
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetNonAirWalkTarget() {
         return new AllApplicableBehaviours<>(
             new SetNonAirWalkTarget<E>()
-                .setRadius(32)
+                .radius(32)
                 .dontAvoidWater(),
             new SetRandomFlightTarget<>()
+                .startCondition(FlyingBirdEntity::isFlying)
+                .stopIf(Predicate.not(FlyingBirdEntity::isFlying))
         );
     }
 
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetGroundWalkTarget() {
         return new AllApplicableBehaviours<>(
             new SetNonAirWalkTarget<E>()
-                .setRadius(32, 16),
+                .radius(32, 16),
             new SetRandomFlightTarget<>()
+                .startCondition(FlyingBirdEntity::isFlying)
+                .stopIf(Predicate.not(FlyingBirdEntity::isFlying))
         );
+    }
+
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetPerchRestTarget() {
+        return CompositeBehaviours.<E>trySetPerchWalkTarget()
+            .startCondition(Predicate.not(BirdUtils::isPerched))
+            .stopIf(BirdUtils::isPerched);
     }
 
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetWaterRestTarget() {
         return new AllApplicableBehaviours<>(
             new SetWaterWalkTarget<E>()
                 .radius(64, 32),
+            new SetNonAirWalkTarget<>()
+                .radius(64, 32),
             new SetRandomFlightTarget<>()
+                .startCondition(FlyingBirdEntity::isFlying)
+                .stopIf(Predicate.not(FlyingBirdEntity::isFlying))
         )
             .startCondition(Predicate.not(Entity::isInWaterOrBubble))
             .stopIf(Entity::isInWaterOrBubble);
@@ -67,6 +92,7 @@ public class CompositeBehaviours {
         return new AllApplicableBehaviours<>(
             CustomBehaviours.setNearestFoodWalkTarget(),
             new SetRandomFlightTarget<>()
+                .startCondition(FlyingBirdEntity::isFlying)
         );
     }
 
@@ -90,12 +116,12 @@ public class CompositeBehaviours {
             Pair.of(
                 idleAndLookAround()
                     .runForBetween(30, 100)
-                    .startCondition(Birds::isPerched)
-                    .stopIf(Predicate.not(Birds::isPerched)),
+                    .startCondition(BirdUtils::isPerched)
+                    .stopIf(Predicate.not(BirdUtils::isPerched)),
                 8
             ),
             Pair.of(
-                new SetPerchWalkTarget<>(),
+                trySetPerchWalkTarget(),
                 1
             )
         );

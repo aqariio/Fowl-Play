@@ -3,7 +3,7 @@ package aqario.fowlplay.client.render.entity;
 import aqario.fowlplay.client.render.entity.layer.BirdHeldItemLayer;
 import aqario.fowlplay.client.render.entity.layer.PigeonBundleLayer;
 import aqario.fowlplay.client.render.entity.model.PigeonModel;
-import aqario.fowlplay.common.entity.PigeonEntity;
+import aqario.fowlplay.common.entity.bird.pigeon.PigeonEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

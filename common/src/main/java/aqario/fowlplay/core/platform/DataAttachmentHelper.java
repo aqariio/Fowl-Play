@@ -1,6 +1,6 @@
 package aqario.fowlplay.core.platform;
 
-import aqario.fowlplay.common.entity.ChickenVariant;
+import aqario.fowlplay.common.entity.bird.ChickenVariant;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.animal.Chicken;

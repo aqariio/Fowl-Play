@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
-import aqario.fowlplay.common.entity.FlyingBirdEntity;
+import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
 
 /**
@@ -9,7 +9,7 @@ import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
 public class FlightBehaviours {
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> startFlying() {
         return new AnonymousBehaviour<E>(
-            (bird, brain) -> {
+            bird -> {
                 bird.startFlying();
                 return true;
             }
@@ -19,7 +19,7 @@ public class FlightBehaviours {
 
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> stopFlying() {
         return new AnonymousBehaviour<>(
-            (bird, brain) -> {
+            bird -> {
                 bird.stopFlying();
                 return true;
             }
@@ -28,7 +28,7 @@ public class FlightBehaviours {
 
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> stopFalling() {
         return new AnonymousBehaviour<E>(
-            (bird, brain) -> {
+            bird -> {
                 bird.startFlying();
                 return true;
             }

@@ -1,14 +1,12 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.RobinAnimations;
-import aqario.fowlplay.common.entity.RobinEntity;
+import aqario.fowlplay.common.entity.bird.robin.RobinEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.util.Mth;
 
 public class RobinModel extends FlyingBirdModel<RobinEntity> {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("robin"), "main");
@@ -59,51 +57,13 @@ public class RobinModel extends FlyingBirdModel<RobinEntity> {
     }
 
     @Override
-    public void prepareMobModel(RobinEntity robin, float limbAngle, float limbDistance, float tickDelta) {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
-        super.prepareMobModel(robin, limbAngle, limbDistance, tickDelta);
-        float ageInTicks = robin.tickCount + tickDelta;
-        float bodyYaw = Mth.rotLerp(tickDelta, robin.yBodyRotO, robin.yBodyRot);
-        float headYaw = Mth.rotLerp(tickDelta, robin.yHeadRotO, robin.yHeadRot);
-        float relativeHeadYaw = Mth.wrapDegrees(headYaw - bodyYaw);
-
-        float headPitch = Mth.lerp(tickDelta, robin.xRotO, robin.getXRot());
-        if (LivingEntityRenderer.isEntityUpsideDown(robin)) {
-            headPitch *= -1.0F;
-            relativeHeadYaw *= -1.0F;
+    protected void setAnimations(RobinEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+        if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
+            this.animateWalk(RobinAnimations.WALKING, limbSwing, limbSwingAmount, 6F, 6F);
         }
-        if (!robin.isFlying()) {
-            this.updateHeadRotation(relativeHeadYaw, headPitch);
-        }
-        if (robin.isFlying()) {
-            this.root.xRot = robin.getViewXRot(tickDelta) * (float) (Math.PI / 180.0);
-            this.root.zRot = robin.getRoll(tickDelta) * (float) (Math.PI / 180.0);
-        }
-        if (robin.isFlying()) {
-            this.leftWingOpen.visible = true;
-            this.rightWingOpen.visible = true;
-            this.leftWing.visible = false;
-            this.rightWing.visible = false;
-        }
-        else {
-            this.leftWingOpen.visible = false;
-            this.rightWingOpen.visible = false;
-            this.leftWing.visible = true;
-            this.rightWing.visible = true;
-        }
-        if (!robin.isFlying() && !robin.isInWaterOrBubble()) {
-            this.animateWalk(RobinAnimations.WALKING, limbAngle, limbDistance, 6F, 6F);
-        }
-        this.animate(robin.standingState, RobinAnimations.STANDING, ageInTicks);
-        this.animate(robin.swimmingState, RobinAnimations.SWIMMING, ageInTicks);
-        this.animate(robin.glidingState, RobinAnimations.GLIDING, ageInTicks);
-        this.animate(robin.flappingState, RobinAnimations.FLAPPING, ageInTicks);
-    }
-
-    private void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = Mth.clamp(headYaw, -135.0F, 135.0F);
-        headPitch = Mth.clamp(headPitch, -25.0F, 45.0F);
-        this.neck.yRot = headYaw * (float) (Math.PI / 180.0);
-        this.neck.xRot = headPitch * (float) (Math.PI / 180.0);
+        this.animate(entity.standingState, RobinAnimations.STANDING, ageInTicks);
+        this.animate(entity.swimmingState, RobinAnimations.SWIMMING, ageInTicks);
+        this.animate(entity.glidingState, RobinAnimations.GLIDING, ageInTicks);
+        this.animate(entity.flappingState, RobinAnimations.FLAPPING, ageInTicks);
     }
 }

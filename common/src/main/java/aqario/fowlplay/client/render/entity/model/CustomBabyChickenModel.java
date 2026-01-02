@@ -7,7 +7,6 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.Chicken;
 
 public class CustomBabyChickenModel extends CustomChickenModel {
@@ -60,17 +59,10 @@ public class CustomBabyChickenModel extends CustomChickenModel {
         this.root().getAllParts().forEach(ModelPart::resetPose);
         this.updateHeadRotation(netHeadYaw, headPitch);
 
-        if (chicken.onGround() && !chicken.isInWaterOrBubble()) {
+        if(chicken.onGround() && !chicken.isInWaterOrBubble()) {
             this.animateWalk(ChickenAnimations.WALKING, limbSwing, limbSwingAmount, 3F, 3F);
         }
         this.animate(((ChickenAnimationHolder) chicken).fowlplay$getStandingState(), ChickenAnimations.STANDING, ageInTicks);
         this.animate(((ChickenAnimationHolder) chicken).fowlplay$getFloatingState(), ChickenAnimations.SWIMMING, ageInTicks);
-    }
-
-    private void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = Mth.clamp(headYaw, -135.0F, 135.0F);
-        headPitch = Mth.clamp(headPitch, -25.0F, 45.0F);
-        this.head.yRot = headYaw * (float) (Math.PI / 180.0);
-        this.head.xRot = headPitch * (float) (Math.PI / 180.0);
     }
 }

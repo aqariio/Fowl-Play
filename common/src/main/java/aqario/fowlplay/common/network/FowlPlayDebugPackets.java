@@ -1,11 +1,11 @@
 package aqario.fowlplay.common.network;
 
 import aqario.fowlplay.client.FowlPlayClient;
-import aqario.fowlplay.common.entity.BirdEntity;
-import aqario.fowlplay.common.entity.FlyingBirdEntity;
-import aqario.fowlplay.common.entity.TrustingBirdEntity;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
+import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
+import aqario.fowlplay.common.entity.bird.TrustingBirdEntity;
 import aqario.fowlplay.common.network.s2c.BirdDebugPayload;
-import aqario.fowlplay.common.util.Birds;
+import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FowlPlay;
 import com.google.common.collect.Lists;
 import dev.architectury.networking.NetworkManager;
@@ -92,7 +92,7 @@ public class FowlPlayDebugPackets {
             trusting,
             flying,
             bird.isAmbient(),
-            Birds.isPerched(bird),
+            BirdUtils.isPerched(bird),
             activities,
             behaviors,
             memories,

@@ -1,7 +1,12 @@
 package aqario.fowlplay.core.platform.fabric;
 
-import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
+import aqario.fowlplay.common.entity.bird.ChickenVariant;
+import aqario.fowlplay.common.entity.bird.duck.DuckVariant;
+import aqario.fowlplay.common.entity.bird.goose.GooseVariant;
+import aqario.fowlplay.common.entity.bird.gull.GullVariant;
+import aqario.fowlplay.common.entity.bird.pigeon.PigeonVariant;
+import aqario.fowlplay.common.entity.bird.sparrow.SparrowVariant;
 import aqario.fowlplay.common.util.RegistryBuilder;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
@@ -33,10 +38,8 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.Block;
 
 import java.util.function.Supplier;
 
@@ -69,15 +72,28 @@ public class PlatformHelperImpl {
         return () -> registry;
     }
 
+    public static Supplier<Block> registerBlock(String id, Supplier<Block> block) {
+        Block registry = Registry.register(BuiltInRegistries.BLOCK, FowlPlay.id(id), block.get());
+        return () -> registry;
+    }
+
     public static <T extends Entity> Supplier<EntityType<T>> registerEntityType(String id, Supplier<EntityType<T>> entityType) {
         EntityType<T> registry = Registry.register(BuiltInRegistries.ENTITY_TYPE, FowlPlay.id(id), entityType.get());
         return () -> registry;
     }
 
-    public static Supplier<Item> registerItem(String id, Supplier<Item> item, ResourceKey<CreativeModeTab> group) {
+    @SafeVarargs
+    public static Supplier<Item> registerItem(String id, Supplier<Item> item, ResourceKey<CreativeModeTab>... groups) {
         Item registry = Registry.register(BuiltInRegistries.ITEM, FowlPlay.id(id), item.get());
-        addItemToItemGroup(() -> registry, group);
+        for(ResourceKey<CreativeModeTab> group : groups) {
+            addItemToItemGroup(() -> registry, group);
+        }
         return () -> registry;
+    }
+
+    @SafeVarargs
+    public static Supplier<Item> registerBlockItem(String id, Supplier<Block> block, ResourceKey<CreativeModeTab>... groups) {
+        return registerItem(id, () -> new BlockItem(block.get(), new Item.Properties()), groups);
     }
 
     public static <T extends Mob> Supplier<Item> registerSpawnEggItem(String id, Supplier<EntityType<T>> entityType, int backgroundColor, int highlightColor) {

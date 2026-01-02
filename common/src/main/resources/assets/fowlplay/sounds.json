@@ -42,6 +42,32 @@
     ],
     "subtitle": "subtitles.entity.blue_jay.hurt"
   },
+  "entity.canada_goose.call": {
+    "sounds": [
+      "fowlplay:mob/goose/canada/call1",
+      "fowlplay:mob/goose/canada/call2",
+      "fowlplay:mob/goose/canada/call3",
+      "fowlplay:mob/goose/canada/call4",
+      "fowlplay:mob/goose/canada/call5",
+      "fowlplay:mob/goose/canada/call6",
+      "fowlplay:mob/goose/canada/call7",
+      "fowlplay:mob/goose/canada/call8"
+    ],
+    "subtitle": "subtitles.entity.canada_goose.call"
+  },
+  "entity.canada_goose.hurt": {
+    "sounds": [
+      "fowlplay:mob/goose/canada/call1",
+      "fowlplay:mob/goose/canada/call2",
+      "fowlplay:mob/goose/canada/call3",
+      "fowlplay:mob/goose/canada/call4",
+      "fowlplay:mob/goose/canada/call5",
+      "fowlplay:mob/goose/canada/call6",
+      "fowlplay:mob/goose/canada/call7",
+      "fowlplay:mob/goose/canada/call8"
+    ],
+    "subtitle": "subtitles.entity.canada_goose.hurt"
+  },
   "entity.cardinal.call": {
     "sounds": [
       "fowlplay:mob/cardinal/call1",
@@ -130,6 +156,24 @@
       "fowlplay:mob/duck/call2"
     ],
     "subtitle": "subtitles.entity.duck.hurt"
+  },
+  "entity.greylag_goose.call": {
+    "sounds": [
+      "fowlplay:mob/goose/greylag/call1",
+      "fowlplay:mob/goose/greylag/call2",
+      "fowlplay:mob/goose/greylag/call3",
+      "fowlplay:mob/goose/greylag/call4"
+    ],
+    "subtitle": "subtitles.entity.greylag_goose.call"
+  },
+  "entity.greylag_goose.hurt": {
+    "sounds": [
+      "fowlplay:mob/goose/greylag/call1",
+      "fowlplay:mob/goose/greylag/call2",
+      "fowlplay:mob/goose/greylag/call3",
+      "fowlplay:mob/goose/greylag/call4"
+    ],
+    "subtitle": "subtitles.entity.greylag_goose.hurt"
   },
   "entity.gull.call": {
     "sounds": [
@@ -293,5 +337,23 @@
       "fowlplay:mob/sparrow/song4"
     ],
     "subtitle": "subtitles.entity.sparrow.song"
+  },
+  "entity.swan_goose.call": {
+    "sounds": [
+      "fowlplay:mob/goose/greylag/call1",
+      "fowlplay:mob/goose/greylag/call2",
+      "fowlplay:mob/goose/greylag/call3",
+      "fowlplay:mob/goose/greylag/call4"
+    ],
+    "subtitle": "subtitles.entity.swan_goose.call"
+  },
+  "entity.swan_goose.hurt": {
+    "sounds": [
+      "fowlplay:mob/goose/greylag/call1",
+      "fowlplay:mob/goose/greylag/call2",
+      "fowlplay:mob/goose/greylag/call3",
+      "fowlplay:mob/goose/greylag/call4"
+    ],
+    "subtitle": "subtitles.entity.swan_goose.hurt"
   }
 }

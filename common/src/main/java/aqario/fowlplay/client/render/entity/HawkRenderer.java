@@ -2,7 +2,7 @@ package aqario.fowlplay.client.render.entity;
 
 import aqario.fowlplay.client.render.entity.layer.BirdHeldItemLayer;
 import aqario.fowlplay.client.render.entity.model.HawkModel;
-import aqario.fowlplay.common.entity.HawkEntity;
+import aqario.fowlplay.common.entity.bird.hawk.HawkEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;

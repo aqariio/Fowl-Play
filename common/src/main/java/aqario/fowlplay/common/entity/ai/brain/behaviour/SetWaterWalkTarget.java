@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
-import aqario.fowlplay.common.entity.BirdEntity;
 import aqario.fowlplay.common.entity.ai.navigation.BirdRandomPos;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.util.CylindricalRadius;
 import aqario.fowlplay.common.util.MemoryList;
 import com.mojang.datafixers.util.Pair;
@@ -50,16 +50,16 @@ public class SetWaterWalkTarget<E extends BirdEntity> extends SpeedModifiableBeh
             targetPos = null;
         }
 
-        if(targetPos == null) {
-            BrainUtils.clearMemory(entity, MemoryModuleType.WALK_TARGET);
+        if(targetPos != null) {
+            BrainUtils.setMemory(entity, MemoryModuleType.WALK_TARGET, new WalkTarget(targetPos, this.speedModifier.apply(entity, targetPos), 0));
         }
         else {
-            BrainUtils.setMemory(entity, MemoryModuleType.WALK_TARGET, new WalkTarget(targetPos, this.speedModifier.apply(entity, targetPos), 0));
+            BrainUtils.clearMemory(entity, MemoryModuleType.WALK_TARGET);
         }
     }
 
     @Nullable
     protected Vec3 getTargetPos(E entity) {
-        return BirdRandomPos.getWaterOrGround(entity, this.radius, this.radius);
+        return BirdRandomPos.getWater(entity, this.radius);
     }
 }

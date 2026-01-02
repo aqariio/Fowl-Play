@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.entity.ai.control;
 
-import aqario.fowlplay.common.entity.FlyingBirdEntity;
+import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.control.LookControl;

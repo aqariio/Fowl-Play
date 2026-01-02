@@ -2,7 +2,7 @@ package aqario.fowlplay.client.render.entity;
 
 import aqario.fowlplay.client.render.entity.layer.BirdHeldItemLayer;
 import aqario.fowlplay.client.render.entity.model.GullModel;
-import aqario.fowlplay.common.entity.GullEntity;
+import aqario.fowlplay.common.entity.bird.gull.GullEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;

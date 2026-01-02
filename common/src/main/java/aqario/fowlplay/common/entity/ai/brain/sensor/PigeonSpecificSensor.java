@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.entity.ai.brain.sensor;
 
-import aqario.fowlplay.common.entity.PigeonEntity;
+import aqario.fowlplay.common.entity.bird.pigeon.PigeonEntity;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.FowlPlaySensorTypes;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;

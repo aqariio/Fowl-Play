@@ -1,6 +1,6 @@
 package aqario.fowlplay.mixin;
 
-import aqario.fowlplay.common.entity.PenguinEntity;
+import aqario.fowlplay.common.entity.bird.penguin.PenguinEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.PowderSnowBlock;

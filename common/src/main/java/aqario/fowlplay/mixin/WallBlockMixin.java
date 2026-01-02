@@ -1,6 +1,6 @@
 package aqario.fowlplay.mixin;
 
-import aqario.fowlplay.common.util.Birds;
+import aqario.fowlplay.common.util.BirdUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -33,7 +33,7 @@ public class WallBlockMixin {
     private void fowlplay$lowerWallHeight(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir) {
         if(context instanceof EntityCollisionContext entityContext
             && entityContext.getEntity() != null
-            && Birds.isNotFlightless(entityContext.getEntity())
+            && BirdUtils.isNotFlightless(entityContext.getEntity())
         ) {
             VoxelShape originalShape = this.collisionShapeByIndex.get(state);
             if(originalShape.max(Direction.Axis.Y) > 1) {

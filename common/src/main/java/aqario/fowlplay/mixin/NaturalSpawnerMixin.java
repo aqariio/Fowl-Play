@@ -1,6 +1,6 @@
 package aqario.fowlplay.mixin;
 
-import aqario.fowlplay.common.entity.CustomMobCategory;
+import aqario.fowlplay.common.entity.bird.CustomMobCategory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.MobCategory;

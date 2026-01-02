@@ -1,6 +1,6 @@
 package aqario.fowlplay.mixin;
 
-import aqario.fowlplay.common.util.Birds;
+import aqario.fowlplay.common.util.BirdUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -36,7 +36,7 @@ public abstract class FenceGateBlockMixin extends HorizontalDirectionalBlock {
     private void fowlplay$lowerFenceGateHeight(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir) {
         if(context instanceof EntityCollisionContext entityContext
             && entityContext.getEntity() != null
-            && Birds.isNotFlightless(entityContext.getEntity())
+            && BirdUtils.isNotFlightless(entityContext.getEntity())
         ) {
             switch(state.getValue(FACING).getAxis()) {
                 case X -> cir.setReturnValue(Shapes.box(

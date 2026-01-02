@@ -1,3 +1,7 @@
+## 1.1.1
+
+- Fix birds not being saved to chunk when unloaded in 1.20.1
+
 ## 1.1.0
 
 - **Bird AI has been completely overhauled**
@@ -21,20 +25,27 @@
         - Swan goose
     - Domestic variants are obtained through breeding (this mechanic will be expanded in the future)
         - Emden (from greylag goose)
-        - Chinese (from swan gose)
+        - Chinese (from swan goose)
         - Canada geese do not have a domestic variant
-    - Geese with the name "untitled" will attack any player they see
+    - To breed geese, you must first drop them food to get them to trust you. Afterwards, you can approach without scaring them away and feed them directly
+    - Domestic geese will no longer naturally avoid players, and can have their wings clipped using shears (to stop them from flying)
+    - Geese with the name "untitled" will attack any player they see, and can pick up swords
 - **Add Scarecrows**
     - Birds see scarecrows as players, so any bird that avoids players will also avoid scarecrows
     - Scarecrows can be attacked like armour stands, activating enchantments such as sweeping edge
     - Scarecrows can be broken by sneaking and attacking it
         - Unlike armour stands, double-clicking scarecrows will do nothing
     - Scarecrows can be destroyed by fire, lava, and explosions
-- **Other features**
-  - Fix incompatibility with PerfectParity
+- **Other changes**
+  - Fix incompatibility with Perfect Parity
+  - Fix seemingly random crash in 1.20.1 when a bird is pathing
   - Add European Portuguese translation
   - Add Japanese translation
   - Add Traditional Chinese translation
+
+## 1.1.0-beta.6
+
+- Fix seemingly random crash in 1.20.1 when a bird is pathing
 
 ## 1.1.0-beta.5
 

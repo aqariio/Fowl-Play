@@ -6,7 +6,7 @@ import aqario.fowlplay.client.render.entity.model.BabyGooseModel;
 import aqario.fowlplay.client.render.entity.model.DomesticGooseModel;
 import aqario.fowlplay.client.render.entity.model.GooseModel;
 import aqario.fowlplay.common.entity.bird.goose.GooseEntity;
-import aqario.fowlplay.common.entity.bird.goose.GooseVariant;
+import aqario.fowlplay.common.entity.variant.GooseVariant;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

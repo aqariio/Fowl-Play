@@ -1,7 +1,7 @@
 package aqario.fowlplay.datagen;
 
-import aqario.fowlplay.common.entity.bird.duck.DuckVariant;
-import aqario.fowlplay.common.entity.bird.goose.GooseVariant;
+import aqario.fowlplay.common.entity.variant.DuckVariant;
+import aqario.fowlplay.common.entity.variant.GooseVariant;
 import aqario.fowlplay.core.FowlPlayRegistries;
 import aqario.fowlplay.core.tags.FowlPlayVariantTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;

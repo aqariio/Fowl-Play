@@ -8,6 +8,7 @@ import aqario.fowlplay.common.entity.ai.navigation.GroundNavigation;
 import aqario.fowlplay.common.entity.bird.Flocking;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.bird.TameableBirdEntity;
+import aqario.fowlplay.common.entity.variant.PigeonVariant;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.*;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;

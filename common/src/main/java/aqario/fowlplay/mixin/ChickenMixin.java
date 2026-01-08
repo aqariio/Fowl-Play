@@ -1,6 +1,6 @@
 package aqario.fowlplay.mixin;
 
-import aqario.fowlplay.common.entity.bird.ChickenVariant;
+import aqario.fowlplay.common.entity.variant.ChickenVariant;
 import aqario.fowlplay.common.util.ChickenAnimationHolder;
 import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
 import aqario.fowlplay.core.platform.DataAttachmentHelper;

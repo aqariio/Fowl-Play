@@ -1,4 +1,4 @@
-package aqario.fowlplay.common.entity.bird.duck;
+package aqario.fowlplay.common.entity.variant;
 
 import aqario.fowlplay.common.util.PathBuilder;
 import aqario.fowlplay.core.FowlPlay;

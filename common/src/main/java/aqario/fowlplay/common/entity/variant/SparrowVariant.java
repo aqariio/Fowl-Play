@@ -1,4 +1,4 @@
-package aqario.fowlplay.common.entity.bird.sparrow;
+package aqario.fowlplay.common.entity.variant;
 
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;

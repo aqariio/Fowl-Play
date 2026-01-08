@@ -3,7 +3,7 @@ package aqario.fowlplay.client.render.entity;
 import aqario.fowlplay.client.render.entity.model.AdultBabyModelPair;
 import aqario.fowlplay.client.render.entity.model.CustomBabyChickenModel;
 import aqario.fowlplay.client.render.entity.model.CustomChickenModel;
-import aqario.fowlplay.common.entity.bird.ChickenVariant;
+import aqario.fowlplay.common.entity.variant.ChickenVariant;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

@@ -1,6 +1,6 @@
 package aqario.fowlplay.core.neoforge;
 
-import aqario.fowlplay.common.entity.bird.ChickenVariant;
+import aqario.fowlplay.common.entity.variant.ChickenVariant;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
 import net.minecraft.core.Holder;

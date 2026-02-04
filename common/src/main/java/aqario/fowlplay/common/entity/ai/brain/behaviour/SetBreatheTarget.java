@@ -2,7 +2,6 @@ package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.archaeopteryx.core.util.BrainUtils;
 import aqario.archaeopteryx.core.util.MemoryList;
-import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
@@ -19,7 +18,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-public class SetBreatheTarget<E extends BirdEntity & BirdBrain<E>> extends SpeedModifiableBehaviour<E> {
+public class SetBreatheTarget<E extends BirdEntity> extends SpeedModifiableBehaviour<E> {
     private static final MemoryList MEMORIES = MemoryList.create(1)
         .registered(MemoryModuleType.WALK_TARGET);
 
@@ -29,12 +28,12 @@ public class SetBreatheTarget<E extends BirdEntity & BirdBrain<E>> extends Speed
     }
 
     @Override
-    protected boolean checkExtraStartConditions(ServerLevel world, E bird) {
-        return this.shouldKeepRunning(bird);
+    protected boolean canStart(ServerLevel world, E bird) {
+        return this.canContinue(bird);
     }
 
     @Override
-    protected boolean shouldKeepRunning(E bird) {
+    protected boolean canContinue(E bird) {
         return bird.getAirSupply() < 400;
     }
 

@@ -32,21 +32,21 @@ public class CustomBehaviours {
         return new Idle<E>()
             .noTimeout()
             .startCondition(entity -> !entity.isFlying() && !BirdUtils.isPerched(entity))
-            .stopIf(entity -> entity.isFlying() || BirdUtils.isPerched(entity));
+            .stopCondition(entity -> entity.isFlying() || BirdUtils.isPerched(entity));
     }
 
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> idleIfPerched() {
         return new Idle<E>()
             .noTimeout()
             .startCondition(BirdUtils::isPerched)
-            .stopIf(Predicate.not(BirdUtils::isPerched));
+            .stopCondition(Predicate.not(BirdUtils::isPerched));
     }
 
     public static <E extends BirdEntity> ExtendedBehaviour<E> idleIfInWater() {
         return new Idle<E>()
             .noTimeout()
             .startCondition(Entity::isInWaterOrBubble)
-            .stopIf(Predicate.not(Entity::isInWaterOrBubble));
+            .stopCondition(Predicate.not(Entity::isInWaterOrBubble));
     }
 
     public static <E extends BirdEntity> ExtendedBehaviour<E> forgetUnderwaterAttackTarget() {

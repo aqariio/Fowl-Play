@@ -601,12 +601,12 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    public ActivityGroup<? extends PenguinEntity> getCoreTasks() {
+    public ActivityGroup<? extends PenguinEntity> coreActivity() {
         return BirdBrain.coreActivity(
             new SetBreatheTarget<>(),
             new SetAttackTarget<>(),
             new LookAtTarget<>()
-                .runForBetween(45, 90),
+                .runtime(45, 90),
             new MoveToWalkTarget<>()
         );
     }
@@ -619,7 +619,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    public ActivityGroup<? extends PenguinEntity> getFightTasks() {
+    public ActivityGroup<? extends PenguinEntity> fightActivity() {
         return BirdBrain.fightActivity(
             new InvalidateAttackTarget<>(),
             SlideBehaviours.startSliding(),
@@ -632,7 +632,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    public ActivityGroup<? extends PenguinEntity> getIdleTasks() {
+    public ActivityGroup<? extends PenguinEntity> idleActivity() {
         return BirdBrain.idleActivity(
             new BreedWithPartner<>(),
             new FollowParent<>(),
@@ -664,7 +664,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
                 ),
                 Pair.of(
                     new Idle<>()
-                        .runFor(entity -> entity.getRandom().nextIntBetweenInclusive(400, 800)),
+                        .runtime(entity -> entity.getRandom().nextIntBetweenInclusive(400, 800)),
                     5
                 ),
                 Pair.of(

@@ -8,22 +8,22 @@ import aqario.fowlplay.common.entity.bird.penguin.PenguinEntity;
  * A collection of behaviours that control the sliding behaviour of penguins.
  */
 public class SlideBehaviours {
-    public static ExtendedBehaviour<PenguinEntity> startSliding() {
-        return new AnonymousBehaviour<>(
+    public static <E extends PenguinEntity> ExtendedBehaviour<E> startSliding() {
+        return new AnonymousBehaviour<E>(
             PenguinEntity::startSliding
         )
             .startCondition(bird -> !bird.isSliding() && bird.canStartSliding());
     }
 
-    public static ExtendedBehaviour<PenguinEntity> stopSliding() {
-        return new AnonymousBehaviour<>(
+    public static <E extends PenguinEntity> ExtendedBehaviour<E> stopSliding() {
+        return new AnonymousBehaviour<E>(
             PenguinEntity::stopSliding
         )
             .startCondition(PenguinEntity::isSliding);
     }
 
-    public static ExtendedBehaviour<PenguinEntity> toggleSliding(int seconds) {
-        return new AnonymousBehaviour<PenguinEntity>(
+    public static <E extends PenguinEntity> ExtendedBehaviour<E> toggleSliding(int seconds) {
+        return new AnonymousBehaviour<E>(
             bird -> {
                 if(bird.isSliding()) {
                     bird.stopSliding();

@@ -114,7 +114,7 @@ public class CompositeBehaviours {
         return new OneRandomBehaviour<>(
             Pair.of(
                 CompositeBehaviours.<E>idleAndLookAround()
-                    .runForBetween(30, 100)
+                    .runtime(30, 100)
                     .startCondition(BirdUtils::isPerched)
                     .stopCondition(Predicate.not(BirdUtils::isPerched)),
                 8
@@ -130,7 +130,7 @@ public class CompositeBehaviours {
         return new OneRandomBehaviour<>(
             Pair.of(
                 CompositeBehaviours.<E>idleAndLookAround()
-                    .runForBetween(30, 100)
+                    .runtime(30, 100)
                     .startCondition(Entity::onGround)
                     .stopCondition(Predicate.not(Entity::onGround)),
                 2

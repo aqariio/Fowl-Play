@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
-import aqario.archaeopteryx.common.ai.BrainHolder;
 import aqario.archaeopteryx.common.ai.behaviour.ExtendedBehaviour;
 import aqario.archaeopteryx.core.util.BrainUtils;
 import aqario.archaeopteryx.core.util.FixedPositionTracker;
@@ -16,7 +15,7 @@ import net.minecraft.world.entity.ai.memory.MemoryStatus;
 
 import java.util.List;
 
-public class SetRandomLookTarget<E extends Mob & BrainHolder<E>> extends ExtendedBehaviour<E> {
+public class SetRandomLookTarget<E extends Mob> extends ExtendedBehaviour<E> {
     private static final MemoryList MEMORIES = MemoryList.create(1)
         .absent(
             MemoryModuleType.LOOK_TARGET,
@@ -27,7 +26,7 @@ public class SetRandomLookTarget<E extends Mob & BrainHolder<E>> extends Extende
     private long timeUntilNextLook = 0L;
 
     public SetRandomLookTarget() {
-        this.runForBetween(20, 60);
+        this.runtime(20, 60);
     }
 
     public SetRandomLookTarget<E> lookChance(float chance) {
@@ -46,13 +45,13 @@ public class SetRandomLookTarget<E extends Mob & BrainHolder<E>> extends Extende
     }
 
     @Override
-    protected boolean checkExtraStartConditions(ServerLevel level, E entity) {
+    protected boolean canStart(ServerLevel level, E entity) {
         return entity.getRandom().nextFloat() < this.runChance.sample(entity.getRandom());
     }
 
     @Override
-    protected boolean shouldKeepRunning(E entity) {
-        return !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET);
+    protected boolean canContinue(E entity) {
+        return !entity.isMemoryPresent(MemoryModuleType.WALK_TARGET);
     }
 
     @Override

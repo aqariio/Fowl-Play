@@ -2,7 +2,7 @@ package aqario.fowlplay.common.entity.ai.brain;
 
 import aqario.archaeopteryx.common.ai.ActivityGroup;
 import aqario.archaeopteryx.common.ai.BrainHolder;
-import aqario.archaeopteryx.core.util.TaskListBuilder;
+import aqario.archaeopteryx.core.util.ActivityListBuilder;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.core.FowlPlayActivities;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
@@ -45,62 +45,66 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends BrainHol
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> coreActivity(Behavior<? super T>... behaviours) {
-        return new ActivityGroup<T>(Activity.CORE).priority(0).behaviours(behaviours);
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> coreActivity(Behavior<? super T>... behaviors) {
+        return new ActivityGroup<T>(Activity.CORE).priority(0).behaviors(behaviors);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> avoidActivity(Behavior<? super T>... behaviours) {
-        return new ActivityGroup<T>(Activity.AVOID).priority(10).behaviours(behaviours)
-            .requireAndWipeMemoriesOnUse(FowlPlayMemoryTypes.IS_AVOIDING.get());
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> avoidActivity(Behavior<? super T>... behaviors) {
+        return new ActivityGroup<T>(Activity.AVOID).priority(10).behaviors(behaviors)
+            .presentMemories(FowlPlayMemoryTypes.IS_AVOIDING.get())
+            .clearMemories(FowlPlayMemoryTypes.IS_AVOIDING.get());
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> deliverActivity(Behavior<? super T>... behaviours) {
-        return new ActivityGroup<T>(FowlPlayActivities.DELIVER.get()).priority(10).behaviours(behaviours)
-            .requireAndWipeMemoriesOnUse(FowlPlayMemoryTypes.RECIPIENT.get());
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> deliverActivity(Behavior<? super T>... behaviors) {
+        return new ActivityGroup<T>(FowlPlayActivities.DELIVER.get()).priority(10).behaviors(behaviors)
+            .presentMemories(FowlPlayMemoryTypes.RECIPIENT.get())
+            .clearMemories(FowlPlayMemoryTypes.RECIPIENT.get());
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> fightActivity(Behavior<? super T>... behaviours) {
-        return new ActivityGroup<T>(Activity.FIGHT).priority(10).behaviours(behaviours)
-            .requireAndWipeMemoriesOnUse(MemoryModuleType.ATTACK_TARGET);
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> fightActivity(Behavior<? super T>... behaviors) {
+        return new ActivityGroup<T>(Activity.FIGHT).priority(10).behaviors(behaviors)
+            .presentMemories(MemoryModuleType.ATTACK_TARGET)
+            .clearMemories(MemoryModuleType.ATTACK_TARGET);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> forageActivity(Behavior<? super T>... behaviours) {
-        return new ActivityGroup<T>(FowlPlayActivities.FORAGE.get()).priority(10).behaviours(behaviours);
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> forageActivity(Behavior<? super T>... behaviors) {
+        return new ActivityGroup<T>(FowlPlayActivities.FORAGE.get()).priority(10).behaviors(behaviors);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> idleActivity(Behavior<? super T>... behaviours) {
-        return new ActivityGroup<T>(Activity.IDLE).priority(10).behaviours(behaviours);
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> idleActivity(Behavior<? super T>... behaviors) {
+        return new ActivityGroup<T>(Activity.IDLE).priority(10).behaviors(behaviors);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> perchActivity(Behavior<? super T>... behaviours) {
-        return new ActivityGroup<T>(FowlPlayActivities.PERCH.get()).priority(10).behaviours(behaviours);
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> perchActivity(Behavior<? super T>... behaviors) {
+        return new ActivityGroup<T>(FowlPlayActivities.PERCH.get()).priority(10).behaviors(behaviors);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> pickupFoodActivity(Behavior<? super T>... behaviours) {
-        return new ActivityGroup<T>(FowlPlayActivities.PICK_UP.get()).priority(10).behaviours(behaviours)
-            .requireAndWipeMemoriesOnUse(FowlPlayMemoryTypes.SEES_FOOD.get());
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> pickupFoodActivity(Behavior<? super T>... behaviors) {
+        return new ActivityGroup<T>(FowlPlayActivities.PICK_UP.get()).priority(10).behaviors(behaviors)
+            .presentMemories(FowlPlayMemoryTypes.SEES_FOOD.get())
+            .clearMemories(FowlPlayMemoryTypes.SEES_FOOD.get());
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> restActivity(Behavior<? super T>... behaviours) {
-        return new ActivityGroup<T>(Activity.REST).priority(10).behaviours(behaviours);
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> restActivity(Behavior<? super T>... behaviors) {
+        return new ActivityGroup<T>(Activity.REST).priority(10).behaviors(behaviors);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> soarActivity(Behavior<? super T>... behaviours) {
-        return new ActivityGroup<T>(FowlPlayActivities.SOAR.get()).priority(10).behaviours(behaviours);
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> soarActivity(Behavior<? super T>... behaviors) {
+        return new ActivityGroup<T>(FowlPlayActivities.SOAR.get()).priority(10).behaviors(behaviors);
     }
 
     @Override
-    default void addTasks(final TaskListBuilder<E> builder) {
-        BrainHolder.super.addTasks(builder);
+    default void addActivities(final ActivityListBuilder<E> builder) {
+        BrainHolder.super.addActivities(builder);
 
         builder.add(this.getDeliverTasks());
         builder.add(this.getAvoidTasks());

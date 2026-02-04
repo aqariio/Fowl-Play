@@ -2,7 +2,6 @@ package aqario.fowlplay.common.entity.ai.brain.sensor;
 
 import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
 import aqario.archaeopteryx.common.ai.sensing.PredicateSensor;
-import aqario.archaeopteryx.core.util.BrainUtils;
 import aqario.fowlplay.common.entity.bird.pigeon.PigeonEntity;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.FowlPlaySensorTypes;
@@ -39,11 +38,11 @@ public class PigeonSpecificSensor extends PredicateSensor<UUID, PigeonEntity> {
 
     @Override
     protected void doTick(ServerLevel world, PigeonEntity pigeon) {
-        if (this.predicate().test(null, pigeon)) {
-            BrainUtils.setMemory(pigeon, FowlPlayMemoryTypes.RECIPIENT.get(), pigeon.getRecipientUuid());
+        if(this.predicate().test(null, pigeon)) {
+            pigeon.setMemory(FowlPlayMemoryTypes.RECIPIENT.get(), pigeon.getRecipientUuid());
         }
         else {
-            BrainUtils.clearMemory(pigeon, FowlPlayMemoryTypes.RECIPIENT.get());
+            pigeon.clearMemory(FowlPlayMemoryTypes.RECIPIENT.get());
         }
     }
 }

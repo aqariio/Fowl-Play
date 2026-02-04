@@ -1,5 +1,6 @@
 package aqario.fowlplay.common.entity.ai.navigation;
 
+import aqario.archaeopteryx.common.ai.navigation.ExtendedNavigator;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.util.BirdUtils;
 import com.google.common.collect.ImmutableSet;
@@ -14,7 +15,6 @@ import net.minecraft.world.level.pathfinder.FlyNodeEvaluator;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.pathfinder.PathFinder;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.api.core.navigation.ExtendedNavigator;
 import org.jetbrains.annotations.Nullable;
 
 public class FlightNavigation extends GroundPathNavigation implements ExtendedNavigator {

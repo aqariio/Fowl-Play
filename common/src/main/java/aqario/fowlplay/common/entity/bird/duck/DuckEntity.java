@@ -1,6 +1,7 @@
 package aqario.fowlplay.common.entity.bird.duck;
 
 import aqario.archaeopteryx.common.ai.ActivityGroup;
+import aqario.archaeopteryx.common.ai.ExtendedBrainProvider;
 import aqario.archaeopteryx.common.ai.behaviour.OneRandomBehaviour;
 import aqario.archaeopteryx.common.ai.behaviour.attack.AnimatableMeleeAttack;
 import aqario.archaeopteryx.common.ai.behaviour.look.LookAtTarget;
@@ -10,6 +11,7 @@ import aqario.archaeopteryx.common.ai.behaviour.move.MoveToWalkTarget;
 import aqario.archaeopteryx.common.ai.behaviour.path.SetWalkTargetToAttackTarget;
 import aqario.archaeopteryx.common.ai.behaviour.target.InvalidateAttackTarget;
 import aqario.archaeopteryx.common.ai.behaviour.target.SetAttackTarget;
+import aqario.archaeopteryx.common.ai.schedule.ExtendedSchedule;
 import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
 import aqario.archaeopteryx.common.ai.sensing.vanilla.InWaterSensor;
 import aqario.archaeopteryx.common.ai.sensing.vanilla.NearbyLivingEntitySensor;
@@ -56,8 +58,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
-import net.tslat.smartbrainlib.api.core.schedule.SmartBrainSchedule;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -258,7 +258,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
 
     @Override
     protected Brain.Provider<DuckEntity> brainProvider() {
-        return new SmartBrainProvider<>(this);
+        return new ExtendedBrainProvider<>(this);
     }
 
     @Override
@@ -276,26 +276,26 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     }
 
     @Override
-    public ActivityGroup<? extends DuckEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public ActivityGroup<? extends DuckEntity> coreActivity() {
+        return BirdBrain.core(
             FlightBehaviours.stopFalling(),
             new SetAttackTarget<>(),
             new LookAtTarget<>()
-                .runForBetween(45, 90),
+                .runtime(45, 90),
             new MoveToWalkTarget<>()
         );
     }
 
     @Override
-    public ActivityGroup<? extends DuckEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public ActivityGroup<? extends DuckEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public ActivityGroup<? extends DuckEntity> getFightTasks() {
-        return BirdBrain.fightActivity(
+    public ActivityGroup<? extends DuckEntity> fightActivity() {
+        return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
             FlightBehaviours.startFlying(),
             new SetWalkTargetToAttackTarget<>(),
@@ -304,8 +304,8 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     }
 
     @Override
-    public ActivityGroup<? extends DuckEntity> getForageTasks() {
-        return BirdBrain.forageActivity(
+    public ActivityGroup<? extends DuckEntity> forageActivity() {
+        return BirdBrain.forage(
             new OneRandomBehaviour<>(
                 Pair.of(
                     CompositeBehaviours.trySetWaterWalkTarget(),
@@ -313,7 +313,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
                 ),
                 Pair.of(
                     CustomBehaviours.idleIfNotFlying()
-                        .runForBetween(100, 300),
+                        .runtime(100, 300),
                     2
                 )
             )
@@ -321,8 +321,8 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     }
 
     @Override
-    public ActivityGroup<? extends DuckEntity> getIdleTasks() {
-        return BirdBrain.idleActivity(
+    public ActivityGroup<? extends DuckEntity> idleActivity() {
+        return BirdBrain.idle(
             new BreedWithPartner<>(),
             new FollowParent<>(),
             SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
@@ -331,21 +331,21 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
             new OneRandomBehaviour<>(
                 CompositeBehaviours.trySetWaterWalkTarget(),
                 CustomBehaviours.idleIfNotFlying()
-                    .runForBetween(100, 300)
+                    .runtime(100, 300)
             )
         );
     }
 
     @Override
-    public ActivityGroup<? extends DuckEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public ActivityGroup<? extends DuckEntity> pickupFoodActivity() {
+        return BirdBrain.pickupFood(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public ActivityGroup<? extends DuckEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public ActivityGroup<? extends DuckEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetWaterRestTarget(),
             CustomBehaviours.idleIfInWater()
         );
@@ -353,7 +353,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
 
     @Nullable
     @Override
-    public SmartBrainSchedule getSchedule() {
+    public ExtendedSchedule getSchedule() {
         return FowlPlaySchedules.WATERFOWL.get();
     }
 

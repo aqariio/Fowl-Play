@@ -1,6 +1,7 @@
 package aqario.fowlplay.common.entity.bird.hawk;
 
 import aqario.archaeopteryx.common.ai.ActivityGroup;
+import aqario.archaeopteryx.common.ai.ExtendedBrainProvider;
 import aqario.archaeopteryx.common.ai.behaviour.attack.AnimatableMeleeAttack;
 import aqario.archaeopteryx.common.ai.behaviour.look.LookAtTarget;
 import aqario.archaeopteryx.common.ai.behaviour.move.FloatToSurfaceOfFluid;
@@ -8,6 +9,7 @@ import aqario.archaeopteryx.common.ai.behaviour.move.MoveToWalkTarget;
 import aqario.archaeopteryx.common.ai.behaviour.path.SetWalkTargetToAttackTarget;
 import aqario.archaeopteryx.common.ai.behaviour.target.InvalidateAttackTarget;
 import aqario.archaeopteryx.common.ai.behaviour.target.SetAttackTarget;
+import aqario.archaeopteryx.common.ai.schedule.ExtendedSchedule;
 import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
 import aqario.archaeopteryx.common.ai.sensing.vanilla.InWaterSensor;
 import aqario.archaeopteryx.common.ai.sensing.vanilla.NearbyLivingEntitySensor;
@@ -42,8 +44,6 @@ import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
-import net.tslat.smartbrainlib.api.core.schedule.SmartBrainSchedule;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -165,7 +165,7 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
 
     @Override
     protected Brain.Provider<HawkEntity> brainProvider() {
-        return new SmartBrainProvider<>(this);
+        return new ExtendedBrainProvider<>(this);
     }
 
     @Override
@@ -183,29 +183,29 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     }
 
     @Override
-    public ActivityGroup<? extends HawkEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public ActivityGroup<? extends HawkEntity> coreActivity() {
+        return BirdBrain.core(
             new FloatToSurfaceOfFluid<>()
                 .riseChance(0.5F),
             FlightBehaviours.stopFalling(),
             new SetAttackTarget<>(),
             SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
             new LookAtTarget<>()
-                .runForBetween(45, 90),
+                .runtime(45, 90),
             new MoveToWalkTarget<>()
         );
     }
 
     @Override
-    public ActivityGroup<? extends HawkEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public ActivityGroup<? extends HawkEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public ActivityGroup<? extends HawkEntity> getFightTasks() {
-        return BirdBrain.fightActivity(
+    public ActivityGroup<? extends HawkEntity> fightActivity() {
+        return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
             FlightBehaviours.startFlying(),
             new SetWalkTargetToAttackTarget<>(),
@@ -214,37 +214,37 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     }
 
     @Override
-    public ActivityGroup<? extends HawkEntity> getPerchTasks() {
-        return BirdBrain.perchActivity(
+    public ActivityGroup<? extends HawkEntity> perchActivity() {
+        return BirdBrain.perch(
             CompositeBehaviours.tryPerch()
         );
     }
 
     @Override
-    public ActivityGroup<? extends HawkEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public ActivityGroup<? extends HawkEntity> pickupFoodActivity() {
+        return BirdBrain.pickupFood(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public ActivityGroup<? extends HawkEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public ActivityGroup<? extends HawkEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );
     }
 
     @Override
-    public ActivityGroup<? extends HawkEntity> getSoarTasks() {
-        return BirdBrain.soarActivity(
+    public ActivityGroup<? extends HawkEntity> soarActivity() {
+        return BirdBrain.soar(
             new SetRandomFlightTarget<>()
         );
     }
 
     @Nullable
     @Override
-    public SmartBrainSchedule getSchedule() {
+    public ExtendedSchedule getSchedule() {
         return FowlPlaySchedules.RAPTOR.get();
     }
 

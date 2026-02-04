@@ -1,10 +1,12 @@
 package aqario.fowlplay.common.entity.bird.cardinal;
 
 import aqario.archaeopteryx.common.ai.ActivityGroup;
+import aqario.archaeopteryx.common.ai.ExtendedBrainProvider;
 import aqario.archaeopteryx.common.ai.behaviour.OneRandomBehaviour;
 import aqario.archaeopteryx.common.ai.behaviour.look.LookAtTarget;
 import aqario.archaeopteryx.common.ai.behaviour.move.FloatToSurfaceOfFluid;
 import aqario.archaeopteryx.common.ai.behaviour.move.MoveToWalkTarget;
+import aqario.archaeopteryx.common.ai.schedule.ExtendedSchedule;
 import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
 import aqario.archaeopteryx.common.ai.sensing.vanilla.InWaterSensor;
 import aqario.archaeopteryx.common.ai.sensing.vanilla.NearbyLivingEntitySensor;
@@ -34,8 +36,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
-import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
-import net.tslat.smartbrainlib.api.core.schedule.SmartBrainSchedule;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -107,7 +107,7 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
 
     @Override
     protected Brain.Provider<CardinalEntity> brainProvider() {
-        return new SmartBrainProvider<>(this);
+        return new ExtendedBrainProvider<>(this);
     }
 
     @Override
@@ -124,27 +124,27 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
     }
 
     @Override
-    public ActivityGroup<? extends CardinalEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public ActivityGroup<? extends CardinalEntity> coreActivity() {
+        return BirdBrain.core(
             new FloatToSurfaceOfFluid<>(),
             FlightBehaviours.stopFalling(),
             SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
             new LookAtTarget<>()
-                .runForBetween(45, 90),
+                .runtime(45, 90),
             new MoveToWalkTarget<>()
         );
     }
 
     @Override
-    public ActivityGroup<? extends CardinalEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public ActivityGroup<? extends CardinalEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public ActivityGroup<? extends CardinalEntity> getForageTasks() {
-        return BirdBrain.forageActivity(
+    public ActivityGroup<? extends CardinalEntity> forageActivity() {
+        return BirdBrain.forage(
             new OneRandomBehaviour<>(
                 CompositeBehaviours.tryForage(),
                 CompositeBehaviours.tryPerch()
@@ -153,22 +153,22 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
     }
 
     @Override
-    public ActivityGroup<? extends CardinalEntity> getPerchTasks() {
-        return BirdBrain.perchActivity(
+    public ActivityGroup<? extends CardinalEntity> perchActivity() {
+        return BirdBrain.perch(
             CompositeBehaviours.tryPerch()
         );
     }
 
     @Override
-    public ActivityGroup<? extends CardinalEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public ActivityGroup<? extends CardinalEntity> pickupFoodActivity() {
+        return BirdBrain.pickupFood(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public ActivityGroup<? extends CardinalEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public ActivityGroup<? extends CardinalEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );
@@ -176,7 +176,7 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
 
     @Nullable
     @Override
-    public SmartBrainSchedule getSchedule() {
+    public ExtendedSchedule getSchedule() {
         return FowlPlaySchedules.FORAGER.get();
     }
 

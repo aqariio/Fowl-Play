@@ -1,10 +1,12 @@
 package aqario.fowlplay.common.entity.bird.pigeon;
 
 import aqario.archaeopteryx.common.ai.ActivityGroup;
+import aqario.archaeopteryx.common.ai.ExtendedBrainProvider;
 import aqario.archaeopteryx.common.ai.behaviour.OneRandomBehaviour;
 import aqario.archaeopteryx.common.ai.behaviour.look.LookAtTarget;
 import aqario.archaeopteryx.common.ai.behaviour.move.FloatToSurfaceOfFluid;
 import aqario.archaeopteryx.common.ai.behaviour.move.MoveToWalkTarget;
+import aqario.archaeopteryx.common.ai.schedule.ExtendedSchedule;
 import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
 import aqario.archaeopteryx.common.ai.sensing.vanilla.InWaterSensor;
 import aqario.archaeopteryx.common.ai.sensing.vanilla.NearbyLivingEntitySensor;
@@ -51,8 +53,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
-import net.tslat.smartbrainlib.api.core.schedule.SmartBrainSchedule;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -346,7 +346,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
 
     @Override
     protected Brain.Provider<PigeonEntity> brainProvider() {
-        return new SmartBrainProvider<>(this);
+        return new ExtendedBrainProvider<>(this);
     }
 
     @Override
@@ -364,8 +364,8 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     @Override
-    public ActivityGroup<? extends PigeonEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public ActivityGroup<? extends PigeonEntity> coreActivity() {
+        return BirdBrain.core(
             new FloatToSurfaceOfFluid<>()
                 .riseChance(0.5F),
             FlightBehaviours.stopFalling(),
@@ -373,23 +373,23 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
             new SetOwnerTarget(),
             SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
             new LookAtTarget<>()
-                .runForBetween(45, 90),
+                .runtime(45, 90),
             new MoveToWalkTarget<>()
                 .startCondition(entity -> !BrainUtils.hasMemory(entity, FowlPlayMemoryTypes.TELEPORT_TARGET.get()))
-                .stopIf(entity -> BrainUtils.hasMemory(entity, FowlPlayMemoryTypes.TELEPORT_TARGET.get()))
+                .stopCondition(entity -> BrainUtils.hasMemory(entity, FowlPlayMemoryTypes.TELEPORT_TARGET.get()))
         );
     }
 
     @Override
-    public ActivityGroup<? extends PigeonEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public ActivityGroup<? extends PigeonEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public ActivityGroup<? extends PigeonEntity> getDeliverTasks() {
-        return BirdBrain.deliverActivity(
+    public ActivityGroup<? extends PigeonEntity> deliverActivity() {
+        return BirdBrain.deliver(
             FlightBehaviours.<PigeonEntity>stopFlying()
                 .startCondition(PigeonEntity::shouldStopFlyingToRecipient),
             FlightBehaviours.<PigeonEntity>startFlying()
@@ -399,8 +399,8 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     @Override
-    public ActivityGroup<? extends PigeonEntity> getForageTasks() {
-        return BirdBrain.forageActivity(
+    public ActivityGroup<? extends PigeonEntity> forageActivity() {
+        return BirdBrain.forage(
             new OneRandomBehaviour<>(
                 CompositeBehaviours.tryForage(),
                 CompositeBehaviours.tryPerch()
@@ -409,8 +409,8 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     @Override
-    public ActivityGroup<? extends PigeonEntity> getPerchTasks() {
-        return BirdBrain.perchActivity(
+    public ActivityGroup<? extends PigeonEntity> perchActivity() {
+        return BirdBrain.perch(
             new LeaderlessFlocking(
                 5,
                 0.03f,
@@ -423,16 +423,16 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     @Override
-    public ActivityGroup<? extends PigeonEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public ActivityGroup<? extends PigeonEntity> pickupFoodActivity() {
+        return BirdBrain.pickupFood(
             CompositeBehaviours.<PigeonEntity>tryPickUpFood()
                 .startCondition(pigeon -> !pigeon.isSitting())
         );
     }
 
     @Override
-    public ActivityGroup<? extends PigeonEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public ActivityGroup<? extends PigeonEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );
@@ -440,7 +440,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
 
     @Nullable
     @Override
-    public SmartBrainSchedule getSchedule() {
+    public ExtendedSchedule getSchedule() {
         return FowlPlaySchedules.FORAGER.get();
     }
 

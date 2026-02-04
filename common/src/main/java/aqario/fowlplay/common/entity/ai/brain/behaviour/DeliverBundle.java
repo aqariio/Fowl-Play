@@ -1,5 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
+import aqario.archaeopteryx.common.ai.behaviour.AnonymousBehaviour;
+import aqario.archaeopteryx.core.util.MemoryList;
 import aqario.fowlplay.common.entity.ai.brain.TeleportTarget;
 import aqario.fowlplay.common.entity.bird.pigeon.PigeonEntity;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
@@ -27,9 +29,7 @@ public class DeliverBundle {
                     if(bird.getOwner() != null && bird.distanceToSqr(recipient) > 100 * 100 && bird.distanceToSqr(bird.getOwner()) > 16 * 16) {
                         bird.setMemory(FowlPlayMemoryTypes.TELEPORT_TARGET.get(), new TeleportTarget(recipient));
                     }
-                    return true;
                 }
-                return false;
             }
         );
     }

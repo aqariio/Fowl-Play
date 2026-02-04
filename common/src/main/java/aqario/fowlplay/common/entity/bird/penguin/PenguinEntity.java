@@ -602,7 +602,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @Override
     public ActivityGroup<? extends PenguinEntity> coreActivity() {
-        return BirdBrain.coreActivity(
+        return BirdBrain.core(
             new SetBreatheTarget<>(),
             new SetAttackTarget<>(),
             new LookAtTarget<>()
@@ -612,15 +612,15 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    public ActivityGroup<? extends PenguinEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public ActivityGroup<? extends PenguinEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
     public ActivityGroup<? extends PenguinEntity> fightActivity() {
-        return BirdBrain.fightActivity(
+        return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
             SlideBehaviours.startSliding(),
             new SetWalkTargetToAttackTarget<>()
@@ -633,7 +633,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @Override
     public ActivityGroup<? extends PenguinEntity> idleActivity() {
-        return BirdBrain.idleActivity(
+        return BirdBrain.idle(
             new BreedWithPartner<>(),
             new FollowParent<>(),
             SetEntityLookTarget.create(EntityType.PLAYER),
@@ -680,16 +680,16 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    public ActivityGroup<? extends PenguinEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public ActivityGroup<? extends PenguinEntity> pickupFoodActivity() {
+        return BirdBrain.pickupFood(
             SlideBehaviours.startSliding(),
             CustomBehaviours.setNearestFoodWalkTarget()
         );
     }
 
     @Override
-    public ActivityGroup<? extends PenguinEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public ActivityGroup<? extends PenguinEntity> restActivity() {
+        return BirdBrain.rest(
             new Idle<>()
         );
     }

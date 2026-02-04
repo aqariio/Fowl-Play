@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
-import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
+import aqario.archaeopteryx.core.util.MemoryList;
 import aqario.fowlplay.common.entity.ai.navigation.BirdRandomPos;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.util.CylindricalRadius;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.BiPredicate;
 
-public class SetWaterWalkTarget<E extends BirdEntity & BirdBrain<E>> extends SpeedModifiableBehaviour<E> {
+public class SetWaterWalkTarget<E extends BirdEntity> extends SpeedModifiableBehaviour<E> {
     private static final MemoryList MEMORIES = MemoryList.create(1)
         .absent(MemoryModuleType.WALK_TARGET);
     protected CylindricalRadius radius = new CylindricalRadius(32, 16);

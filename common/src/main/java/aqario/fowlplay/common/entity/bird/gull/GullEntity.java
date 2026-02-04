@@ -242,26 +242,26 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     }
 
     @Override
-    public ActivityGroup<? extends GullEntity> getCoreTasks() {
-        return BirdBrain.<GullEntity>coreActivity(
+    public ActivityGroup<? extends GullEntity> coreActivity() {
+        return BirdBrain.core(
             FlightBehaviours.stopFalling(),
             new SetAttackTarget<>(),
             new LookAtTarget<GullEntity>()
-                .runForBetween(45, 90),
+                .runtime(45, 90),
             new MoveToWalkTarget<>()
         );
     }
 
     @Override
-    public ActivityGroup<? extends GullEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public ActivityGroup<? extends GullEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public ActivityGroup<? extends GullEntity> getFightTasks() {
-        return BirdBrain.<GullEntity>fightActivity(
+    public ActivityGroup<? extends GullEntity> fightActivity() {
+        return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
             FlightBehaviours.startFlying(),
             new SetWalkTargetToAttackTarget<>(),
@@ -271,16 +271,16 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     }
 
     @Override
-    public ActivityGroup<? extends GullEntity> getForageTasks() {
-        return BirdBrain.<GullEntity>forageActivity(
-            new OneRandomBehaviour<GullEntity>(
+    public ActivityGroup<? extends GullEntity> forageActivity() {
+        return BirdBrain.forage(
+            new OneRandomBehaviour<>(
                 Pair.of(
                     CompositeBehaviours.trySetNonAirWalkTarget(),
                     1
                 ),
                 Pair.of(
                     CustomBehaviours.idleIfNotFlying()
-                        .runForBetween(100, 300),
+                        .runtime(100, 300),
                     2
                 )
             ),
@@ -289,39 +289,39 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     }
 
     @Override
-    public ActivityGroup<? extends GullEntity> getIdleTasks() {
-        return BirdBrain.<GullEntity>idleActivity(
+    public ActivityGroup<? extends GullEntity> idleActivity() {
+        return BirdBrain.idle(
             new BreedWithPartner<>(),
             new FollowParent<>(),
             SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
             new SetRandomLookTarget<GullEntity>()
                 .lookChance(0.02f),
-            new OneRandomBehaviour<GullEntity>(
+            new OneRandomBehaviour<>(
                 CompositeBehaviours.trySetNonAirWalkTarget(),
                 CustomBehaviours.idleIfNotFlying()
-                    .runForBetween(100, 300)
+                    .runtime(100, 300)
             )
         );
     }
 
     @Override
-    public ActivityGroup<? extends GullEntity> getPickupFoodTasks() {
-        return BirdBrain.<GullEntity>pickupFoodActivity(
+    public ActivityGroup<? extends GullEntity> pickupFoodActivity() {
+        return BirdBrain.pickupFood(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public ActivityGroup<? extends GullEntity> getRestTasks() {
-        return BirdBrain.<GullEntity>restActivity(
+    public ActivityGroup<? extends GullEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetWaterRestTarget(),
             CustomBehaviours.idleIfInWater()
         );
     }
 
     @Override
-    public ActivityGroup<? extends GullEntity> getSoarTasks() {
-        return BirdBrain.<GullEntity>soarActivity(
+    public ActivityGroup<? extends GullEntity> soarActivity() {
+        return BirdBrain.soar(
             new SetRandomFlightTarget<>()
         );
     }

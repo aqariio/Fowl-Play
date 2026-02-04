@@ -2,7 +2,6 @@ package aqario.fowlplay.common.entity.ai.brain.sensor;
 
 import aqario.archaeopteryx.common.ai.sensing.EntityFilteringSensor;
 import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
-import aqario.archaeopteryx.core.util.BrainUtils;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
@@ -52,16 +51,16 @@ public class AvoidTargetSensor<E extends BirdEntity> extends EntityFilteringSens
     protected void doTick(ServerLevel level, E bird) {
         LivingEntity avoidTarget = this.testForEntity(bird);
         if(avoidTarget != null) {
-            BrainUtils.setMemory(bird, this.getMemory(), avoidTarget);
+            bird.setMemory(this.getMemory(), avoidTarget);
         }
         else {
-            BrainUtils.clearMemory(bird, this.getMemory());
+            bird.clearMemory(this.getMemory());
         }
         if(avoidTarget != null && avoidTarget.closerThan(bird, bird.getFleeRange(avoidTarget))) {
-            BrainUtils.setMemory(bird, FowlPlayMemoryTypes.IS_AVOIDING.get(), Unit.INSTANCE);
+            bird.setMemory(FowlPlayMemoryTypes.IS_AVOIDING.get(), Unit.INSTANCE);
         }
         else {
-            BrainUtils.clearMemory(bird, FowlPlayMemoryTypes.IS_AVOIDING.get());
+            bird.clearMemory(FowlPlayMemoryTypes.IS_AVOIDING.get());
         }
     }
 }

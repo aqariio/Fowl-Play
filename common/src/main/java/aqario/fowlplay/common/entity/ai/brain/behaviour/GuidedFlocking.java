@@ -2,6 +2,7 @@ package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.archaeopteryx.common.ai.behaviour.ExtendedBehaviour;
 import aqario.archaeopteryx.core.util.BrainUtils;
+import aqario.archaeopteryx.core.util.MemoryList;
 import aqario.fowlplay.common.entity.bird.Flocking;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
@@ -43,7 +44,7 @@ public class GuidedFlocking extends ExtendedBehaviour<FlyingBirdEntity> {
     }
 
     @Override
-    protected boolean checkExtraStartConditions(ServerLevel world, FlyingBirdEntity bird) {
+    protected boolean canStart(ServerLevel world, FlyingBirdEntity bird) {
         if(!bird.isFlying()) {
             return false;
         }
@@ -74,8 +75,8 @@ public class GuidedFlocking extends ExtendedBehaviour<FlyingBirdEntity> {
     }
 
     @Override
-    protected boolean canStillUse(ServerLevel world, FlyingBirdEntity bird, long time) {
-        return this.checkExtraStartConditions(world, bird);
+    protected boolean canContinue(FlyingBirdEntity bird) {
+        return this.canStart((ServerLevel) bird.level(), bird);
     }
 
     @Override

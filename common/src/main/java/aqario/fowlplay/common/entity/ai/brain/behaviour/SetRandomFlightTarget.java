@@ -2,7 +2,6 @@ package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.archaeopteryx.common.ai.behaviour.ExtendedBehaviour;
 import aqario.archaeopteryx.core.util.MemoryList;
-import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.navigation.BirdRandomPos;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.util.CylindricalRadius;
@@ -14,7 +13,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-public class SetRandomFlightTarget<E extends FlyingBirdEntity & BirdBrain<E>> extends ExtendedBehaviour<E> {
+public class SetRandomFlightTarget<E extends FlyingBirdEntity> extends ExtendedBehaviour<E> {
     private static final MemoryList MEMORIES = MemoryList.create(1)
         .absent(MemoryModuleType.WALK_TARGET);
     private static final CylindricalRadius RANGE = new CylindricalRadius(64, 16);

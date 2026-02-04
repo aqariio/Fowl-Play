@@ -2,7 +2,7 @@ package aqario.fowlplay.common.entity.ai.brain.sensor;
 
 import aqario.archaeopteryx.common.ai.sensing.EntityFilteringSensor;
 import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
-import aqario.archaeopteryx.core.util.BrainUtils;
+import aqario.archaeopteryx.core.util.SensoryUtils;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.core.FowlPlaySensorTypes;
 import net.minecraft.world.entity.EntitySelector;
@@ -10,7 +10,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
 import net.minecraft.world.entity.ai.sensing.SensorType;
-import net.tslat.smartbrainlib.util.SensoryUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -35,7 +34,7 @@ public class AttackTargetSensor<E extends BirdEntity> extends EntityFilteringSen
     @Override
     protected BiPredicate<LivingEntity, E> predicate() {
         return (target, self) -> {
-            if (self.shouldAttack(target) && canAttack(self, target)) {
+            if(self.shouldAttack(target) && canAttack(self, target)) {
                 return true;
             }
             return self.canHunt(target) && canHunt(self, target);
@@ -45,7 +44,7 @@ public class AttackTargetSensor<E extends BirdEntity> extends EntityFilteringSen
     @Nullable
     @Override
     protected LivingEntity findMatches(E entity, NearestVisibleLivingEntities matcher) {
-        return matcher.findClosest(target -> predicate().test(target, entity)).orElse(null);
+        return matcher.findClosest(target -> this.predicate().test(target, entity)).orElse(null);
     }
 
     private static boolean canAttack(BirdEntity bird, LivingEntity target) {
@@ -54,7 +53,7 @@ public class AttackTargetSensor<E extends BirdEntity> extends EntityFilteringSen
     }
 
     private static boolean canHunt(BirdEntity bird, LivingEntity target) {
-        return !BrainUtils.hasMemory(bird, MemoryModuleType.HAS_HUNTING_COOLDOWN)
+        return !bird.isMemoryPresent(MemoryModuleType.HAS_HUNTING_COOLDOWN)
             && canAttack(bird, target);
     }
 }

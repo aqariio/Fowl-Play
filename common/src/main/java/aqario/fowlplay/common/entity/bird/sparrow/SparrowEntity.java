@@ -1,10 +1,12 @@
 package aqario.fowlplay.common.entity.bird.sparrow;
 
 import aqario.archaeopteryx.common.ai.ActivityGroup;
+import aqario.archaeopteryx.common.ai.ExtendedBrainProvider;
 import aqario.archaeopteryx.common.ai.behaviour.OneRandomBehaviour;
 import aqario.archaeopteryx.common.ai.behaviour.look.LookAtTarget;
 import aqario.archaeopteryx.common.ai.behaviour.move.FloatToSurfaceOfFluid;
 import aqario.archaeopteryx.common.ai.behaviour.move.MoveToWalkTarget;
+import aqario.archaeopteryx.common.ai.schedule.ExtendedSchedule;
 import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
 import aqario.archaeopteryx.common.ai.sensing.vanilla.InWaterSensor;
 import aqario.archaeopteryx.common.ai.sensing.vanilla.NearbyLivingEntitySensor;
@@ -34,8 +36,6 @@ import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
-import net.tslat.smartbrainlib.api.core.schedule.SmartBrainSchedule;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -208,7 +208,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
 
     @Override
     protected Brain.Provider<SparrowEntity> brainProvider() {
-        return new SmartBrainProvider<>(this);
+        return new ExtendedBrainProvider<>(this);
     }
 
     @Override
@@ -225,27 +225,27 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    public ActivityGroup<? extends SparrowEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public ActivityGroup<? extends SparrowEntity> coreActivity() {
+        return BirdBrain.core(
             new FloatToSurfaceOfFluid<>(),
             FlightBehaviours.stopFalling(),
             SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
             new LookAtTarget<>()
-                .runForBetween(45, 90),
+                .runtime(45, 90),
             new MoveToWalkTarget<>()
         );
     }
 
     @Override
-    public ActivityGroup<? extends SparrowEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public ActivityGroup<? extends SparrowEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public ActivityGroup<? extends SparrowEntity> getForageTasks() {
-        return BirdBrain.forageActivity(
+    public ActivityGroup<? extends SparrowEntity> forageActivity() {
+        return BirdBrain.forage(
             new OneRandomBehaviour<>(
                 CompositeBehaviours.tryForage(),
                 CompositeBehaviours.tryPerch()
@@ -254,8 +254,8 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    public ActivityGroup<? extends SparrowEntity> getPerchTasks() {
-        return BirdBrain.perchActivity(
+    public ActivityGroup<? extends SparrowEntity> perchActivity() {
+        return BirdBrain.perch(
             new LeaderlessFlocking(
                 3,
                 0.03f,
@@ -268,15 +268,15 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    public ActivityGroup<? extends SparrowEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public ActivityGroup<? extends SparrowEntity> pickupFoodActivity() {
+        return BirdBrain.pickupFood(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public ActivityGroup<? extends SparrowEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public ActivityGroup<? extends SparrowEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );
@@ -284,7 +284,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
 
     @Nullable
     @Override
-    public SmartBrainSchedule getSchedule() {
+    public ExtendedSchedule getSchedule() {
         return FowlPlaySchedules.FORAGER.get();
     }
 

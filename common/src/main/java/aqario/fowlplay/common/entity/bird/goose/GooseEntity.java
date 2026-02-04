@@ -376,26 +376,26 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public ActivityGroup<? extends GooseEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public ActivityGroup<? extends GooseEntity> coreActivity() {
+        return BirdBrain.core(
             FlightBehaviours.stopFalling(),
-            new SetAttackTarget<GooseEntity>(),
+            new SetAttackTarget<>(),
             new LookAtTarget<GooseEntity>()
-                .runForBetween(45, 90),
-            new MoveToWalkTarget<GooseEntity>()
+                .runtime(45, 90),
+            new MoveToWalkTarget<>()
         );
     }
 
     @Override
-    public ActivityGroup<? extends GooseEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public ActivityGroup<? extends GooseEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public ActivityGroup<? extends GooseEntity> getFightTasks() {
-        return BirdBrain.<GooseEntity>fightActivity(
+    public ActivityGroup<? extends GooseEntity> fightActivity() {
+        return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
             new SetWalkTargetToAttackTarget<GooseEntity>()
                 .speedMod((entity, target) -> BirdUtils.FAST_SPEED),
@@ -404,8 +404,8 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public ActivityGroup<? extends GooseEntity> getForageTasks() {
-        return BirdBrain.forageActivity(
+    public ActivityGroup<? extends GooseEntity> forageActivity() {
+        return BirdBrain.forage(
             new LeaderlessFlocking(
                 5,
                 0.04f,
@@ -413,14 +413,14 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
                 0.06f,
                 3f
             ),
-            new OneRandomBehaviour<GooseEntity>(
+            new OneRandomBehaviour<>(
                 Pair.of(
                     CompositeBehaviours.trySetWaterWalkTarget(),
                     1
                 ),
                 Pair.of(
                     CustomBehaviours.idleIfNotFlying()
-                        .runForBetween(100, 300),
+                        .runtime(100, 300),
                     2
                 )
             )
@@ -428,32 +428,32 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public ActivityGroup<? extends GooseEntity> getIdleTasks() {
-        return BirdBrain.idleActivity(
-            new BreedWithPartner<GooseEntity>(),
-            new FollowParent<GooseEntity>(),
-            SetEntityLookTarget.<GooseEntity>create(BirdUtils::isPlayerHoldingFood),
+    public ActivityGroup<? extends GooseEntity> idleActivity() {
+        return BirdBrain.idle(
+            new BreedWithPartner<>(),
+            new FollowParent<>(),
+            SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
             new SetRandomLookTarget<GooseEntity>()
                 .lookChance(0.02f),
             new OneRandomBehaviour<>(
-                CompositeBehaviours.<GooseEntity>trySetWaterWalkTarget(),
+                CompositeBehaviours.trySetWaterWalkTarget(),
                 CustomBehaviours.<GooseEntity>idleIfNotFlying()
-                    .runForBetween(100, 300)
+                    .runtime(100, 300)
             )
         );
     }
 
     @Override
-    public ActivityGroup<? extends GooseEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
-            CompositeBehaviours.<GooseEntity>tryPickUpFood()
+    public ActivityGroup<? extends GooseEntity> pickupFoodActivity() {
+        return BirdBrain.pickupFood(
+            CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public ActivityGroup<? extends GooseEntity> getRestTasks() {
-        return BirdBrain.restActivity(
-            CompositeBehaviours.<GooseEntity>trySetWaterRestTarget(),
+    public ActivityGroup<? extends GooseEntity> restActivity() {
+        return BirdBrain.rest(
+            CompositeBehaviours.trySetWaterRestTarget(),
             CustomBehaviours.idleIfInWater()
         );
     }

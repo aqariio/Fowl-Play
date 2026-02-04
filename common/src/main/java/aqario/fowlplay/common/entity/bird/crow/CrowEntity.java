@@ -1,6 +1,7 @@
 package aqario.fowlplay.common.entity.bird.crow;
 
 import aqario.archaeopteryx.common.ai.ActivityGroup;
+import aqario.archaeopteryx.common.ai.ExtendedBrainProvider;
 import aqario.archaeopteryx.common.ai.behaviour.OneRandomBehaviour;
 import aqario.archaeopteryx.common.ai.behaviour.attack.AnimatableMeleeAttack;
 import aqario.archaeopteryx.common.ai.behaviour.look.LookAtTarget;
@@ -9,6 +10,7 @@ import aqario.archaeopteryx.common.ai.behaviour.move.MoveToWalkTarget;
 import aqario.archaeopteryx.common.ai.behaviour.path.SetWalkTargetToAttackTarget;
 import aqario.archaeopteryx.common.ai.behaviour.target.InvalidateAttackTarget;
 import aqario.archaeopteryx.common.ai.behaviour.target.SetAttackTarget;
+import aqario.archaeopteryx.common.ai.schedule.ExtendedSchedule;
 import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
 import aqario.archaeopteryx.common.ai.sensing.vanilla.InWaterSensor;
 import aqario.archaeopteryx.common.ai.sensing.vanilla.NearbyLivingEntitySensor;
@@ -43,8 +45,6 @@ import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
-import net.tslat.smartbrainlib.api.core.schedule.SmartBrainSchedule;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -161,7 +161,7 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
 
     @Override
     protected Brain.Provider<CrowEntity> brainProvider() {
-        return new SmartBrainProvider<>(this);
+        return new ExtendedBrainProvider<>(this);
     }
 
     @Override
@@ -179,29 +179,29 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     }
 
     @Override
-    public ActivityGroup<? extends CrowEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public ActivityGroup<? extends CrowEntity> coreActivity() {
+        return BirdBrain.core(
             new FloatToSurfaceOfFluid<>()
                 .riseChance(0.5F),
             FlightBehaviours.stopFalling(),
             new SetAttackTarget<>(),
             SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
             new LookAtTarget<>()
-                .runForBetween(45, 90),
+                .runtime(45, 90),
             new MoveToWalkTarget<>()
         );
     }
 
     @Override
-    public ActivityGroup<? extends CrowEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public ActivityGroup<? extends CrowEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public ActivityGroup<? extends CrowEntity> getFightTasks() {
-        return BirdBrain.fightActivity(
+    public ActivityGroup<? extends CrowEntity> fightActivity() {
+        return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
             FlightBehaviours.startFlying(),
             new SetWalkTargetToAttackTarget<>(),
@@ -210,8 +210,8 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     }
 
     @Override
-    public ActivityGroup<? extends CrowEntity> getForageTasks() {
-        return BirdBrain.forageActivity(
+    public ActivityGroup<? extends CrowEntity> forageActivity() {
+        return BirdBrain.forage(
             new OneRandomBehaviour<>(
                 CompositeBehaviours.tryForage(),
                 CompositeBehaviours.tryPerch()
@@ -220,8 +220,8 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     }
 
     @Override
-    public ActivityGroup<? extends CrowEntity> getPerchTasks() {
-        return BirdBrain.perchActivity(
+    public ActivityGroup<? extends CrowEntity> perchActivity() {
+        return BirdBrain.perch(
             new LeaderlessFlocking(
                 3,
                 0.03f,
@@ -234,15 +234,15 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     }
 
     @Override
-    public ActivityGroup<? extends CrowEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public ActivityGroup<? extends CrowEntity> pickupFoodActivity() {
+        return BirdBrain.pickupFood(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public ActivityGroup<? extends CrowEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public ActivityGroup<? extends CrowEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );
@@ -250,7 +250,7 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
 
     @Nullable
     @Override
-    public SmartBrainSchedule getSchedule() {
+    public ExtendedSchedule getSchedule() {
         return FowlPlaySchedules.FORAGER.get();
     }
 

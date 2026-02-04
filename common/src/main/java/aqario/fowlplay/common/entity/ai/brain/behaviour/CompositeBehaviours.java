@@ -5,7 +5,6 @@ import aqario.archaeopteryx.common.ai.behaviour.ExtendedBehaviour;
 import aqario.archaeopteryx.common.ai.behaviour.OneRandomBehaviour;
 import aqario.archaeopteryx.common.ai.behaviour.misc.Idle;
 import aqario.archaeopteryx.common.ai.behaviour.path.SetRandomSwimTarget;
-import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.bird.penguin.PenguinEntity;
@@ -20,7 +19,7 @@ import java.util.function.Predicate;
  * A collection of preconfigured group behaviours for ease of use.
  */
 public class CompositeBehaviours {
-    public static <E extends FlyingBirdEntity & BirdBrain<E>> ExtendedBehaviour<E> trySetPerchWalkTarget() {
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetPerchWalkTarget() {
         return new AllApplicableBehaviours<>(
             new SetPerchWalkTarget<>(),
             new SetRandomFlightTarget<E>()
@@ -29,7 +28,7 @@ public class CompositeBehaviours {
         );
     }
 
-    public static <E extends FlyingBirdEntity & BirdBrain<E>> ExtendedBehaviour<E> trySetWaterWalkTarget() {
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetWaterWalkTarget() {
         return new AllApplicableBehaviours<>(
             new SetWaterWalkTarget<E>()
                 .radius(32, 24),
@@ -39,7 +38,7 @@ public class CompositeBehaviours {
         );
     }
 
-    public static <E extends FlyingBirdEntity & BirdBrain<E>> ExtendedBehaviour<E> trySetNonAirWalkTarget() {
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetNonAirWalkTarget() {
         return new AllApplicableBehaviours<>(
             new SetNonAirWalkTarget<E>()
                 .radius(32)
@@ -50,7 +49,7 @@ public class CompositeBehaviours {
         );
     }
 
-    public static <E extends FlyingBirdEntity & BirdBrain<E>> ExtendedBehaviour<E> trySetGroundWalkTarget() {
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetGroundWalkTarget() {
         return new AllApplicableBehaviours<>(
             new SetNonAirWalkTarget<E>()
                 .radius(32, 16),
@@ -60,13 +59,13 @@ public class CompositeBehaviours {
         );
     }
 
-    public static <E extends FlyingBirdEntity & BirdBrain<E>> ExtendedBehaviour<E> trySetPerchRestTarget() {
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetPerchRestTarget() {
         return CompositeBehaviours.<E>trySetPerchWalkTarget()
             .startCondition(Predicate.not(BirdUtils::isPerched))
             .stopCondition(BirdUtils::isPerched);
     }
 
-    public static <E extends FlyingBirdEntity & BirdBrain<E>> ExtendedBehaviour<E> trySetWaterRestTarget() {
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetWaterRestTarget() {
         return new AllApplicableBehaviours<>(
             new SetWaterWalkTarget<E>()
                 .radius(64, 32),
@@ -80,16 +79,16 @@ public class CompositeBehaviours {
             .stopCondition(Entity::isInWaterOrBubble);
     }
 
-    public static <E extends BirdEntity & BirdBrain<E>> ExtendedBehaviour<E> idleAndLookAround() {
+    public static <E extends BirdEntity> ExtendedBehaviour<E> idleAndLookAround() {
         return new OneRandomBehaviour<>(
-            new SetRandomLookTarget<E>(),
+            new SetRandomLookTarget<>(),
             new Idle<E>()
                 .noTimeout()
         );
     }
 
-    public static <E extends FlyingBirdEntity & BirdBrain<E>> ExtendedBehaviour<E> tryPickUpFood() {
-        return new AllApplicableBehaviours<E>(
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> tryPickUpFood() {
+        return new AllApplicableBehaviours<>(
             CustomBehaviours.setNearestFoodWalkTarget(),
             new SetRandomFlightTarget<E>()
                 .startCondition(FlyingBirdEntity::isFlying)
@@ -110,7 +109,7 @@ public class CompositeBehaviours {
         ).startCondition(entity -> !entity.isMemoryPresent(MemoryModuleType.HAS_HUNTING_COOLDOWN));
     }
 
-    public static <E extends FlyingBirdEntity & BirdBrain<E>> ExtendedBehaviour<E> tryPerch() {
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> tryPerch() {
         return new OneRandomBehaviour<>(
             Pair.of(
                 CompositeBehaviours.<E>idleAndLookAround()
@@ -126,7 +125,7 @@ public class CompositeBehaviours {
         );
     }
 
-    public static <E extends FlyingBirdEntity & BirdBrain<E>> ExtendedBehaviour<E> tryForage() {
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> tryForage() {
         return new OneRandomBehaviour<>(
             Pair.of(
                 CompositeBehaviours.<E>idleAndLookAround()

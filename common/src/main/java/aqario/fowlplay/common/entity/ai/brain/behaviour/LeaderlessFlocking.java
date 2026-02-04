@@ -1,13 +1,12 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.archaeopteryx.common.ai.behaviour.ExtendedBehaviour;
-import aqario.archaeopteryx.core.util.BrainUtils;
+import aqario.archaeopteryx.core.util.MemoryList;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.phys.Vec3;
@@ -45,15 +44,14 @@ public class LeaderlessFlocking extends ExtendedBehaviour<FlyingBirdEntity> {
     }
 
     @Override
-    protected boolean checkExtraStartConditions(ServerLevel world, FlyingBirdEntity bird) {
+    protected boolean canStart(ServerLevel world, FlyingBirdEntity bird) {
         if(!bird.isFlying()) {
             return false;
         }
-        Brain<?> brain = bird.getBrain();
-        if(!BrainUtils.hasMemory(brain, FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get())) {
+        if(!bird.isMemoryPresent(FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get())) {
             return false;
         }
-        this.nearbyBirds = BrainUtils.getMemory(brain, FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
+        this.nearbyBirds = bird.getPresentMemory(FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
         // noinspection ConstantConditions
         this.nearbyBirds.removeIf(entity -> !entity.closerThan(bird, VIEW_RADIUS));
 
@@ -61,8 +59,8 @@ public class LeaderlessFlocking extends ExtendedBehaviour<FlyingBirdEntity> {
     }
 
     @Override
-    protected boolean shouldKeepRunning(FlyingBirdEntity bird) {
-        return this.checkExtraStartConditions((ServerLevel) bird.level(), bird);
+    protected boolean canContinue(FlyingBirdEntity bird) {
+        return this.canStart((ServerLevel) bird.level(), bird);
     }
 
     @Override

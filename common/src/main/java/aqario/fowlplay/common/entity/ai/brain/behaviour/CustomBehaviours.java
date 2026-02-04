@@ -3,7 +3,6 @@ package aqario.fowlplay.common.entity.ai.brain.behaviour;
 import aqario.archaeopteryx.common.ai.behaviour.ExtendedBehaviour;
 import aqario.archaeopteryx.common.ai.behaviour.misc.Idle;
 import aqario.archaeopteryx.common.ai.behaviour.misc.InvalidateMemory;
-import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.util.BirdUtils;
@@ -17,7 +16,7 @@ import java.util.function.Predicate;
  * A collection of preconfigured behaviours for ease of use.
  */
 public class CustomBehaviours {
-    public static <E extends BirdEntity & BirdBrain<E>> ExtendedBehaviour<E> setNearestFoodWalkTarget() {
+    public static <E extends BirdEntity> ExtendedBehaviour<E> setNearestFoodWalkTarget() {
         return new SetItemWalkTarget<E>()
             .radius(BirdUtils.ITEM_PICK_UP_RANGE)
             .speed(BirdUtils.FAST_SPEED);

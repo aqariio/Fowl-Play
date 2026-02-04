@@ -16,89 +16,89 @@ import java.util.List;
 import java.util.Set;
 
 public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends BrainHolder<E> {
-    default ActivityGroup<? extends E> getAvoidTasks() {
+    default ActivityGroup<? extends E> avoidActivity() {
         return ActivityGroup.empty();
     }
 
-    default ActivityGroup<? extends E> getDeliverTasks() {
+    default ActivityGroup<? extends E> deliverActivity() {
         return ActivityGroup.empty();
     }
 
-    default ActivityGroup<? extends E> getForageTasks() {
+    default ActivityGroup<? extends E> forageActivity() {
         return ActivityGroup.empty();
     }
 
-    default ActivityGroup<? extends E> getPerchTasks() {
+    default ActivityGroup<? extends E> perchActivity() {
         return ActivityGroup.empty();
     }
 
-    default ActivityGroup<? extends E> getPickupFoodTasks() {
+    default ActivityGroup<? extends E> pickupFoodActivity() {
         return ActivityGroup.empty();
     }
 
-    default ActivityGroup<? extends E> getRestTasks() {
+    default ActivityGroup<? extends E> restActivity() {
         return ActivityGroup.empty();
     }
 
-    default ActivityGroup<? extends E> getSoarTasks() {
+    default ActivityGroup<? extends E> soarActivity() {
         return ActivityGroup.empty();
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> coreActivity(Behavior<? super T>... behaviors) {
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> core(Behavior<? super T>... behaviors) {
         return new ActivityGroup<T>(Activity.CORE).priority(0).behaviors(behaviors);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> avoidActivity(Behavior<? super T>... behaviors) {
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> avoid(Behavior<? super T>... behaviors) {
         return new ActivityGroup<T>(Activity.AVOID).priority(10).behaviors(behaviors)
             .presentMemories(FowlPlayMemoryTypes.IS_AVOIDING.get())
             .clearMemories(FowlPlayMemoryTypes.IS_AVOIDING.get());
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> deliverActivity(Behavior<? super T>... behaviors) {
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> deliver(Behavior<? super T>... behaviors) {
         return new ActivityGroup<T>(FowlPlayActivities.DELIVER.get()).priority(10).behaviors(behaviors)
             .presentMemories(FowlPlayMemoryTypes.RECIPIENT.get())
             .clearMemories(FowlPlayMemoryTypes.RECIPIENT.get());
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> fightActivity(Behavior<? super T>... behaviors) {
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> fight(Behavior<? super T>... behaviors) {
         return new ActivityGroup<T>(Activity.FIGHT).priority(10).behaviors(behaviors)
             .presentMemories(MemoryModuleType.ATTACK_TARGET)
             .clearMemories(MemoryModuleType.ATTACK_TARGET);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> forageActivity(Behavior<? super T>... behaviors) {
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> forage(Behavior<? super T>... behaviors) {
         return new ActivityGroup<T>(FowlPlayActivities.FORAGE.get()).priority(10).behaviors(behaviors);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> idleActivity(Behavior<? super T>... behaviors) {
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> idle(Behavior<? super T>... behaviors) {
         return new ActivityGroup<T>(Activity.IDLE).priority(10).behaviors(behaviors);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> perchActivity(Behavior<? super T>... behaviors) {
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> perch(Behavior<? super T>... behaviors) {
         return new ActivityGroup<T>(FowlPlayActivities.PERCH.get()).priority(10).behaviors(behaviors);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> pickupFoodActivity(Behavior<? super T>... behaviors) {
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> pickupFood(Behavior<? super T>... behaviors) {
         return new ActivityGroup<T>(FowlPlayActivities.PICK_UP.get()).priority(10).behaviors(behaviors)
             .presentMemories(FowlPlayMemoryTypes.SEES_FOOD.get())
             .clearMemories(FowlPlayMemoryTypes.SEES_FOOD.get());
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> restActivity(Behavior<? super T>... behaviors) {
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> rest(Behavior<? super T>... behaviors) {
         return new ActivityGroup<T>(Activity.REST).priority(10).behaviors(behaviors);
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> soarActivity(Behavior<? super T>... behaviors) {
+    static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> soar(Behavior<? super T>... behaviors) {
         return new ActivityGroup<T>(FowlPlayActivities.SOAR.get()).priority(10).behaviors(behaviors);
     }
 
@@ -106,13 +106,13 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends BrainHol
     default void addActivities(final ActivityListBuilder<E> builder) {
         BrainHolder.super.addActivities(builder);
 
-        builder.add(this.getDeliverTasks());
-        builder.add(this.getAvoidTasks());
-        builder.add(this.getPickupFoodTasks());
-        builder.add(this.getForageTasks());
-        builder.add(this.getSoarTasks());
-        builder.add(this.getPerchTasks());
-        builder.add(this.getRestTasks());
+        builder.add(this.deliverActivity());
+        builder.add(this.avoidActivity());
+        builder.add(this.pickupFoodActivity());
+        builder.add(this.forageActivity());
+        builder.add(this.soarActivity());
+        builder.add(this.perchActivity());
+        builder.add(this.restActivity());
     }
 
     @Override

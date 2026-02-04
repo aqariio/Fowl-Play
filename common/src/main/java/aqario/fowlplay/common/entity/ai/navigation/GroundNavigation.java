@@ -1,11 +1,11 @@
 package aqario.fowlplay.common.entity.ai.navigation;
 
+import aqario.archaeopteryx.common.ai.navigation.SmoothGroundNavigation;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.util.BirdUtils;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
-import net.tslat.smartbrainlib.api.core.navigation.SmoothGroundNavigation;
 import org.jetbrains.annotations.Nullable;
 
 public class GroundNavigation extends SmoothGroundNavigation {

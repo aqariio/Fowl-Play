@@ -3,7 +3,7 @@ package aqario.fowlplay.common.entity.ai.brain.behaviour;
 import aqario.archaeopteryx.common.ai.behaviour.AnonymousBehaviour;
 import aqario.archaeopteryx.core.util.MemoryList;
 import aqario.fowlplay.common.entity.ai.brain.TeleportTarget;
-import aqario.fowlplay.common.entity.bird.pigeon.PigeonEntity;
+import aqario.fowlplay.common.entity.bird.dove.PigeonEntity;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import net.minecraft.world.entity.ai.behavior.EntityTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;

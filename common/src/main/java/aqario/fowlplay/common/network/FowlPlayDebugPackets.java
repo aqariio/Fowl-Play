@@ -4,7 +4,7 @@ import aqario.fowlplay.client.FowlPlayClient;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.bird.TrustingBirdEntity;
-import aqario.fowlplay.common.network.s2c.BirdDebugPayload;
+import aqario.fowlplay.common.network.clientbound.BirdDebugPayload;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FowlPlay;
 import com.google.common.collect.Lists;
@@ -32,7 +32,6 @@ import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.pathfinder.Path;
-import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -55,8 +54,8 @@ public class FowlPlayDebugPackets {
         if(bird instanceof InventoryCarrier inventoryOwner) {
             inventory = inventoryOwner.getInventory().isEmpty() ? "" : inventoryOwner.getInventory().toString();
         }
-        if(BrainUtils.hasMemory(brain, MemoryModuleType.PATH)) {
-            path = BrainUtils.getMemory(brain, MemoryModuleType.PATH);
+        if(bird.isMemoryPresent(MemoryModuleType.PATH)) {
+            path = bird.getPresentMemory(MemoryModuleType.PATH);
         }
         List<String> trusting = new ArrayList<>();
         if(bird instanceof TrustingBirdEntity trustingBird) {

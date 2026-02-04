@@ -5,8 +5,8 @@ import aqario.fowlplay.client.render.entity.model.AdultBabyModelPair;
 import aqario.fowlplay.client.render.entity.model.BabyGooseModel;
 import aqario.fowlplay.client.render.entity.model.DomesticGooseModel;
 import aqario.fowlplay.client.render.entity.model.GooseModel;
-import aqario.fowlplay.common.entity.bird.goose.GooseEntity;
-import aqario.fowlplay.common.entity.bird.goose.GooseVariant;
+import aqario.fowlplay.common.entity.bird.waterfowl.GooseEntity;
+import aqario.fowlplay.common.entity.variant.GooseVariant;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -46,13 +46,13 @@ public class GooseRenderer extends MobRenderer<GooseEntity, GooseModel> {
 
     @Override
     public void render(GooseEntity goose, float f, float g, PoseStack matrices, MultiBufferSource vertexConsumerProvider, int i) {
-        this.model = this.models.get(goose.getVariant().value().modelType())
+        this.model = this.models.get(goose.getVariant().value().modelType(goose.isDomestic()))
             .getModel(goose.isBaby());
         super.render(goose, f, g, matrices, vertexConsumerProvider, i);
     }
 
     @Override
     public ResourceLocation getTextureLocation(GooseEntity goose) {
-        return goose.getVariant().value().texture(goose.isBaby());
+        return goose.getVariant().value().texture(goose.isBaby(), goose.isDomestic());
     }
 }

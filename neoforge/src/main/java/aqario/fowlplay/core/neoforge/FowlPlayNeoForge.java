@@ -1,15 +1,10 @@
 package aqario.fowlplay.core.neoforge;
 
 import aqario.fowlplay.client.neoforge.FowlPlayNeoForgeClient;
-import aqario.fowlplay.common.network.neoforge.ChickenVariantPayload;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.platform.neoforge.PlatformHelperImpl;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
@@ -19,8 +14,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import java.util.Comparator;
@@ -37,7 +30,6 @@ public final class FowlPlayNeoForge {
         modBus.addListener(FowlPlayNeoForge::onNewRegistry);
         modBus.addListener(FowlPlayNeoForge::onSetup);
         modBus.addListener(FowlPlayNeoForge::onAddItemGroupEntries);
-        modBus.addListener(FowlPlayNeoForge::onRegisterPayloadHandlers);
 
         PlatformHelperImpl.CHICKEN_VARIANTS.register(modBus);
         PlatformHelperImpl.DUCK_VARIANTS.register(modBus);
@@ -56,24 +48,6 @@ public final class FowlPlayNeoForge {
         PlatformHelperImpl.TRACKED_DATA_HANDLERS.register(modBus);
         FowlPlayBiomeModifiers.BIOME_MODIFIER_SERIALIZERS.register(modBus);
         FowlPlayDataAttachments.ATTACHMENT_TYPES.register(modBus);
-    }
-
-    private static void onRegisterPayloadHandlers(final RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event.registrar("1");
-        registrar.playToClient(
-            ChickenVariantPayload.ID,
-            ChickenVariantPayload.CODEC,
-            (payload, context) -> {
-                ClientLevel world = Minecraft.getInstance().level;
-                if(world == null) {
-                    return;
-                }
-                Entity entity = world.getEntity(payload.entityId());
-                if(entity instanceof Chicken) {
-                    entity.setData(FowlPlayDataAttachments.CHICKEN_VARIANT, payload.variant());
-                }
-            }
-        );
     }
 
     private static void onNewRegistry(NewRegistryEvent event) {

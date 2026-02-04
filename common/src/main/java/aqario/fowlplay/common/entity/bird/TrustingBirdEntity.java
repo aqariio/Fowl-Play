@@ -90,7 +90,7 @@ public abstract class TrustingBirdEntity extends FlyingBirdEntity {
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        return this.trusts(player) ? super.mobInteract(player, hand) : InteractionResult.PASS;
+        return this.trusts(player) ? super.mobInteract(player, hand) : InteractionResult.FAIL;
     }
 
     @Override

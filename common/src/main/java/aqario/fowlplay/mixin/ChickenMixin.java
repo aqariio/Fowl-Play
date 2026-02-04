@@ -1,6 +1,6 @@
 package aqario.fowlplay.mixin;
 
-import aqario.fowlplay.common.entity.bird.ChickenVariant;
+import aqario.fowlplay.common.entity.variant.ChickenVariant;
 import aqario.fowlplay.common.util.ChickenAnimationHolder;
 import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
 import aqario.fowlplay.core.platform.DataAttachmentHelper;
@@ -85,9 +85,6 @@ public abstract class ChickenMixin extends Animal implements VariantHolder<Holde
             this.fowlplay$swimmingState.animateWhen(this.isInWaterOrBubble(), this.tickCount);
         }
         super.tick();
-        if(!this.level().isClientSide()) {
-            DataAttachmentHelper.sendChickenVariantUpdate((Chicken) (Object) this);
-        }
     }
 
     @Override

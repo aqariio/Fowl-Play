@@ -1,7 +1,7 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.GullAnimations;
-import aqario.fowlplay.common.entity.bird.gull.GullEntity;
+import aqario.fowlplay.common.entity.bird.shorebird.GullEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;

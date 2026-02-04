@@ -1,7 +1,7 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.ChickadeeAnimations;
-import aqario.fowlplay.common.entity.bird.chickadee.ChickadeeEntity;
+import aqario.fowlplay.common.entity.bird.passerine.ChickadeeEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;

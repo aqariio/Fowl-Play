@@ -4,7 +4,7 @@ import aqario.fowlplay.client.render.debug.BirdDebugRenderer;
 import aqario.fowlplay.client.render.entity.*;
 import aqario.fowlplay.client.render.entity.model.*;
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.network.s2c.BirdDebugPayload;
+import aqario.fowlplay.common.network.clientbound.BirdDebugPayload;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayEntityTypes;
 import aqario.fowlplay.core.platform.PlatformHelper;

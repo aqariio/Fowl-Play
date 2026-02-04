@@ -289,11 +289,11 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     public boolean canStartFlying() {
-        return !this.isFlying() && !this.isBelowWaterline() && this.getHealth() >= MIN_HEALTH_TO_FLY;
+        return !this.isFlightless() && !this.isFlying() && !this.isBelowWaterline() && this.getHealth() >= MIN_HEALTH_TO_FLY;
     }
 
     public boolean shouldStopFlying() {
-        if(this.isUnderWater() || this.isPassenger()) {
+        if(this.isFlightless() || this.isUnderWater() || this.isPassenger()) {
             return true;
         }
         if(this.timeFlying < MIN_FLIGHT_TIME) {
@@ -322,7 +322,18 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         }
     }
 
+    public boolean hasWings() {
+        return true;
+    }
+
+    public boolean isFlightless() {
+        return !this.hasWings();
+    }
+
     public boolean isFlying() {
+        if(this.isFlightless()) {
+            return false;
+        }
         return this.entityData.get(FLYING);
     }
 

@@ -1,3 +1,10 @@
+## 1.1.2
+
+- Fix geese sometimes not breeding
+- Fix pigeon not following its owner
+- Add Turkish localization
+- Lower the minimum version for Fabric loader
+
 ## 1.1.1
 
 - Fix birds not being saved to chunk when unloaded in 1.20.1
@@ -5,18 +12,19 @@
 ## 1.1.0
 
 - **Bird AI has been completely overhauled**
-  - Birds now adhere to a schedule when determining what their behaviours should be, similar to villagers
-    - During the day, birds will fly around, perch, and forage for food
-    - At night, perching birds will seek out a tree to sleep in, while waterfowl will sleep on the ground or on water
-  - Birds now have a height range that they will try to fly between
-  - Birds will now decelerate and stop flying when approaching their destination
-  - Birds will no longer get trapped in vehicles when flying
-  - Improve reliability of bird pathfinding (less midair spinning)
-    - Many pathfinding optimizations
-    - Fix birds spinning when trying to fly vertically
-  - Birds now stop flying when below a certain speed
-  - Birds will now tilt their heads when looking at things
-  - Fix jerky movement when birds turn
+    - Birds now adhere to a schedule when determining what their behaviours should be, similar to villagers
+        - During the day, birds will fly around, perch, and forage for food
+        - At night, perching birds will seek out a tree to sleep in, while waterfowl will sleep on the ground or on
+          water
+    - Birds now have a height range that they will try to fly between
+    - Birds will now decelerate and stop flying when approaching their destination
+    - Birds will no longer get trapped in vehicles when flying
+    - Improve reliability of bird pathfinding (less midair spinning)
+        - Many pathfinding optimizations
+        - Fix birds spinning when trying to fly vertically
+    - Birds now stop flying when below a certain speed
+    - Birds will now tilt their heads when looking at things
+    - Fix jerky movement when birds turn
 - **Introducing the goose**
     - Geese variants are split into two categories: domestic and wild
     - Naturally spawned geese will have wild variants
@@ -27,8 +35,10 @@
         - Emden (from greylag goose)
         - Chinese (from swan goose)
         - Canada geese do not have a domestic variant
-    - To breed geese, you must first drop them food to get them to trust you. Afterwards, you can approach without scaring them away and feed them directly
-    - Domestic geese will no longer naturally avoid players, and can have their wings clipped using shears (to stop them from flying)
+    - To breed geese, you must first drop them food to get them to trust you. Afterwards, you can approach without
+      scaring them away and feed them directly
+    - Domestic geese will no longer naturally avoid players, and can have their wings clipped using shears (to stop them
+      from flying)
     - Geese with the name "untitled" will attack any player they see, and can pick up swords
 - **Add Scarecrows**
     - Birds see scarecrows as players, so any bird that avoids players will also avoid scarecrows
@@ -37,11 +47,11 @@
         - Unlike armour stands, double-clicking scarecrows will do nothing
     - Scarecrows can be destroyed by fire, lava, and explosions
 - **Other changes**
-  - Fix incompatibility with Perfect Parity
-  - Fix seemingly random crash in 1.20.1 when a bird is pathing
-  - Add European Portuguese translation
-  - Add Japanese translation
-  - Add Traditional Chinese translation
+    - Fix incompatibility with Perfect Parity
+    - Fix seemingly random crash in 1.20.1 when a bird is pathing
+    - Add European Portuguese translation
+    - Add Japanese translation
+    - Add Traditional Chinese translation
 
 ## 1.1.0-beta.6
 

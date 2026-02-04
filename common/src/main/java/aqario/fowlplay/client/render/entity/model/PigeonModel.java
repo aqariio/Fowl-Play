@@ -1,7 +1,7 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.PigeonAnimations;
-import aqario.fowlplay.common.entity.bird.pigeon.PigeonEntity;
+import aqario.fowlplay.common.entity.bird.dove.PigeonEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;

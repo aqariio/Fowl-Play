@@ -24,6 +24,10 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends BrainHol
         return ActivityGroup.empty();
     }
 
+    default ActivityGroup<? extends E> followActivity() {
+        return ActivityGroup.empty();
+    }
+
     default ActivityGroup<? extends E> forageActivity() {
         return ActivityGroup.empty();
     }
@@ -71,6 +75,13 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends BrainHol
     }
 
     @SafeVarargs
+    static <T extends BirdEntity & BirdBrain<T>> ActivityGroup<T> follow(Behavior<? super T>... behaviors) {
+        return new ActivityGroup<T>(FowlPlayActivities.FOLLOW.get()).priority(10).behaviors(behaviors)
+            .presentMemories(FowlPlayMemoryTypes.IS_FOLLOWING.get())
+            .clearMemories(FowlPlayMemoryTypes.IS_FOLLOWING.get());
+    }
+
+    @SafeVarargs
     static <T extends BirdEntity & BrainHolder<T>> ActivityGroup<T> forage(Behavior<? super T>... behaviors) {
         return new ActivityGroup<T>(FowlPlayActivities.FORAGE.get()).priority(10).behaviors(behaviors);
     }
@@ -108,6 +119,7 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends BrainHol
 
         builder.add(this.deliverActivity());
         builder.add(this.avoidActivity());
+        builder.add(this.followActivity());
         builder.add(this.pickupFoodActivity());
         builder.add(this.forageActivity());
         builder.add(this.soarActivity());
@@ -121,6 +133,7 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends BrainHol
             FowlPlayActivities.DELIVER.get(),
             Activity.AVOID,
             Activity.FIGHT,
+            FowlPlayActivities.FOLLOW.get(),
             FowlPlayActivities.PICK_UP.get(),
             FowlPlayActivities.FORAGE.get(),
             FowlPlayActivities.SOAR.get(),
@@ -136,6 +149,7 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends BrainHol
             FowlPlayActivities.DELIVER.get(),
             Activity.AVOID,
             Activity.FIGHT,
+            FowlPlayActivities.FOLLOW.get(),
             FowlPlayActivities.PICK_UP.get()
         );
     }

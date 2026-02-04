@@ -2,11 +2,13 @@ package aqario.fowlplay.common.entity.ai.brain.sensor;
 
 import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
 import aqario.archaeopteryx.common.ai.sensing.PredicateSensor;
-import aqario.fowlplay.common.entity.bird.pigeon.PigeonEntity;
+import aqario.fowlplay.common.entity.bird.dove.PigeonEntity;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.FowlPlaySensorTypes;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Unit;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 
@@ -15,8 +17,15 @@ import java.util.UUID;
 
 public class PigeonSpecificSensor extends PredicateSensor<UUID, PigeonEntity> {
     private static final List<MemoryModuleType<?>> MEMORIES = ObjectArrayList.of(
+        FowlPlayMemoryTypes.IS_FOLLOWING.get(),
         FowlPlayMemoryTypes.RECIPIENT.get()
     );
+    protected UniformInt range = UniformInt.of(5, 10);
+
+    public PigeonSpecificSensor range(int min, int max) {
+        this.range = UniformInt.of(min, max);
+        return this;
+    }
 
     public PigeonSpecificSensor() {
         super(
@@ -43,6 +52,14 @@ public class PigeonSpecificSensor extends PredicateSensor<UUID, PigeonEntity> {
         }
         else {
             pigeon.clearMemory(FowlPlayMemoryTypes.RECIPIENT.get());
+        }
+        if(pigeon.getOwner() != null
+            && pigeon.distanceToSqr(pigeon.getOwner()) > this.range.getMaxValue() * this.range.getMaxValue()
+        ) {
+            pigeon.setMemory(FowlPlayMemoryTypes.IS_FOLLOWING.get(), Unit.INSTANCE);
+        }
+        else {
+            pigeon.clearMemory(FowlPlayMemoryTypes.IS_FOLLOWING.get());
         }
     }
 }

@@ -1,7 +1,7 @@
 package aqario.fowlplay.client.render.debug;
 
 import aqario.fowlplay.client.FowlPlayClient;
-import aqario.fowlplay.common.network.s2c.BirdDebugPayload;
+import aqario.fowlplay.common.network.clientbound.BirdDebugPayload;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.PoseStack;

@@ -44,6 +44,11 @@ public class FowlPlaySchedules {
         .activityAt(12500, Activity.REST)
         .activityAt(23000, Activity.IDLE)
     );
+    public static final Supplier<ExtendedSchedule> WATERFOWL_DOMESTIC = register("waterfowl_domestic", new ExtendedSchedule()
+        .activityAt(0, Activity.IDLE)
+        .activityAt(12500, Activity.REST)
+        .activityAt(23000, Activity.IDLE)
+    );
 
     private static Supplier<ExtendedSchedule> register(String id, ExtendedSchedule schedule) {
         return PlatformHelper.registerSchedule(id, () -> schedule);

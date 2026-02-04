@@ -1,5 +1,6 @@
 package aqario.fowlplay.common.entity.bird;
 
+import aqario.fowlplay.common.entity.CustomMobCategory;
 import aqario.fowlplay.common.entity.ai.control.BirdBodyRotationControl;
 import aqario.fowlplay.common.entity.ai.control.BirdLookControl;
 import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;

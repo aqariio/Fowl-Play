@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.world.gen.neoforge;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.bird.CustomMobCategory;
+import aqario.fowlplay.common.entity.CustomMobCategory;
 import aqario.fowlplay.core.FowlPlayEntityTypes;
 import aqario.fowlplay.core.neoforge.FowlPlayBiomeModifiers;
 import aqario.fowlplay.core.tags.FowlPlayBiomeTags;

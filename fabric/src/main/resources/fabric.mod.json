@@ -47,7 +47,7 @@
     "fabricloader": ">=${fabric_loader_version}",
     "fabric-api": ">=${fabric_api_version}",
     "architectury": ">=${architectury_version}",
-    "smartbrainlib": ">=${sbl_version}",
+    "archaeopteryx": ">=${archaeopteryx_version}",
     "yet_another_config_lib_v3": ">=${yacl_version}"
   },
   "custom": {

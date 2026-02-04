@@ -1,5 +1,7 @@
 package aqario.fowlplay.common.util;
 
+import aqario.archaeopteryx.core.registry.AtrxMemoryTypes;
+import aqario.archaeopteryx.core.util.BrainUtils;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.entity.bird.Domesticatable;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
@@ -19,11 +21,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.registry.SBLMemoryTypes;
-import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * A utility class for birds.
@@ -115,17 +114,16 @@ public final class BirdUtils {
 
     public static <T extends BirdEntity> void alertOthers(T bird, LivingEntity attacker) {
         getNearbyVisibleAdults(bird).forEach(other -> {
-            Brain<?> brain = other.getBrain();
             if(attacker instanceof Player) {
-                BrainUtils.setForgettableMemory(brain, FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get(), true, CANNOT_PICKUP_FOOD_TICKS);
+                BrainUtils.setForgettableMemory(other, FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get(), true, CANNOT_PICKUP_FOOD_TICKS);
             }
-            BrainUtils.clearMemory(brain, MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
-            BrainUtils.setForgettableMemory(brain, MemoryModuleType.AVOID_TARGET, attacker, AVOID_TICKS);
+            other.clearMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
+            BrainUtils.setForgettableMemory(other, MemoryModuleType.AVOID_TARGET, attacker, AVOID_TICKS);
         });
     }
 
     public static <T extends BirdEntity> List<? extends AgeableMob> getNearbyVisibleAdults(T bird) {
-        return Optional.ofNullable(BrainUtils.getMemory(bird, FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get()))
+        return bird.getMemory(FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get())
             .orElse(ImmutableList.of());
     }
 
@@ -134,19 +132,18 @@ public final class BirdUtils {
     }
 
     public static boolean canPickupFood(BirdEntity bird) {
-        Brain<?> brain = bird.getBrain();
-        if(BrainUtils.hasMemory(brain, FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get())) {
+        if(bird.isMemoryPresent(FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get())) {
             return false;
         }
-        if(!BrainUtils.hasMemory(brain, SBLMemoryTypes.NEARBY_ITEMS.get())) {
+        if(!bird.isMemoryPresent(AtrxMemoryTypes.NEARBY_ITEMS.get())) {
             return false;
         }
-        List<ItemEntity> foodItems = BrainUtils.getMemory(brain, SBLMemoryTypes.NEARBY_ITEMS.get());
+        List<ItemEntity> foodItems = bird.getPresentMemory(AtrxMemoryTypes.NEARBY_ITEMS.get());
         // noinspection ConstantConditions
         if(foodItems.isEmpty() || bird.getFood().test(bird.getMainHandItem())) {
             return false;
         }
-        NearestVisibleLivingEntities visibleMobs = BrainUtils.getMemory(brain, MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES);
+        NearestVisibleLivingEntities visibleMobs = bird.getPresentMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES);
         if(visibleMobs == null) {
             return true;
         }
@@ -159,7 +156,6 @@ public final class BirdUtils {
     }
 
     public static boolean shouldAvoid(BirdEntity bird, LivingEntity target) {
-        Brain<?> brain = bird.getBrain();
         if(!(bird.shouldAvoid(target) && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target)) && !wasHurtBy(bird, target)) {
             return false;
         }
@@ -171,7 +167,7 @@ public final class BirdUtils {
                 return false;
             }
         }
-        LivingEntity attackTarget = BrainUtils.getMemory(brain, MemoryModuleType.ATTACK_TARGET);
+        LivingEntity attackTarget = bird.getPresentMemory(MemoryModuleType.ATTACK_TARGET);
         if(attackTarget != null && attackTarget.equals(target)) {
             return false;
         }
@@ -179,8 +175,9 @@ public final class BirdUtils {
     }
 
     public static boolean wasHurtBy(BirdEntity bird, LivingEntity entity) {
-        LivingEntity hurtBy = BrainUtils.getMemory(bird, MemoryModuleType.HURT_BY_ENTITY);
-        return hurtBy != null && hurtBy.equals(entity);
+        return bird.getMemory(MemoryModuleType.HURT_BY_ENTITY)
+            .map(hurtBy -> hurtBy.equals(entity))
+            .orElse(false);
     }
 
     public static boolean isPerched(BirdEntity entity) {

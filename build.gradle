@@ -94,7 +94,7 @@ subprojects {
             "fabric_api_version"   : rootProject.fabric_api_version,
             "neoforge_version"     : rootProject.neoforge_version,
             "architectury_version" : rootProject.architectury_version,
-            "sbl_version"          : rootProject.sbl_version,
+            "archaeopteryx_version": rootProject.archaeopteryx_version,
             "yacl_version"         : rootProject.yacl_version
         ]
 

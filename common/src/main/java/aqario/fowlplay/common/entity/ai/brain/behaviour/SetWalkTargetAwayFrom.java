@@ -1,6 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.archaeopteryx.core.util.BrainUtils;
+import aqario.archaeopteryx.core.util.MemoryList;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.entity.ai.Brain;

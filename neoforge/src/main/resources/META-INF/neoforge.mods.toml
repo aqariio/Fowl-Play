@@ -37,9 +37,9 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.fowlplay]]
-modId = "smartbrainlib"
+modId = "archaeopteryx"
 type = "required"
-versionRange = "[${sbl_version},)"
+versionRange = "[${archaeopteryx_version},)"
 ordering = "NONE"
 side = "BOTH"
 

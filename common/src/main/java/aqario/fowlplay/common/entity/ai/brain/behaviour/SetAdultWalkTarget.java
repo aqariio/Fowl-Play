@@ -1,5 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
+import aqario.archaeopteryx.common.ai.behaviour.AnonymousBehaviour;
+import aqario.archaeopteryx.core.util.MemoryList;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -20,9 +22,6 @@ public class SetAdultWalkTarget {
                 .absent(MemoryModuleType.WALK_TARGET),
             bird -> {
                 List<BirdEntity> nearbyAdults = (List<BirdEntity>) bird.getPresentMemory(FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
-                if(nearbyAdults.isEmpty()) {
-                    return false;
-                }
                 AgeableMob nearest = nearbyAdults.getFirst();
                 if(bird.closerThan(nearest, executionRange.getMaxValue() + 1)
                     && !bird.closerThan(nearest, executionRange.getMinValue())) {
@@ -31,9 +30,7 @@ public class SetAdultWalkTarget {
                     );
                     bird.setMemory(MemoryModuleType.LOOK_TARGET, new EntityTracker(nearest, true));
                     bird.setMemory(MemoryModuleType.WALK_TARGET, newWalkTarget);
-                    return true;
                 }
-                return false;
             }
         );
     }

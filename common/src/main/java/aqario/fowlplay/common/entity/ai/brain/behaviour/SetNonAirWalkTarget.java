@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
-import aqario.archaeopteryx.core.util.BrainUtils;
+import aqario.archaeopteryx.core.util.MemoryList;
 import aqario.fowlplay.common.entity.ai.navigation.BirdRandomPos;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.util.CylindricalRadius;
@@ -62,10 +62,10 @@ public class SetNonAirWalkTarget<E extends BirdEntity> extends SpeedModifiableBe
         }
 
         if(targetPos != null) {
-            BrainUtils.setMemory(entity, MemoryModuleType.WALK_TARGET, new WalkTarget(targetPos, this.speedModifier.apply(entity, targetPos), 0));
+            entity.setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(targetPos, this.speedModifier.apply(entity, targetPos), 0));
         }
         else {
-            BrainUtils.clearMemory(entity, MemoryModuleType.WALK_TARGET);
+            entity.clearMemory(MemoryModuleType.WALK_TARGET);
         }
     }
 

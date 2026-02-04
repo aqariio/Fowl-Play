@@ -1,3 +1,7 @@
+## 1.1.3
+
+- Resolve incompatibility with All Bark All Bite and TerraFirmaCraft
+
 ## 1.1.2
 
 - Fix geese sometimes not breeding

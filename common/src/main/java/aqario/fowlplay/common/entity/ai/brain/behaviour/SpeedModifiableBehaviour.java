@@ -15,7 +15,6 @@ public abstract class SpeedModifiableBehaviour<E extends LivingEntity> extends E
 
     public SpeedModifiableBehaviour<E> speed(BiFunction<E, Vec3, Float> function) {
         this.speedModifier = function;
-
         return this;
     }
 }

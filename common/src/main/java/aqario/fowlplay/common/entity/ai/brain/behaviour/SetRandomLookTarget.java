@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.archaeopteryx.common.ai.behaviour.ExtendedBehaviour;
-import aqario.archaeopteryx.core.util.BrainUtils;
 import aqario.archaeopteryx.core.util.FixedPositionTracker;
 import aqario.archaeopteryx.core.util.MemoryList;
 import com.mojang.datafixers.util.Pair;
@@ -35,7 +34,6 @@ public class SetRandomLookTarget<E extends Mob> extends ExtendedBehaviour<E> {
 
     public SetRandomLookTarget<E> lookChance(FloatProvider chance) {
         this.runChance = chance;
-
         return this;
     }
 
@@ -66,6 +64,6 @@ public class SetRandomLookTarget<E extends Mob> extends ExtendedBehaviour<E> {
 
         int lookTime = entity.getRandom().nextIntBetweenInclusive(15, 60);
         this.timeUntilNextLook = entity.level().getGameTime() + lookTime;
-        BrainUtils.setForgettableMemory(entity, MemoryModuleType.LOOK_TARGET, new FixedPositionTracker(entity.getEyePosition().add(Math.cos(angle), 0, Math.sin(angle))), lookTime);
+        entity.setMemoryWithExpiry(MemoryModuleType.LOOK_TARGET, new FixedPositionTracker(entity.getEyePosition().add(Math.cos(angle), 0, Math.sin(angle))), lookTime);
     }
 }

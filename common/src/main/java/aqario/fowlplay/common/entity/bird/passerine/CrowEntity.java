@@ -106,7 +106,7 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
         if(!target.getType().is(FowlPlayEntityTypeTags.CROW_ATTACK_TARGETS) && (hurtBy == null || !hurtBy.equals(target))) {
             return false;
         }
-        Optional<List<? extends AgeableMob>> nearbyAdults = Optional.ofNullable(BrainUtils.getMemory(this, FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get()));
+        Optional<List<? extends AgeableMob>> nearbyAdults = this.getMemory(FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
         return nearbyAdults.filter(passiveEntities -> passiveEntities.size() >= 4).isPresent();
     }
 

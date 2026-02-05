@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
-import aqario.archaeopteryx.core.util.BrainUtils;
 import aqario.archaeopteryx.core.util.MemoryList;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import com.mojang.datafixers.util.Pair;
@@ -40,7 +39,7 @@ public class SetBreatheTarget<E extends BirdEntity> extends SpeedModifiableBehav
     @Override
     protected void tick(E bird) {
         Vec3 targetPos = this.findAir(bird);
-        BrainUtils.setMemory(bird, MemoryModuleType.WALK_TARGET, new WalkTarget(targetPos, this.speedModifier.apply(bird, targetPos), 0));
+        bird.setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(targetPos, this.speedModifier.apply(bird, targetPos), 0));
     }
 
     private Vec3 findAir(E bird) {

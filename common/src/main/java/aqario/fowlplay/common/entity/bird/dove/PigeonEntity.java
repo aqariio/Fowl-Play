@@ -11,7 +11,6 @@ import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
 import aqario.archaeopteryx.common.ai.sensing.vanilla.InWaterSensor;
 import aqario.archaeopteryx.common.ai.sensing.vanilla.NearbyLivingEntitySensor;
 import aqario.archaeopteryx.common.ai.sensing.vanilla.NearbyPlayersSensor;
-import aqario.archaeopteryx.core.util.BrainUtils;
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -375,8 +374,8 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
             new LookAtTarget<>()
                 .runtime(45, 90),
             new MoveToWalkTarget<>()
-                .startCondition(entity -> !BrainUtils.hasMemory(entity, FowlPlayMemoryTypes.TELEPORT_TARGET.get()))
-                .stopCondition(entity -> BrainUtils.hasMemory(entity, FowlPlayMemoryTypes.TELEPORT_TARGET.get()))
+                .startCondition(entity -> !entity.isMemoryPresent(FowlPlayMemoryTypes.TELEPORT_TARGET.get()))
+                .stopCondition(entity -> entity.isMemoryPresent(FowlPlayMemoryTypes.TELEPORT_TARGET.get()))
         );
     }
 

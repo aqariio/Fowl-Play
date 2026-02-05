@@ -45,7 +45,7 @@ public class SetOwnerWalkOrTpTarget extends SpeedModifiableBehaviour<PigeonEntit
             return false;
         }
         this.owner = owner;
-        return super.checkExtraStartConditions(world, pigeon);
+        return true;
     }
 
     @Override

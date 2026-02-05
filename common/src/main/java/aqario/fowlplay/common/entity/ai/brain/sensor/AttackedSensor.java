@@ -2,7 +2,6 @@ package aqario.fowlplay.common.entity.ai.brain.sensor;
 
 import aqario.archaeopteryx.common.ai.sensing.ExtendedSensor;
 import aqario.archaeopteryx.common.ai.sensing.PredicateSensor;
-import aqario.archaeopteryx.core.util.BrainUtils;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.entity.bird.TrustingBirdEntity;
 import aqario.fowlplay.common.util.BirdUtils;
@@ -46,8 +45,7 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
     protected void doTick(ServerLevel world, E bird) {
         DamageSource damageSource = bird.getLastDamageSource();
         if(damageSource == null) {
-            bird.clearMemory(MemoryModuleType.HURT_BY);
-            bird.clearMemory(MemoryModuleType.HURT_BY_ENTITY);
+            bird.clearMemories(MemoryModuleType.HURT_BY, MemoryModuleType.HURT_BY_ENTITY);
             return;
         }
         if(this.predicate().test(damageSource, bird)) {
@@ -59,7 +57,7 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
             }
             return;
         }
-        BrainUtils.withMemory(bird, MemoryModuleType.HURT_BY_ENTITY, attacker -> {
+        bird.getMemory(MemoryModuleType.HURT_BY_ENTITY).ifPresent(attacker -> {
             if(!attacker.isAlive() || attacker.level() != bird.level()) {
                 bird.clearMemory(MemoryModuleType.HURT_BY_ENTITY);
             }
@@ -69,7 +67,7 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
     public static <T extends BirdEntity> void onAttacked(T bird, LivingEntity attacker) {
         bird.clearMemory(FowlPlayMemoryTypes.SEES_FOOD.get());
         if(attacker instanceof Player player) {
-            BrainUtils.setForgettableMemory(bird, FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get(), true, BirdUtils.CANNOT_PICKUP_FOOD_TICKS);
+            bird.setMemoryWithExpiry(FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get(), true, BirdUtils.CANNOT_PICKUP_FOOD_TICKS);
             if(bird instanceof TrustingBirdEntity trustingBird && trustingBird.trusts(player)) {
                 trustingBird.stopTrusting(player);
             }

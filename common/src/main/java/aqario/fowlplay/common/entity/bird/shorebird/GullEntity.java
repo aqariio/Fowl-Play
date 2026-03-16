@@ -77,6 +77,11 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     }
 
     @Override
+    protected boolean canFloat() {
+        return true;
+    }
+
+    @Override
     public int getMaxPitchChange() {
         return 18;
     }

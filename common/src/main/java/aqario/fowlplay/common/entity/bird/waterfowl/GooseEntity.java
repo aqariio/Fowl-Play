@@ -99,6 +99,11 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
+    protected boolean canFloat() {
+        return true;
+    }
+
+    @Override
     public int getMaxPitchChange() {
         return 18;
     }

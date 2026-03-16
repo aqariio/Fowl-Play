@@ -4,12 +4,12 @@ import aqario.fowlplay.common.entity.CustomMobCategory;
 import aqario.fowlplay.common.entity.ai.control.BirdBodyRotationControl;
 import aqario.fowlplay.common.entity.ai.control.BirdLookControl;
 import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;
-import aqario.fowlplay.common.entity.bird.waterfowl.GooseEntity;
 import aqario.fowlplay.common.network.FowlPlayDebugPackets;
 import aqario.fowlplay.common.util.AnimationStateList;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -218,11 +218,15 @@ public abstract class BirdEntity extends Animal {
         return this.isUnderWater() || this.getFluidHeight(FluidTags.WATER) > this.getBoundingBox().getYsize() * 0.35;
     }
 
+    protected boolean canFloat() {
+        return false;
+    }
+
     @Override
     public Vec3 getFluidFallingAdjustedMovement(double gravity, boolean isFalling, Vec3 deltaMovement) {
-        if(this instanceof GooseEntity && this.isWaterAboveFloatHeight()) { // TODO: implement for all birds that can float on water
-            double floatVelocity = 0.1 * Math.pow(Mth.clamp(1 - this.getEyeHeight() + this.getBoundingBox().getYsize() * 0.5, 0, 1), 3);
-            return deltaMovement.add(0.0, 0.07 * Math.pow(Math.clamp(this.getFluidHeight(FluidTags.WATER), 0, 1), 3), 0.0);
+        if(this.canFloat() && this.isWaterAboveFloatHeight()) {
+            double floatVelocity = 0.1 * Math.pow(Mth.clamp(this.getFluidHeight(FluidTags.WATER) / this.getBoundingBox().getYsize(), 0, 1), 3);
+            return deltaMovement.add(0.0, deltaMovement.y < floatVelocity - 0.005 ? floatVelocity : -0.003, 0.0);
         }
         return super.getFluidFallingAdjustedMovement(gravity, isFalling, deltaMovement);
     }
@@ -535,6 +539,11 @@ public abstract class BirdEntity extends Animal {
         super.sendDebugPackets();
         DebugPackets.sendEntityBrain(this);
         FowlPlayDebugPackets.sendBirdData(this);
+        FowlPlayDebugPackets.sendGenericData(this,
+            Pair.of("fluid height", String.format("%.3f", this.getFluidHeight(FluidTags.WATER))),
+            Pair.of("is water above float height", this.isWaterAboveFloatHeight()),
+            Pair.of("y velocity", String.format("%.3f", this.getDeltaMovement().y))
+        );
     }
 
     public <U> boolean isMemoryPresent(MemoryModuleType<U> memoryType) {

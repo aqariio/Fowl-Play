@@ -5,9 +5,11 @@ import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.bird.TrustingBirdEntity;
 import aqario.fowlplay.common.network.clientbound.BirdDebugPayload;
+import aqario.fowlplay.common.network.clientbound.GenericDebugPayload;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FowlPlay;
 import com.google.common.collect.Lists;
+import com.mojang.datafixers.util.Pair;
 import dev.architectury.networking.NetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -38,6 +40,30 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class FowlPlayDebugPackets {
+    @SafeVarargs
+    public static <T> void sendGenericData(LivingEntity entity, Pair<String, T>... data) {
+        if(!FowlPlay.isDebugUtilsLoaded()
+            || entity.level().isClientSide()
+            || !FowlPlayClient.DEBUG_GENERIC
+        ) {
+            return;
+        }
+
+        HashMap<String, String> map = new HashMap<>();
+        for(Pair<String, T> pair : data) {
+            map.put(pair.getFirst(), pair.getSecond().toString());
+        }
+
+        GenericDebugPayload.Data payloadData = new GenericDebugPayload.Data(
+            entity.getUUID(),
+            entity.getId(),
+            entity.position(),
+            map
+        );
+        GenericDebugPayload payload = new GenericDebugPayload(payloadData);
+        sendToAll((ServerLevel) entity.level(), payload);
+    }
+
     @SuppressWarnings("deprecation")
     public static void sendBirdData(BirdEntity bird) {
         if(!FowlPlay.isDebugUtilsLoaded()

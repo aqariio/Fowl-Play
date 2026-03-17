@@ -24,6 +24,7 @@ public final class FowlPlayEntityTypeTags {
     public static final TagKey<EntityType<?>> PASSERINES = create("passerines");
     public static final TagKey<EntityType<?>> PENGUIN_AVOIDS = create("penguin_avoids");
     public static final TagKey<EntityType<?>> PENGUIN_HUNT_TARGETS = create("penguin_hunt_targets");
+    public static final TagKey<EntityType<?>> PERCHING_BIRDS = create("perching_birds");
     public static final TagKey<EntityType<?>> PIGEON_AVOIDS = create("pigeon_avoids");
     public static final TagKey<EntityType<?>> RAVEN_AVOIDS = create("raven_avoids");
     public static final TagKey<EntityType<?>> RAVEN_ATTACK_TARGETS = create("raven_attack_targets");

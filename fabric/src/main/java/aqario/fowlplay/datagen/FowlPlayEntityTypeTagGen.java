@@ -50,6 +50,20 @@ public class FowlPlayEntityTypeTagGen extends FabricTagProvider.EntityTypeTagPro
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.FLIGHTLESS)
             .add(FowlPlayEntityTypes.PENGUIN.get());
 
+        // Perching Birds
+        this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.PERCHING_BIRDS)
+            .add(EntityType.CHICKEN)
+            .add(EntityType.PARROT)
+            .add(FowlPlayEntityTypes.BLUE_JAY.get())
+            .add(FowlPlayEntityTypes.CARDINAL.get())
+            .add(FowlPlayEntityTypes.CHICKADEE.get())
+            .add(FowlPlayEntityTypes.CROW.get())
+            .add(FowlPlayEntityTypes.HAWK.get())
+            .add(FowlPlayEntityTypes.PIGEON.get())
+            .add(FowlPlayEntityTypes.RAVEN.get())
+            .add(FowlPlayEntityTypes.ROBIN.get())
+            .add(FowlPlayEntityTypes.SPARROW.get());
+
         // Passerines
         this.getOrCreateTagBuilder(FowlPlayEntityTypeTags.PASSERINES)
             .add(FowlPlayEntityTypes.BLUE_JAY.get())

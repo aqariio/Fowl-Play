@@ -316,7 +316,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         this.getNavigation().stop();
         Brain<?> brain = this.getBrain();
         brain.eraseMemory(MemoryModuleType.WALK_TARGET);
-        if(BirdUtils.isNotFlightless(this) && BirdUtils.isPerched(this)) {
+        if(BirdUtils.isPerchingBird(this) && BirdUtils.isPerched(this)) {
             this.setDeltaMovement(Vec3.ZERO);
             this.getNavigation().stop();
         }

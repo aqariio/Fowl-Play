@@ -34,7 +34,7 @@ public class BlockStateBaseMixin {
         if(self.getBlock() instanceof LeavesBlock && context instanceof EntityCollisionContext entityContext) {
             Entity entity = entityContext.getEntity();
             if(entity != null
-                && BirdUtils.isNotFlightless(entity)
+                && BirdUtils.isPerchingBird(entity)
             ) {
                 if(entityContext.isAbove(LEAVES_SHAPE, pos, true)
                     && (!(entity instanceof FlyingBirdEntity bird) || !bird.isFlying())

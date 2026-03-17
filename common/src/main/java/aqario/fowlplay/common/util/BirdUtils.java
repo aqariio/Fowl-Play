@@ -113,6 +113,10 @@ public final class BirdUtils {
             && !entity.getType().is(FowlPlayEntityTypeTags.FLIGHTLESS);
     }
 
+    public static boolean isPerchingBird(Entity entity) {
+        return entity.getType().is(FowlPlayEntityTypeTags.PERCHING_BIRDS);
+    }
+
     public static <T extends BirdEntity> void alertOthers(T bird, LivingEntity attacker) {
         getNearbyVisibleAdults(bird).forEach(other -> {
             Brain<?> brain = other.getBrain();

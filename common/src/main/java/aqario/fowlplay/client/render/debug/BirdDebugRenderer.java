@@ -310,10 +310,10 @@ public class BirdDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
     }
 
     private static void drawString(PoseStack matrices, MultiBufferSource vertexConsumers, Position pos, int offsetY, String string, int color, float size) {
-//        BlockPos blockPos = BlockPos.ofFloored(pos);
+        // TODO: partialTick interpolation
         double f = pos.x() + 0.5;
         double g = pos.y() + 2.4 + (double) offsetY * 0.25;
         double h = pos.z() + 0.5;
-        DebugRenderer.renderFloatingText(matrices, vertexConsumers, string, f, g, h, color, size, false, 0.5F, true);
+        DebugRenderer.renderFloatingText(matrices, vertexConsumers, string, f, g, h, color, size, false, 0.5F, false);
     }
 }

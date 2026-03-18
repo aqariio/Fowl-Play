@@ -1,10 +1,10 @@
 package aqario.fowlplay.core;
 
-import aqario.fowlplay.common.entity.*;
+import aqario.fowlplay.common.entity.variant.*;
 import aqario.fowlplay.common.util.RegistryBuilder;
 import net.minecraft.core.Registry;
 
-public class FowlPlayBuiltInRegistries {
+public final class FowlPlayBuiltInRegistries {
     public static final Registry<ChickenVariant> CHICKEN_VARIANT = RegistryBuilder
         .create(FowlPlayRegistries.CHICKEN_VARIANT)
         .sync()

@@ -4,7 +4,7 @@ import aqario.fowlplay.client.render.entity.layer.BirdHeldItemLayer;
 import aqario.fowlplay.client.render.entity.model.AdultBabyModelPair;
 import aqario.fowlplay.client.render.entity.model.BabyPenguinModel;
 import aqario.fowlplay.client.render.entity.model.PenguinModel;
-import aqario.fowlplay.common.entity.PenguinEntity;
+import aqario.fowlplay.common.entity.bird.penguin.PenguinEntity;
 import aqario.fowlplay.core.FowlPlay;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;

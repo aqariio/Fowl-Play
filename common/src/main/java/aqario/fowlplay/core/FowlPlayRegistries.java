@@ -1,6 +1,6 @@
 package aqario.fowlplay.core;
 
-import aqario.fowlplay.common.entity.*;
+import aqario.fowlplay.common.entity.variant.*;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 

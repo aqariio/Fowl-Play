@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.sensor;
 
-import aqario.fowlplay.common.entity.BirdEntity;
-import aqario.fowlplay.common.util.Birds;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
+import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.FowlPlaySensorTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -40,7 +40,7 @@ public class AvoidTargetSensor<E extends BirdEntity> extends EntityFilteringSens
 
     @Override
     protected BiPredicate<LivingEntity, E> predicate() {
-        return (target, self) -> Birds.shouldAvoid(self, target);
+        return (target, self) -> BirdUtils.shouldAvoid(self, target);
     }
 
     @Override

@@ -1,7 +1,16 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.*;
+import aqario.fowlplay.common.entity.CustomMobCategory;
+import aqario.fowlplay.common.entity.ScarecrowEntity;
+import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
+import aqario.fowlplay.common.entity.bird.dove.PigeonEntity;
+import aqario.fowlplay.common.entity.bird.passerine.*;
+import aqario.fowlplay.common.entity.bird.penguin.PenguinEntity;
+import aqario.fowlplay.common.entity.bird.raptor.HawkEntity;
+import aqario.fowlplay.common.entity.bird.shorebird.GullEntity;
+import aqario.fowlplay.common.entity.bird.waterfowl.DuckEntity;
+import aqario.fowlplay.common.entity.bird.waterfowl.GooseEntity;
 import aqario.fowlplay.common.util.EntityTypeBuilder;
 import aqario.fowlplay.common.world.gen.CustomSpawnPlacementTypes;
 import aqario.fowlplay.core.platform.PlatformHelper;

@@ -1,6 +1,6 @@
 package aqario.fowlplay.mixin.neoforge;
 
-import aqario.fowlplay.common.entity.PenguinEntity;
+import aqario.fowlplay.common.entity.bird.penguin.PenguinEntity;
 import aqario.fowlplay.core.tags.FowlPlayBlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

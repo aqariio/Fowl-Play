@@ -5,7 +5,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 
 import java.util.function.Supplier;
 
-public class FowlPlayParticleTypes {
+public final class FowlPlayParticleTypes {
     public static final Supplier<SimpleParticleType> SMALL_BUBBLE = register("small_bubble", false);
 
     private static Supplier<SimpleParticleType> register(String name, boolean alwaysShow) {

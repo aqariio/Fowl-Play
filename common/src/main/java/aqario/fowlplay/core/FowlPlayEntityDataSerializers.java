@@ -1,6 +1,6 @@
 package aqario.fowlplay.core;
 
-import aqario.fowlplay.common.entity.*;
+import aqario.fowlplay.common.entity.variant.*;
 import aqario.fowlplay.core.platform.PlatformHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;

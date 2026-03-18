@@ -22,6 +22,7 @@ import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 
 import java.util.function.Supplier;
 
@@ -37,12 +38,24 @@ public class PlatformHelper {
     }
 
     @ExpectPlatform
-    public static <T extends Entity> Supplier<EntityType<T>> registerEntityType(String id, Supplier<EntityType<T>> entityType) {
+    public static Supplier<Block> registerBlock(String id, Supplier<Block> block) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static Supplier<Item> registerItem(String id, Supplier<Item> item, ResourceKey<CreativeModeTab> group) {
+    public static <T extends Entity> Supplier<EntityType<T>> registerEntityType(String id, Supplier<EntityType<T>> entityType) {
+        throw new AssertionError();
+    }
+
+    @SafeVarargs
+    @ExpectPlatform
+    public static Supplier<Item> registerItem(String id, Supplier<Item> item, ResourceKey<CreativeModeTab>... groups) {
+        throw new AssertionError();
+    }
+
+    @SafeVarargs
+    @ExpectPlatform
+    public static Supplier<Item> registerBlockItem(String id, Supplier<Block> block, ResourceKey<CreativeModeTab>... groups) {
         throw new AssertionError();
     }
 

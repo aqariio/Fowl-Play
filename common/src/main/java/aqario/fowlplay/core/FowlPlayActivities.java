@@ -1,5 +1,6 @@
 package aqario.fowlplay.core;
 
+import aqario.fowlplay.common.entity.ai.brain.ExtendedActivity;
 import aqario.fowlplay.core.platform.PlatformHelper;
 import net.minecraft.world.entity.schedule.Activity;
 
@@ -14,7 +15,7 @@ public final class FowlPlayActivities {
     public static final Supplier<Activity> SOAR = register("soar");
 
     private static Supplier<Activity> register(String id) {
-        return PlatformHelper.registerActivity(id, () -> new Activity(id));
+        return PlatformHelper.registerActivity(id, () -> new ExtendedActivity(FowlPlay.id(id)));
     }
 
     public static void init() {

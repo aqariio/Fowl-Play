@@ -20,6 +20,12 @@ public class FowlPlayItemTagGen extends FabricTagProvider.ItemTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider lookup) {
+        this.getOrCreateTagBuilder(FowlPlayItemTags.BIRD_FEED)
+            .add(Items.BEETROOT_SEEDS)
+            .add(Items.MELON_SEEDS)
+            .add(Items.PUMPKIN_SEEDS)
+            .add(Items.TORCHFLOWER_SEEDS)
+            .add(Items.WHEAT_SEEDS);
         this.getOrCreateTagBuilder(FowlPlayItemTags.BLUE_JAY_FOOD)
             .add(Items.BEETROOT_SEEDS)
             .add(Items.GLOW_BERRIES)

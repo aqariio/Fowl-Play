@@ -1,8 +1,8 @@
 package aqario.fowlplay.common.entity.ai.brain.sensor;
 
-import aqario.fowlplay.common.entity.BirdEntity;
-import aqario.fowlplay.common.entity.TrustingBirdEntity;
-import aqario.fowlplay.common.util.Birds;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
+import aqario.fowlplay.common.entity.bird.TrustingBirdEntity;
+import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.FowlPlaySensorTypes;
 import com.google.common.collect.ImmutableList;
@@ -72,13 +72,13 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
         Brain<?> brain = bird.getBrain();
         BrainUtils.clearMemory(brain, FowlPlayMemoryTypes.SEES_FOOD.get());
         if(attacker instanceof Player player) {
-            BrainUtils.setForgettableMemory(brain, FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get(), true, Birds.CANNOT_PICKUP_FOOD_TICKS);
+            BrainUtils.setForgettableMemory(brain, FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get(), true, BirdUtils.CANNOT_PICKUP_FOOD_TICKS);
             if(bird instanceof TrustingBirdEntity trustingBird && trustingBird.trusts(player)) {
                 trustingBird.stopTrusting(player);
             }
         }
         if(attacker.getType() != bird.getType() && !bird.shouldAttack(attacker)) {
-            Birds.alertOthers(bird, attacker);
+            BirdUtils.alertOthers(bird, attacker);
         }
     }
 }

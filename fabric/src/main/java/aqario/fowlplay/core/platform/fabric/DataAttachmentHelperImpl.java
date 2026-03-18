@@ -1,6 +1,6 @@
 package aqario.fowlplay.core.platform.fabric;
 
-import aqario.fowlplay.common.entity.ChickenVariant;
+import aqario.fowlplay.common.entity.variant.ChickenVariant;
 import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
 import aqario.fowlplay.core.fabric.FowlPlayDataAttachments;
 import net.minecraft.core.Holder;
@@ -17,8 +17,5 @@ public class DataAttachmentHelperImpl {
 
     public static void setChickenVariant(Chicken entity, Holder<ChickenVariant> variant) {
         entity.setAttached(FowlPlayDataAttachments.CHICKEN_VARIANT, variant);
-    }
-
-    public static void sendChickenVariantUpdate(Chicken entity) {
     }
 }

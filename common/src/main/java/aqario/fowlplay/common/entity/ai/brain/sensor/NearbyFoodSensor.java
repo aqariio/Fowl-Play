@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.sensor;
 
-import aqario.fowlplay.common.entity.BirdEntity;
-import aqario.fowlplay.common.util.Birds;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
+import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerLevel;
@@ -41,10 +41,10 @@ public class NearbyFoodSensor<E extends BirdEntity> extends PredicateSensor<Item
     protected void doTick(ServerLevel world, E bird) {
         Brain<?> brain = bird.getBrain();
         double radius = bird.getAttributeValue(Attributes.FOLLOW_RANGE);
-        List<ItemEntity> nearbyItems = EntityRetrievalUtil.getEntities(bird, radius, ItemEntity.class, item -> predicate().test(item, bird));
+        List<ItemEntity> nearbyItems = EntityRetrievalUtil.getEntities(bird, radius, ItemEntity.class, item -> this.predicate().test(item, bird));
         BrainUtils.setMemory(brain, SBLMemoryTypes.NEARBY_ITEMS.get(), nearbyItems);
 
-        if(Birds.canPickupFood(bird)) {
+        if(BirdUtils.canPickupFood(bird)) {
             BrainUtils.setMemory(brain, FowlPlayMemoryTypes.SEES_FOOD.get(), Unit.INSTANCE);
         }
         else {

@@ -1,6 +1,6 @@
 package aqario.fowlplay.core.neoforge;
 
-import aqario.fowlplay.common.entity.ChickenVariant;
+import aqario.fowlplay.common.entity.variant.ChickenVariant;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
 import net.minecraft.core.Holder;
@@ -22,7 +22,7 @@ public class FowlPlayDataAttachments {
                 () -> FowlPlayBuiltInRegistries.CHICKEN_VARIANT.getHolderOrThrow(ChickenVariant.WHITE).getDelegate()
             )
             .serialize(FowlPlayBuiltInRegistries.CHICKEN_VARIANT.holderByNameCodec())
-
+            .sync(ChickenVariant.PACKET_CODEC)
     );
 
     private static <T> Supplier<AttachmentType<T>> register(String id, AttachmentType.Builder<T> builder) {

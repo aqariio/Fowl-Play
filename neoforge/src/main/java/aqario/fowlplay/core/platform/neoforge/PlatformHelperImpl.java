@@ -1,7 +1,7 @@
 package aqario.fowlplay.core.platform.neoforge;
 
-import aqario.fowlplay.common.entity.*;
 import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
+import aqario.fowlplay.common.entity.variant.*;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;
 import com.mojang.datafixers.util.Pair;
@@ -27,9 +27,11 @@ import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.schedule.Schedule;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -66,6 +68,9 @@ public class PlatformHelperImpl {
     );
     public static final DeferredRegister<Activity> ACTIVITIES = DeferredRegister.create(
         BuiltInRegistries.ACTIVITY,
+        FowlPlay.ID
+    );
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.createBlocks(
         FowlPlay.ID
     );
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(
@@ -129,14 +134,26 @@ public class PlatformHelperImpl {
         return ACTIVITIES.register(id, activity);
     }
 
+    public static Supplier<Block> registerBlock(String id, Supplier<Block> block) {
+        return BLOCKS.register(id, block);
+    }
+
     public static <T extends Entity> Supplier<EntityType<T>> registerEntityType(String id, Supplier<EntityType<T>> entityType) {
         return ENTITY_TYPES.register(id, entityType);
     }
 
-    public static Supplier<Item> registerItem(String id, Supplier<Item> item, ResourceKey<CreativeModeTab> group) {
+    @SafeVarargs
+    public static Supplier<Item> registerItem(String id, Supplier<Item> item, ResourceKey<CreativeModeTab>... groups) {
         Supplier<Item> registry = ITEMS.register(id, item);
-        addItemToItemGroup(registry, group);
+        for(ResourceKey<CreativeModeTab> group : groups) {
+            addItemToItemGroup(registry, group);
+        }
         return registry;
+    }
+
+    @SafeVarargs
+    public static Supplier<Item> registerBlockItem(String id, Supplier<Block> block, ResourceKey<CreativeModeTab>... groups) {
+        return registerItem(id, () -> new BlockItem(block.get(), new Item.Properties()), groups);
     }
 
     public static <T extends Mob> Supplier<Item> registerSpawnEggItem(String id, Supplier<EntityType<T>> entityType, int backgroundColor, int highlightColor) {

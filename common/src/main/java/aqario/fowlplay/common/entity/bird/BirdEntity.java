@@ -25,7 +25,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.BodyRotationControl;
@@ -39,7 +38,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -152,11 +150,11 @@ public abstract class BirdEntity extends Animal {
 
     @Override
     public boolean canTakeItem(ItemStack stack) {
-        EquipmentSlot equipmentSlot = this.getEquipmentSlotForItem(stack);
-        if(!this.getItemBySlot(equipmentSlot).isEmpty()) {
+        EquipmentSlot slot = this.getEquipmentSlotForItem(stack);
+        if(!this.getItemBySlot(slot).isEmpty()) {
             return false;
         }
-        return equipmentSlot == EquipmentSlot.MAINHAND && super.canTakeItem(stack);
+        return slot == EquipmentSlot.MAINHAND && super.canTakeItem(stack);
     }
 
     @Override
@@ -209,8 +207,7 @@ public abstract class BirdEntity extends Animal {
             this.take(item, stack.getCount());
             item.discard();
             this.eatingTime = 0;
-            Brain<?> brain = this.getBrain();
-            BrainUtils.clearMemory(brain, FowlPlayMemoryTypes.SEES_FOOD.get());
+            this.clearMemory(FowlPlayMemoryTypes.SEES_FOOD.get());
         }
     }
 
@@ -225,7 +222,9 @@ public abstract class BirdEntity extends Animal {
     @Override
     public Vec3 getFluidFallingAdjustedMovement(double gravity, boolean isFalling, Vec3 deltaMovement) {
         if(this.canFloat() && this.isWaterAboveFloatHeight()) {
-            double floatVelocity = 0.1 * Math.pow(Mth.clamp(this.getFluidHeight(FluidTags.WATER) / this.getBoundingBox().getYsize(), 0, 1), 3);
+            double error = Mth.clamp(this.getFluidHeight(FluidTags.WATER) / this.getBoundingBox().getYsize(), 0, 1);
+            // cubically proportional to the percentage of hitbox submerged underwater
+            double floatVelocity = 0.1 * Math.pow(error, 3);
             return deltaMovement.add(0.0, deltaMovement.y < floatVelocity - 0.005 ? floatVelocity : -0.003, 0.0);
         }
         return super.getFluidFallingAdjustedMovement(gravity, isFalling, deltaMovement);
@@ -347,6 +346,7 @@ public abstract class BirdEntity extends Animal {
     public void baseTick() {
         super.baseTick();
         this.level().getProfiler().push("birdBaseTick");
+        // TODO: make bird calls behaviours instead of random events
         if(this.isAlive() && this.random.nextInt(1000) < this.callChance++) {
             this.resetCallDelay();
             if(this.canCall()) {
@@ -370,7 +370,7 @@ public abstract class BirdEntity extends Animal {
     @Override
     public void tick() {
         if(this.level().isClientSide()) {
-            this.updateAnimations();
+            this.updateAnimationStates();
         }
         super.tick();
         if(this.isAmbient() && !this.shouldBeAmbient()) {
@@ -382,7 +382,7 @@ public abstract class BirdEntity extends Animal {
         return this.walkAnimation.isMoving();
     }
 
-    protected void updateAnimations() {
+    protected void updateAnimationStates() {
         // on land
         if(!this.isInWaterOrBubble()) {
             if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {

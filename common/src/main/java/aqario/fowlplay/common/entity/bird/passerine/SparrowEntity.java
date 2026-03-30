@@ -80,7 +80,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    protected void updateAnimations() {
+    protected void updateAnimationStates() {
         // on land
         if(!this.isFlying() && !this.isInWaterOrBubble()) {
             if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {

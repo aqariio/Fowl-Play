@@ -3,7 +3,6 @@ package aqario.fowlplay.core;
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.CustomMobCategory;
 import aqario.fowlplay.common.entity.ScarecrowEntity;
-import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.bird.dove.PigeonEntity;
 import aqario.fowlplay.common.entity.bird.passerine.*;
 import aqario.fowlplay.common.entity.bird.penguin.PenguinEntity;
@@ -13,6 +12,7 @@ import aqario.fowlplay.common.entity.bird.waterfowl.DuckEntity;
 import aqario.fowlplay.common.entity.bird.waterfowl.GooseEntity;
 import aqario.fowlplay.common.util.EntityTypeBuilder;
 import aqario.fowlplay.common.world.gen.CustomSpawnPlacementTypes;
+import aqario.fowlplay.common.world.gen.SpawnPredicates;
 import aqario.fowlplay.core.platform.PlatformHelper;
 import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
 import dev.architectury.registry.level.biome.BiomeModifications;
@@ -37,7 +37,7 @@ public final class FowlPlayEntityTypes {
             .spawnRestriction(
                 CustomSpawnPlacementTypes.GROUND,
                 Heightmap.Types.MOTION_BLOCKING,
-                FlyingBirdEntity::canSpawnPasserines
+                SpawnPredicates::canSpawnPasserines
             )
             .sized(0.4f, 0.55f)
             .eyeHeight(0.475f)
@@ -52,7 +52,7 @@ public final class FowlPlayEntityTypes {
             .spawnRestriction(
                 CustomSpawnPlacementTypes.GROUND,
                 Heightmap.Types.MOTION_BLOCKING,
-                FlyingBirdEntity::canSpawnPasserines
+                SpawnPredicates::canSpawnPasserines
             )
             .sized(0.4f, 0.55f)
             .eyeHeight(0.475f)
@@ -67,7 +67,7 @@ public final class FowlPlayEntityTypes {
             .spawnRestriction(
                 CustomSpawnPlacementTypes.GROUND,
                 Heightmap.Types.MOTION_BLOCKING,
-                FlyingBirdEntity::canSpawnPasserines
+                SpawnPredicates::canSpawnPasserines
             )
             .sized(0.3f, 0.45f)
             .eyeHeight(0.4f)
@@ -82,7 +82,7 @@ public final class FowlPlayEntityTypes {
             .spawnRestriction(
                 CustomSpawnPlacementTypes.GROUND,
                 Heightmap.Types.MOTION_BLOCKING,
-                FlyingBirdEntity::canSpawnPasserines
+                SpawnPredicates::canSpawnPasserines
             )
             .sized(0.5f, 0.6f)
             .eyeHeight(0.55f)
@@ -97,7 +97,7 @@ public final class FowlPlayEntityTypes {
             .spawnRestriction(
                 CustomSpawnPlacementTypes.AQUATIC,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                FlyingBirdEntity::canSpawnWaterfowl
+                SpawnPredicates::canSpawnWaterfowl
             )
             .sized(0.6f, 0.8f)
             .eyeHeight(0.7f)
@@ -112,7 +112,7 @@ public final class FowlPlayEntityTypes {
             .spawnRestriction(
                 CustomSpawnPlacementTypes.AQUATIC,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                FlyingBirdEntity::canSpawnWaterfowl
+                SpawnPredicates::canSpawnWaterfowl
             )
             .sized(0.7f, 1.1f)
             .eyeHeight(1.0f)
@@ -127,7 +127,7 @@ public final class FowlPlayEntityTypes {
             .spawnRestriction(
                 CustomSpawnPlacementTypes.SEMIAQUATIC,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                FlyingBirdEntity::canSpawnShorebirds
+                SpawnPredicates::canSpawnShorebirds
             )
             .sized(0.6f, 0.8f)
             .eyeHeight(0.7f)
@@ -142,7 +142,7 @@ public final class FowlPlayEntityTypes {
             .spawnRestriction(
                 CustomSpawnPlacementTypes.GROUND,
                 Heightmap.Types.MOTION_BLOCKING,
-                FlyingBirdEntity::canSpawnPasserines
+                SpawnPredicates::canSpawnPasserines
             )
             .sized(0.6f, 0.8f)
             .eyeHeight(0.7f)
@@ -173,7 +173,7 @@ public final class FowlPlayEntityTypes {
             .spawnRestriction(
                 CustomSpawnPlacementTypes.GROUND,
                 Heightmap.Types.MOTION_BLOCKING,
-                FlyingBirdEntity::canSpawnShorebirds
+                SpawnPredicates::canSpawnShorebirds
             )
             .sized(0.5f, 0.6f)
             .eyeHeight(0.5f)
@@ -188,7 +188,7 @@ public final class FowlPlayEntityTypes {
             .spawnRestriction(
                 CustomSpawnPlacementTypes.GROUND,
                 Heightmap.Types.MOTION_BLOCKING,
-                FlyingBirdEntity::canSpawnPasserines
+                SpawnPredicates::canSpawnPasserines
             )
             .sized(0.6f, 0.8f)
             .eyeHeight(0.7f)
@@ -203,7 +203,7 @@ public final class FowlPlayEntityTypes {
             .spawnRestriction(
                 CustomSpawnPlacementTypes.GROUND,
                 Heightmap.Types.MOTION_BLOCKING,
-                FlyingBirdEntity::canSpawnPasserines
+                SpawnPredicates::canSpawnPasserines
             )
             .sized(0.4f, 0.55f)
             .eyeHeight(0.475f)
@@ -218,7 +218,7 @@ public final class FowlPlayEntityTypes {
             .spawnRestriction(
                 CustomSpawnPlacementTypes.GROUND,
                 Heightmap.Types.MOTION_BLOCKING,
-                FlyingBirdEntity::canSpawnPasserines
+                SpawnPredicates::canSpawnPasserines
             )
             .sized(0.3f, 0.45f)
             .eyeHeight(0.4f)

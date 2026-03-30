@@ -266,7 +266,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    protected void updateAnimations() {
+    protected void updateAnimationStates() {
         this.standingState.animateWhen(this.onGround() && !this.isInWaterOrBubble() && !this.isSliding(), this.tickCount);
 
         if(this.isInWaterOrBubble()) {

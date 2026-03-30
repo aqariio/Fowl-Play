@@ -34,12 +34,17 @@ public class BlockStateBaseMixin {
         if(self.getBlock() instanceof LeavesBlock && context instanceof EntityCollisionContext entityContext) {
             Entity entity = entityContext.getEntity();
             if(entity != null
-                && BirdUtils.isPerchingBird(entity)
+                && BirdUtils.isNotFlightless(entity)
             ) {
                 if(entityContext.isAbove(LEAVES_SHAPE, pos, true)
                     && (!(entity instanceof FlyingBirdEntity bird) || !bird.isFlying())
                 ) {
-                    cir.setReturnValue(LEAVES_SHAPE);
+                    if(BirdUtils.isPerchingBird(entity)) {
+                        cir.setReturnValue(LEAVES_SHAPE);
+                    }
+                    else {
+                        cir.setReturnValue(Shapes.block());
+                    }
                 }
                 else {
                     cir.setReturnValue(Shapes.empty());

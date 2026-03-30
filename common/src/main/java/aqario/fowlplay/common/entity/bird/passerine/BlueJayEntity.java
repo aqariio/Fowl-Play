@@ -56,7 +56,7 @@ public class BlueJayEntity extends FlyingBirdEntity implements BirdBrain<BlueJay
     }
 
     @Override
-    protected void updateAnimations() {
+    protected void updateAnimationStates() {
         this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
         this.flappingState.animateWhen(this.isFlying(), this.tickCount);
         this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);

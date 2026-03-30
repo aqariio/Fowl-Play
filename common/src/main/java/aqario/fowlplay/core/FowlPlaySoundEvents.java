@@ -60,6 +60,9 @@ public final class FowlPlaySoundEvents {
     public static final Supplier<SoundEvent> ENTITY_SPARROW_SONG = register("entity.sparrow.song");
     public static final Supplier<SoundEvent> ENTITY_SPARROW_HURT = register("entity.sparrow.hurt");
 
+    public static final Supplier<SoundEvent> ENTITY_VULTURE_CALL = register("entity.vulture.call");
+    public static final Supplier<SoundEvent> ENTITY_VULTURE_HURT = register("entity.vulture.hurt");
+
     private static Supplier<SoundEvent> register(String id) {
         return PlatformHelper.registerSoundEvent(id, () -> SoundEvent.createVariableRangeEvent(FowlPlay.id(id)));
     }

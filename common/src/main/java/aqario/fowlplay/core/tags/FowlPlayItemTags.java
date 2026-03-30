@@ -20,6 +20,7 @@ public final class FowlPlayItemTags {
     public static final TagKey<Item> RAVEN_FOOD = create("raven_food");
     public static final TagKey<Item> ROBIN_FOOD = create("robin_food");
     public static final TagKey<Item> SPARROW_FOOD = create("sparrow_food");
+    public static final TagKey<Item> VULTURE_FOOD = create("vulture_food");
 
     private static TagKey<Item> create(String id) {
         return TagKey.create(Registries.ITEM, FowlPlay.id(id));

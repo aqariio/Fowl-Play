@@ -98,18 +98,18 @@ public class VultureEntity extends TrustingBirdEntity implements BirdBrain<Vultu
     }
 
     public Ingredient getFood() {
-        return Ingredient.of(FowlPlayItemTags.HAWK_FOOD);
+        return Ingredient.of(FowlPlayItemTags.VULTURE_FOOD);
     }
 
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
-        return entity.getType().is(FowlPlayEntityTypeTags.HAWK_AVOIDS);
+        return entity.getType().is(FowlPlayEntityTypeTags.VULTURE_AVOIDS);
     }
 
     @Override
     public boolean canHunt(LivingEntity target) {
-        return target.getType().is(FowlPlayEntityTypeTags.HAWK_HUNT_TARGETS) ||
-            (target.getType().is(FowlPlayEntityTypeTags.HAWK_BABY_HUNT_TARGETS) && target.isBaby());
+        return target.getType().is(FowlPlayEntityTypeTags.VULTURE_HUNT_TARGETS) ||
+            (target.getType().is(FowlPlayEntityTypeTags.VULTURE_BABY_HUNT_TARGETS) && target.isBaby());
     }
 
     @Override
@@ -146,7 +146,7 @@ public class VultureEntity extends TrustingBirdEntity implements BirdBrain<Vultu
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FowlPlaySoundEvents.ENTITY_HAWK_CALL.get();
+        return FowlPlaySoundEvents.ENTITY_VULTURE_CALL.get();
     }
 
     @Override
@@ -162,7 +162,7 @@ public class VultureEntity extends TrustingBirdEntity implements BirdBrain<Vultu
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FowlPlaySoundEvents.ENTITY_HAWK_HURT.get();
+        return FowlPlaySoundEvents.ENTITY_VULTURE_HURT.get();
     }
 
     @Override

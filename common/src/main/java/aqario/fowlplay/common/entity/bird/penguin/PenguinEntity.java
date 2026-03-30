@@ -4,7 +4,7 @@ import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
-import aqario.fowlplay.common.entity.ai.control.BirdAquaticMoveControl;
+import aqario.fowlplay.common.entity.ai.control.AquaticBirdMoveControl;
 import aqario.fowlplay.common.entity.ai.navigation.AmphibiousNavigation;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.util.BirdUtils;
@@ -115,7 +115,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @Override
     protected MoveControl createMoveControl() {
-        return new BirdAquaticMoveControl(this, 85, 15, 1.0F, 1.0F, true);
+        return new AquaticBirdMoveControl(this, 85, 15, 1.0F, 1.0F, true);
     }
 
     @Override
@@ -167,7 +167,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     public static AttributeSupplier.Builder createPenguinAttributes() {
         return BirdEntity.createBirdAttributes()
-            .add(Attributes.MAX_HEALTH, 16.0f)
+            .add(Attributes.MAX_HEALTH, 18.0f)
             .add(Attributes.ATTACK_DAMAGE, 1.0f)
             .add(Attributes.MOVEMENT_SPEED, 0.145f)
             .add(Attributes.WATER_MOVEMENT_EFFICIENCY, 1.0f);

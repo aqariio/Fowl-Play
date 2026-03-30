@@ -4,7 +4,6 @@ import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
-import aqario.fowlplay.common.entity.ai.control.BirdFloatMoveControl;
 import aqario.fowlplay.common.entity.ai.navigation.AmphibiousNavigation;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.bird.TrustingBirdEntity;
@@ -29,7 +28,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.schedule.Activity;
@@ -69,11 +67,6 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
         super(entityType, world);
         this.setPathfindingMalus(PathType.WATER_BORDER, 0.0f);
         this.setPathfindingMalus(PathType.WATER, 0.0f);
-    }
-
-    @Override
-    protected MoveControl createMoveControl() {
-        return new BirdFloatMoveControl(this);
     }
 
     @Override

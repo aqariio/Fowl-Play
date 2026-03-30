@@ -33,6 +33,7 @@ public class FeederBlock extends FaceAttachedHorizontalDirectionalBlock implemen
     public FeederBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.getStateDefinition().any()
+            .setValue(WATERLOGGED, false)
             .setValue(FACING, Direction.NORTH)
             .setValue(FACE, AttachFace.FLOOR)
             .setValue(FILL_LEVEL, 0)
@@ -69,6 +70,6 @@ public class FeederBlock extends FaceAttachedHorizontalDirectionalBlock implemen
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(WATERLOGGED, FACE, FACING, FILL_LEVEL);
+        builder.add(WATERLOGGED, FACING, FACE, FILL_LEVEL);
     }
 }

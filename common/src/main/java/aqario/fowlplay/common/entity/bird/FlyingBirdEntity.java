@@ -25,7 +25,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.VisibleForTesting;
 
 public abstract class FlyingBirdEntity extends BirdEntity {
     private static final EntityDataAccessor<Boolean> FLYING = SynchedEntityData.defineId(
@@ -302,8 +301,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         return this.entityData.get(FLYING);
     }
 
-    @VisibleForTesting
-    public void setFlying(boolean flying) {
+    private void setFlying(boolean flying) {
         this.entityData.set(FLYING, flying);
     }
 

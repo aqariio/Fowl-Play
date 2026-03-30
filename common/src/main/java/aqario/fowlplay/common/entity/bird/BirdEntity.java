@@ -230,6 +230,10 @@ public abstract class BirdEntity extends Animal {
         return super.getFluidFallingAdjustedMovement(gravity, isFalling, deltaMovement);
     }
 
+    public boolean isJumping() {
+        return this.jumping;
+    }
+
     @Override
     public boolean isSleeping() {
         return this.entityData.get(SLEEPING);

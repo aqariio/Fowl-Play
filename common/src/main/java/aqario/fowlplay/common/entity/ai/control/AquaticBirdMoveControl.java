@@ -6,7 +6,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 
-public class BirdAquaticMoveControl extends BirdMoveControl {
+public class AquaticBirdMoveControl extends BirdMoveControl {
     private static final float field_40123 = 10.0F;
     private final int pitchChange;
     private final int yawChange;
@@ -14,7 +14,7 @@ public class BirdAquaticMoveControl extends BirdMoveControl {
     private final float speedInAir;
     private final boolean buoyant;
 
-    public BirdAquaticMoveControl(BirdEntity bird, int pitchChange, int yawChange, float speedInWater, float speedInAir, boolean buoyant) {
+    public AquaticBirdMoveControl(BirdEntity bird, int pitchChange, int yawChange, float speedInWater, float speedInAir, boolean buoyant) {
         super(bird);
         this.pitchChange = pitchChange;
         this.yawChange = yawChange;
@@ -68,7 +68,7 @@ public class BirdAquaticMoveControl extends BirdMoveControl {
                 }
                 else {
                     float m = Math.abs(Mth.wrapDegrees(this.mob.getYRot() - h));
-                    float n = method_45335(m);
+                    float n = getTurningSpeedFactor(m);
                     this.mob.setSpeed(speed * this.speedInAir * n);
                 }
             }
@@ -81,7 +81,7 @@ public class BirdAquaticMoveControl extends BirdMoveControl {
         }
     }
 
-    private static float method_45335(float f) {
+    private static float getTurningSpeedFactor(float f) {
         return 1.0F - Mth.clamp((f - field_40123) / 50.0F, 0.0F, 1.0F);
     }
 }

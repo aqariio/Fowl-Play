@@ -44,6 +44,9 @@ dependencies {
     // Architectury
     modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
 
+    // Balm
+    modImplementation("net.blay09.mods:balm-fabric:${project.balm_version}")
+
     // Cloth Config
     modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")
 

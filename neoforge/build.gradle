@@ -57,6 +57,9 @@ dependencies {
         transitive = false
     }
 
+    // Balm
+    modImplementation("net.blay09.mods:balm-neoforge:${project.balm_version}")
+
     // Cloth Config
     modRuntimeOnly("me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}")
 

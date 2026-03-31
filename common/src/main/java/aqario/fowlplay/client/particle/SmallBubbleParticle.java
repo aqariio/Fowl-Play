@@ -67,10 +67,10 @@ public class SmallBubbleParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
-    public static class Factory implements ParticleProvider<SimpleParticleType> {
+    public static class Provider implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet spriteProvider;
 
-        public Factory(SpriteSet spriteProvider) {
+        public Provider(SpriteSet spriteProvider) {
             this.spriteProvider = spriteProvider;
         }
 

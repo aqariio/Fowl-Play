@@ -21,6 +21,9 @@ dependencies {
     // Architectury
     modImplementation("dev.architectury:architectury-fabric:${rootProject.architectury_version}")
 
+    // Balm
+    modImplementation("net.blay09.mods:balm-common:${project.balm_version}")
+
     // Debug Utils
     modImplementation("io.github.flemmli97:debugutils:${project.debugutils_version}-fabric") {
         transitive = false

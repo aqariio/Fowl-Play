@@ -29,16 +29,7 @@ public final class FowlPlayNeoForge {
         RegisterImpl.GULL_VARIANTS.register(modBus);
         RegisterImpl.PIGEON_VARIANTS.register(modBus);
         RegisterImpl.SPARROW_VARIANTS.register(modBus);
-        RegisterImpl.ACTIVITIES.register(modBus);
-        RegisterImpl.ENTITY_TYPES.register(modBus);
         RegisterImpl.ITEMS.register(modBus);
-        RegisterImpl.MEMORY_MODULE_TYPES.register(modBus);
-        RegisterImpl.PARTICLE_TYPES.register(modBus);
-        RegisterImpl.SCHEDULES.register(modBus);
-        RegisterImpl.SENSOR_TYPES.register(modBus);
-        RegisterImpl.SOUND_EVENTS.register(modBus);
-        RegisterImpl.TRACKED_DATA_HANDLERS.register(modBus);
-        FowlPlayBiomeModifiers.BIOME_MODIFIER_SERIALIZERS.register(modBus);
         FowlPlayDataAttachments.ATTACHMENT_TYPES.register(modBus);
     }
 

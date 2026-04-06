@@ -1,6 +1,5 @@
 package aqario.fowlplay.core.platform.fabric;
 
-import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
 import aqario.fowlplay.core.FowlPlay;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
@@ -16,19 +15,11 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.syncher.EntityDataSerializer;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.minecraft.world.entity.ai.sensing.Sensor;
-import net.minecraft.world.entity.ai.sensing.SensorType;
-import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 
@@ -41,18 +32,8 @@ public class RegisterImpl {
         Registry.register((Registry<T>) BuiltInRegistries.REGISTRY.get(key.registry()), key, variant.get());
     }
 
-    public static Supplier<Activity> activity(String id, Supplier<Activity> activity) {
-        Activity registry = Registry.register(BuiltInRegistries.ACTIVITY, FowlPlay.id(id), activity.get());
-        return () -> registry;
-    }
-
     public static Supplier<Block> block(String id, Supplier<Block> block) {
         Block registry = Registry.register(BuiltInRegistries.BLOCK, FowlPlay.id(id), block.get());
-        return () -> registry;
-    }
-
-    public static <T extends Entity> Supplier<EntityType<T>> entityType(String id, Supplier<EntityType<T>> entityType) {
-        EntityType<T> registry = Registry.register(BuiltInRegistries.ENTITY_TYPE, FowlPlay.id(id), entityType.get());
         return () -> registry;
     }
 
@@ -74,41 +55,12 @@ public class RegisterImpl {
         return item(id, () -> new SpawnEggItem(entityType.get(), backgroundColor, highlightColor, new Item.Properties()), CreativeModeTabs.SPAWN_EGGS);
     }
 
-    public static <T> Supplier<MemoryModuleType<T>> memoryType(String id, Supplier<MemoryModuleType<T>> memoryModuleType) {
-        MemoryModuleType<T> registry = Registry.register(BuiltInRegistries.MEMORY_MODULE_TYPE, FowlPlay.id(id), memoryModuleType.get());
-        return () -> registry;
-    }
-
-    public static Supplier<SimpleParticleType> particleType(String id, Supplier<SimpleParticleType> particleType) {
-        SimpleParticleType registry = Registry.register(BuiltInRegistries.PARTICLE_TYPE, FowlPlay.id(id), particleType.get());
-        return () -> registry;
-    }
-
-    public static Supplier<ExtendedSchedule> schedule(String id, Supplier<ExtendedSchedule> schedule) {
-        ExtendedSchedule registry = Registry.register(BuiltInRegistries.SCHEDULE, FowlPlay.id(id), schedule.get());
-        return () -> registry;
-    }
-
-    public static <T extends Sensor<?>> Supplier<SensorType<T>> sensorType(String id, Supplier<SensorType<T>> sensorType) {
-        SensorType<T> registry = Registry.register(BuiltInRegistries.SENSOR_TYPE, FowlPlay.id(id), sensorType.get());
-        return () -> registry;
-    }
-
-    public static Supplier<SoundEvent> soundEvent(String id, Supplier<SoundEvent> soundEvent) {
-        SoundEvent registry = Registry.register(BuiltInRegistries.SOUND_EVENT, FowlPlay.id(id), soundEvent.get());
-        return () -> registry;
-    }
-
     public static <T> Registry<T> registry(ResourceKey<Registry<T>> registryKey, boolean sync) {
         FabricRegistryBuilder<T, MappedRegistry<T>> builder = FabricRegistryBuilder.createSimple(registryKey);
         if(sync) {
             builder.attribute(RegistryAttribute.SYNCED);
         }
         return builder.buildAndRegister();
-    }
-
-    public static <T> void entityDataSerializer(String id, EntityDataSerializer<T> handler) {
-        EntityDataSerializers.registerSerializer(handler);
     }
 
     public static void addItemToItemGroup(Supplier<Item> item, ResourceKey<CreativeModeTab> itemGroup) {

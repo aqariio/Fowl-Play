@@ -1,11 +1,17 @@
 package aqario.fowlplay.core;
 
-import aqario.fowlplay.core.platform.Register;
+import aqario.fowlplay.common.registry.CommonRegister;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvent;
 
 import java.util.function.Supplier;
 
 public final class FowlPlaySoundEvents {
+    public static final CommonRegister<SoundEvent> REGISTRAR = CommonRegister.create(
+        BuiltInRegistries.SOUND_EVENT,
+        FowlPlay.ID
+    );
+
     public static final Supplier<SoundEvent> ENTITY_BIRD_EAT = register("entity.bird.eat");
     public static final Supplier<SoundEvent> ENTITY_BIRD_FLAP = register("entity.bird.flap");
 
@@ -64,9 +70,6 @@ public final class FowlPlaySoundEvents {
     public static final Supplier<SoundEvent> ENTITY_VULTURE_HURT = register("entity.vulture.hurt");
 
     private static Supplier<SoundEvent> register(String id) {
-        return Register.soundEvent(id, () -> SoundEvent.createVariableRangeEvent(FowlPlay.id(id)));
-    }
-
-    public static void init() {
+        return REGISTRAR.register(id, () -> SoundEvent.createVariableRangeEvent(FowlPlay.id(id)));
     }
 }

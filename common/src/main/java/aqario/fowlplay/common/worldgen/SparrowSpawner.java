@@ -1,7 +1,7 @@
-package aqario.fowlplay.common.world.gen;
+package aqario.fowlplay.common.worldgen;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.bird.dove.PigeonEntity;
+import aqario.fowlplay.common.entity.bird.passerine.SparrowEntity;
 import aqario.fowlplay.core.FowlPlayEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -16,9 +16,9 @@ import net.minecraft.world.phys.AABB;
 
 import java.util.List;
 
-public class PigeonSpawner implements CustomSpawner {
-    private static final int SPAWN_COOLDOWN = 3600;
-    private static final int MAX_PIGEONS = 6;
+public class SparrowSpawner implements CustomSpawner {
+    private static final int SPAWN_COOLDOWN = 2400;
+    private static final int MAX_SPARROWS = 12;
     private int ticksUntilNextSpawn;
 
     @SuppressWarnings("deprecation")
@@ -26,7 +26,7 @@ public class PigeonSpawner implements CustomSpawner {
     public int tick(ServerLevel world, boolean spawnMonsters, boolean spawnAnimals) {
         if (!spawnAnimals
             || !world.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)
-            || FowlPlayConfig.getInstance().pigeonSpawnWeight <= 0
+            || FowlPlayConfig.getInstance().sparrowSpawnWeight <= 0
         ) {
             return 0;
         }
@@ -57,9 +57,10 @@ public class PigeonSpawner implements CustomSpawner {
         if (world.getPoiManager()
             .getCountInRange(holder -> holder.is(PoiTypes.HOME), pos, 48, PoiManager.Occupancy.IS_OCCUPIED)
             > 4L) {
-            List<PigeonEntity> nearbyPigeons = world.getEntitiesOfClass(PigeonEntity.class, new AABB(pos).inflate(48.0, 8.0, 48.0));
-            if (nearbyPigeons.size() < MAX_PIGEONS
-                && world.canSeeSky(pos)) {
+            List<SparrowEntity> nearbySparrows = world.getEntitiesOfClass(SparrowEntity.class, new AABB(pos).inflate(48.0, 8.0, 48.0));
+            if (nearbySparrows.size() < MAX_SPARROWS
+                && SpawnPredicates.canSpawnPasserines(FowlPlayEntityTypes.SPARROW.get(), world, MobSpawnType.NATURAL, pos, world.getRandom())
+            ) {
                 return this.spawn(pos, world);
             }
         }
@@ -68,13 +69,13 @@ public class PigeonSpawner implements CustomSpawner {
     }
 
     private int spawn(BlockPos pos, ServerLevel world) {
-        PigeonEntity pigeon = FowlPlayEntityTypes.PIGEON.get().create(world);
-        if (pigeon == null) {
+        SparrowEntity sparrow = FowlPlayEntityTypes.SPARROW.get().create(world);
+        if (sparrow == null) {
             return 0;
         }
-        pigeon.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.NATURAL, null);
-        pigeon.moveTo(pos, 0.0F, 0.0F);
-        world.addFreshEntityWithPassengers(pigeon);
+        sparrow.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.NATURAL, null);
+        sparrow.moveTo(pos, 0.0F, 0.0F);
+        world.addFreshEntityWithPassengers(sparrow);
         return 1;
     }
 }

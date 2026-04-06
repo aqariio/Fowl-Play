@@ -1,6 +1,5 @@
 package aqario.fowlplay.core.platform;
 
-import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -9,17 +8,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.minecraft.world.entity.ai.sensing.Sensor;
-import net.minecraft.world.entity.ai.sensing.SensorType;
-import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -33,17 +25,7 @@ public class Register {
     }
 
     @ExpectPlatform
-    public static Supplier<Activity> activity(String id, Supplier<Activity> activity) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
     public static Supplier<Block> block(String id, Supplier<Block> block) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static <T extends Entity> Supplier<EntityType<T>> entityType(String id, Supplier<EntityType<T>> entityType) {
         throw new AssertionError();
     }
 
@@ -65,37 +47,7 @@ public class Register {
     }
 
     @ExpectPlatform
-    public static <T> Supplier<MemoryModuleType<T>> memoryType(String id, Supplier<MemoryModuleType<T>> memoryModuleType) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static Supplier<SimpleParticleType> particleType(String id, Supplier<SimpleParticleType> particleType) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static Supplier<ExtendedSchedule> schedule(String id, Supplier<ExtendedSchedule> schedule) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static <T extends Sensor<?>> Supplier<SensorType<T>> sensorType(String id, Supplier<SensorType<T>> sensorType) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static Supplier<SoundEvent> soundEvent(String id, Supplier<SoundEvent> soundEvent) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
     public static <T> Registry<T> registry(ResourceKey<Registry<T>> registryKey, boolean sync) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static <T> void entityDataSerializer(String id, EntityDataSerializer<T> handler) {
         throw new AssertionError();
     }
 

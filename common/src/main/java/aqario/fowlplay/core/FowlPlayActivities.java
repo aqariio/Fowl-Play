@@ -1,12 +1,18 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.entity.ai.brain.ExtendedActivity;
-import aqario.fowlplay.core.platform.Register;
+import aqario.fowlplay.common.registry.CommonRegister;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.schedule.Activity;
 
 import java.util.function.Supplier;
 
 public final class FowlPlayActivities {
+    public static final CommonRegister<Activity> REGISTRAR = CommonRegister.create(
+        BuiltInRegistries.ACTIVITY,
+        FowlPlay.ID
+    );
+
     public static final Supplier<Activity> DELIVER = register("deliver");
     public static final Supplier<Activity> FOLLOW = register("follow");
     public static final Supplier<Activity> FORAGE = register("forage");
@@ -15,9 +21,6 @@ public final class FowlPlayActivities {
     public static final Supplier<Activity> SOAR = register("soar");
 
     private static Supplier<Activity> register(String id) {
-        return Register.activity(id, () -> new ExtendedActivity(FowlPlay.id(id)));
-    }
-
-    public static void init() {
+        return REGISTRAR.register(id, () -> new ExtendedActivity(FowlPlay.id(id)));
     }
 }

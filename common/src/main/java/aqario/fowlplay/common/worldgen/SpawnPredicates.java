@@ -1,4 +1,4 @@
-package aqario.fowlplay.common.world.gen;
+package aqario.fowlplay.common.worldgen;
 
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.core.tags.FowlPlayBlockTags;

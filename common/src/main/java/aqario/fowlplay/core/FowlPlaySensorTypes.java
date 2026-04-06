@@ -1,13 +1,19 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
-import aqario.fowlplay.core.platform.Register;
+import aqario.fowlplay.common.registry.CommonRegister;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 
 import java.util.function.Supplier;
 
 public final class FowlPlaySensorTypes {
+    public static final CommonRegister<SensorType<?>> REGISTRAR = CommonRegister.create(
+        BuiltInRegistries.SENSOR_TYPE,
+        FowlPlay.ID
+    );
+
     public static final Supplier<SensorType<NearbyAdultsSensor<?>>> NEARBY_ADULTS = register("nearby_adults",
         NearbyAdultsSensor::new
     );
@@ -25,9 +31,6 @@ public final class FowlPlaySensorTypes {
     );
 
     private static <U extends Sensor<?>> Supplier<SensorType<U>> register(String id, Supplier<U> factory) {
-        return Register.sensorType(id, () -> new SensorType<>(factory));
-    }
-
-    public static void init() {
+        return REGISTRAR.register(id, () -> new SensorType<>(factory));
     }
 }

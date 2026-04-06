@@ -41,7 +41,8 @@ public class CommonRegisterImpl<T> extends CommonRegister<T> {
     }
 
     @Override
-    protected void platformRegister() {
+    public void register() {
+        super.register();
         this.registry.register(Objects.requireNonNull(ModLoadingContext.get().getActiveContainer().getEventBus()));
     }
 }

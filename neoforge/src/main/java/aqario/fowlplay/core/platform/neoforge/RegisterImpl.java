@@ -1,6 +1,5 @@
 package aqario.fowlplay.core.platform.neoforge;
 
-import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
 import aqario.fowlplay.common.entity.variant.*;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;
@@ -14,19 +13,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.minecraft.world.entity.ai.sensing.Sensor;
-import net.minecraft.world.entity.ai.sensing.SensorType;
-import net.minecraft.world.entity.schedule.Activity;
-import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -34,7 +24,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
 import java.util.function.Supplier;
@@ -66,45 +55,13 @@ public class RegisterImpl {
         FowlPlayRegistries.SPARROW_VARIANT,
         FowlPlay.ID
     );
-    public static final DeferredRegister<Activity> ACTIVITIES = DeferredRegister.create(
-        BuiltInRegistries.ACTIVITY,
-        FowlPlay.ID
-    );
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.createBlocks(
-        FowlPlay.ID
-    );
-    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(
-        BuiltInRegistries.ENTITY_TYPE,
         FowlPlay.ID
     );
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.createItems(
         FowlPlay.ID
     );
-    public static final DeferredRegister<MemoryModuleType<?>> MEMORY_MODULE_TYPES = DeferredRegister.create(
-        BuiltInRegistries.MEMORY_MODULE_TYPE,
-        FowlPlay.ID
-    );
-    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(
-        BuiltInRegistries.PARTICLE_TYPE,
-        FowlPlay.ID
-    );
-    public static final DeferredRegister<Schedule> SCHEDULES = DeferredRegister.create(
-        BuiltInRegistries.SCHEDULE,
-        FowlPlay.ID
-    );
-    public static final DeferredRegister<SensorType<?>> SENSOR_TYPES = DeferredRegister.create(
-        BuiltInRegistries.SENSOR_TYPE,
-        FowlPlay.ID
-    );
-    public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(
-        BuiltInRegistries.SOUND_EVENT,
-        FowlPlay.ID
-    );
     public static final ObjectArrayList<Registry<?>> REGISTRIES = new ObjectArrayList<>();
-    public static final DeferredRegister<EntityDataSerializer<?>> TRACKED_DATA_HANDLERS = DeferredRegister.create(
-        NeoForgeRegistries.ENTITY_DATA_SERIALIZERS,
-        FowlPlay.ID
-    );
     public static final ObjectArrayList<Pair<ModelLayerLocation, Supplier<LayerDefinition>>> MODEL_LAYERS = new ObjectArrayList<>();
     public static final ObjectArrayList<Pair<Supplier<EntityType<?>>, EntityRendererProvider<?>>> ENTITY_RENDERERS = new ObjectArrayList<>();
 
@@ -130,16 +87,8 @@ public class RegisterImpl {
         }
     }
 
-    public static Supplier<Activity> activity(String id, Supplier<Activity> activity) {
-        return ACTIVITIES.register(id, activity);
-    }
-
     public static Supplier<Block> block(String id, Supplier<Block> block) {
         return BLOCKS.register(id, block);
-    }
-
-    public static <T extends Entity> Supplier<EntityType<T>> entityType(String id, Supplier<EntityType<T>> entityType) {
-        return ENTITY_TYPES.register(id, entityType);
     }
 
     @SafeVarargs
@@ -160,26 +109,6 @@ public class RegisterImpl {
         return item(id, () -> new DeferredSpawnEggItem(entityType, backgroundColor, highlightColor, new Item.Properties()), CreativeModeTabs.SPAWN_EGGS);
     }
 
-    public static <T> Supplier<MemoryModuleType<T>> memoryType(String id, Supplier<MemoryModuleType<T>> memoryModuleType) {
-        return MEMORY_MODULE_TYPES.register(id, memoryModuleType);
-    }
-
-    public static Supplier<SimpleParticleType> particleType(String id, Supplier<SimpleParticleType> particleType) {
-        return PARTICLE_TYPES.register(id, particleType);
-    }
-
-    public static Supplier<ExtendedSchedule> schedule(String id, Supplier<ExtendedSchedule> schedule) {
-        return SCHEDULES.register(id, schedule);
-    }
-
-    public static <T extends Sensor<?>> Supplier<SensorType<T>> sensorType(String id, Supplier<SensorType<T>> sensorType) {
-        return SENSOR_TYPES.register(id, sensorType);
-    }
-
-    public static Supplier<SoundEvent> soundEvent(String id, Supplier<SoundEvent> soundEvent) {
-        return SOUND_EVENTS.register(id, soundEvent);
-    }
-
     public static <T> Registry<T> registry(ResourceKey<Registry<T>> registryKey, boolean sync) {
         RegistryBuilder<T> builder = new RegistryBuilder<>(registryKey);
         if(sync) {
@@ -188,10 +117,6 @@ public class RegisterImpl {
         Registry<T> registry = builder.create();
         REGISTRIES.add(registry);
         return registry;
-    }
-
-    public static <T> void entityDataSerializer(String id, EntityDataSerializer<T> handler) {
-        TRACKED_DATA_HANDLERS.register(id, () -> handler);
     }
 
     public static void addItemToItemGroup(Supplier<Item> item, ResourceKey<CreativeModeTab> itemGroup) {

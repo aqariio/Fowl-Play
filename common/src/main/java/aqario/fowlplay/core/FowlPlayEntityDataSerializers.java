@@ -1,7 +1,7 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.entity.variant.*;
-import aqario.fowlplay.core.platform.Register;
+import aqario.fowlplay.common.registry.DataSerializerRegister;
 import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -11,10 +11,8 @@ import java.util.List;
 import java.util.UUID;
 
 public final class FowlPlayEntityDataSerializers {
-    public static final EntityDataSerializer<Holder<ChickenVariant>> CHICKEN_VARIANT = register(
-        "chicken_variant",
-        EntityDataSerializer.forValueType(ChickenVariant.PACKET_CODEC)
-    );
+    public static final DataSerializerRegister REGISTRAR = DataSerializerRegister.create(FowlPlay.ID);
+
     public static final EntityDataSerializer<Holder<DuckVariant>> DUCK_VARIANT = register(
         "duck_variant",
         EntityDataSerializer.forValueType(DuckVariant.PACKET_CODEC)
@@ -41,10 +39,7 @@ public final class FowlPlayEntityDataSerializers {
     );
 
     private static <T> EntityDataSerializer<T> register(String id, EntityDataSerializer<T> handler) {
-        Register.entityDataSerializer(id, handler);
+        REGISTRAR.register(id, handler);
         return handler;
-    }
-
-    public static void init() {
     }
 }

@@ -1,12 +1,19 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
-import aqario.fowlplay.core.platform.Register;
+import aqario.fowlplay.common.registry.CommonRegister;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.entity.schedule.Schedule;
 
 import java.util.function.Supplier;
 
 public class FowlPlaySchedules {
+    public static final CommonRegister<Schedule> REGISTRAR = CommonRegister.create(
+        BuiltInRegistries.SCHEDULE,
+        FowlPlay.ID
+    );
+
     // TODO: have separate schedules for babies and adults, and separate schedules for domestic and wild variants
     public static final Supplier<ExtendedSchedule> FORAGER = register("forager", new ExtendedSchedule()
         .activityAt(0, FowlPlayActivities.PERCH)
@@ -51,9 +58,6 @@ public class FowlPlaySchedules {
     );
 
     private static Supplier<ExtendedSchedule> register(String id, ExtendedSchedule schedule) {
-        return Register.schedule(id, () -> schedule);
-    }
-
-    public static void init() {
+        return REGISTRAR.register(id, () -> schedule);
     }
 }

@@ -12,10 +12,10 @@ import aqario.fowlplay.common.entity.bird.waterfowl.DuckEntity;
 import aqario.fowlplay.common.entity.bird.waterfowl.GooseEntity;
 import aqario.fowlplay.common.registry.CommonRegister;
 import aqario.fowlplay.common.util.EntityTypeBuilder;
-import aqario.fowlplay.common.world.gen.CustomSpawnPlacementTypes;
-import aqario.fowlplay.common.world.gen.SpawnPredicates;
+import aqario.fowlplay.common.worldgen.BiomeModifier;
+import aqario.fowlplay.common.worldgen.CustomSpawnPlacementTypes;
+import aqario.fowlplay.common.worldgen.SpawnPredicates;
 import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
-import dev.architectury.registry.level.biome.BiomeModifications;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
@@ -29,7 +29,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.function.Supplier;
 
 public final class FowlPlayEntityTypes {
-    public static final CommonRegister<EntityType<?>> ENTITY_TYPES = CommonRegister.create(
+    public static final CommonRegister<EntityType<?>> REGISTRAR = CommonRegister.create(
         BuiltInRegistries.ENTITY_TYPE,
         FowlPlay.ID
     );
@@ -271,7 +271,7 @@ public final class FowlPlayEntityTypes {
     );
 
     private static <T extends Entity> Supplier<EntityType<T>> register(String id, EntityTypeBuilder<T> builder) {
-        return ENTITY_TYPES.register(id, () -> builder.build(id));
+        return REGISTRAR.register(id, () -> builder.build(id));
     }
 
     static {
@@ -397,30 +397,51 @@ public final class FowlPlayEntityTypes {
     }
 
     // TODO: use biome property based spawning to more accurately reflect real life habitats
-    // doesn't work on neoforge apparently
-    public static <T extends Entity> void addSpawn(TagKey<Biome> tag, MobCategory spawnGroup, Supplier<EntityType<T>> type, int weight, int minGroupSize, int maxGroupSize) {
-        BiomeModifications.addProperties(
-            context -> context.hasTag(tag),
-            (context, mutable) -> mutable.getSpawnProperties().addSpawn(
-                spawnGroup,
+    public static <T extends Entity> void addSpawn(TagKey<Biome> tag, MobCategory category, Supplier<EntityType<T>> type, int weight, int minCount, int maxCount) {
+//        BiomeModifications.addProperties(
+//            context -> context.hasTag(tag),
+//            (context, mutable) -> mutable.getSpawnProperties().addSpawn(
+//                category,
+//                new MobSpawnSettings.SpawnerData(
+//                    type.get(),
+//                    weight,
+//                    minCount,
+//                    maxCount
+//                )
+//            )
+//        );
+        BiomeModifier.add(
+            context -> context.is(tag),
+            (context, modifier) -> modifier.addSpawn(
+                category,
                 new MobSpawnSettings.SpawnerData(
                     type.get(),
                     weight,
-                    minGroupSize,
-                    maxGroupSize
+                    minCount,
+                    maxCount
                 )
             )
         );
     }
 
-    public static <T extends Entity> void setSpawnCost(TagKey<Biome> tag, Supplier<EntityType<T>> type, double gravityLimit, double mass) {
-        BiomeModifications.addProperties(
-            context -> context.hasTag(tag),
-            (context, mutable) -> mutable.getSpawnProperties().setSpawnCost(
+    public static <T extends Entity> void setSpawnCost(TagKey<Biome> tag, Supplier<EntityType<T>> type, double energyBudget, double charge) {
+//        BiomeModifications.addProperties(
+//            context -> context.hasTag(tag),
+//            (context, mutable) -> mutable.getSpawnProperties().setSpawnCost(
+//                type.get(),
+//                new MobSpawnSettings.MobSpawnCost(
+//                    energyBudget,
+//                    charge
+//                )
+//            )
+//        );
+        BiomeModifier.add(
+            context -> context.is(tag),
+            (context, modifier) -> modifier.setSpawnCost(
                 type.get(),
                 new MobSpawnSettings.MobSpawnCost(
-                    gravityLimit,
-                    mass
+                    energyBudget,
+                    charge
                 )
             )
         );

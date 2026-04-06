@@ -3,8 +3,9 @@ package aqario.fowlplay.core;
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.variant.*;
 import aqario.fowlplay.common.util.PathBuilder;
-import aqario.fowlplay.common.world.gen.PigeonSpawner;
-import aqario.fowlplay.common.world.gen.SparrowSpawner;
+import aqario.fowlplay.common.worldgen.BiomeModifier;
+import aqario.fowlplay.common.worldgen.PigeonSpawner;
+import aqario.fowlplay.common.worldgen.SparrowSpawner;
 import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.platform.Mod;
 import dev.architectury.platform.Platform;
@@ -45,17 +46,18 @@ public class FowlPlay {
         PigeonVariant.init();
         SparrowVariant.init();
 
-        FowlPlayActivities.init();
+        FowlPlayActivities.REGISTRAR.register();
         FowlPlayBlocks.init();
-        FowlPlayEntityTypes.ENTITY_TYPES.register();
+        FowlPlayEntityTypes.REGISTRAR.register();
         FowlPlayItems.init();
-        FowlPlayMemoryTypes.init();
-        FowlPlayParticleTypes.init();
-        FowlPlaySchedules.init();
-        FowlPlaySensorTypes.init();
-        FowlPlaySoundEvents.init();
-        FowlPlayEntityDataSerializers.init();
+        FowlPlayMemoryTypes.REGISTRAR.register();
+        FowlPlayParticleTypes.REGISTRAR.register();
+        FowlPlaySchedules.REGISTRAR.register();
+        FowlPlaySensorTypes.REGISTRAR.register();
+        FowlPlaySoundEvents.REGISTRAR.register();
+        FowlPlayEntityDataSerializers.REGISTRAR.register();
 
+        BiomeModifier.register();
         initSpawners();
     }
 

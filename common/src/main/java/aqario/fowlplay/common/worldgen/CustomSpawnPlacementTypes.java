@@ -1,4 +1,4 @@
-package aqario.fowlplay.common.world.gen;
+package aqario.fowlplay.common.worldgen;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;

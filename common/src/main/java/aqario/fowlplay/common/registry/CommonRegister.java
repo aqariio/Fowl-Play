@@ -32,12 +32,8 @@ public abstract class CommonRegister<T> {
 
     public void register() {
         if(this.registered) {
-            throw new IllegalArgumentException("Already registered: " + this.key());
+            throw new IllegalArgumentException("Already registered!");
         }
-
         this.registered = true;
-        this.platformRegister();
     }
-
-    protected abstract void platformRegister();
 }

@@ -45,9 +45,4 @@ public class CommonRegisterImpl<T> extends CommonRegister<T> {
     public Registry<T> registry() {
         return this.registry;
     }
-
-    @Override
-    protected void platformRegister() {
-        // NO-OP
-    }
 }

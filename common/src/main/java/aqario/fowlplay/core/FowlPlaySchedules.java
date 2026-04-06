@@ -1,7 +1,7 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.entity.ai.brain.ExtendedSchedule;
-import aqario.fowlplay.core.platform.PlatformHelper;
+import aqario.fowlplay.core.platform.Register;
 import net.minecraft.world.entity.schedule.Activity;
 
 import java.util.function.Supplier;
@@ -51,7 +51,7 @@ public class FowlPlaySchedules {
     );
 
     private static Supplier<ExtendedSchedule> register(String id, ExtendedSchedule schedule) {
-        return PlatformHelper.registerSchedule(id, () -> schedule);
+        return Register.schedule(id, () -> schedule);
     }
 
     public static void init() {

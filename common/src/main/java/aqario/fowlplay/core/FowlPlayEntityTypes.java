@@ -10,12 +10,13 @@ import aqario.fowlplay.common.entity.bird.raptor.HawkEntity;
 import aqario.fowlplay.common.entity.bird.shorebird.GullEntity;
 import aqario.fowlplay.common.entity.bird.waterfowl.DuckEntity;
 import aqario.fowlplay.common.entity.bird.waterfowl.GooseEntity;
+import aqario.fowlplay.common.registry.CommonRegister;
 import aqario.fowlplay.common.util.EntityTypeBuilder;
 import aqario.fowlplay.common.world.gen.CustomSpawnPlacementTypes;
 import aqario.fowlplay.common.world.gen.SpawnPredicates;
-import aqario.fowlplay.core.platform.PlatformHelper;
 import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
 import dev.architectury.registry.level.biome.BiomeModifications;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -28,6 +29,11 @@ import net.minecraft.world.phys.Vec3;
 import java.util.function.Supplier;
 
 public final class FowlPlayEntityTypes {
+    public static final CommonRegister<EntityType<?>> ENTITY_TYPES = CommonRegister.create(
+        BuiltInRegistries.ENTITY_TYPE,
+        FowlPlay.ID
+    );
+
     public static final Supplier<EntityType<BlueJayEntity>> BLUE_JAY = register("blue_jay",
         EntityTypeBuilder.of(
                 BlueJayEntity::new,
@@ -118,13 +124,43 @@ public final class FowlPlayEntityTypes {
             .eyeHeight(1.0f)
     );
 
+//    public static final Supplier<EntityType<GooseEntity>> GREYLAG_GOOSE = register("greylag_goose",
+//        EntityTypeBuilder.of(
+//                GooseEntity::new,
+//                CustomMobCategory.BIRDS.mobCategory
+//            )
+//            .attributes(GooseEntity::createGooseAttributes)
+//            .spawnRestriction(
+//                CustomSpawnPlacementTypes.AQUATIC,
+//                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+//                SpawnPredicates::canSpawnWaterfowl
+//            )
+//            .sized(0.7f, 1.1f)
+//            .eyeHeight(1.0f)
+//    );
+//
+//    public static final Supplier<EntityType<GooseEntity>> SWAN_GOOSE = register("swan_goose",
+//        EntityTypeBuilder.of(
+//                GooseEntity::new,
+//                CustomMobCategory.BIRDS.mobCategory
+//            )
+//            .attributes(GooseEntity::createGooseAttributes)
+//            .spawnRestriction(
+//                CustomSpawnPlacementTypes.AQUATIC,
+//                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+//                SpawnPredicates::canSpawnWaterfowl
+//            )
+//            .sized(0.7f, 1.1f)
+//            .eyeHeight(1.0f)
+//    );
+
     public static final Supplier<EntityType<GullEntity>> GULL = register("gull",
         EntityTypeBuilder.of(
                 GullEntity::new,
                 CustomMobCategory.BIRDS.mobCategory
             )
             .attributes(GullEntity::createGullAttributes)
-            .spawnRestriction(
+            .spawnRestriction(//
                 CustomSpawnPlacementTypes.SEMIAQUATIC,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 SpawnPredicates::canSpawnShorebirds
@@ -235,10 +271,10 @@ public final class FowlPlayEntityTypes {
     );
 
     private static <T extends Entity> Supplier<EntityType<T>> register(String id, EntityTypeBuilder<T> builder) {
-        return PlatformHelper.registerEntityType(id, () -> builder.build(id));
+        return ENTITY_TYPES.register(id, () -> builder.build(id));
     }
 
-    public static void init() {
+    static {
         // Spawn Weights
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_BLUE_JAYS,

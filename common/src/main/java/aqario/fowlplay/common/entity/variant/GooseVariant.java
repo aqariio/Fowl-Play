@@ -3,7 +3,7 @@ package aqario.fowlplay.common.entity.variant;
 import aqario.fowlplay.common.util.PathBuilder;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;
-import aqario.fowlplay.core.platform.PlatformHelper;
+import aqario.fowlplay.core.platform.Register;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -39,7 +39,7 @@ public record GooseVariant(
 
     private static ResourceKey<GooseVariant> register(String id, boolean domesticatable) {
         ResourceKey<GooseVariant> key = ResourceKey.create(FowlPlayRegistries.GOOSE_VARIANT, FowlPlay.id(id));
-        PlatformHelper.registerVariant(id, key, () -> new GooseVariant(
+        Register.variant(id, key, () -> new GooseVariant(
             id,
             domesticatable
         ));

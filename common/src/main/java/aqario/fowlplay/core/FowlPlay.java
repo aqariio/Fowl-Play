@@ -47,7 +47,7 @@ public class FowlPlay {
 
         FowlPlayActivities.init();
         FowlPlayBlocks.init();
-        FowlPlayEntityTypes.init();
+        FowlPlayEntityTypes.ENTITY_TYPES.register();
         FowlPlayItems.init();
         FowlPlayMemoryTypes.init();
         FowlPlayParticleTypes.init();

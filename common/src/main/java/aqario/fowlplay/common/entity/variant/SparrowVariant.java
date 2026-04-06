@@ -2,7 +2,7 @@ package aqario.fowlplay.common.entity.variant;
 
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;
-import aqario.fowlplay.core.platform.PlatformHelper;
+import aqario.fowlplay.core.platform.Register;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -18,7 +18,7 @@ public record SparrowVariant(ResourceLocation texture) {
     private static ResourceKey<SparrowVariant> register(String id) {
         ResourceKey<SparrowVariant> key = ResourceKey.create(FowlPlayRegistries.SPARROW_VARIANT, FowlPlay.id(id));
         ResourceLocation texture = FowlPlay.id("textures/entity/sparrow/" + key.location().getPath() + "_sparrow.png");
-        PlatformHelper.registerVariant(id, key, () -> new SparrowVariant(texture));
+        Register.variant(id, key, () -> new SparrowVariant(texture));
         return key;
     }
 

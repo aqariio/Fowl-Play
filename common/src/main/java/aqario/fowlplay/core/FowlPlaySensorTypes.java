@@ -1,7 +1,7 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
-import aqario.fowlplay.core.platform.PlatformHelper;
+import aqario.fowlplay.core.platform.Register;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 
@@ -25,7 +25,7 @@ public final class FowlPlaySensorTypes {
     );
 
     private static <U extends Sensor<?>> Supplier<SensorType<U>> register(String id, Supplier<U> factory) {
-        return PlatformHelper.registerSensorType(id, () -> new SensorType<>(factory));
+        return Register.sensorType(id, () -> new SensorType<>(factory));
     }
 
     public static void init() {

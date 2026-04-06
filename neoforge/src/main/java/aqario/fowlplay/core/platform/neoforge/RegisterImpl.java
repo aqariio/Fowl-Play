@@ -40,7 +40,7 @@ import net.neoforged.neoforge.registries.RegistryBuilder;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public class PlatformHelperImpl {
+public class RegisterImpl {
     public static final Object2ObjectOpenHashMap<Supplier<Item>, ResourceKey<CreativeModeTab>> ITEM_TO_GROUPS = new Object2ObjectOpenHashMap<>();
     public static final DeferredRegister<ChickenVariant> CHICKEN_VARIANTS = DeferredRegister.create(
         FowlPlayRegistries.CHICKEN_VARIANT,
@@ -109,7 +109,7 @@ public class PlatformHelperImpl {
     public static final ObjectArrayList<Pair<Supplier<EntityType<?>>, EntityRendererProvider<?>>> ENTITY_RENDERERS = new ObjectArrayList<>();
 
     @SuppressWarnings("unchecked")
-    public static <T> void registerVariant(String id, ResourceKey<T> key, Supplier<T> variant) {
+    public static <T> void variant(String id, ResourceKey<T> key, Supplier<T> variant) {
         if(key.isFor(FowlPlayRegistries.CHICKEN_VARIANT)) {
             CHICKEN_VARIANTS.register(id, (Supplier<ChickenVariant>) variant);
         }
@@ -130,20 +130,20 @@ public class PlatformHelperImpl {
         }
     }
 
-    public static Supplier<Activity> registerActivity(String id, Supplier<Activity> activity) {
+    public static Supplier<Activity> activity(String id, Supplier<Activity> activity) {
         return ACTIVITIES.register(id, activity);
     }
 
-    public static Supplier<Block> registerBlock(String id, Supplier<Block> block) {
+    public static Supplier<Block> block(String id, Supplier<Block> block) {
         return BLOCKS.register(id, block);
     }
 
-    public static <T extends Entity> Supplier<EntityType<T>> registerEntityType(String id, Supplier<EntityType<T>> entityType) {
+    public static <T extends Entity> Supplier<EntityType<T>> entityType(String id, Supplier<EntityType<T>> entityType) {
         return ENTITY_TYPES.register(id, entityType);
     }
 
     @SafeVarargs
-    public static Supplier<Item> registerItem(String id, Supplier<Item> item, ResourceKey<CreativeModeTab>... groups) {
+    public static Supplier<Item> item(String id, Supplier<Item> item, ResourceKey<CreativeModeTab>... groups) {
         Supplier<Item> registry = ITEMS.register(id, item);
         for(ResourceKey<CreativeModeTab> group : groups) {
             addItemToItemGroup(registry, group);
@@ -152,35 +152,35 @@ public class PlatformHelperImpl {
     }
 
     @SafeVarargs
-    public static Supplier<Item> registerBlockItem(String id, Supplier<Block> block, ResourceKey<CreativeModeTab>... groups) {
-        return registerItem(id, () -> new BlockItem(block.get(), new Item.Properties()), groups);
+    public static Supplier<Item> blockItem(String id, Supplier<Block> block, ResourceKey<CreativeModeTab>... groups) {
+        return item(id, () -> new BlockItem(block.get(), new Item.Properties()), groups);
     }
 
-    public static <T extends Mob> Supplier<Item> registerSpawnEggItem(String id, Supplier<EntityType<T>> entityType, int backgroundColor, int highlightColor) {
-        return registerItem(id, () -> new DeferredSpawnEggItem(entityType, backgroundColor, highlightColor, new Item.Properties()), CreativeModeTabs.SPAWN_EGGS);
+    public static <T extends Mob> Supplier<Item> spawnEggItem(String id, Supplier<EntityType<T>> entityType, int backgroundColor, int highlightColor) {
+        return item(id, () -> new DeferredSpawnEggItem(entityType, backgroundColor, highlightColor, new Item.Properties()), CreativeModeTabs.SPAWN_EGGS);
     }
 
-    public static <T> Supplier<MemoryModuleType<T>> registerMemoryModuleType(String id, Supplier<MemoryModuleType<T>> memoryModuleType) {
+    public static <T> Supplier<MemoryModuleType<T>> memoryType(String id, Supplier<MemoryModuleType<T>> memoryModuleType) {
         return MEMORY_MODULE_TYPES.register(id, memoryModuleType);
     }
 
-    public static Supplier<SimpleParticleType> registerParticleType(String id, Supplier<SimpleParticleType> particleType) {
+    public static Supplier<SimpleParticleType> particleType(String id, Supplier<SimpleParticleType> particleType) {
         return PARTICLE_TYPES.register(id, particleType);
     }
 
-    public static Supplier<ExtendedSchedule> registerSchedule(String id, Supplier<ExtendedSchedule> schedule) {
+    public static Supplier<ExtendedSchedule> schedule(String id, Supplier<ExtendedSchedule> schedule) {
         return SCHEDULES.register(id, schedule);
     }
 
-    public static <T extends Sensor<?>> Supplier<SensorType<T>> registerSensorType(String id, Supplier<SensorType<T>> sensorType) {
+    public static <T extends Sensor<?>> Supplier<SensorType<T>> sensorType(String id, Supplier<SensorType<T>> sensorType) {
         return SENSOR_TYPES.register(id, sensorType);
     }
 
-    public static Supplier<SoundEvent> registerSoundEvent(String id, Supplier<SoundEvent> soundEvent) {
+    public static Supplier<SoundEvent> soundEvent(String id, Supplier<SoundEvent> soundEvent) {
         return SOUND_EVENTS.register(id, soundEvent);
     }
 
-    public static <T> Registry<T> registerRegistry(ResourceKey<Registry<T>> registryKey, boolean sync) {
+    public static <T> Registry<T> registry(ResourceKey<Registry<T>> registryKey, boolean sync) {
         RegistryBuilder<T> builder = new RegistryBuilder<>(registryKey);
         if(sync) {
             builder.sync(true);
@@ -190,7 +190,7 @@ public class PlatformHelperImpl {
         return registry;
     }
 
-    public static <T> void registerTrackedDataHandler(String id, EntityDataSerializer<T> handler) {
+    public static <T> void entityDataSerializer(String id, EntityDataSerializer<T> handler) {
         TRACKED_DATA_HANDLERS.register(id, () -> handler);
     }
 
@@ -199,14 +199,14 @@ public class PlatformHelperImpl {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<T> provider) {
+    public static <T extends Entity> void entityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<T> provider) {
         ENTITY_RENDERERS.add(Pair.of((Supplier<EntityType<?>>) (Supplier<?>) type, provider));
     }
 
-    public static void registerModelLayer(ModelLayerLocation location, Supplier<LayerDefinition> definition) {
+    public static void modelLayer(ModelLayerLocation location, Supplier<LayerDefinition> definition) {
         MODEL_LAYERS.add(Pair.of(location, definition));
     }
 
-    public static <T extends ParticleOptions> void registerParticleFactory(Supplier<ParticleType<T>> supplier, ParticleProvider<T> provider) {
+    public static <T extends ParticleOptions> void particleFactory(Supplier<ParticleType<T>> supplier, ParticleProvider<T> provider) {
     }
 }

@@ -2,7 +2,7 @@ package aqario.fowlplay.common.entity.variant;
 
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;
-import aqario.fowlplay.core.platform.PlatformHelper;
+import aqario.fowlplay.core.platform.Register;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -21,7 +21,7 @@ public record PigeonVariant(ResourceLocation texture) {
     private static ResourceKey<PigeonVariant> register(String id) {
         ResourceKey<PigeonVariant> key = ResourceKey.create(FowlPlayRegistries.PIGEON_VARIANT, FowlPlay.id(id));
         ResourceLocation texture = FowlPlay.id("textures/entity/pigeon/" + key.location().getPath() + "_pigeon.png");
-        PlatformHelper.registerVariant(id, key, () -> new PigeonVariant(texture));
+        Register.variant(id, key, () -> new PigeonVariant(texture));
         return key;
     }
 

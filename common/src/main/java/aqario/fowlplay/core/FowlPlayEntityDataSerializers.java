@@ -1,7 +1,7 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.entity.variant.*;
-import aqario.fowlplay.core.platform.PlatformHelper;
+import aqario.fowlplay.core.platform.Register;
 import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -41,7 +41,7 @@ public final class FowlPlayEntityDataSerializers {
     );
 
     private static <T> EntityDataSerializer<T> register(String id, EntityDataSerializer<T> handler) {
-        PlatformHelper.registerTrackedDataHandler(id, handler);
+        Register.entityDataSerializer(id, handler);
         return handler;
     }
 

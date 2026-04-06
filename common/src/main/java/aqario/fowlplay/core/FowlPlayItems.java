@@ -1,7 +1,7 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.item.ScarecrowItem;
-import aqario.fowlplay.core.platform.PlatformHelper;
+import aqario.fowlplay.core.platform.Register;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -99,11 +99,11 @@ public final class FowlPlayItems {
     );
 
     private static <T extends Mob> Supplier<Item> registerSpawnEgg(String id, Supplier<EntityType<T>> type, int backgroundColor, int highlightColor) {
-        return PlatformHelper.registerSpawnEggItem(id, type, backgroundColor, highlightColor);
+        return Register.spawnEggItem(id, type, backgroundColor, highlightColor);
     }
 
     private static Supplier<Item> register(String id, Supplier<Item> item, ResourceKey<CreativeModeTab> group) {
-        return PlatformHelper.registerItem(id, item, group);
+        return Register.item(id, item, group);
     }
 
     public static void init() {

@@ -26,96 +26,91 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.function.Supplier;
 
-public class PlatformHelper {
+public class Register {
     @ExpectPlatform
-    public static <T> void registerVariant(String id, ResourceKey<T> key, Supplier<T> variant) {
+    public static <T> void variant(String id, ResourceKey<T> key, Supplier<T> variant) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static Supplier<Activity> registerActivity(String id, Supplier<Activity> activity) {
+    public static Supplier<Activity> activity(String id, Supplier<Activity> activity) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static Supplier<Block> registerBlock(String id, Supplier<Block> block) {
+    public static Supplier<Block> block(String id, Supplier<Block> block) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <T extends Entity> Supplier<EntityType<T>> registerEntityType(String id, Supplier<EntityType<T>> entityType) {
-        throw new AssertionError();
-    }
-
-    @SafeVarargs
-    @ExpectPlatform
-    public static Supplier<Item> registerItem(String id, Supplier<Item> item, ResourceKey<CreativeModeTab>... groups) {
+    public static <T extends Entity> Supplier<EntityType<T>> entityType(String id, Supplier<EntityType<T>> entityType) {
         throw new AssertionError();
     }
 
     @SafeVarargs
     @ExpectPlatform
-    public static Supplier<Item> registerBlockItem(String id, Supplier<Block> block, ResourceKey<CreativeModeTab>... groups) {
+    public static Supplier<Item> item(String id, Supplier<Item> item, ResourceKey<CreativeModeTab>... groups) {
+        throw new AssertionError();
+    }
+
+    @SafeVarargs
+    @ExpectPlatform
+    public static Supplier<Item> blockItem(String id, Supplier<Block> block, ResourceKey<CreativeModeTab>... groups) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <T extends Mob> Supplier<Item> registerSpawnEggItem(String id, Supplier<EntityType<T>> entityType, int backgroundColor, int highlightColor) {
+    public static <T extends Mob> Supplier<Item> spawnEggItem(String id, Supplier<EntityType<T>> entityType, int backgroundColor, int highlightColor) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <T> Supplier<MemoryModuleType<T>> registerMemoryModuleType(String id, Supplier<MemoryModuleType<T>> memoryModuleType) {
+    public static <T> Supplier<MemoryModuleType<T>> memoryType(String id, Supplier<MemoryModuleType<T>> memoryModuleType) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static Supplier<SimpleParticleType> registerParticleType(String id, Supplier<SimpleParticleType> particleType) {
+    public static Supplier<SimpleParticleType> particleType(String id, Supplier<SimpleParticleType> particleType) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static Supplier<ExtendedSchedule> registerSchedule(String id, Supplier<ExtendedSchedule> schedule) {
+    public static Supplier<ExtendedSchedule> schedule(String id, Supplier<ExtendedSchedule> schedule) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <T extends Sensor<?>> Supplier<SensorType<T>> registerSensorType(String id, Supplier<SensorType<T>> sensorType) {
+    public static <T extends Sensor<?>> Supplier<SensorType<T>> sensorType(String id, Supplier<SensorType<T>> sensorType) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static Supplier<SoundEvent> registerSoundEvent(String id, Supplier<SoundEvent> soundEvent) {
+    public static Supplier<SoundEvent> soundEvent(String id, Supplier<SoundEvent> soundEvent) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <T> Registry<T> registerRegistry(ResourceKey<Registry<T>> registryKey, boolean sync) {
+    public static <T> Registry<T> registry(ResourceKey<Registry<T>> registryKey, boolean sync) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <T> void registerTrackedDataHandler(String id, EntityDataSerializer<T> handler) {
+    public static <T> void entityDataSerializer(String id, EntityDataSerializer<T> handler) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static void addItemToItemGroup(Supplier<Item> item, ResourceKey<CreativeModeTab> itemGroup) {
+    public static <T extends Entity> void entityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<T> provider) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<T> provider) {
+    public static void modelLayer(ModelLayerLocation location, Supplier<LayerDefinition> definition) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static void registerModelLayer(ModelLayerLocation location, Supplier<LayerDefinition> definition) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static <T extends ParticleOptions> void registerParticleFactory(Supplier<ParticleType<T>> supplier, ParticleProvider<T> provider) {
+    public static <T extends ParticleOptions> void particleFactory(Supplier<ParticleType<T>> supplier, ParticleProvider<T> provider) {
         throw new AssertionError();
     }
 }

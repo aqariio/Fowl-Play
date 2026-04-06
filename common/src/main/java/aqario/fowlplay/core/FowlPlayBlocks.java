@@ -1,7 +1,7 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.block.FeederBlock;
-import aqario.fowlplay.core.platform.PlatformHelper;
+import aqario.fowlplay.core.platform.Register;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -18,14 +18,14 @@ public final class FowlPlayBlocks {
 
     @SafeVarargs
     private static Supplier<Block> register(String id, Supplier<Block> block, ResourceKey<CreativeModeTab>... groups) {
-        Supplier<Block> registry = PlatformHelper.registerBlock(id, block);
+        Supplier<Block> registry = Register.block(id, block);
         registerBlockItem(id, registry, groups);
         return registry;
     }
 
     @SafeVarargs
     private static void registerBlockItem(String id, Supplier<Block> block, ResourceKey<CreativeModeTab>... groups) {
-        PlatformHelper.registerBlockItem(id, block, groups);
+        Register.blockItem(id, block, groups);
     }
 
     public static void init() {

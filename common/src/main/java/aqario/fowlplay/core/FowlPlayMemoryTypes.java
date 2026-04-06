@@ -2,7 +2,7 @@ package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.entity.ai.brain.RememberedPositions;
 import aqario.fowlplay.common.entity.ai.brain.TeleportTarget;
-import aqario.fowlplay.core.platform.PlatformHelper;
+import aqario.fowlplay.core.platform.Register;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.util.Unit;
@@ -25,11 +25,11 @@ public final class FowlPlayMemoryTypes {
     public static final Supplier<MemoryModuleType<RememberedPositions>> REMEMBERED_POSITIONS = register("remembered_positions", RememberedPositions.CODEC);
 
     private static <U> Supplier<MemoryModuleType<U>> register(String id, Codec<U> codec) {
-        return PlatformHelper.registerMemoryModuleType(id, () -> new MemoryModuleType<>(Optional.of(codec)));
+        return Register.memoryType(id, () -> new MemoryModuleType<>(Optional.of(codec)));
     }
 
     private static <U> Supplier<MemoryModuleType<U>> register(String id) {
-        return PlatformHelper.registerMemoryModuleType(id, () -> new MemoryModuleType<>(Optional.empty()));
+        return Register.memoryType(id, () -> new MemoryModuleType<>(Optional.empty()));
     }
 
     public static void init() {

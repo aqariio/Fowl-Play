@@ -2,7 +2,7 @@ package aqario.fowlplay.common.entity.variant;
 
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;
-import aqario.fowlplay.core.platform.PlatformHelper;
+import aqario.fowlplay.core.platform.Register;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -19,7 +19,7 @@ public record GullVariant(ResourceLocation texture) {
     private static ResourceKey<GullVariant> register(String id) {
         ResourceKey<GullVariant> key = ResourceKey.create(FowlPlayRegistries.GULL_VARIANT, FowlPlay.id(id));
         ResourceLocation texture = FowlPlay.id("textures/entity/gull/" + key.location().getPath() + "_gull.png");
-        PlatformHelper.registerVariant(id, key, () -> new GullVariant(texture));
+        Register.variant(id, key, () -> new GullVariant(texture));
         return key;
     }
 

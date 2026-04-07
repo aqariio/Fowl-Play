@@ -1,7 +1,7 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.item.ScarecrowItem;
-import aqario.fowlplay.core.platform.Register;
+import aqario.fowlplay.common.registry.ItemRegister;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -12,6 +12,7 @@ import net.minecraft.world.item.Item;
 import java.util.function.Supplier;
 
 public final class FowlPlayItems {
+    public static final ItemRegister REGISTRAR = ItemRegister.create(FowlPlay.ID);
     public static final Supplier<Item> BLUE_JAY_SPAWN_EGG = registerSpawnEgg(
         "blue_jay_spawn_egg",
         FowlPlayEntityTypes.BLUE_JAY,
@@ -99,13 +100,10 @@ public final class FowlPlayItems {
     );
 
     private static <T extends Mob> Supplier<Item> registerSpawnEgg(String id, Supplier<EntityType<T>> type, int backgroundColor, int highlightColor) {
-        return Register.spawnEggItem(id, type, backgroundColor, highlightColor);
+        return REGISTRAR.spawnEgg(id, type, backgroundColor, highlightColor);
     }
 
-    private static Supplier<Item> register(String id, Supplier<Item> item, ResourceKey<CreativeModeTab> group) {
-        return Register.item(id, item, group);
-    }
-
-    public static void init() {
+    private static Supplier<Item> register(String id, Supplier<Item> item, ResourceKey<CreativeModeTab> tab) {
+        return REGISTRAR.register(id, item, tab);
     }
 }

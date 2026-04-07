@@ -8,7 +8,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
@@ -20,26 +19,14 @@ public final class FowlPlayNeoForge {
         FowlPlay.init();
 
         modBus.addListener(FowlPlayNeoForge::onNewRegistry);
-        modBus.addListener(FowlPlayNeoForge::onSetup);
         modBus.addListener(FowlPlayNeoForge::onAddItemGroupEntries);
 
-        RegisterImpl.CHICKEN_VARIANTS.register(modBus);
-        RegisterImpl.DUCK_VARIANTS.register(modBus);
-        RegisterImpl.GOOSE_VARIANTS.register(modBus);
-        RegisterImpl.GULL_VARIANTS.register(modBus);
-        RegisterImpl.PIGEON_VARIANTS.register(modBus);
-        RegisterImpl.SPARROW_VARIANTS.register(modBus);
-        RegisterImpl.ITEMS.register(modBus);
-        RegisterImpl.BLOCKS.register(modBus);
         FowlPlayDataAttachments.ATTACHMENT_TYPES.register(modBus);
     }
 
     private static void onNewRegistry(NewRegistryEvent event) {
         FowlPlay.earlyInit();
         RegisterImpl.REGISTRIES.forEach(event::register);
-    }
-
-    private static void onSetup(FMLCommonSetupEvent event) {
     }
 
     private static void onAddItemGroupEntries(BuildCreativeModeTabContentsEvent event) {

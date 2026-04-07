@@ -39,17 +39,17 @@ public class FowlPlay {
     }
 
     public static void init() {
-        ChickenVariant.init();
-        DuckVariant.init();
-        GooseVariant.init();
-        GullVariant.init();
-        PigeonVariant.init();
-        SparrowVariant.init();
+        ChickenVariant.REGISTRAR.register();
+        DuckVariant.REGISTRAR.register();
+        GooseVariant.REGISTRAR.register();
+        GullVariant.REGISTRAR.register();
+        PigeonVariant.REGISTRAR.register();
+        SparrowVariant.REGISTRAR.register();
 
         FowlPlayActivities.REGISTRAR.register();
-        FowlPlayBlocks.init();
+        FowlPlayBlocks.REGISTRAR.register();
         FowlPlayEntityTypes.REGISTRAR.register();
-        FowlPlayItems.init();
+        FowlPlayItems.REGISTRAR.register();
         FowlPlayMemoryTypes.REGISTRAR.register();
         FowlPlayParticleTypes.REGISTRAR.register();
         FowlPlaySchedules.REGISTRAR.register();

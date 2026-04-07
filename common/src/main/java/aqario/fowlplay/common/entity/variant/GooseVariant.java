@@ -1,9 +1,9 @@
 package aqario.fowlplay.common.entity.variant;
 
+import aqario.fowlplay.common.registry.CommonRegister;
 import aqario.fowlplay.common.util.PathBuilder;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;
-import aqario.fowlplay.core.platform.Register;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -16,7 +16,13 @@ public record GooseVariant(
     String id,
     boolean domesticatable
 ) {
-    public static final StreamCodec<RegistryFriendlyByteBuf, Holder<GooseVariant>> PACKET_CODEC = ByteBufCodecs.holderRegistry(FowlPlayRegistries.GOOSE_VARIANT);
+    public static final StreamCodec<RegistryFriendlyByteBuf, Holder<GooseVariant>> PACKET_CODEC = ByteBufCodecs.holderRegistry(
+        FowlPlayRegistries.GOOSE_VARIANT
+    );
+    public static final CommonRegister<GooseVariant> REGISTRAR = CommonRegister.create(
+        FowlPlayRegistries.GOOSE_VARIANT,
+        FowlPlay.ID
+    );
     public static final ResourceKey<GooseVariant> CANADA = register("canada", false);
     public static final ResourceKey<GooseVariant> GREYLAG = register("greylag", true);
     public static final ResourceKey<GooseVariant> SWAN = register("swan", true);
@@ -39,14 +45,8 @@ public record GooseVariant(
 
     private static ResourceKey<GooseVariant> register(String id, boolean domesticatable) {
         ResourceKey<GooseVariant> key = ResourceKey.create(FowlPlayRegistries.GOOSE_VARIANT, FowlPlay.id(id));
-        Register.variant(id, key, () -> new GooseVariant(
-            id,
-            domesticatable
-        ));
+        REGISTRAR.register(id, () -> new GooseVariant(id, domesticatable));
         return key;
-    }
-
-    public static void init() {
     }
 
     public enum ModelType implements StringRepresentable {

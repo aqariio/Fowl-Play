@@ -1,9 +1,9 @@
 package aqario.fowlplay.common.entity.variant;
 
+import aqario.fowlplay.common.registry.CommonRegister;
 import aqario.fowlplay.common.util.PathBuilder;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;
-import aqario.fowlplay.core.platform.Register;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -15,7 +15,13 @@ import net.minecraft.util.StringRepresentable;
 public record DuckVariant(
     String id
 ) {
-    public static final StreamCodec<RegistryFriendlyByteBuf, Holder<DuckVariant>> PACKET_CODEC = ByteBufCodecs.holderRegistry(FowlPlayRegistries.DUCK_VARIANT);
+    public static final StreamCodec<RegistryFriendlyByteBuf, Holder<DuckVariant>> PACKET_CODEC = ByteBufCodecs.holderRegistry(
+        FowlPlayRegistries.DUCK_VARIANT
+    );
+    public static final CommonRegister<DuckVariant> REGISTRAR = CommonRegister.create(
+        FowlPlayRegistries.DUCK_VARIANT,
+        FowlPlay.ID
+    );
     public static final ResourceKey<DuckVariant> GREEN_HEADED = register("green_headed");
     public static final ResourceKey<DuckVariant> BROWN = register("brown");
 
@@ -37,13 +43,8 @@ public record DuckVariant(
 
     private static ResourceKey<DuckVariant> register(String id) {
         ResourceKey<DuckVariant> key = ResourceKey.create(FowlPlayRegistries.DUCK_VARIANT, FowlPlay.id(id));
-        Register.variant(id, key, () -> new DuckVariant(
-            id
-        ));
+        REGISTRAR.register(id, () -> new DuckVariant(id));
         return key;
-    }
-
-    public static void init() {
     }
 
     public enum ModelType implements StringRepresentable {

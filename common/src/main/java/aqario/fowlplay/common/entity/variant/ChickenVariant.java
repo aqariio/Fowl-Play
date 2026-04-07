@@ -1,9 +1,9 @@
 package aqario.fowlplay.common.entity.variant;
 
+import aqario.fowlplay.common.registry.CommonRegister;
 import aqario.fowlplay.common.util.PathBuilder;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;
-import aqario.fowlplay.core.platform.Register;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -12,7 +12,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 public record ChickenVariant(String id) {
-    public static final StreamCodec<RegistryFriendlyByteBuf, Holder<ChickenVariant>> PACKET_CODEC = ByteBufCodecs.holderRegistry(FowlPlayRegistries.CHICKEN_VARIANT);
+    public static final StreamCodec<RegistryFriendlyByteBuf, Holder<ChickenVariant>> PACKET_CODEC = ByteBufCodecs.holderRegistry(
+        FowlPlayRegistries.CHICKEN_VARIANT
+    );
+    public static final CommonRegister<ChickenVariant> REGISTRAR = CommonRegister.create(
+        FowlPlayRegistries.CHICKEN_VARIANT,
+        FowlPlay.ID
+    );
     public static final ResourceKey<ChickenVariant> WHITE = register("white");
     public static final ResourceKey<ChickenVariant> RED_JUNGLEFOWL = register("red_junglefowl");
 
@@ -27,10 +33,7 @@ public record ChickenVariant(String id) {
 
     private static ResourceKey<ChickenVariant> register(String id) {
         ResourceKey<ChickenVariant> key = ResourceKey.create(FowlPlayRegistries.CHICKEN_VARIANT, FowlPlay.id(id));
-        Register.variant(id, key, () -> new ChickenVariant(id));
+        REGISTRAR.register(id, () -> new ChickenVariant(id));
         return key;
-    }
-
-    public static void init() {
     }
 }

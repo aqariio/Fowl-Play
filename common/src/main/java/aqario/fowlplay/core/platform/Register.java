@@ -12,43 +12,20 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 
 import java.util.function.Supplier;
 
 public class Register {
     @ExpectPlatform
-    public static <T> void variant(String id, ResourceKey<T> key, Supplier<T> variant) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static Supplier<Block> block(String id, Supplier<Block> block) {
-        throw new AssertionError();
-    }
-
-    @SafeVarargs
-    @ExpectPlatform
-    public static Supplier<Item> item(String id, Supplier<Item> item, ResourceKey<CreativeModeTab>... groups) {
-        throw new AssertionError();
-    }
-
-    @SafeVarargs
-    @ExpectPlatform
-    public static Supplier<Item> blockItem(String id, Supplier<Block> block, ResourceKey<CreativeModeTab>... groups) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static <T extends Mob> Supplier<Item> spawnEggItem(String id, Supplier<EntityType<T>> entityType, int backgroundColor, int highlightColor) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
     public static <T> Registry<T> registry(ResourceKey<Registry<T>> registryKey, boolean sync) {
+        throw new AssertionError();
+    }
+
+    @SafeVarargs
+    @ExpectPlatform
+    public static <T extends Item> void addToItemGroup(Supplier<T> item, ResourceKey<CreativeModeTab>... tab) {
         throw new AssertionError();
     }
 

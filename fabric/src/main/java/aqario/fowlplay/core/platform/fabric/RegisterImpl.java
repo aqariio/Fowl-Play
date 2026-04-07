@@ -33,7 +33,7 @@ public class RegisterImpl {
     }
 
     @SafeVarargs
-    public static <T extends Item> void addToItemGroup(Supplier<T> item, ResourceKey<CreativeModeTab>... tabs) {
+    public static <T extends Item> void addToCreativeTab(Supplier<T> item, ResourceKey<CreativeModeTab>... tabs) {
         T entry = item.get();
         for(ResourceKey<CreativeModeTab> tab : tabs) {
             ItemGroupEvents.modifyEntriesEvent(tab).register(entries ->

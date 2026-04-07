@@ -26,7 +26,7 @@ public class ItemRegister {
     @SafeVarargs
     public final <T extends Item> Supplier<T> register(String id, Supplier<T> item, ResourceKey<CreativeModeTab>... tabs) {
         Supplier<T> entry = this.register(id, item);
-        Register.addToItemGroup(entry, tabs);
+        Register.addToCreativeTab(entry, tabs);
         return entry;
     }
 

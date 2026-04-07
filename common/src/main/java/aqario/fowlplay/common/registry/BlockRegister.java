@@ -31,7 +31,7 @@ public class BlockRegister {
     ) {
         Supplier<Block> entry = this.blocks.register(id, block);
         Supplier<Item> item = this.items.register(id, () -> new BlockItem(entry.get(), new Item.Properties()));
-        Register.addToItemGroup(item, tabs);
+        Register.addToCreativeTab(item, tabs);
         return entry;
     }
 

@@ -25,7 +25,7 @@ public class Register {
 
     @SafeVarargs
     @ExpectPlatform
-    public static <T extends Item> void addToItemGroup(Supplier<T> item, ResourceKey<CreativeModeTab>... tab) {
+    public static <T extends Item> void addToCreativeTab(Supplier<T> item, ResourceKey<CreativeModeTab>... tab) {
         throw new AssertionError();
     }
 

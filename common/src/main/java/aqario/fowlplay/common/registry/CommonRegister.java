@@ -10,7 +10,7 @@ public abstract class CommonRegister<T> {
     protected final String namespace;
     protected boolean registered = false;
 
-    public CommonRegister(String namespace) {
+    protected CommonRegister(String namespace) {
         this.namespace = namespace;
     }
 

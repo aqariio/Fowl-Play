@@ -1,4 +1,4 @@
-package aqario.fowlplay.core.platform;
+package aqario.fowlplay.client;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -6,29 +6,14 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 
 import java.util.function.Supplier;
 
-public class Register {
-    @ExpectPlatform
-    public static <T> Registry<T> registry(ResourceKey<Registry<T>> registryKey, boolean sync) {
-        throw new AssertionError();
-    }
-
-    @SafeVarargs
-    @ExpectPlatform
-    public static <T extends Item> void addToCreativeTab(Supplier<T> item, ResourceKey<CreativeModeTab>... tab) {
-        throw new AssertionError();
-    }
-
+public class RenderRegistry {
     @ExpectPlatform
     public static <T extends Entity> void entityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<T> provider) {
         throw new AssertionError();

@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 public class CommonRegisterImpl<T> extends CommonRegister<T> {
     private final DeferredRegister<T> registry;
 
-    protected CommonRegisterImpl(DeferredRegister<T> registry, String namespace) {
+    private CommonRegisterImpl(DeferredRegister<T> registry, String namespace) {
         super(namespace);
         this.registry = registry;
     }

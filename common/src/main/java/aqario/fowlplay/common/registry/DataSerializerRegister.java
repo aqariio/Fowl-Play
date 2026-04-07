@@ -7,7 +7,7 @@ public abstract class DataSerializerRegister {
     protected final String namespace;
     protected boolean registered = false;
 
-    public DataSerializerRegister(String namespace) {
+    protected DataSerializerRegister(String namespace) {
         this.namespace = namespace;
     }
 

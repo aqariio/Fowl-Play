@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.registry;
 
-import aqario.fowlplay.core.platform.Register;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
@@ -26,7 +25,7 @@ public class ItemRegister {
     @SafeVarargs
     public final <T extends Item> Supplier<T> register(String id, Supplier<T> item, ResourceKey<CreativeModeTab>... tabs) {
         Supplier<T> entry = this.register(id, item);
-        Register.addToCreativeTab(entry, tabs);
+        CreativeTab.add(entry, tabs);
         return entry;
     }
 

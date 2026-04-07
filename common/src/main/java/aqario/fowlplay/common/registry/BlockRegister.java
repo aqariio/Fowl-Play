@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.registry;
 
-import aqario.fowlplay.core.platform.Register;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
@@ -31,7 +30,7 @@ public class BlockRegister {
     ) {
         Supplier<Block> entry = this.blocks.register(id, block);
         Supplier<Item> item = this.items.register(id, () -> new BlockItem(entry.get(), new Item.Properties()));
-        Register.addToCreativeTab(item, tabs);
+        CreativeTab.add(item, tabs);
         return entry;
     }
 

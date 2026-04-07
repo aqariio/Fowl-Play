@@ -11,7 +11,7 @@ import java.util.Objects;
 public class DataSerializerRegisterImpl extends DataSerializerRegister {
     private final DeferredRegister<EntityDataSerializer<?>> registry;
 
-    public DataSerializerRegisterImpl(DeferredRegister<EntityDataSerializer<?>> registry, String namespace) {
+    private DataSerializerRegisterImpl(DeferredRegister<EntityDataSerializer<?>> registry, String namespace) {
         super(namespace);
         this.registry = registry;
     }

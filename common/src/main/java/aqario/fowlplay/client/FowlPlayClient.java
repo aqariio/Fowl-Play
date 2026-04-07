@@ -11,7 +11,6 @@ import aqario.fowlplay.common.network.clientbound.GenericDebugPayload;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayEntityTypes;
 import aqario.fowlplay.core.FowlPlayParticleTypes;
-import aqario.fowlplay.core.platform.Register;
 import com.google.common.base.Suppliers;
 import dev.architectury.networking.NetworkManager;
 import io.github.flemmli97.debugutils.api.RegisterDebugRenderers;
@@ -59,67 +58,67 @@ public class FowlPlayClient {
     }
 
     public static void registerModelLayers() {
-        Register.modelLayer(BlueJayModel.MODEL_LAYER, BlueJayModel::createBodyLayer);
+        RenderRegistry.modelLayer(BlueJayModel.MODEL_LAYER, BlueJayModel::createBodyLayer);
 
-        Register.modelLayer(CardinalModel.MODEL_LAYER, CardinalModel::createBodyLayer);
+        RenderRegistry.modelLayer(CardinalModel.MODEL_LAYER, CardinalModel::createBodyLayer);
 
-        Register.modelLayer(ChickadeeModel.MODEL_LAYER, ChickadeeModel::createBodyLayer);
+        RenderRegistry.modelLayer(ChickadeeModel.MODEL_LAYER, ChickadeeModel::createBodyLayer);
 
-        Register.modelLayer(CrowModel.MODEL_LAYER, CrowModel::createBodyLayer);
+        RenderRegistry.modelLayer(CrowModel.MODEL_LAYER, CrowModel::createBodyLayer);
 
-        Register.modelLayer(DuckModel.MODEL_LAYER, DuckModel::createBodyLayer);
+        RenderRegistry.modelLayer(DuckModel.MODEL_LAYER, DuckModel::createBodyLayer);
 
-        Register.modelLayer(GooseModel.MODEL_LAYER, GooseModel::createBodyLayer);
-        Register.modelLayer(DomesticGooseModel.MODEL_LAYER, DomesticGooseModel::createBodyLayer);
-        Register.modelLayer(BabyGooseModel.MODEL_LAYER, BabyGooseModel::createBodyLayer);
+        RenderRegistry.modelLayer(GooseModel.MODEL_LAYER, GooseModel::createBodyLayer);
+        RenderRegistry.modelLayer(DomesticGooseModel.MODEL_LAYER, DomesticGooseModel::createBodyLayer);
+        RenderRegistry.modelLayer(BabyGooseModel.MODEL_LAYER, BabyGooseModel::createBodyLayer);
 
-        Register.modelLayer(GullModel.MODEL_LAYER, GullModel::createBodyLayer);
+        RenderRegistry.modelLayer(GullModel.MODEL_LAYER, GullModel::createBodyLayer);
 
-        Register.modelLayer(HawkModel.MODEL_LAYER, HawkModel::createBodyLayer);
+        RenderRegistry.modelLayer(HawkModel.MODEL_LAYER, HawkModel::createBodyLayer);
 
-        Register.modelLayer(PenguinModel.MODEL_LAYER, PenguinModel::createBodyLayer);
-        Register.modelLayer(BabyPenguinModel.MODEL_LAYER, BabyPenguinModel::createBodyLayer);
+        RenderRegistry.modelLayer(PenguinModel.MODEL_LAYER, PenguinModel::createBodyLayer);
+        RenderRegistry.modelLayer(BabyPenguinModel.MODEL_LAYER, BabyPenguinModel::createBodyLayer);
 
-        Register.modelLayer(PigeonModel.MODEL_LAYER, PigeonModel::createBodyLayer);
+        RenderRegistry.modelLayer(PigeonModel.MODEL_LAYER, PigeonModel::createBodyLayer);
 
-        Register.modelLayer(RavenModel.MODEL_LAYER, RavenModel::createBodyLayer);
+        RenderRegistry.modelLayer(RavenModel.MODEL_LAYER, RavenModel::createBodyLayer);
 
-        Register.modelLayer(RobinModel.MODEL_LAYER, RobinModel::createBodyLayer);
+        RenderRegistry.modelLayer(RobinModel.MODEL_LAYER, RobinModel::createBodyLayer);
 
-        Register.modelLayer(SparrowModel.MODEL_LAYER, SparrowModel::createBodyLayer);
+        RenderRegistry.modelLayer(SparrowModel.MODEL_LAYER, SparrowModel::createBodyLayer);
 
-        Register.modelLayer(ScarecrowModel.MODEL_LAYER, ScarecrowModel::createBodyLayer);
-        Register.modelLayer(ScarecrowModel.INNER_ARMOR, () -> ScarecrowArmorModel.createBodyLayer(HAT_DILATION));
-        Register.modelLayer(ScarecrowModel.OUTER_ARMOR, () -> ScarecrowArmorModel.createBodyLayer(ARMOR_DILATION));
+        RenderRegistry.modelLayer(ScarecrowModel.MODEL_LAYER, ScarecrowModel::createBodyLayer);
+        RenderRegistry.modelLayer(ScarecrowModel.INNER_ARMOR, () -> ScarecrowArmorModel.createBodyLayer(HAT_DILATION));
+        RenderRegistry.modelLayer(ScarecrowModel.OUTER_ARMOR, () -> ScarecrowArmorModel.createBodyLayer(ARMOR_DILATION));
 
         if(FowlPlayConfig.getInstance().customChickenModel) {
-            Register.modelLayer(CustomChickenModel.MODEL_LAYER, CustomChickenModel::createBodyLayer);
-            Register.modelLayer(CustomBabyChickenModel.MODEL_LAYER, CustomBabyChickenModel::createBodyLayer);
+            RenderRegistry.modelLayer(CustomChickenModel.MODEL_LAYER, CustomChickenModel::createBodyLayer);
+            RenderRegistry.modelLayer(CustomBabyChickenModel.MODEL_LAYER, CustomBabyChickenModel::createBodyLayer);
         }
     }
 
     public static void registerEntityRenderers() {
-        Register.entityRenderer(FowlPlayEntityTypes.BLUE_JAY, BlueJayRenderer::new);
-        Register.entityRenderer(FowlPlayEntityTypes.CARDINAL, CardinalRenderer::new);
-        Register.entityRenderer(FowlPlayEntityTypes.CHICKADEE, ChickadeeRenderer::new);
-        Register.entityRenderer(FowlPlayEntityTypes.CROW, CrowRenderer::new);
-        Register.entityRenderer(FowlPlayEntityTypes.DUCK, DuckRenderer::new);
-        Register.entityRenderer(FowlPlayEntityTypes.GOOSE, GooseRenderer::new);
-        Register.entityRenderer(FowlPlayEntityTypes.GULL, GullRenderer::new);
-        Register.entityRenderer(FowlPlayEntityTypes.HAWK, HawkRenderer::new);
-        Register.entityRenderer(FowlPlayEntityTypes.PENGUIN, PenguinRenderer::new);
-        Register.entityRenderer(FowlPlayEntityTypes.PIGEON, PigeonRenderer::new);
-        Register.entityRenderer(FowlPlayEntityTypes.RAVEN, RavenRenderer::new);
-        Register.entityRenderer(FowlPlayEntityTypes.ROBIN, RobinRenderer::new);
-        Register.entityRenderer(FowlPlayEntityTypes.SPARROW, SparrowRenderer::new);
-        Register.entityRenderer(FowlPlayEntityTypes.SCARECROW, ScarecrowRenderer::new);
+        RenderRegistry.entityRenderer(FowlPlayEntityTypes.BLUE_JAY, BlueJayRenderer::new);
+        RenderRegistry.entityRenderer(FowlPlayEntityTypes.CARDINAL, CardinalRenderer::new);
+        RenderRegistry.entityRenderer(FowlPlayEntityTypes.CHICKADEE, ChickadeeRenderer::new);
+        RenderRegistry.entityRenderer(FowlPlayEntityTypes.CROW, CrowRenderer::new);
+        RenderRegistry.entityRenderer(FowlPlayEntityTypes.DUCK, DuckRenderer::new);
+        RenderRegistry.entityRenderer(FowlPlayEntityTypes.GOOSE, GooseRenderer::new);
+        RenderRegistry.entityRenderer(FowlPlayEntityTypes.GULL, GullRenderer::new);
+        RenderRegistry.entityRenderer(FowlPlayEntityTypes.HAWK, HawkRenderer::new);
+        RenderRegistry.entityRenderer(FowlPlayEntityTypes.PENGUIN, PenguinRenderer::new);
+        RenderRegistry.entityRenderer(FowlPlayEntityTypes.PIGEON, PigeonRenderer::new);
+        RenderRegistry.entityRenderer(FowlPlayEntityTypes.RAVEN, RavenRenderer::new);
+        RenderRegistry.entityRenderer(FowlPlayEntityTypes.ROBIN, RobinRenderer::new);
+        RenderRegistry.entityRenderer(FowlPlayEntityTypes.SPARROW, SparrowRenderer::new);
+        RenderRegistry.entityRenderer(FowlPlayEntityTypes.SCARECROW, ScarecrowRenderer::new);
 
         if(FowlPlayConfig.getInstance().customChickenModel) {
-            Register.entityRenderer(Suppliers.ofInstance(EntityType.CHICKEN), CustomChickenRenderer::new);
+            RenderRegistry.entityRenderer(Suppliers.ofInstance(EntityType.CHICKEN), CustomChickenRenderer::new);
         }
     }
 
     public static void registerParticleFactories() {
-        Register.particleFactory(FowlPlayParticleTypes.SMALL_BUBBLE, SmallBubbleParticle.Provider::new);
+        RenderRegistry.particleFactory(FowlPlayParticleTypes.SMALL_BUBBLE, SmallBubbleParticle.Provider::new);
     }
 }

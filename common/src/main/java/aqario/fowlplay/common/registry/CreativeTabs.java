@@ -7,10 +7,10 @@ import net.minecraft.world.item.Item;
 
 import java.util.function.Supplier;
 
-public class CreativeTab {
+public class CreativeTabs {
     @SafeVarargs
     @ExpectPlatform
-    public static <T extends Item> void add(Supplier<T> item, ResourceKey<CreativeModeTab>... tab) {
+    public static <T extends Item> void addToEnd(Supplier<T> item, ResourceKey<CreativeModeTab>... tab) {
         throw new AssertionError();
     }
 }

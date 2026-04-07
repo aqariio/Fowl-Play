@@ -8,9 +8,9 @@ import net.minecraft.world.item.Item;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public class CreativeTabImpl {
+public class CreativeTabsImpl {
     @SafeVarargs
-    public static <T extends Item> void add(Supplier<T> item, ResourceKey<CreativeModeTab>... tabs) {
+    public static <T extends Item> void addToEnd(Supplier<T> item, ResourceKey<CreativeModeTab>... tabs) {
         T entry = item.get();
         for(ResourceKey<CreativeModeTab> tab : tabs) {
             ItemGroupEvents.modifyEntriesEvent(tab).register(entries ->

@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.level.Level;
@@ -61,17 +60,17 @@ public class FlightNavigation extends GroundPathNavigation implements ExtendedNa
         return newPath;
     }
 
-    @Override
-    public boolean moveTo(double x, double y, double z, double speed) {
-        this.bird.getMoveControl().setWantedPosition(x, y, z, speed);
-        return true;
-    }
-
-    @Override
-    public boolean moveTo(Entity entity, double speed) {
-        this.bird.getMoveControl().setWantedPosition(entity.getX(), entity.getY(), entity.getZ(), speed);
-        return true;
-    }
+//    @Override
+//    public boolean moveTo(double x, double y, double z, double speed) {
+//        this.bird.getMoveControl().setWantedPosition(x, y, z, speed);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean moveTo(Entity entity, double speed) {
+//        this.bird.getMoveControl().setWantedPosition(entity.getX(), entity.getY(), entity.getZ(), speed);
+//        return true;
+//    }
 
     @Override
     protected boolean canMoveDirectly(Vec3 origin, Vec3 target) {
@@ -93,6 +92,7 @@ public class FlightNavigation extends GroundPathNavigation implements ExtendedNa
         return pos.y;
     }
 
+    @Nullable
     @Override
     public Path createPath(BlockPos target, int distance) {
         return this.createPath(ImmutableSet.of(target), 16, false, distance, 64);

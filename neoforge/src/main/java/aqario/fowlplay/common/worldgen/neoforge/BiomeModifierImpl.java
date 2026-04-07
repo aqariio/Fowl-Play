@@ -9,7 +9,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.common.world.ModifiableBiomeInfo;
@@ -24,26 +23,16 @@ public class BiomeModifierImpl extends aqario.fowlplay.common.worldgen.BiomeModi
         NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS,
         FowlPlay.ID
     );
-    public static DeferredRegister<BiomeModifier> BIOME_MODIFIERS = DeferredRegister.create(
-        NeoForgeRegistries.Keys.BIOME_MODIFIERS,
-        FowlPlay.ID
-    );
-    private static final DeferredHolder<BiomeModifier, CommonBiomeModifier> MODIFIER = BIOME_MODIFIERS.register(
-        "biome_modifier",
-        CommonBiomeModifier::new
-    );
     private static final DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<CommonBiomeModifier>> CODEC = BIOME_MODIFIER_SERIALIZERS.register(
-        "biome_modifier_serializer",
+        "biome_modifier",
         () -> MapCodec.unit(CommonBiomeModifier::new)
     );
 
     public static void register() {
-        IEventBus bus = Objects.requireNonNull(ModLoadingContext.get().getActiveContainer().getEventBus());
-        BIOME_MODIFIERS.register(bus);
-        BIOME_MODIFIER_SERIALIZERS.register(bus);
+        BIOME_MODIFIER_SERIALIZERS.register(Objects.requireNonNull(ModLoadingContext.get().getActiveContainer().getEventBus()));
     }
 
-    static class CommonBiomeModifier implements BiomeModifier {
+    public static class CommonBiomeModifier implements BiomeModifier {
         @Override
         public void modify(Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
             if(phase == Phase.ADD) {

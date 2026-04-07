@@ -30,6 +30,7 @@ public final class FowlPlayNeoForge {
         RegisterImpl.PIGEON_VARIANTS.register(modBus);
         RegisterImpl.SPARROW_VARIANTS.register(modBus);
         RegisterImpl.ITEMS.register(modBus);
+        RegisterImpl.BLOCKS.register(modBus);
         FowlPlayDataAttachments.ATTACHMENT_TYPES.register(modBus);
     }
 

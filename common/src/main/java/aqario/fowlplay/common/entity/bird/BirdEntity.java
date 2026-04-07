@@ -9,7 +9,6 @@ import aqario.fowlplay.common.util.AnimationStateList;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -543,11 +542,11 @@ public abstract class BirdEntity extends Animal {
         super.sendDebugPackets();
         DebugPackets.sendEntityBrain(this);
         FowlPlayDebugPackets.sendBirdData(this);
-        FowlPlayDebugPackets.sendGenericData(this,
-            Pair.of("fluid height", String.format("%.3f", this.getFluidHeight(FluidTags.WATER))),
-            Pair.of("is water above float height", this.isWaterAboveFloatHeight()),
-            Pair.of("y velocity", String.format("%.3f", this.getDeltaMovement().y))
-        );
+//        FowlPlayDebugPackets.sendGenericData(this,
+//            Pair.of("fluid height", String.format("%.3f", this.getFluidHeight(FluidTags.WATER))),
+//            Pair.of("is water above float height", this.isWaterAboveFloatHeight()),
+//            Pair.of("y velocity", String.format("%.3f", this.getDeltaMovement().y))
+//        );
     }
 
     public <U> boolean isMemoryPresent(MemoryModuleType<U> memoryType) {

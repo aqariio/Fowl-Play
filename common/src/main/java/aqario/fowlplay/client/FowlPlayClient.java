@@ -1,5 +1,6 @@
 package aqario.fowlplay.client;
 
+import aqario.fowlplay.client.particle.SmallBubbleParticle;
 import aqario.fowlplay.client.render.debug.BirdDebugRenderer;
 import aqario.fowlplay.client.render.debug.GenericDebugRenderer;
 import aqario.fowlplay.client.render.entity.*;
@@ -9,6 +10,7 @@ import aqario.fowlplay.common.network.clientbound.BirdDebugPayload;
 import aqario.fowlplay.common.network.clientbound.GenericDebugPayload;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayEntityTypes;
+import aqario.fowlplay.core.FowlPlayParticleTypes;
 import aqario.fowlplay.core.platform.Register;
 import com.google.common.base.Suppliers;
 import dev.architectury.networking.NetworkManager;
@@ -50,6 +52,10 @@ public class FowlPlayClient {
                     GenericDebugPayload.onReceive(payload)
             );
         }
+
+        registerModelLayers();
+        registerEntityRenderers();
+        registerParticleFactories();
     }
 
     public static void registerModelLayers() {
@@ -113,9 +119,7 @@ public class FowlPlayClient {
         }
     }
 
-    // TODO: Fix cross-platform particle registration
     public static void registerParticleFactories() {
-//        ParticleProviderRegistry.register(FowlPlayParticleTypes.SMALL_BUBBLE.get(), SmallBubbleParticle.Factory::new);
-//        PlatformHelper.registerParticleFactory(FowlPlayParticleTypes.SMALL_BUBBLE, SmallBubbleParticle.Factory::new);
+        Register.particleFactory(FowlPlayParticleTypes.SMALL_BUBBLE, SmallBubbleParticle.Provider::new);
     }
 }

@@ -3,12 +3,12 @@ package aqario.fowlplay.core.platform.neoforge;
 import aqario.fowlplay.common.entity.variant.*;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.FowlPlayRegistries;
+import aqario.fowlplay.core.platform.Register;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
@@ -22,10 +22,14 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
@@ -123,15 +127,21 @@ public class RegisterImpl {
         ITEM_TO_GROUPS.put(item, itemGroup);
     }
 
-    @SuppressWarnings("unchecked")
     public static <T extends Entity> void entityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<T> provider) {
-        ENTITY_RENDERERS.add(Pair.of((Supplier<EntityType<?>>) (Supplier<?>) type, provider));
+        Objects.requireNonNull(ModLoadingContext.get().getActiveContainer().getEventBus()).<EntityRenderersEvent.RegisterRenderers>addListener(event ->
+            event.registerEntityRenderer(type.get(), provider)
+        );
     }
 
     public static void modelLayer(ModelLayerLocation location, Supplier<LayerDefinition> definition) {
-        MODEL_LAYERS.add(Pair.of(location, definition));
+        Objects.requireNonNull(ModLoadingContext.get().getActiveContainer().getEventBus()).<EntityRenderersEvent.RegisterLayerDefinitions>addListener(event ->
+            event.registerLayerDefinition(location, definition)
+        );
     }
 
-    public static <T extends ParticleOptions> void particleFactory(Supplier<ParticleType<T>> supplier, ParticleProvider<T> provider) {
+    public static <T extends ParticleOptions, P extends ParticleType<T>> void particleFactory(Supplier<P> type, Register.WrappedParticleProvider<T> provider) {
+        Objects.requireNonNull(ModLoadingContext.get().getActiveContainer().getEventBus()).<RegisterParticleProvidersEvent>addListener(event ->
+            event.registerSpriteSet(type.get(), provider::create)
+        );
     }
 }

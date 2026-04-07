@@ -1,6 +1,7 @@
 package aqario.fowlplay.core.platform.fabric;
 
 import aqario.fowlplay.core.FowlPlay;
+import aqario.fowlplay.core.platform.Register;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -9,7 +10,6 @@ import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
@@ -77,7 +77,7 @@ public class RegisterImpl {
         EntityModelLayerRegistry.registerModelLayer(location, definition::get);
     }
 
-    public static <T extends ParticleOptions> void particleFactory(Supplier<ParticleType<T>> supplier, ParticleProvider<T> provider) {
-        ParticleFactoryRegistry.getInstance().register(supplier.get(), provider);
+    public static <T extends ParticleOptions, P extends ParticleType<T>> void particleFactory(Supplier<P> supplier, Register.WrappedParticleProvider<T> provider) {
+        ParticleFactoryRegistry.getInstance().register(supplier.get(), provider::create);
     }
 }

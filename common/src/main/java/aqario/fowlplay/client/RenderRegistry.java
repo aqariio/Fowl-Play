@@ -1,6 +1,6 @@
 package aqario.fowlplay.client;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.particle.ParticleProvider;
@@ -14,19 +14,16 @@ import net.minecraft.world.entity.EntityType;
 import java.util.function.Supplier;
 
 public class RenderRegistry {
-    @ExpectPlatform
     public static <T extends Entity> void entityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<T> provider) {
-        throw new AssertionError();
+        FowlPlay.PLATFORM.renderRegistry$entityRenderer(type, provider);
     }
 
-    @ExpectPlatform
     public static void modelLayer(ModelLayerLocation location, Supplier<LayerDefinition> definition) {
-        throw new AssertionError();
+        FowlPlay.PLATFORM.renderRegistry$modelLayer(location, definition);
     }
 
-    @ExpectPlatform
     public static <T extends ParticleOptions, P extends ParticleType<T>> void particleFactory(Supplier<P> supplier, WrappedParticleProvider<T> provider) {
-        throw new AssertionError();
+        FowlPlay.PLATFORM.renderRegistry$particleFactory(supplier, provider);
     }
 
     @FunctionalInterface

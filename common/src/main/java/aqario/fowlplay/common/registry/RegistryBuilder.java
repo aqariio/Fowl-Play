@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.registry;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
@@ -12,9 +12,8 @@ public abstract class RegistryBuilder<T> {
         this.registryKey = registryKey;
     }
 
-    @ExpectPlatform
     public static <T> RegistryBuilder<T> create(ResourceKey<Registry<T>> registryKey) {
-        throw new AssertionError();
+        return FowlPlay.PLATFORM.registryBuilder$create(registryKey);
     }
 
     public RegistryBuilder<T> sync() {

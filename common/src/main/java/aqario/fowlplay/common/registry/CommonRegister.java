@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.registry;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
@@ -14,14 +14,12 @@ public abstract class CommonRegister<T> {
         this.namespace = namespace;
     }
 
-    @ExpectPlatform
     public static <T> CommonRegister<T> create(ResourceKey<? extends Registry<T>> key, String namespace) {
-        throw new AssertionError();
+        return FowlPlay.PLATFORM.commonRegister$create(key, namespace);
     }
 
-    @ExpectPlatform
     public static <T> CommonRegister<T> create(Registry<T> registry, String namespace) {
-        throw new AssertionError();
+        return FowlPlay.PLATFORM.commonRegister$create(registry, namespace);
     }
 
     public abstract <E extends T> Supplier<E> register(String name, Supplier<E> entry);

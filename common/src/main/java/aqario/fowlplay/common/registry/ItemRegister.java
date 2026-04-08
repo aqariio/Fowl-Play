@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.registry;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
@@ -52,9 +52,8 @@ public class ItemRegister {
         return this.register(id, () -> createSpawnEgg(entity, primaryColor, secondaryColor, properties), CreativeModeTabs.SPAWN_EGGS);
     }
 
-    @ExpectPlatform
     public static <T extends Mob> Item createSpawnEgg(Supplier<EntityType<T>> entity, int primaryColor, int secondaryColor, Item.Properties properties) {
-        throw new AssertionError();
+        return FowlPlay.PLATFORM.itemRegister$createSpawnEgg(entity, primaryColor, secondaryColor, properties);
     }
 
     public void register() {

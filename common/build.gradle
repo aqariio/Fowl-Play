@@ -1,34 +1,100 @@
-architectury {
-    common enabled_platforms.split(",")
+plugins {
+    id 'multiloader-common'
+    id 'net.neoforged.moddev'
 }
 
-loom {
-    accessWidenerPath = file("src/main/resources/${project.mod_id}.accesswidener")
+neoForge {
+    neoFormVersion = neo_form_version
+    // Automatically enable AccessTransformers if the file exists
+    def at = file('src/main/resources/META-INF/accesstransformer.cfg')
+    if (at.exists()) {
+        accessTransformers.from(at.absolutePath)
+    }
+    parchment {
+        minecraftVersion = minecraft_version
+        mappingsVersion = parchment_version
+    }
+}
+
+repositories {
+    maven {
+        name = 'Kotlin for Forge'
+        url = 'https://thedarkcolour.github.io/KotlinForForge/'
+    }
+    maven {
+        name = "QuiltMC"
+        url = "https://maven.quiltmc.org/repository/release/"
+    }
+    maven {
+        name = "modrinth"
+        url = "https://api.modrinth.com/maven"
+    }
+    maven {
+        url = "https://maven.terraformersmc.com/releases/"
+    }
+    maven {
+        url = "https://gitlab.com/api/v4/projects/21830712/packages/maven"
+    }
+    maven {
+        name = "Xander Maven"
+        url = "https://maven.isxander.dev/releases"
+    }
+    maven {
+        url = "https://maven.architectury.dev/"
+    }
+    maven {
+        name = "SmartBrainLib (SBL) Maven Repo"
+        url = "https://dl.cloudsmith.io/public/tslat/sbl/maven/"
+    }
+    maven {
+        name = 'ParchmentMC'
+        url = 'https://maven.parchmentmc.org'
+    }
+    maven {
+        url = "https://maven.shedaniel.me/"
+    }
+    maven {
+        name 'luck-repo'
+        url 'https://repo.lucko.me/'
+        content {
+            includeModule 'me.lucko', 'spark-api'
+        }
+    }
 }
 
 dependencies {
-    // Mappings
-    mappings loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${project.parchment_mappings_version}@zip")
-    }
-
-    // We depend on Fabric Loader here to use the Fabric @Environment annotations,
-    // which get remapped to the correct annotations on each platform.
-    // Do NOT use other classes from Fabric Loader.
-    modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
+    compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
+    // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
+    compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
+    annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
 
     // Architectury
-    modImplementation("dev.architectury:architectury-fabric:${rootProject.architectury_version}")
+    implementation("dev.architectury:architectury-neoforge:${architectury_version}")
 
     // Debug Utils
-    modImplementation("io.github.flemmli97:debugutils:${project.debugutils_version}-fabric") {
+    implementation("io.github.flemmli97:debugutils:${debugutils_version}-neoforge") {
         transitive = false
     }
 
     // Smart Brain Lib
-    modImplementation("net.tslat.smartbrainlib:SmartBrainLib-fabric-${project.minecraft_version}:${project.sbl_version}")
+    implementation("net.tslat.smartbrainlib:SmartBrainLib-common-${minecraft_version}:${sbl_version}")
 
     // Yet Another Config Lib
-    modImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric")
+    implementation("dev.isxander:yet-another-config-lib:${yacl_version}-neoforge")
+}
+
+configurations {
+    commonJava {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+    commonResources {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+}
+
+artifacts {
+    commonJava sourceSets.main.java.sourceDirectories.singleFile
+    commonResources sourceSets.main.resources.sourceDirectories.singleFile
 }

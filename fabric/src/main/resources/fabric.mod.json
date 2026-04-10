@@ -38,6 +38,7 @@
       "aqario.fowlplay.common.integration.fabric.ModMenuIntegration"
     ]
   },
+  "accessWidener": "fowlplay.accesswidener",
   "mixins": [
     "fowlplay.common.mixins.json",
     "fowlplay.fabric.mixins.json"

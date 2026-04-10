@@ -8,6 +8,7 @@ logs/
 # Fabric Loom
 remappedSrc/
 run/
+*/runs/
 common/src/main/generated/
 
 # Eclipse

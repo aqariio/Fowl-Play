@@ -1,104 +1,122 @@
 plugins {
-    id 'com.github.johnrengelman.shadow'
+    id 'multiloader-loader'
+    id 'fabric-loom'
 }
 
-architectury {
-    platformSetupLoomIde()
-    fabric()
-}
-
-loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-}
-
-configurations {
-    common {
-        canBeResolved = true
-        canBeConsumed = false
+repositories {
+    maven {
+        name = 'Kotlin for Forge'
+        url = 'https://thedarkcolour.github.io/KotlinForForge/'
     }
-    compileClasspath.extendsFrom common
-    runtimeClasspath.extendsFrom common
-    developmentFabric.extendsFrom common
-
-    // Files in this configuration will be bundled into your mod using the Shadow plugin.
-    // Don't use the `shadow` configuration from the plugin itself as it's meant for excluding files.
-    shadowBundle {
-        canBeResolved = true
-        canBeConsumed = false
+    maven {
+        name = "QuiltMC"
+        url = "https://maven.quiltmc.org/repository/release/"
+    }
+    maven {
+        name = "modrinth"
+        url = "https://api.modrinth.com/maven"
+    }
+    maven {
+        url = "https://maven.terraformersmc.com/releases/"
+    }
+    maven {
+        url = "https://gitlab.com/api/v4/projects/21830712/packages/maven"
+    }
+    maven {
+        name = "Xander Maven"
+        url = "https://maven.isxander.dev/releases"
+    }
+    maven {
+        url = "https://maven.architectury.dev/"
+    }
+    maven {
+        name = "SmartBrainLib (SBL) Maven Repo"
+        url = "https://dl.cloudsmith.io/public/tslat/sbl/maven/"
+    }
+    maven {
+        name = 'ParchmentMC'
+        url = 'https://maven.parchmentmc.org'
+    }
+    maven {
+        url = "https://maven.shedaniel.me/"
+    }
+    maven {
+        name 'luck-repo'
+        url 'https://repo.lucko.me/'
+        content {
+            includeModule 'me.lucko', 'spark-api'
+        }
     }
 }
 
 dependencies {
-    // Mappings
+    minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${project.parchment_mappings_version}@zip")
+        parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchment_version}@zip")
     }
-
-    // Fabric Loader
-    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
-
-    // Fabric API
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 
     // Architectury
-    modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
+    modImplementation("dev.architectury:architectury-fabric:${architectury_version}")
 
     // Cloth Config
-    modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")
+    modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}")
 
     // Debug Utils
-    modImplementation("io.github.flemmli97:debugutils:${project.debugutils_version}-fabric") {
+    modImplementation("io.github.flemmli97:debugutils:${debugutils_version}-fabric") {
         transitive = false
     }
 
     // Fabric Language Kotlin
-    modRuntimeOnly("net.fabricmc:fabric-language-kotlin:${project.fabric_language_kotlin_version}")
+    modRuntimeOnly("net.fabricmc:fabric-language-kotlin:${fabric_language_kotlin_version}")
 
     // Mod Menu
-    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
+    modImplementation("com.terraformersmc:modmenu:${modmenu_version}") {
         transitive = false
     }
 
     // NBT Autocomplete
-    modRuntimeOnly("maven.modrinth:nbt-autocomplete:${project.nbt_autocomplete_version}-fabric,1.21.1")
+    modRuntimeOnly("maven.modrinth:nbt-autocomplete:${nbt_autocomplete_version}-fabric,1.21.1")
 
     // Observable
-    modRuntimeOnly("maven.modrinth:observable:${project.observable_version}+fabric")
+    modRuntimeOnly("maven.modrinth:observable:${observable_version}+fabric")
 
     // Smart Brain Lib
-    modImplementation("net.tslat.smartbrainlib:SmartBrainLib-fabric-${project.minecraft_version}:${project.sbl_version}")
+    modImplementation("net.tslat.smartbrainlib:SmartBrainLib-fabric-${minecraft_version}:${sbl_version}")
 
     // Spark
-    modRuntimeOnly("me.lucko:fabric-permissions-api:${project.fabric_permissions_api_version}")
-    modRuntimeOnly("maven.modrinth:spark:${project.spark_version}-fabric")
+    modRuntimeOnly("me.lucko:fabric-permissions-api:${fabric_permissions_api_version}")
+    modRuntimeOnly("maven.modrinth:spark:${spark_version}-fabric")
 
     // Suggestion Tweaker
-    modRuntimeOnly("maven.modrinth:suggestion-tweaker:${project.suggestion_tweaker_version}+fabric")
+    modRuntimeOnly("maven.modrinth:suggestion-tweaker:${suggestion_tweaker_version}+fabric")
 
     // Yet Another Config Lib
-    modImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric")
-
-    common(project(path: ':common', configuration: 'namedElements')) { transitive false }
-    shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
+    modImplementation("dev.isxander:yet-another-config-lib:${yacl_version}-fabric")
 }
 
-fabricApi {
-    configureDataGeneration()
-}
-
-shadowJar {
-    exclude "architectury.common.json"
-
-    configurations = [project.configurations.shadowBundle]
-    archiveClassifier = 'dev-shadow'
-    archiveClassifier.set("dev-shadow")
-}
-
-remapJar {
-    input.set shadowJar.archiveFile
-    injectAccessWidener = true
-    inputFile.set shadowJar.archiveFile
-    dependsOn shadowJar
-    archiveClassifier.set(null)
+loom {
+    def aw = project(':common').file("src/main/resources/${mod_id}.accesswidener")
+    if (aw.exists()) {
+        accessWidenerPath.set(aw)
+    }
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
+    runs {
+        client {
+            client()
+            setConfigName('Fabric Client')
+            ideConfigGenerated(true)
+            runDir('runs/client')
+        }
+        server {
+            server()
+            setConfigName('Fabric Server')
+            ideConfigGenerated(true)
+            runDir('runs/server')
+        }
+    }
 }

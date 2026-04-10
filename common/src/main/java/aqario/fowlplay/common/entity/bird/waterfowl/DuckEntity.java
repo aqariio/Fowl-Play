@@ -296,8 +296,8 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     }
 
     @Override
-    public BrainActivityGroup<? extends DuckEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public BrainActivityGroup<? extends DuckEntity> coreActivity() {
+        return BirdBrain.core(
             FlightBehaviours.stopFalling(),
             new SetAttackTarget<>(),
             new LookAtTarget<>()
@@ -307,15 +307,15 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     }
 
     @Override
-    public BrainActivityGroup<? extends DuckEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public BrainActivityGroup<? extends DuckEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends DuckEntity> getFightTasks() {
-        return BirdBrain.fightActivity(
+    public BrainActivityGroup<? extends DuckEntity> fightActivity() {
+        return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
             FlightBehaviours.startFlying(),
             new SetWalkTargetToAttackTarget<>(),
@@ -324,8 +324,8 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     }
 
     @Override
-    public BrainActivityGroup<? extends DuckEntity> getForageTasks() {
-        return BirdBrain.forageActivity(
+    public BrainActivityGroup<? extends DuckEntity> forageActivity() {
+        return BirdBrain.forage(
             new OneRandomBehaviour<>(
                 Pair.of(
                     CompositeBehaviours.trySetWaterWalkTarget(),
@@ -341,8 +341,8 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     }
 
     @Override
-    public BrainActivityGroup<? extends DuckEntity> getIdleTasks() {
-        return BirdBrain.idleActivity(
+    public BrainActivityGroup<? extends DuckEntity> idleActivity() {
+        return BirdBrain.idle(
             new BreedWithPartner<>(),
             new FollowParent<>(),
             SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
@@ -357,15 +357,15 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     }
 
     @Override
-    public BrainActivityGroup<? extends DuckEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public BrainActivityGroup<? extends DuckEntity> pickUpActivity() {
+        return BirdBrain.pickUp(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends DuckEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public BrainActivityGroup<? extends DuckEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetWaterRestTarget(),
             CustomBehaviours.idleIfInWater()
         );

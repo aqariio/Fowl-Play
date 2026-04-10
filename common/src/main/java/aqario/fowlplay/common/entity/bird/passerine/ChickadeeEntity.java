@@ -139,8 +139,8 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
     }
 
     @Override
-    public BrainActivityGroup<? extends ChickadeeEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public BrainActivityGroup<? extends ChickadeeEntity> coreActivity() {
+        return BirdBrain.core(
             new FloatToSurfaceOfFluid<>(),
             FlightBehaviours.stopFalling(),
             SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
@@ -151,15 +151,15 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
     }
 
     @Override
-    public BrainActivityGroup<? extends ChickadeeEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public BrainActivityGroup<? extends ChickadeeEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends ChickadeeEntity> getForageTasks() {
-        return BirdBrain.forageActivity(
+    public BrainActivityGroup<? extends ChickadeeEntity> forageActivity() {
+        return BirdBrain.forage(
             new OneRandomBehaviour<>(
                 CompositeBehaviours.tryForage(),
                 CompositeBehaviours.tryPerch()
@@ -168,22 +168,22 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
     }
 
     @Override
-    public BrainActivityGroup<? extends ChickadeeEntity> getPerchTasks() {
-        return BirdBrain.perchActivity(
+    public BrainActivityGroup<? extends ChickadeeEntity> perchActivity() {
+        return BirdBrain.perch(
             CompositeBehaviours.tryPerch()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends ChickadeeEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public BrainActivityGroup<? extends ChickadeeEntity> pickUpActivity() {
+        return BirdBrain.pickUp(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends ChickadeeEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public BrainActivityGroup<? extends ChickadeeEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );

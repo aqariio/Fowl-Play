@@ -176,8 +176,8 @@ public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEnti
     }
 
     @Override
-    public BrainActivityGroup<? extends RobinEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public BrainActivityGroup<? extends RobinEntity> coreActivity() {
+        return BirdBrain.core(
             new FloatToSurfaceOfFluid<>(),
             FlightBehaviours.stopFalling(),
             SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
@@ -188,15 +188,15 @@ public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEnti
     }
 
     @Override
-    public BrainActivityGroup<? extends RobinEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public BrainActivityGroup<? extends RobinEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends RobinEntity> getForageTasks() {
-        return BirdBrain.forageActivity(
+    public BrainActivityGroup<? extends RobinEntity> forageActivity() {
+        return BirdBrain.forage(
             new OneRandomBehaviour<>(
                 CompositeBehaviours.tryForage(),
                 CompositeBehaviours.tryPerch()
@@ -205,22 +205,22 @@ public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEnti
     }
 
     @Override
-    public BrainActivityGroup<? extends RobinEntity> getPerchTasks() {
-        return BirdBrain.perchActivity(
+    public BrainActivityGroup<? extends RobinEntity> perchActivity() {
+        return BirdBrain.perch(
             CompositeBehaviours.tryPerch()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends RobinEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public BrainActivityGroup<? extends RobinEntity> pickUpActivity() {
+        return BirdBrain.pickUp(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends RobinEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public BrainActivityGroup<? extends RobinEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );

@@ -113,8 +113,8 @@ public class BlueJayEntity extends FlyingBirdEntity implements BirdBrain<BlueJay
     }
 
     @Override
-    public BrainActivityGroup<? extends BlueJayEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public BrainActivityGroup<? extends BlueJayEntity> coreActivity() {
+        return BirdBrain.core(
             new FloatToSurfaceOfFluid<>(),
             FlightBehaviours.stopFalling(),
             SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
@@ -125,15 +125,15 @@ public class BlueJayEntity extends FlyingBirdEntity implements BirdBrain<BlueJay
     }
 
     @Override
-    public BrainActivityGroup<? extends BlueJayEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public BrainActivityGroup<? extends BlueJayEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends BlueJayEntity> getForageTasks() {
-        return BirdBrain.forageActivity(
+    public BrainActivityGroup<? extends BlueJayEntity> forageActivity() {
+        return BirdBrain.forage(
             new OneRandomBehaviour<>(
                 CompositeBehaviours.tryForage(),
                 CompositeBehaviours.tryPerch()
@@ -142,22 +142,22 @@ public class BlueJayEntity extends FlyingBirdEntity implements BirdBrain<BlueJay
     }
 
     @Override
-    public BrainActivityGroup<? extends BlueJayEntity> getPerchTasks() {
-        return BirdBrain.perchActivity(
+    public BrainActivityGroup<? extends BlueJayEntity> perchActivity() {
+        return BirdBrain.perch(
             CompositeBehaviours.tryPerch()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends BlueJayEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public BrainActivityGroup<? extends BlueJayEntity> pickUpActivity() {
+        return BirdBrain.pickUp(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends BlueJayEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public BrainActivityGroup<? extends BlueJayEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );

@@ -179,8 +179,8 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     }
 
     @Override
-    public BrainActivityGroup<? extends CrowEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public BrainActivityGroup<? extends CrowEntity> coreActivity() {
+        return BirdBrain.core(
             new FloatToSurfaceOfFluid<>()
                 .riseChance(0.5F),
             FlightBehaviours.stopFalling(),
@@ -193,15 +193,15 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     }
 
     @Override
-    public BrainActivityGroup<? extends CrowEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public BrainActivityGroup<? extends CrowEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends CrowEntity> getFightTasks() {
-        return BirdBrain.fightActivity(
+    public BrainActivityGroup<? extends CrowEntity> fightActivity() {
+        return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
             FlightBehaviours.startFlying(),
             new SetWalkTargetToAttackTarget<>(),
@@ -210,8 +210,8 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     }
 
     @Override
-    public BrainActivityGroup<? extends CrowEntity> getForageTasks() {
-        return BirdBrain.forageActivity(
+    public BrainActivityGroup<? extends CrowEntity> forageActivity() {
+        return BirdBrain.forage(
             new OneRandomBehaviour<>(
                 CompositeBehaviours.tryForage(),
                 CompositeBehaviours.tryPerch()
@@ -220,8 +220,8 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     }
 
     @Override
-    public BrainActivityGroup<? extends CrowEntity> getPerchTasks() {
-        return BirdBrain.perchActivity(
+    public BrainActivityGroup<? extends CrowEntity> perchActivity() {
+        return BirdBrain.perch(
             new LeaderlessFlocking(
                 3,
                 0.03f,
@@ -234,15 +234,15 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     }
 
     @Override
-    public BrainActivityGroup<? extends CrowEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public BrainActivityGroup<? extends CrowEntity> pickUpActivity() {
+        return BirdBrain.pickUp(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends CrowEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public BrainActivityGroup<? extends CrowEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );

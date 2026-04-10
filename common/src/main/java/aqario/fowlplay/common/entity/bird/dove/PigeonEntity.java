@@ -379,8 +379,8 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     @Override
-    public BrainActivityGroup<? extends PigeonEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public BrainActivityGroup<? extends PigeonEntity> coreActivity() {
+        return BirdBrain.core(
             new FloatToSurfaceOfFluid<>()
                 .riseChance(0.5F),
             FlightBehaviours.stopFalling(),
@@ -395,15 +395,15 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     @Override
-    public BrainActivityGroup<? extends PigeonEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public BrainActivityGroup<? extends PigeonEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends PigeonEntity> getDeliverTasks() {
-        return BirdBrain.deliverActivity(
+    public BrainActivityGroup<? extends PigeonEntity> deliverActivity() {
+        return BirdBrain.deliver(
             FlightBehaviours.<PigeonEntity>stopFlying()
                 .startCondition(PigeonEntity::shouldStopFlyingToRecipient),
             FlightBehaviours.<PigeonEntity>startFlying()
@@ -413,15 +413,15 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     @Override
-    public BrainActivityGroup<? extends PigeonEntity> getFollowTasks() {
-        return BirdBrain.followActivity(
+    public BrainActivityGroup<? extends PigeonEntity> followActivity() {
+        return BirdBrain.follow(
             new SetOwnerWalkOrTpTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends PigeonEntity> getForageTasks() {
-        return BirdBrain.forageActivity(
+    public BrainActivityGroup<? extends PigeonEntity> forageActivity() {
+        return BirdBrain.forage(
             new OneRandomBehaviour<>(
                 CompositeBehaviours.tryForage(),
                 CompositeBehaviours.tryPerch()
@@ -430,8 +430,8 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     @Override
-    public BrainActivityGroup<? extends PigeonEntity> getPerchTasks() {
-        return BirdBrain.perchActivity(
+    public BrainActivityGroup<? extends PigeonEntity> perchActivity() {
+        return BirdBrain.perch(
             new LeaderlessFlocking(
                 5,
                 0.03f,
@@ -444,16 +444,16 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     @Override
-    public BrainActivityGroup<? extends PigeonEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public BrainActivityGroup<? extends PigeonEntity> pickUpActivity() {
+        return BirdBrain.pickUp(
             CompositeBehaviours.<PigeonEntity>tryPickUpFood()
                 .startCondition(pigeon -> !pigeon.isSitting())
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends PigeonEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public BrainActivityGroup<? extends PigeonEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );

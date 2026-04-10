@@ -225,8 +225,8 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    public BrainActivityGroup<? extends SparrowEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public BrainActivityGroup<? extends SparrowEntity> coreActivity() {
+        return BirdBrain.core(
             new FloatToSurfaceOfFluid<>(),
             FlightBehaviours.stopFalling(),
             SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
@@ -237,15 +237,15 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    public BrainActivityGroup<? extends SparrowEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public BrainActivityGroup<? extends SparrowEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends SparrowEntity> getForageTasks() {
-        return BirdBrain.forageActivity(
+    public BrainActivityGroup<? extends SparrowEntity> forageActivity() {
+        return BirdBrain.forage(
             new OneRandomBehaviour<>(
                 CompositeBehaviours.tryForage(),
                 CompositeBehaviours.tryPerch()
@@ -254,8 +254,8 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    public BrainActivityGroup<? extends SparrowEntity> getPerchTasks() {
-        return BirdBrain.perchActivity(
+    public BrainActivityGroup<? extends SparrowEntity> perchActivity() {
+        return BirdBrain.perch(
             new LeaderlessFlocking(
                 3,
                 0.03f,
@@ -268,15 +268,15 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    public BrainActivityGroup<? extends SparrowEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public BrainActivityGroup<? extends SparrowEntity> pickUpActivity() {
+        return BirdBrain.pickUp(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends SparrowEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public BrainActivityGroup<? extends SparrowEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );

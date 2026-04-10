@@ -185,8 +185,8 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     }
 
     @Override
-    public BrainActivityGroup<? extends RavenEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public BrainActivityGroup<? extends RavenEntity> coreActivity() {
+        return BirdBrain.core(
             new FloatToSurfaceOfFluid<>()
                 .riseChance(0.5F),
             FlightBehaviours.stopFalling(),
@@ -199,15 +199,15 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     }
 
     @Override
-    public BrainActivityGroup<? extends RavenEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public BrainActivityGroup<? extends RavenEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends RavenEntity> getFightTasks() {
-        return BirdBrain.fightActivity(
+    public BrainActivityGroup<? extends RavenEntity> fightActivity() {
+        return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
             FlightBehaviours.startFlying(),
             new SetWalkTargetToAttackTarget<>(),
@@ -216,8 +216,8 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     }
 
     @Override
-    public BrainActivityGroup<? extends RavenEntity> getForageTasks() {
-        return BirdBrain.forageActivity(
+    public BrainActivityGroup<? extends RavenEntity> forageActivity() {
+        return BirdBrain.forage(
             new OneRandomBehaviour<>(
                 CompositeBehaviours.tryForage(),
                 CompositeBehaviours.tryPerch()
@@ -226,30 +226,30 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     }
 
     @Override
-    public BrainActivityGroup<? extends RavenEntity> getPerchTasks() {
-        return BirdBrain.perchActivity(
+    public BrainActivityGroup<? extends RavenEntity> perchActivity() {
+        return BirdBrain.perch(
             CompositeBehaviours.tryPerch()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends RavenEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public BrainActivityGroup<? extends RavenEntity> pickUpActivity() {
+        return BirdBrain.pickUp(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends RavenEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public BrainActivityGroup<? extends RavenEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends RavenEntity> getSoarTasks() {
-        return BirdBrain.soarActivity(
+    public BrainActivityGroup<? extends RavenEntity> soarActivity() {
+        return BirdBrain.soar(
             new OneRandomBehaviour<>(
                 Pair.of(
                     new SetRandomFlightTarget<>(),

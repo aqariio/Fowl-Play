@@ -183,8 +183,8 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     }
 
     @Override
-    public BrainActivityGroup<? extends HawkEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public BrainActivityGroup<? extends HawkEntity> coreActivity() {
+        return BirdBrain.core(
             new FloatToSurfaceOfFluid<>()
                 .riseChance(0.5F),
             FlightBehaviours.stopFalling(),
@@ -197,15 +197,15 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     }
 
     @Override
-    public BrainActivityGroup<? extends HawkEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public BrainActivityGroup<? extends HawkEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends HawkEntity> getFightTasks() {
-        return BirdBrain.fightActivity(
+    public BrainActivityGroup<? extends HawkEntity> fightActivity() {
+        return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
             FlightBehaviours.startFlying(),
             new SetWalkTargetToAttackTarget<>(),
@@ -214,30 +214,30 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     }
 
     @Override
-    public BrainActivityGroup<? extends HawkEntity> getPerchTasks() {
-        return BirdBrain.perchActivity(
+    public BrainActivityGroup<? extends HawkEntity> perchActivity() {
+        return BirdBrain.perch(
             CompositeBehaviours.tryPerch()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends HawkEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public BrainActivityGroup<? extends HawkEntity> pickUpActivity() {
+        return BirdBrain.pickUp(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends HawkEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public BrainActivityGroup<? extends HawkEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends HawkEntity> getSoarTasks() {
-        return BirdBrain.soarActivity(
+    public BrainActivityGroup<? extends HawkEntity> soarActivity() {
+        return BirdBrain.soar(
             new SetRandomFlightTarget<>()
         );
     }

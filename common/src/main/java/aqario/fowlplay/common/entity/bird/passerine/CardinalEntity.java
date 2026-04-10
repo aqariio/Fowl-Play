@@ -124,8 +124,8 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
     }
 
     @Override
-    public BrainActivityGroup<? extends CardinalEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public BrainActivityGroup<? extends CardinalEntity> coreActivity() {
+        return BirdBrain.core(
             new FloatToSurfaceOfFluid<>(),
             FlightBehaviours.stopFalling(),
             SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
@@ -136,15 +136,15 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
     }
 
     @Override
-    public BrainActivityGroup<? extends CardinalEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public BrainActivityGroup<? extends CardinalEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends CardinalEntity> getForageTasks() {
-        return BirdBrain.forageActivity(
+    public BrainActivityGroup<? extends CardinalEntity> forageActivity() {
+        return BirdBrain.forage(
             new OneRandomBehaviour<>(
                 CompositeBehaviours.tryForage(),
                 CompositeBehaviours.tryPerch()
@@ -153,22 +153,22 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
     }
 
     @Override
-    public BrainActivityGroup<? extends CardinalEntity> getPerchTasks() {
-        return BirdBrain.perchActivity(
+    public BrainActivityGroup<? extends CardinalEntity> perchActivity() {
+        return BirdBrain.perch(
             CompositeBehaviours.tryPerch()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends CardinalEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public BrainActivityGroup<? extends CardinalEntity> pickUpActivity() {
+        return BirdBrain.pickUp(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends CardinalEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public BrainActivityGroup<? extends CardinalEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );

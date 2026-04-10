@@ -392,8 +392,8 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public BrainActivityGroup<? extends GooseEntity> coreActivity() {
+        return BirdBrain.core(
             FlightBehaviours.stopFalling(),
             new SetAttackTarget<>(),
             new LookAtTarget<>()
@@ -403,15 +403,15 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public BrainActivityGroup<? extends GooseEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> getFightTasks() {
-        return BirdBrain.fightActivity(
+    public BrainActivityGroup<? extends GooseEntity> fightActivity() {
+        return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
             new SetWalkTargetToAttackTarget<>()
                 .speedMod((entity, target) -> BirdUtils.FAST_SPEED),
@@ -420,8 +420,8 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> getForageTasks() {
-        return BirdBrain.forageActivity(
+    public BrainActivityGroup<? extends GooseEntity> forageActivity() {
+        return BirdBrain.forage(
             new BreedWithPartner<>(),
             new LeaderlessFlocking(
                 5,
@@ -445,8 +445,8 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> getIdleTasks() {
-        return BirdBrain.idleActivity(
+    public BrainActivityGroup<? extends GooseEntity> idleActivity() {
+        return BirdBrain.idle(
             new BreedWithPartner<>(),
             new FollowParent<>(),
             SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
@@ -461,15 +461,15 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public BrainActivityGroup<? extends GooseEntity> pickUpActivity() {
+        return BirdBrain.pickUp(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public BrainActivityGroup<? extends GooseEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetWaterRestTarget(),
             CustomBehaviours.idleIfInWater()
         );

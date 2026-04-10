@@ -601,8 +601,8 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    public BrainActivityGroup<? extends PenguinEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public BrainActivityGroup<? extends PenguinEntity> coreActivity() {
+        return BirdBrain.core(
             new SetBreatheTarget<>(),
             new SetAttackTarget<>(),
             new LookAtTarget<>()
@@ -612,15 +612,15 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    public BrainActivityGroup<? extends PenguinEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public BrainActivityGroup<? extends PenguinEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends PenguinEntity> getFightTasks() {
-        return BirdBrain.fightActivity(
+    public BrainActivityGroup<? extends PenguinEntity> fightActivity() {
+        return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
             SlideBehaviours.startSliding(),
             new SetWalkTargetToAttackTarget<>()
@@ -632,8 +632,8 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    public BrainActivityGroup<? extends PenguinEntity> getIdleTasks() {
-        return BirdBrain.idleActivity(
+    public BrainActivityGroup<? extends PenguinEntity> idleActivity() {
+        return BirdBrain.idle(
             new BreedWithPartner<>(),
             new FollowParent<>(),
             SetEntityLookTarget.create(EntityType.PLAYER),
@@ -680,16 +680,16 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    public BrainActivityGroup<? extends PenguinEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public BrainActivityGroup<? extends PenguinEntity> pickUpActivity() {
+        return BirdBrain.pickUp(
             SlideBehaviours.startSliding(),
             CustomBehaviours.setNearestFoodWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends PenguinEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public BrainActivityGroup<? extends PenguinEntity> restActivity() {
+        return BirdBrain.rest(
             new Idle<>()
         );
     }

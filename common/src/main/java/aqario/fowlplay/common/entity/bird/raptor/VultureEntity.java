@@ -185,8 +185,8 @@ public class VultureEntity extends TrustingBirdEntity implements BirdBrain<Vultu
     }
 
     @Override
-    public BrainActivityGroup<? extends VultureEntity> getCoreTasks() {
-        return BirdBrain.coreActivity(
+    public BrainActivityGroup<? extends VultureEntity> coreActivity() {
+        return BirdBrain.core(
             new FloatToSurfaceOfFluid<>()
                 .riseChance(0.5F),
             FlightBehaviours.stopFalling(),
@@ -199,15 +199,15 @@ public class VultureEntity extends TrustingBirdEntity implements BirdBrain<Vultu
     }
 
     @Override
-    public BrainActivityGroup<? extends VultureEntity> getAvoidTasks() {
-        return BirdBrain.avoidActivity(
+    public BrainActivityGroup<? extends VultureEntity> avoidActivity() {
+        return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends VultureEntity> getFightTasks() {
-        return BirdBrain.fightActivity(
+    public BrainActivityGroup<? extends VultureEntity> fightActivity() {
+        return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
             FlightBehaviours.startFlying(),
             new SetWalkTargetToAttackTarget<>(),
@@ -216,30 +216,30 @@ public class VultureEntity extends TrustingBirdEntity implements BirdBrain<Vultu
     }
 
     @Override
-    public BrainActivityGroup<? extends VultureEntity> getPerchTasks() {
-        return BirdBrain.perchActivity(
+    public BrainActivityGroup<? extends VultureEntity> perchActivity() {
+        return BirdBrain.perch(
             CompositeBehaviours.tryPerch()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends VultureEntity> getPickupFoodTasks() {
-        return BirdBrain.pickupFoodActivity(
+    public BrainActivityGroup<? extends VultureEntity> pickUpActivity() {
+        return BirdBrain.pickUp(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends VultureEntity> getRestTasks() {
-        return BirdBrain.restActivity(
+    public BrainActivityGroup<? extends VultureEntity> restActivity() {
+        return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
             CustomBehaviours.idleIfPerched()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends VultureEntity> getSoarTasks() {
-        return BirdBrain.soarActivity(
+    public BrainActivityGroup<? extends VultureEntity> soarActivity() {
+        return BirdBrain.soar(
             new SetRandomFlightTarget<>()
         );
     }

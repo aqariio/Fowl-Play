@@ -5,10 +5,8 @@ import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.entity.ai.navigation.AmphibiousNavigation;
-import aqario.fowlplay.common.entity.bird.Domesticatable;
-import aqario.fowlplay.common.entity.bird.Flocking;
-import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
-import aqario.fowlplay.common.entity.bird.TrustingBirdEntity;
+import aqario.fowlplay.common.entity.bird.*;
+import aqario.fowlplay.common.entity.bird.VariantHolder;
 import aqario.fowlplay.common.entity.variant.GooseVariant;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.common.util.CylindricalRadius;
@@ -18,6 +16,7 @@ import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -25,7 +24,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -66,9 +64,8 @@ import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 
-public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEntity>, VariantHolder<Holder<GooseVariant>>, Domesticatable, Flocking {
+public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEntity>, VariantHolder<GooseVariant>, Domesticatable, Flocking {
     private static final EntityDataAccessor<Holder<GooseVariant>> VARIANT = SynchedEntityData.defineId(
         GooseEntity.class,
         FowlPlayEntityDataSerializers.GOOSE_VARIANT
@@ -82,7 +79,6 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
         EntityDataSerializers.BOOLEAN
     );
     private static final String AGGRESSIVE_KEY = "aggressive";
-    private static final String VARIANT_KEY = "variant";
     private boolean aggressive;
 
     public GooseEntity(EntityType<? extends GooseEntity> entityType, Level world) {
@@ -118,11 +114,13 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
-        FowlPlayBuiltInRegistries.GOOSE_VARIANT
-            .getRandom(level.getRandom())
-            .ifPresent(this::setVariant);
-
+    public SpawnGroupData finalizeSpawn(
+        ServerLevelAccessor level,
+        DifficultyInstance difficulty,
+        MobSpawnType spawnType,
+        @Nullable SpawnGroupData spawnGroupData
+    ) {
+        this.withRandomVariant(level.getRandom(), this::setVariant);
         return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
     }
 
@@ -197,7 +195,22 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
         super.defineSynchedData(builder);
         builder.define(CLIPPED, false);
         builder.define(DOMESTIC, false);
-        builder.define(VARIANT, FowlPlayBuiltInRegistries.GOOSE_VARIANT.getHolderOrThrow(GooseVariant.CANADA));
+        this.defineVariant(builder, VARIANT);
+    }
+
+    @Override
+    public Registry<GooseVariant> variantRegistry() {
+        return FowlPlayBuiltInRegistries.GOOSE_VARIANT;
+    }
+
+    @Override
+    public ResourceKey<Registry<GooseVariant>> variantRegistryKey() {
+        return FowlPlayRegistries.GOOSE_VARIANT;
+    }
+
+    @Override
+    public ResourceKey<GooseVariant> defaultVariant() {
+        return GooseVariant.CANADA;
     }
 
     @Override
@@ -210,16 +223,12 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
         this.entityData.set(VARIANT, variant);
     }
 
-    public ResourceKey<GooseVariant> getVariantKey() {
-        return this.getVariant().unwrapKey().orElse(GooseVariant.CANADA);
-    }
-
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         this.writeClipped(nbt);
         this.writeDomestic(nbt);
-        nbt.putString(VARIANT_KEY, this.getVariantKey().location().toString());
+        this.writeVariant(nbt);
         if(this.aggressive) {
             nbt.putBoolean(AGGRESSIVE_KEY, true);
         }
@@ -230,10 +239,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
         super.readAdditionalSaveData(nbt);
         this.readClipped(nbt);
         this.readDomestic(nbt);
-        Optional.ofNullable(ResourceLocation.tryParse(nbt.getString(VARIANT_KEY)))
-            .map(variant -> ResourceKey.create(FowlPlayRegistries.GOOSE_VARIANT, variant))
-            .flatMap(FowlPlayBuiltInRegistries.GOOSE_VARIANT::getHolder)
-            .ifPresent(this::setVariant);
+        this.readVariant(nbt);
         if(nbt.contains(AGGRESSIVE_KEY, Tag.TAG_ANY_NUMERIC)) {
             this.aggressive = nbt.getBoolean(AGGRESSIVE_KEY);
         }

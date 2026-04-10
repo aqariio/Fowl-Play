@@ -8,6 +8,7 @@ import aqario.fowlplay.common.entity.ai.navigation.GroundNavigation;
 import aqario.fowlplay.common.entity.bird.Flocking;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.bird.TameableBirdEntity;
+import aqario.fowlplay.common.entity.bird.VariantHolder;
 import aqario.fowlplay.common.entity.variant.PigeonVariant;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.*;
@@ -16,13 +17,13 @@ import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
@@ -60,7 +61,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class PigeonEntity extends TameableBirdEntity implements BirdBrain<PigeonEntity>, VariantHolder<Holder<PigeonVariant>>, Flocking {
+public class PigeonEntity extends TameableBirdEntity implements BirdBrain<PigeonEntity>, VariantHolder<PigeonVariant>, Flocking {
     private static final EntityDataAccessor<Optional<UUID>> RECIPIENT = SynchedEntityData.defineId(
         PigeonEntity.class,
         EntityDataSerializers.OPTIONAL_UUID
@@ -70,6 +71,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
         FowlPlayEntityDataSerializers.PIGEON_VARIANT
     );
     public final AnimationState sittingState = new AnimationState();
+    private static final String RECIPIENT_KEY = "recipient";
 
     public PigeonEntity(EntityType<? extends PigeonEntity> entityType, Level world) {
         super(entityType, world);
@@ -79,19 +81,19 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
         float f = level.getRandom().nextFloat();
         if(f < 0.5f) { // 50% chance for banded
-            FowlPlayBuiltInRegistries.PIGEON_VARIANT.getHolder(PigeonVariant.BANDED).ifPresent(this::setVariant);
+            this.toHolder(PigeonVariant.BANDED).ifPresent(this::setVariant);
         }
         else if(f < 0.75f) { // 25% chance for checkered
-            FowlPlayBuiltInRegistries.PIGEON_VARIANT.getHolder(PigeonVariant.CHECKERED).ifPresent(this::setVariant);
+            this.toHolder(PigeonVariant.CHECKERED).ifPresent(this::setVariant);
         }
         else if(f < 0.95f) { // 20% chance for gray
-            FowlPlayBuiltInRegistries.PIGEON_VARIANT.getHolder(PigeonVariant.GRAY).ifPresent(this::setVariant);
+            this.toHolder(PigeonVariant.GRAY).ifPresent(this::setVariant);
         }
         else if(f < 0.99f) { // 4% chance for rusty
-            FowlPlayBuiltInRegistries.PIGEON_VARIANT.getHolder(PigeonVariant.RUSTY).ifPresent(this::setVariant);
+            this.toHolder(PigeonVariant.RUSTY).ifPresent(this::setVariant);
         }
         else { // 1% chance for white
-            FowlPlayBuiltInRegistries.PIGEON_VARIANT.getHolder(PigeonVariant.WHITE).ifPresent(this::setVariant);
+            this.toHolder(PigeonVariant.WHITE).ifPresent(this::setVariant);
         }
         return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
     }
@@ -106,7 +108,22 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(RECIPIENT, Optional.empty());
-        builder.define(VARIANT, FowlPlayBuiltInRegistries.PIGEON_VARIANT.getHolderOrThrow(PigeonVariant.BANDED));
+        this.defineVariant(builder, VARIANT);
+    }
+
+    @Override
+    public Registry<PigeonVariant> variantRegistry() {
+        return FowlPlayBuiltInRegistries.PIGEON_VARIANT;
+    }
+
+    @Override
+    public ResourceKey<Registry<PigeonVariant>> variantRegistryKey() {
+        return FowlPlayRegistries.PIGEON_VARIANT;
+    }
+
+    @Override
+    public ResourceKey<PigeonVariant> defaultVariant() {
+        return PigeonVariant.BANDED;
     }
 
     @Override
@@ -122,22 +139,19 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putString("variant", this.getVariant().unwrapKey().orElse(PigeonVariant.BANDED).location().toString());
+        this.writeVariant(nbt);
         if(this.getRecipientUuid() != null) {
-            nbt.putUUID("recipient", this.getRecipientUuid());
+            nbt.putUUID(RECIPIENT_KEY, this.getRecipientUuid());
         }
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        Optional.ofNullable(ResourceLocation.tryParse(nbt.getString("variant")))
-            .map(variant -> ResourceKey.create(FowlPlayRegistries.PIGEON_VARIANT, variant))
-            .flatMap(FowlPlayBuiltInRegistries.PIGEON_VARIANT::getHolder)
-            .ifPresent(this::setVariant);
+        this.readVariant(nbt);
 
-        if(nbt.hasUUID("recipient")) {
-            this.setRecipientUuid(nbt.getUUID("recipient"));
+        if(nbt.hasUUID(RECIPIENT_KEY)) {
+            this.setRecipientUuid(nbt.getUUID(RECIPIENT_KEY));
         }
         else {
             this.setRecipientUuid(null);

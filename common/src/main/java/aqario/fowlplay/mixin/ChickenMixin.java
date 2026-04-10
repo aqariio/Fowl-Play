@@ -1,10 +1,14 @@
 package aqario.fowlplay.mixin;
 
+import aqario.fowlplay.common.entity.bird.VariantHolder;
 import aqario.fowlplay.common.entity.variant.ChickenVariant;
 import aqario.fowlplay.common.util.ChickenAnimationHolder;
 import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
+import aqario.fowlplay.core.FowlPlayRegistries;
 import aqario.fowlplay.core.platform.DataAttachmentHelper;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
@@ -20,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = Chicken.class, priority = 999)
-public abstract class ChickenMixin extends Animal implements VariantHolder<Holder<ChickenVariant>>, ChickenAnimationHolder {
+public abstract class ChickenMixin extends Animal implements VariantHolder<ChickenVariant>, ChickenAnimationHolder {
     @Unique
     private final AnimationState fowlplay$standingState = new AnimationState();
     @Unique
@@ -65,6 +69,21 @@ public abstract class ChickenMixin extends Animal implements VariantHolder<Holde
             );
         }
         cir.setReturnValue(child);
+    }
+
+    @Override
+    public Registry<ChickenVariant> variantRegistry() {
+        return FowlPlayBuiltInRegistries.CHICKEN_VARIANT;
+    }
+
+    @Override
+    public ResourceKey<Registry<ChickenVariant>> variantRegistryKey() {
+        return FowlPlayRegistries.CHICKEN_VARIANT;
+    }
+
+    @Override
+    public ResourceKey<ChickenVariant> defaultVariant() {
+        return ChickenVariant.WHITE;
     }
 
     @Override

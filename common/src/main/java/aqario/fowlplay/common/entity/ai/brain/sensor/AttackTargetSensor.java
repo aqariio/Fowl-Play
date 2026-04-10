@@ -9,7 +9,6 @@ import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.tslat.smartbrainlib.api.core.sensor.EntityFilteringSensor;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
-import net.tslat.smartbrainlib.util.BrainUtils;
 import net.tslat.smartbrainlib.util.SensoryUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,7 +44,7 @@ public class AttackTargetSensor<E extends BirdEntity> extends EntityFilteringSen
     @Nullable
     @Override
     protected LivingEntity findMatches(E entity, NearestVisibleLivingEntities matcher) {
-        return matcher.findClosest(target -> predicate().test(target, entity)).orElse(null);
+        return matcher.findClosest(target -> this.predicate().test(target, entity)).orElse(null);
     }
 
     private static boolean canAttack(BirdEntity bird, LivingEntity target) {
@@ -54,7 +53,7 @@ public class AttackTargetSensor<E extends BirdEntity> extends EntityFilteringSen
     }
 
     private static boolean canHunt(BirdEntity bird, LivingEntity target) {
-        return !BrainUtils.hasMemory(bird, MemoryModuleType.HAS_HUNTING_COOLDOWN)
+        return !bird.isMemoryPresent(MemoryModuleType.HAS_HUNTING_COOLDOWN)
             && canAttack(bird, target);
     }
 }

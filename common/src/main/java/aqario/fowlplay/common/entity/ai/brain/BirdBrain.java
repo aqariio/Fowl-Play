@@ -41,6 +41,10 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
         return BrainActivityGroup.empty();
     }
 
+    default BrainActivityGroup<? extends E> huntActivity() {
+        return BrainActivityGroup.empty();
+    }
+
     default BrainActivityGroup<? extends E> idleActivity() {
         return BrainActivityGroup.empty();
     }
@@ -93,6 +97,11 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
     @SafeVarargs
     static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> forage(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(FowlPlayActivities.FORAGE.get()).priority(10).behaviours(behaviours);
+    }
+
+    @SafeVarargs
+    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> hunt(Behavior<? super T>... behaviours) {
+        return new BrainActivityGroup<T>(FowlPlayActivities.HUNT.get()).priority(10).behaviours(behaviours);
     }
 
     @SafeVarargs

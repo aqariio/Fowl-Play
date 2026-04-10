@@ -137,23 +137,21 @@ public final class BirdUtils {
         return target.getType() == EntityType.PLAYER && target.isHolding(bird.getFood());
     }
 
-    public static boolean canPickupFood(BirdEntity bird) {
-        Brain<?> brain = bird.getBrain();
-        if(BrainUtils.hasMemory(brain, FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get())) {
+    public static boolean shouldPickupFood(BirdEntity bird) {
+        if(bird.isMemoryPresent(FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get())) {
             return false;
         }
-        if(!BrainUtils.hasMemory(brain, SBLMemoryTypes.NEARBY_ITEMS.get())) {
+        if(!bird.isMemoryPresent(SBLMemoryTypes.NEARBY_ITEMS.get())) {
             return false;
         }
-        List<ItemEntity> foodItems = BrainUtils.getMemory(brain, SBLMemoryTypes.NEARBY_ITEMS.get());
-        // noinspection ConstantConditions
+        List<ItemEntity> foodItems = bird.getPresentMemory(SBLMemoryTypes.NEARBY_ITEMS.get());
         if(foodItems.isEmpty() || bird.getFood().test(bird.getMainHandItem())) {
             return false;
         }
-        NearestVisibleLivingEntities visibleMobs = BrainUtils.getMemory(brain, MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES);
-        if(visibleMobs == null) {
+        if(!bird.isMemoryPresent(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES)) {
             return true;
         }
+        NearestVisibleLivingEntities visibleMobs = bird.getPresentMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES);
         List<LivingEntity> avoidTargets = visibleMobs.find(entity -> true)
             .filter(entity -> shouldAvoid(bird, entity))
             .filter(entity -> entity.closerThan(foodItems.getFirst(), bird.getFleeRange(entity)))

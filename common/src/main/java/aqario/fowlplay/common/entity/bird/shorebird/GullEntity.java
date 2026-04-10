@@ -32,9 +32,7 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -353,12 +351,7 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
 
     @Override
     protected void customServerAiStep() {
-        Brain<?> brain = this.getBrain();
-        Activity activity = brain.getActiveNonCoreActivity().orElse(null);
         this.tickBrain(this);
-        if(activity == Activity.FIGHT && brain.getActiveNonCoreActivity().orElse(null) != Activity.FIGHT) {
-            brain.setMemoryWithExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, 2400L);
-        }
         super.customServerAiStep();
     }
 }

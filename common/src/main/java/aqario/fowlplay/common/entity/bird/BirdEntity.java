@@ -282,6 +282,18 @@ public abstract class BirdEntity extends Animal {
     }
 
     @Override
+    public boolean killedEntity(ServerLevel level, LivingEntity entity) {
+        boolean bl = super.killedEntity(level, entity);
+        if(bl) {
+            if(this.canHunt(entity)) {
+                this.setMemoryWithExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, 18000L);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void aiStep() {
         super.aiStep();
         if(!this.level().isClientSide() && this.isAlive()) {
@@ -292,6 +304,7 @@ public abstract class BirdEntity extends Animal {
                     if(stack.getItem().components().has(DataComponents.FOOD)) {
                         // noinspection ConstantConditions
                         this.heal(stack.getItem().components().get(DataComponents.FOOD).nutrition());
+                        this.setMemoryWithExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, 18000L);
                     }
                     else {
                         stack.shrink(1);
@@ -567,6 +580,10 @@ public abstract class BirdEntity extends Animal {
 
     public <U> void setMemory(MemoryModuleType<U> memoryType, U value) {
         this.brain.setMemory(memoryType, value);
+    }
+
+    public <U> void setMemoryWithExpiry(MemoryModuleType<U> memory, U value, long expiryTicks) {
+        this.brain.setMemoryWithExpiry(memory, value, expiryTicks);
     }
 
     public <U> void clearMemory(MemoryModuleType<U> memoryType) {

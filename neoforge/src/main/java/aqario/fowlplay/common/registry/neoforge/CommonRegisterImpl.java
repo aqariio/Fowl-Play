@@ -1,12 +1,11 @@
 package aqario.fowlplay.common.registry.neoforge;
 
 import aqario.fowlplay.common.registry.CommonRegister;
+import aqario.fowlplay.core.neoforge.FowlPlayNeoForge;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.Objects;
 import java.util.function.Supplier;
 
 public class CommonRegisterImpl<T> extends CommonRegister<T> {
@@ -43,6 +42,6 @@ public class CommonRegisterImpl<T> extends CommonRegister<T> {
     @Override
     public void register() {
         super.register();
-        this.registry.register(Objects.requireNonNull(ModLoadingContext.get().getActiveContainer().getEventBus()));
+        this.registry.register(FowlPlayNeoForge.eventBus());
     }
 }

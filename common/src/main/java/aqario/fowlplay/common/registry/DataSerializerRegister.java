@@ -22,10 +22,6 @@ public abstract class DataSerializerRegister {
         if(this.registered) {
             throw new IllegalArgumentException("Already registered!");
         }
-
         this.registered = true;
-        this.platformRegister();
     }
-
-    protected abstract void platformRegister();
 }

@@ -16,9 +16,4 @@ public class DataSerializerRegisterImpl extends DataSerializerRegister {
     public <T> void register(String name, EntityDataSerializer<T> serializer) {
         EntityDataSerializers.registerSerializer(serializer);
     }
-
-    @Override
-    protected void platformRegister() {
-        // NO-OP
-    }
 }

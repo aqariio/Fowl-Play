@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.worldgen.neoforge;
 
 import aqario.fowlplay.core.FowlPlay;
-import aqario.fowlplay.core.neoforge.FowlPlayNeoForge;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
@@ -10,11 +9,14 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.common.world.ModifiableBiomeInfo;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
+import java.util.Objects;
 
 public class BiomeModifierImpl extends aqario.fowlplay.common.worldgen.BiomeModifier /* >:( */ {
     public static DeferredRegister<MapCodec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS = DeferredRegister.create(
@@ -27,7 +29,7 @@ public class BiomeModifierImpl extends aqario.fowlplay.common.worldgen.BiomeModi
     );
 
     public static void register() {
-        BIOME_MODIFIER_SERIALIZERS.register(FowlPlayNeoForge.eventBus());
+        BIOME_MODIFIER_SERIALIZERS.register(Objects.requireNonNull(ModLoadingContext.get().getActiveContainer().getEventBus()));
     }
 
     public static class CommonBiomeModifier implements BiomeModifier {

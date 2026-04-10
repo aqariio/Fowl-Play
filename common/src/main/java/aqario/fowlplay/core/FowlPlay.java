@@ -6,7 +6,6 @@ import aqario.fowlplay.common.util.PathBuilder;
 import aqario.fowlplay.common.worldgen.BiomeModifier;
 import aqario.fowlplay.common.worldgen.PigeonSpawner;
 import aqario.fowlplay.common.worldgen.SparrowSpawner;
-import aqario.fowlplay.core.platform.PlatformHelper;
 import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.platform.Mod;
 import dev.architectury.platform.Platform;
@@ -14,12 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ServiceLoader;
-
 public class FowlPlay {
-    public static final PlatformHelper PLATFORM = ServiceLoader.load(PlatformHelper.class)
-        .findFirst()
-        .orElseThrow();
     public static final Logger LOGGER = LoggerFactory.getLogger("Fowl Play");
     public static final String ID = "fowlplay";
 

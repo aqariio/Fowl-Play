@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.worldgen;
 
-import aqario.fowlplay.core.FowlPlay;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
@@ -27,8 +27,9 @@ public class BiomeModifier {
         });
     }
 
+    @ExpectPlatform
     public static void register() {
-        FowlPlay.PLATFORM.biomeModifier$register();
+        throw new AssertionError();
     }
 
     public interface Context {

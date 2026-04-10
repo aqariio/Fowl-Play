@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.registry;
 
-import aqario.fowlplay.core.FowlPlay;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.network.syncher.EntityDataSerializer;
 
 public abstract class DataSerializerRegister {
@@ -11,8 +11,9 @@ public abstract class DataSerializerRegister {
         this.namespace = namespace;
     }
 
+    @ExpectPlatform
     public static DataSerializerRegister create(String namespace) {
-        return FowlPlay.PLATFORM.dataSerializerRegister$create(namespace);
+        throw new AssertionError();
     }
 
     public abstract <T> void register(String name, EntityDataSerializer<T> serializer);
@@ -21,6 +22,10 @@ public abstract class DataSerializerRegister {
         if(this.registered) {
             throw new IllegalArgumentException("Already registered!");
         }
+
         this.registered = true;
+        this.platformRegister();
     }
+
+    protected abstract void platformRegister();
 }

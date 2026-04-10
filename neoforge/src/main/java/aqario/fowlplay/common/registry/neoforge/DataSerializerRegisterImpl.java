@@ -1,10 +1,12 @@
 package aqario.fowlplay.common.registry.neoforge;
 
 import aqario.fowlplay.common.registry.DataSerializerRegister;
-import aqario.fowlplay.core.neoforge.FowlPlayNeoForge;
 import net.minecraft.network.syncher.EntityDataSerializer;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
+import java.util.Objects;
 
 public class DataSerializerRegisterImpl extends DataSerializerRegister {
     private final DeferredRegister<EntityDataSerializer<?>> registry;
@@ -24,8 +26,7 @@ public class DataSerializerRegisterImpl extends DataSerializerRegister {
     }
 
     @Override
-    public void register() {
-        super.register();
-        this.registry.register(FowlPlayNeoForge.eventBus());
+    protected void platformRegister() {
+        this.registry.register(Objects.requireNonNull(ModLoadingContext.get().getActiveContainer().getEventBus()));
     }
 }

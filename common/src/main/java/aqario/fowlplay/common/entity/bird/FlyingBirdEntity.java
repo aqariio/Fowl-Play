@@ -267,7 +267,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         return this.onGround()
             || this.isWaterAboveFloatHeight()
             || this.getDeltaMovement().length() < MIN_FLIGHT_VELOCITY
-            || this.getHealth() < MIN_HEALTH_TO_FLY;
+            /*|| this.getHealth() < MIN_HEALTH_TO_FLY*/;
     }
 
     public void startFlying() {

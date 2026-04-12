@@ -120,10 +120,11 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if(!this.level().isClientSide() && !this.isInvulnerableTo(source)) {
+        boolean bl = super.hurt(source, amount);
+        if(!this.level().isClientSide() && bl) {
             this.setSitting(false);
         }
-        return super.hurt(source, amount);
+        return bl;
     }
 
     @Override

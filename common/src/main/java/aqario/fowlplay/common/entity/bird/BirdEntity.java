@@ -206,6 +206,7 @@ public abstract class BirdEntity extends Animal {
             if(i > 1) {
                 this.dropWithoutDelay(stack.split(i - 1), thrower);
             }
+            // spit out current item
             this.spawnAtLocation(this.getItemBySlot(EquipmentSlot.MAINHAND));
             this.onItemPickup(item);
             this.setItemSlot(EquipmentSlot.MAINHAND, stack.split(1));
@@ -216,6 +217,26 @@ public abstract class BirdEntity extends Animal {
             this.clearMemory(FowlPlayMemoryTypes.SEES_FOOD.get());
             this.setMemoryWithExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, 18000L);
         }
+    }
+
+    @Override
+    protected void dropEquipment() {
+        super.dropEquipment();
+        this.dropBeakItem();
+    }
+
+    protected void dropBeakItem() {
+        this.spawnAtLocation(this.getItemBySlot(EquipmentSlot.MAINHAND));
+        this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        boolean bl = super.hurt(source, amount);
+        if(bl) {
+            this.dropBeakItem();
+        }
+        return bl;
     }
 
     public boolean isWaterAboveFloatHeight() {

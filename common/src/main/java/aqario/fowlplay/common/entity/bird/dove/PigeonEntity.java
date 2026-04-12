@@ -265,9 +265,6 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     @Override
     protected void dropEquipment() {
         super.dropEquipment();
-
-        this.spawnAtLocation(this.getItemBySlot(EquipmentSlot.MAINHAND));
-        this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         this.spawnAtLocation(this.getItemBySlot(EquipmentSlot.OFFHAND));
         this.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
     }

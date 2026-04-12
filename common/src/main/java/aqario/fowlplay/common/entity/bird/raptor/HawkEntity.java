@@ -7,6 +7,7 @@ import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.bird.TrustingBirdEntity;
 import aqario.fowlplay.common.util.BirdUtils;
+import aqario.fowlplay.common.util.Utils;
 import aqario.fowlplay.core.FowlPlaySchedules;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
@@ -236,6 +237,8 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     @Override
     public BrainActivityGroup<? extends HawkEntity> soarActivity() {
         return BirdBrain.soar(
+            new CheckHuntTargets<>()
+                .targetPredicate(Utils.not(BirdUtils::isSelfAndTargetInWater)),
             new SetRandomFlightTarget<>()
         );
     }

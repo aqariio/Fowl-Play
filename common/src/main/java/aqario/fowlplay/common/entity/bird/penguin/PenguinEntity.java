@@ -10,6 +10,7 @@ import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FowlPlayEntityTypes;
 import aqario.fowlplay.core.FowlPlayParticleTypes;
+import aqario.fowlplay.core.FowlPlaySchedules;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
 import aqario.fowlplay.core.tags.FowlPlayBlockTags;
@@ -68,6 +69,7 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarge
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetAttackTarget;
+import net.tslat.smartbrainlib.api.core.schedule.SmartBrainSchedule;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.InWaterSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.ItemTemptingSensor;
@@ -631,6 +633,41 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
+    public BrainActivityGroup<? extends PenguinEntity> huntActivity() {
+        return BirdBrain.hunt(
+            new CheckHuntTargets<>(),
+            new OneRandomBehaviour<>(
+                Pair.of(
+                    new SetRandomWalkTarget<>()
+                        .setRadius(64, 32),
+                    5
+                ),
+                Pair.of(
+                    new SetRandomSwimTarget<>()
+                        .setRadius(32, 16),
+                    2
+                )
+            ).startCondition(entity -> entity.isInWaterOrBubble() && !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET)),
+            new OneRandomBehaviour<>(
+                Pair.of(
+                    new SetRandomWalkTarget<>()
+                        .setRadius(24, 12),
+                    2
+                ),
+                Pair.of(
+                    new Idle<>()
+                        .runFor(entity -> entity.getRandom().nextIntBetweenInclusive(400, 800)),
+                    3
+                ),
+                Pair.of(
+                    CompositeBehaviours.slideToWater(),
+                    6
+                )
+            ).startCondition(entity -> !entity.isInWaterOrBubble() && !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET))
+        );
+    }
+
+    @Override
     public BrainActivityGroup<? extends PenguinEntity> idleActivity() {
         return BirdBrain.idle(
             new BreedWithPartner<>(),
@@ -691,6 +728,11 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
         return BirdBrain.rest(
             new Idle<>()
         );
+    }
+
+    @Override
+    public @Nullable SmartBrainSchedule getSchedule() {
+        return FowlPlaySchedules.PENGUIN.get();
     }
 
     @Override

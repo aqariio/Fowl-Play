@@ -10,6 +10,7 @@ import aqario.fowlplay.common.entity.bird.VariantHolder;
 import aqario.fowlplay.common.entity.variant.GooseVariant;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.common.util.CylindricalRadius;
+import aqario.fowlplay.common.util.Utils;
 import aqario.fowlplay.core.*;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
@@ -129,7 +130,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
         GooseEntity child = FowlPlayEntityTypes.GOOSE.get().create(level);
         if(child != null && otherParent instanceof GooseEntity parent2) {
-            Holder<GooseVariant> variant = BirdUtils.getRandomOf(child.getRandom(), this, parent2).getVariant();
+            Holder<GooseVariant> variant = Utils.getRandomOf(child.getRandom(), this, parent2).getVariant();
             child.setVariant(variant);
             child.setDomestic(variant.value().domesticatable());
         }

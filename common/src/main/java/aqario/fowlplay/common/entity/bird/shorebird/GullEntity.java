@@ -11,6 +11,7 @@ import aqario.fowlplay.common.entity.bird.VariantHolder;
 import aqario.fowlplay.common.entity.variant.GullVariant;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.common.util.CylindricalRadius;
+import aqario.fowlplay.common.util.Utils;
 import aqario.fowlplay.core.*;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
@@ -290,6 +291,8 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     @Override
     public BrainActivityGroup<? extends GullEntity> forageActivity() {
         return BirdBrain.forage(
+            new CheckHuntTargets<>()
+                .targetPredicate(Utils.not(BirdUtils::isSelfAndTargetInWater)),
             new OneRandomBehaviour<>(
                 Pair.of(
                     CompositeBehaviours.trySetNonAirWalkTarget(),
@@ -339,6 +342,8 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     @Override
     public BrainActivityGroup<GullEntity> soarActivity() {
         return BirdBrain.soar(
+            new CheckHuntTargets<>()
+                .targetPredicate(Utils.not(BirdUtils::isSelfAndTargetInWater)),
             new SetRandomFlightTarget<>()
         );
     }

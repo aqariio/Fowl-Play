@@ -33,12 +33,7 @@ public class AttackTargetSensor<E extends BirdEntity> extends EntityFilteringSen
 
     @Override
     protected BiPredicate<LivingEntity, E> predicate() {
-        return (target, self) -> {
-            if (self.shouldAttack(target) && canAttack(self, target)) {
-                return true;
-            }
-            return self.canHunt(target) && canHunt(self, target);
-        };
+        return (target, self) -> self.shouldAttack(target) && canAttack(self, target);
     }
 
     @Nullable
@@ -50,10 +45,5 @@ public class AttackTargetSensor<E extends BirdEntity> extends EntityFilteringSen
     private static boolean canAttack(BirdEntity bird, LivingEntity target) {
         return SensoryUtils.isEntityAttackable(bird, target)
             && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target);
-    }
-
-    private static boolean canHunt(BirdEntity bird, LivingEntity target) {
-        return !bird.isMemoryPresent(MemoryModuleType.HAS_HUNTING_COOLDOWN)
-            && canAttack(bird, target);
     }
 }

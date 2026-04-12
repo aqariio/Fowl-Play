@@ -52,6 +52,7 @@ public abstract class BirdEntity extends Animal {
     public final AnimationStateList idleAnimStates = this.createIdleAnimations();
     private static final String AMBIENT_KEY = "ambient";
     private static final String SLEEPING_KEY = "sleeping";
+    private static final String HUNTING_COOLDOWN_KEY = "hunting_cooldown";
     private boolean ambient;
     private int eatingTime;
     protected int idleAnimationChance;
@@ -117,6 +118,9 @@ public abstract class BirdEntity extends Animal {
         super.addAdditionalSaveData(nbt);
         nbt.putBoolean(AMBIENT_KEY, this.ambient);
         nbt.putBoolean(SLEEPING_KEY, this.isSleeping());
+        if(this.isMemoryPresent(MemoryModuleType.HAS_HUNTING_COOLDOWN)) {
+            nbt.putLong(HUNTING_COOLDOWN_KEY, this.getMemoryExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN));
+        }
     }
 
     @Override
@@ -124,6 +128,9 @@ public abstract class BirdEntity extends Animal {
         super.readAdditionalSaveData(nbt);
         this.setAmbient(nbt.getBoolean(AMBIENT_KEY));
         this.setSleeping(nbt.getBoolean(SLEEPING_KEY));
+        if(nbt.contains(HUNTING_COOLDOWN_KEY)) {
+            this.setMemoryWithExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, nbt.getLong(HUNTING_COOLDOWN_KEY));
+        }
     }
 
     /**
@@ -562,6 +569,7 @@ public abstract class BirdEntity extends Animal {
 //        );
     }
 
+    // equivalent to isPresent check on optional memory
     public <U> boolean isMemoryPresent(MemoryModuleType<U> memoryType) {
         return this.brain.hasMemoryValue(memoryType);
     }
@@ -576,6 +584,10 @@ public abstract class BirdEntity extends Animal {
 
     public <U> U getMemoryOrDefault(MemoryModuleType<U> memory, Supplier<U> fallback) {
         return this.brain.getMemory(memory).orElseGet(fallback);
+    }
+
+    public long getMemoryExpiry(MemoryModuleType<?> memory) {
+        return this.brain.getTimeUntilExpiry(memory);
     }
 
     public <U> void setMemory(MemoryModuleType<U> memoryType, U value) {

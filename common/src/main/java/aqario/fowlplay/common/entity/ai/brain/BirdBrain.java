@@ -1,9 +1,9 @@
 package aqario.fowlplay.common.entity.ai.brain;
 
 import aqario.fowlplay.common.entity.bird.BirdEntity;
+import aqario.fowlplay.common.util.ActivityListBuilder;
 import aqario.fowlplay.core.FowlPlayActivities;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.minecraft.world.entity.ai.behavior.Behavior;
@@ -17,6 +17,18 @@ import java.util.Map;
 import java.util.Set;
 
 public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBrainOwner<E> {
+    default void addActivities(final ActivityListBuilder<E> builder) {
+        builder.add(this.avoidActivity());
+        builder.add(this.deliverActivity());
+        builder.add(this.followActivity());
+        builder.add(this.forageActivity());
+        builder.add(this.huntActivity());
+        builder.add(this.perchActivity());
+        builder.add(this.pickUpActivity());
+        builder.add(this.restActivity());
+        builder.add(this.soarActivity());
+    }
+
     default BrainActivityGroup<? extends E> coreActivity() {
         return BrainActivityGroup.empty();
     }
@@ -147,38 +159,9 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
 
     @Override
     default Map<Activity, BrainActivityGroup<? extends E>> getAdditionalTasks() {
-        Object2ObjectOpenHashMap<Activity, BrainActivityGroup<? extends E>> taskList = new Object2ObjectOpenHashMap<>();
-        BrainActivityGroup<? extends E> activityGroup;
-
-        // core is already handled
-        if(!(activityGroup = this.deliverActivity()).getBehaviours().isEmpty()) {
-            taskList.put(FowlPlayActivities.DELIVER.get(), activityGroup);
-        }
-        if(!(activityGroup = this.avoidActivity()).getBehaviours().isEmpty()) {
-            taskList.put(Activity.AVOID, activityGroup);
-        }
-        // fight is already handled
-        if(!(activityGroup = this.followActivity()).getBehaviours().isEmpty()) {
-            taskList.put(FowlPlayActivities.FOLLOW.get(), activityGroup);
-        }
-        if(!(activityGroup = this.pickUpActivity()).getBehaviours().isEmpty()) {
-            taskList.put(FowlPlayActivities.PICK_UP.get(), activityGroup);
-        }
-        if(!(activityGroup = this.forageActivity()).getBehaviours().isEmpty()) {
-            taskList.put(FowlPlayActivities.FORAGE.get(), activityGroup);
-        }
-        if(!(activityGroup = this.soarActivity()).getBehaviours().isEmpty()) {
-            taskList.put(FowlPlayActivities.SOAR.get(), activityGroup);
-        }
-        if(!(activityGroup = this.perchActivity()).getBehaviours().isEmpty()) {
-            taskList.put(FowlPlayActivities.PERCH.get(), activityGroup);
-        }
-        // idle is already handled
-        if(!(activityGroup = this.restActivity()).getBehaviours().isEmpty()) {
-            taskList.put(Activity.REST, activityGroup);
-        }
-
-        return taskList;
+        ActivityListBuilder<E> builder = new ActivityListBuilder<>();
+        this.addActivities(builder);
+        return builder.build();
     }
 
     @Override
@@ -189,6 +172,7 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
             Activity.FIGHT,
             FowlPlayActivities.FOLLOW.get(),
             FowlPlayActivities.PICK_UP.get(),
+            FowlPlayActivities.HUNT.get(),
             FowlPlayActivities.FORAGE.get(),
             FowlPlayActivities.SOAR.get(),
             FowlPlayActivities.PERCH.get(),

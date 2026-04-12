@@ -8,10 +8,12 @@ import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.RandomSource;
+import net.minecraft.util.Unit;
 import net.minecraft.util.valueproviders.UniformInt;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -20,10 +22,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.registry.SBLMemoryTypes;
-import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * A utility class for birds.
@@ -37,11 +37,6 @@ public final class BirdUtils {
     public static final int AVOID_TICKS = 160;
     public static final int CANNOT_PICKUP_FOOD_TICKS = 1200;
     public static final UniformInt STAY_NEAR_ENTITY_RANGE = UniformInt.of(16, 32);
-
-    @SafeVarargs
-    public static <T> T getRandomOf(RandomSource random, T... selections) {
-        return selections[random.nextInt(selections.length)];
-    }
 
     public static boolean isDaytime(BirdEntity entity) {
         Level world = entity.level();
@@ -85,13 +80,12 @@ public final class BirdUtils {
     }
 
     public static boolean shouldFlyFromAvoidTarget(FlyingBirdEntity bird) {
-        Brain<?> brain = bird.getBrain();
-        if(!BrainUtils.hasMemory(brain, MemoryModuleType.AVOID_TARGET)
-            || !BrainUtils.hasMemory(brain, FowlPlayMemoryTypes.IS_AVOIDING.get())
+        if(!bird.isMemoryPresent(MemoryModuleType.AVOID_TARGET)
+            || !bird.isMemoryPresent(FowlPlayMemoryTypes.IS_AVOIDING.get())
         ) {
             return false;
         }
-        LivingEntity target = BrainUtils.getMemory(brain, MemoryModuleType.AVOID_TARGET);
+        LivingEntity target = bird.getPresentMemory(MemoryModuleType.AVOID_TARGET);
         // noinspection ConstantConditions
         if((target.isSprinting() && !target.isSpectator()) || target.isPassenger()) {
             return true;
@@ -108,6 +102,10 @@ public final class BirdUtils {
         return dxz2 <= xzRadius * xzRadius && dy2 <= yRadius * yRadius;
     }
 
+    public static <E extends BirdEntity> boolean isSelfAndTargetInWater(E self, LivingEntity target) {
+        return self.isInWaterOrBubble() && target.isUnderWater() && target.position().y < self.position().y;
+    }
+
     public static boolean isNotFlightless(Entity entity) {
         return entity.getType().is(FowlPlayEntityTypeTags.BIRDS)
             && !entity.getType().is(FowlPlayEntityTypeTags.FLIGHTLESS);
@@ -119,17 +117,17 @@ public final class BirdUtils {
 
     public static <T extends BirdEntity> void alertOthers(T bird, LivingEntity attacker) {
         getNearbyVisibleAdults(bird).forEach(other -> {
-            Brain<?> brain = other.getBrain();
             if(attacker instanceof Player) {
-                BrainUtils.setForgettableMemory(brain, FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get(), true, CANNOT_PICKUP_FOOD_TICKS);
+                other.setMemoryWithExpiry(FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get(), Unit.INSTANCE, CANNOT_PICKUP_FOOD_TICKS);
             }
-            BrainUtils.clearMemory(brain, MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
-            BrainUtils.setForgettableMemory(brain, MemoryModuleType.AVOID_TARGET, attacker, AVOID_TICKS);
+            other.clearMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
+            other.setMemoryWithExpiry(MemoryModuleType.AVOID_TARGET, attacker, AVOID_TICKS);
         });
     }
 
-    public static <T extends BirdEntity> List<? extends AgeableMob> getNearbyVisibleAdults(T bird) {
-        return Optional.ofNullable(BrainUtils.getMemory(bird, FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get()))
+    @SuppressWarnings("unchecked")
+    public static <T extends BirdEntity> List<T> getNearbyVisibleAdults(T bird) {
+        return (List<T>) bird.getMemory(FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get())
             .orElse(ImmutableList.of());
     }
 
@@ -145,7 +143,7 @@ public final class BirdUtils {
             return false;
         }
         List<ItemEntity> foodItems = bird.getPresentMemory(SBLMemoryTypes.NEARBY_ITEMS.get());
-        if(foodItems.isEmpty() || bird.getFood().test(bird.getMainHandItem())) {
+        if(bird.getFood().test(bird.getMainHandItem())) {
             return false;
         }
         if(!bird.isMemoryPresent(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES)) {
@@ -161,7 +159,6 @@ public final class BirdUtils {
     }
 
     public static boolean shouldAvoid(BirdEntity bird, LivingEntity target) {
-        Brain<?> brain = bird.getBrain();
         if(!(bird.shouldAvoid(target) && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target)) && !wasHurtBy(bird, target)) {
             return false;
         }
@@ -173,16 +170,18 @@ public final class BirdUtils {
                 return false;
             }
         }
-        LivingEntity attackTarget = BrainUtils.getMemory(brain, MemoryModuleType.ATTACK_TARGET);
-        if(attackTarget != null && attackTarget.equals(target)) {
+        if(bird.isMemoryPresent(MemoryModuleType.ATTACK_TARGET)
+            && bird.getPresentMemory(MemoryModuleType.ATTACK_TARGET).equals(target)
+        ) {
             return false;
         }
         return !bird.shouldAttack(target);
     }
 
     public static boolean wasHurtBy(BirdEntity bird, LivingEntity entity) {
-        LivingEntity hurtBy = BrainUtils.getMemory(bird, MemoryModuleType.HURT_BY_ENTITY);
-        return hurtBy != null && hurtBy.equals(entity);
+        return bird.getMemory(MemoryModuleType.HURT_BY_ENTITY)
+            .map(hurtBy -> hurtBy.equals(entity))
+            .orElse(false);
     }
 
     public static boolean isPerched(BirdEntity entity) {

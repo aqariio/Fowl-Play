@@ -10,6 +10,7 @@ import aqario.fowlplay.common.entity.bird.VariantHolder;
 import aqario.fowlplay.common.entity.variant.DuckVariant;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.common.util.CylindricalRadius;
+import aqario.fowlplay.common.util.Utils;
 import aqario.fowlplay.core.*;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
@@ -117,7 +118,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     public @Nullable AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
         DuckEntity child = FowlPlayEntityTypes.DUCK.get().create(level);
         if(child != null && otherParent instanceof DuckEntity parent2) {
-            Holder<DuckVariant> variant = BirdUtils.getRandomOf(child.getRandom(), this, parent2).getVariant();
+            Holder<DuckVariant> variant = Utils.getRandomOf(child.getRandom(), this, parent2).getVariant();
             child.setVariant(variant);
             child.setDomestic(true);
         }

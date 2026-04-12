@@ -50,8 +50,6 @@ public class CustomBehaviours {
 
     public static <E extends BirdEntity> ExtendedBehaviour<E> forgetUnderwaterAttackTarget() {
         return new InvalidateMemory<E, LivingEntity>(MemoryModuleType.ATTACK_TARGET)
-            .invalidateIf(((entity, target) ->
-                entity.isInWaterOrBubble() && target.isUnderWater() && target.position().y < entity.position().y
-            ));
+            .invalidateIf(BirdUtils::isSelfAndTargetInWater);
     }
 }

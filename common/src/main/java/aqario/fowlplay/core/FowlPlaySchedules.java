@@ -24,6 +24,13 @@ public class FowlPlaySchedules {
         .activityAt(12500, Activity.REST)
         .activityAt(23000, FowlPlayActivities.PERCH)
     );
+    public static final Supplier<ExtendedSchedule> PENGUIN = register("penguin", new ExtendedSchedule()
+        .activityAt(0, Activity.IDLE)
+        .activityAt(4000, FowlPlayActivities.HUNT)
+        .activityAt(8000, Activity.IDLE)
+        .activityAt(12500, Activity.REST)
+        .activityAt(23000, Activity.IDLE)
+    );
     public static final Supplier<ExtendedSchedule> RAPTOR = register("raptor", new ExtendedSchedule()
         .activityAt(0, FowlPlayActivities.PERCH)
         .activityAt(1000, FowlPlayActivities.SOAR)

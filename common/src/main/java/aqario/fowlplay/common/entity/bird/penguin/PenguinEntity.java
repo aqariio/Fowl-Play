@@ -597,7 +597,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
             new InWaterSensor<>(),
             new AttackedSensor<>(),
             new AvoidTargetSensor<>(),
-            new AttackTargetSensor<>()
+            new HuntTargetSensor<>()
         );
     }
 
@@ -635,7 +635,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     @Override
     public BrainActivityGroup<? extends PenguinEntity> huntActivity() {
         return BirdBrain.hunt(
-            new CheckHuntTargets<>(),
+            new SetHuntTarget<>(),
             new OneRandomBehaviour<>(
                 Pair.of(
                     new SetRandomWalkTarget<>()

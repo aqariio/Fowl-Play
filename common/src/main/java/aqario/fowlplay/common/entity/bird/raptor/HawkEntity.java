@@ -177,7 +177,8 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
             new InWaterSensor<>(),
             new AttackedSensor<>(),
             new AvoidTargetSensor<>(),
-            new AttackTargetSensor<>()
+            new AttackTargetSensor<>(),
+            new HuntTargetSensor<>()
         );
     }
 
@@ -237,7 +238,7 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     @Override
     public BrainActivityGroup<? extends HawkEntity> soarActivity() {
         return BirdBrain.soar(
-            new CheckHuntTargets<>()
+            new SetHuntTarget<>()
                 .targetPredicate(Utils.not(BirdUtils::isSelfAndTargetInWater)),
             new SetRandomFlightTarget<>()
         );

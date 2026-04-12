@@ -3,7 +3,10 @@ package aqario.fowlplay.common.entity.bird.waterfowl;
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
-import aqario.fowlplay.common.entity.ai.brain.sensor.*;
+import aqario.fowlplay.common.entity.ai.brain.sensor.AttackedSensor;
+import aqario.fowlplay.common.entity.ai.brain.sensor.AvoidTargetSensor;
+import aqario.fowlplay.common.entity.ai.brain.sensor.NearbyAdultsSensor;
+import aqario.fowlplay.common.entity.ai.brain.sensor.NearbyFoodSensor;
 import aqario.fowlplay.common.entity.ai.navigation.AmphibiousNavigation;
 import aqario.fowlplay.common.entity.bird.*;
 import aqario.fowlplay.common.entity.bird.VariantHolder;
@@ -289,8 +292,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
             new NearbyAdultsSensor<>(),
             new InWaterSensor<>(),
             new AttackedSensor<>(),
-            new AvoidTargetSensor<>(),
-            new AttackTargetSensor<>()
+            new AvoidTargetSensor<>()
         );
     }
 

@@ -1,6 +1,7 @@
 package aqario.fowlplay.common.entity.ai.brain.sensor;
 
 import aqario.fowlplay.common.entity.bird.BirdEntity;
+import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.FowlPlaySensorTypes;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,10 +16,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.BiPredicate;
 
-public class AttackTargetSensor<E extends BirdEntity> extends EntityFilteringSensor<LivingEntity, E> {
+public class HuntTargetSensor<E extends BirdEntity> extends EntityFilteringSensor<LivingEntity, E> {
     @Override
     protected MemoryModuleType<LivingEntity> getMemory() {
-        return MemoryModuleType.NEAREST_ATTACKABLE;
+        return FowlPlayMemoryTypes.NEAREST_HUNTABLE.get();
     }
 
     @Override
@@ -28,11 +29,11 @@ public class AttackTargetSensor<E extends BirdEntity> extends EntityFilteringSen
 
     @Override
     public SensorType<? extends ExtendedSensor<?>> type() {
-        return FowlPlaySensorTypes.ATTACK_TARGETS.get();
+        return FowlPlaySensorTypes.HUNT_TARGETS.get();
     }
 
     protected BiPredicate<LivingEntity, E> predicate() {
-        return (target, self) -> self.shouldAttack(target) && this.canAttack(self, target);
+        return (target, self) -> self.canHunt(target) && this.canHunt(self, target);
     }
 
     @Nullable
@@ -41,8 +42,9 @@ public class AttackTargetSensor<E extends BirdEntity> extends EntityFilteringSen
         return matcher.findClosest(target -> this.predicate().test(target, entity)).orElse(null);
     }
 
-    private boolean canAttack(E bird, LivingEntity target) {
-        return SensoryUtils.isEntityAttackable(bird, target)
+    private boolean canHunt(E self, LivingEntity target) {
+        return !self.isMemoryPresent(MemoryModuleType.HAS_HUNTING_COOLDOWN)
+            && SensoryUtils.isEntityAttackable(self, target)
             && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target);
     }
 }

@@ -26,6 +26,9 @@ public final class FowlPlaySensorTypes {
     public static final Supplier<SensorType<AttackTargetSensor<?>>> ATTACK_TARGETS = register("attack_targets",
         AttackTargetSensor::new
     );
+    public static final Supplier<SensorType<HuntTargetSensor<?>>> HUNT_TARGETS = register("hunt_targets",
+        HuntTargetSensor::new
+    );
     public static final Supplier<SensorType<PigeonSpecificSensor>> PIGEON_SPECIFIC_SENSOR = register("pigeon_specific_sensor",
         PigeonSpecificSensor::new
     );

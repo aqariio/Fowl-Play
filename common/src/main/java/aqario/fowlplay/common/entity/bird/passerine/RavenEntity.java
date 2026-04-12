@@ -7,6 +7,7 @@ import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.bird.TrustingBirdEntity;
 import aqario.fowlplay.common.util.BirdUtils;
+import aqario.fowlplay.common.util.Utils;
 import aqario.fowlplay.core.FowlPlayMemoryTypes;
 import aqario.fowlplay.core.FowlPlaySchedules;
 import aqario.fowlplay.core.FowlPlaySoundEvents;
@@ -179,7 +180,8 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
             new InWaterSensor<>(),
             new AttackedSensor<>(),
             new AvoidTargetSensor<>(),
-            new AttackTargetSensor<>()
+            new AttackTargetSensor<>(),
+            new HuntTargetSensor<>()
         );
     }
 
@@ -217,6 +219,8 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     @Override
     public BrainActivityGroup<? extends RavenEntity> forageActivity() {
         return BirdBrain.forage(
+            new SetHuntTarget<>()
+                .targetPredicate(Utils.not(BirdUtils::isSelfAndTargetInWater)),
             new OneRandomBehaviour<>(
                 CompositeBehaviours.tryForage(),
                 CompositeBehaviours.tryPerch()
@@ -249,6 +253,8 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     @Override
     public BrainActivityGroup<? extends RavenEntity> soarActivity() {
         return BirdBrain.soar(
+            new SetHuntTarget<>()
+                .targetPredicate(Utils.not(BirdUtils::isSelfAndTargetInWater)),
             new OneRandomBehaviour<>(
                 Pair.of(
                     new SetRandomFlightTarget<>(),

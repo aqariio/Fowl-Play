@@ -214,6 +214,7 @@ public abstract class BirdEntity extends Animal {
             item.discard();
             this.eatingTime = 0;
             this.clearMemory(FowlPlayMemoryTypes.SEES_FOOD.get());
+            this.setMemoryWithExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, 18000L);
         }
     }
 
@@ -311,7 +312,6 @@ public abstract class BirdEntity extends Animal {
                     if(stack.getItem().components().has(DataComponents.FOOD)) {
                         // noinspection ConstantConditions
                         this.heal(stack.getItem().components().get(DataComponents.FOOD).nutrition());
-                        this.setMemoryWithExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, 18000L);
                     }
                     else {
                         stack.shrink(1);
@@ -569,7 +569,9 @@ public abstract class BirdEntity extends Animal {
 //        );
     }
 
-    // equivalent to isPresent check on optional memory
+    /**
+     * equivalent to isPresent check on optional memory
+     */
     public <U> boolean isMemoryPresent(MemoryModuleType<U> memoryType) {
         return this.brain.hasMemoryValue(memoryType);
     }
@@ -590,6 +592,9 @@ public abstract class BirdEntity extends Animal {
         return this.brain.getTimeUntilExpiry(memory);
     }
 
+    /**
+     * a null value is equivalent to clearMemory
+     */
     public <U> void setMemory(MemoryModuleType<U> memoryType, U value) {
         this.brain.setMemory(memoryType, value);
     }

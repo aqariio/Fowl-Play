@@ -255,7 +255,7 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
             new InWaterSensor<>(),
             new AttackedSensor<>(),
             new AvoidTargetSensor<>(),
-            new AttackTargetSensor<>()
+            new HuntTargetSensor<>()
         );
     }
 
@@ -291,7 +291,7 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     @Override
     public BrainActivityGroup<? extends GullEntity> forageActivity() {
         return BirdBrain.forage(
-            new CheckHuntTargets<>()
+            new SetHuntTarget<>()
                 .targetPredicate(Utils.not(BirdUtils::isSelfAndTargetInWater)),
             new OneRandomBehaviour<>(
                 Pair.of(
@@ -342,7 +342,7 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     @Override
     public BrainActivityGroup<GullEntity> soarActivity() {
         return BirdBrain.soar(
-            new CheckHuntTargets<>()
+            new SetHuntTarget<>()
                 .targetPredicate(Utils.not(BirdUtils::isSelfAndTargetInWater)),
             new SetRandomFlightTarget<>()
         );

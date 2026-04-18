@@ -368,7 +368,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     public BrainActivityGroup<? extends DuckEntity> restActivity() {
         return BirdBrain.rest(
             CompositeBehaviours.trySetWaterRestTarget(),
-            CustomBehaviours.idleIfInWater()
+            CustomBehaviours.sleepIfInWater()
         );
     }
 

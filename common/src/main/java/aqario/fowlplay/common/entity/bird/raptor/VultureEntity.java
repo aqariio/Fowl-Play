@@ -231,7 +231,7 @@ public class VultureEntity extends TrustingBirdEntity implements BirdBrain<Vultu
     public BrainActivityGroup<? extends VultureEntity> restActivity() {
         return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
-            CustomBehaviours.idleIfPerched()
+            CustomBehaviours.sleepIfPerched()
         );
     }
 

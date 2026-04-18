@@ -300,9 +300,18 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
 
     @Override
     public void updateAnimationStates() {
-        this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
-        this.flappingState.animateWhen(this.isFlying(), this.tickCount);
-        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+        if(this.isSleeping()) {
+            this.sleepingState.start(this.tickCount);
+            this.standingState.stop();
+            this.swimmingState.stop();
+            this.idleAnimStates.stopAll();
+        }
+        else {
+            this.sleepingState.stop();
+            this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
+            this.flappingState.animateWhen(this.isFlying(), this.tickCount);
+            this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+        }
     }
 
     @Override
@@ -472,7 +481,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     public BrainActivityGroup<? extends GooseEntity> restActivity() {
         return BirdBrain.rest(
             CompositeBehaviours.trySetWaterRestTarget(),
-            CustomBehaviours.idleIfInWater()
+            CustomBehaviours.sleepIfInWater()
         );
     }
 

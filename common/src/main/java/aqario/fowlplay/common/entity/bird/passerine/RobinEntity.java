@@ -222,7 +222,7 @@ public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEnti
     public BrainActivityGroup<? extends RobinEntity> restActivity() {
         return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
-            CustomBehaviours.idleIfPerched()
+            CustomBehaviours.sleepIfPerched()
         );
     }
 

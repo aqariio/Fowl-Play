@@ -185,7 +185,7 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
     public BrainActivityGroup<? extends ChickadeeEntity> restActivity() {
         return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
-            CustomBehaviours.idleIfPerched()
+            CustomBehaviours.sleepIfPerched()
         );
     }
 

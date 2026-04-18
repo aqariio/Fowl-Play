@@ -159,7 +159,7 @@ public class BlueJayEntity extends FlyingBirdEntity implements BirdBrain<BlueJay
     public BrainActivityGroup<? extends BlueJayEntity> restActivity() {
         return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
-            CustomBehaviours.idleIfPerched()
+            CustomBehaviours.sleepIfPerched()
         );
     }
 

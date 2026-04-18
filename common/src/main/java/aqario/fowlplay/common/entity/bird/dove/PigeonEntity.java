@@ -452,7 +452,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     public BrainActivityGroup<? extends PigeonEntity> restActivity() {
         return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
-            CustomBehaviours.idleIfPerched()
+            CustomBehaviours.sleepIfPerched()
         );
     }
 

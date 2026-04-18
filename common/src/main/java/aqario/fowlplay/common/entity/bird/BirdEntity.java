@@ -49,6 +49,7 @@ public abstract class BirdEntity extends Animal {
     );
     public final AnimationState standingState = new AnimationState();
     public final AnimationState swimmingState = new AnimationState();
+    public final AnimationState sleepingState = new AnimationState();
     public final AnimationStateList idleAnimStates = this.createIdleAnimations();
     private static final String AMBIENT_KEY = "ambient";
     private static final String SLEEPING_KEY = "sleeping";
@@ -271,11 +272,11 @@ public abstract class BirdEntity extends Animal {
         this.entityData.set(SLEEPING, sleeping);
     }
 
-    private void goToSleep() {
+    public void goToSleep() {
         this.setSleeping(true);
     }
 
-    private void wakeUp() {
+    public void wakeUp() {
         this.setSleeping(false);
     }
 
@@ -427,6 +428,15 @@ public abstract class BirdEntity extends Animal {
     }
 
     protected void updateAnimationStates() {
+        if(this.isSleeping()) {
+            this.sleepingState.start(this.tickCount);
+            this.standingState.stop();
+            this.swimmingState.stop();
+            this.idleAnimStates.stopAll();
+        }
+        else {
+            this.sleepingState.stop();
+        }
         // on land
         if(!this.isInWaterOrBubble()) {
             if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {

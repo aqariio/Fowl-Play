@@ -170,7 +170,7 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
     public BrainActivityGroup<? extends CardinalEntity> restActivity() {
         return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
-            CustomBehaviours.idleIfPerched()
+            CustomBehaviours.sleepIfPerched()
         );
     }
 

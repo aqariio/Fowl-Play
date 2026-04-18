@@ -194,6 +194,6 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
 
     @Override
     default Activity getDefaultActivity() {
-        return Activity.REST;
+        return Activity.IDLE; // rest
     }
 }

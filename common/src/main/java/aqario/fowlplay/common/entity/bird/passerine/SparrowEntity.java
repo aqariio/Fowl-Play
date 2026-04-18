@@ -278,7 +278,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     public BrainActivityGroup<? extends SparrowEntity> restActivity() {
         return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
-            CustomBehaviours.idleIfPerched()
+            CustomBehaviours.sleepIfPerched()
         );
     }
 

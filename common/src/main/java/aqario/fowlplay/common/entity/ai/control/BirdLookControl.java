@@ -49,6 +49,9 @@ public class BirdLookControl extends LookControl {
     }
 
     private void tickOnGround() {
+        if (this.resetXRotOnTick()) {
+            this.mob.setXRot(0.0F);
+        }
         if(this.lookAtCooldown > 0) {
             this.lookAtCooldown--;
             this.getYRotD().ifPresent(yaw -> this.mob.yHeadRot = this.rotateTowards(this.mob.yHeadRot, this.calculateYaw(this.mob.yHeadRot, yaw), this.yMaxRotSpeed));

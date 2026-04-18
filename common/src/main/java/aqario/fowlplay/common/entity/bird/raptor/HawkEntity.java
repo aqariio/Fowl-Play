@@ -231,7 +231,7 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     public BrainActivityGroup<? extends HawkEntity> restActivity() {
         return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
-            CustomBehaviours.idleIfPerched()
+            CustomBehaviours.sleepIfPerched()
         );
     }
 

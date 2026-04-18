@@ -242,7 +242,7 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     public BrainActivityGroup<? extends CrowEntity> restActivity() {
         return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
-            CustomBehaviours.idleIfPerched()
+            CustomBehaviours.sleepIfPerched()
         );
     }
 

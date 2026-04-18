@@ -84,7 +84,6 @@ public class CompositeBehaviours {
         return new OneRandomBehaviour<>(
             new SetRandomLookTarget<>(),
             new Idle<>()
-                .noTimeout()
         );
     }
 

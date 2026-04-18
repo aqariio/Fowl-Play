@@ -55,6 +55,7 @@ import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
+import net.tslat.smartbrainlib.api.core.behaviour.AllApplicableBehaviours;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeAttack;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
@@ -79,6 +80,7 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity> {
     private static final int SLIDING_TRANSITION_TICKS = (int) (0.75F * 20);
@@ -726,7 +728,15 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     @Override
     public BrainActivityGroup<? extends PenguinEntity> restActivity() {
         return BirdBrain.rest(
-            new Idle<>()
+            new AllApplicableBehaviours<>(
+                new SetNonAirWalkTarget<PenguinEntity>()
+                    .radius(32, 16)
+                    .startCondition(Entity::isInWaterOrBubble)
+                    .stopIf(Predicate.not(Entity::isInWaterOrBubble))
+            ),
+            new Sleep<>()
+                .startCondition(Entity::onGround)
+                .stopIf(Predicate.not(Entity::onGround))
         );
     }
 

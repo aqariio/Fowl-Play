@@ -335,7 +335,7 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     public BrainActivityGroup<? extends GullEntity> restActivity() {
         return BirdBrain.rest(
             CompositeBehaviours.trySetWaterRestTarget(),
-            CustomBehaviours.idleIfInWater()
+            CustomBehaviours.sleepIfInWater()
         );
     }
 

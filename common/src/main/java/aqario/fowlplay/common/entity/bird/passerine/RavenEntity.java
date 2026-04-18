@@ -246,7 +246,7 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     public BrainActivityGroup<? extends RavenEntity> restActivity() {
         return BirdBrain.rest(
             CompositeBehaviours.trySetPerchRestTarget(),
-            CustomBehaviours.idleIfPerched()
+            CustomBehaviours.sleepIfPerched()
         );
     }
 

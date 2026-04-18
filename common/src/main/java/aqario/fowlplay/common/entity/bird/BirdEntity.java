@@ -31,12 +31,16 @@ import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
+import net.tslat.smartbrainlib.api.SmartBrainOwner;
+import net.tslat.smartbrainlib.api.core.SmartBrain;
+import net.tslat.smartbrainlib.api.core.schedule.SmartBrainSchedule;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -636,5 +640,23 @@ public abstract class BirdEntity extends Animal {
 
     public <U> void clearMemory(MemoryModuleType<U> memoryType) {
         this.brain.eraseMemory(memoryType);
+    }
+
+    public boolean isActivityActive(Activity activity) {
+        return this.brain.isActive(activity);
+    }
+
+    public SmartBrainSchedule getActiveSchedule() {
+        return ((SmartBrain<?>) this.brain).getSchedule();
+    }
+
+    public void setSchedule(SmartBrainSchedule schedule) {
+        ((SmartBrain<?>) this.brain).setSchedule(schedule);
+    }
+
+    public void updateSchedule() {
+        if(this instanceof SmartBrainOwner<?> brainHaver) {
+            this.setSchedule(brainHaver.getSchedule());
+        }
     }
 }

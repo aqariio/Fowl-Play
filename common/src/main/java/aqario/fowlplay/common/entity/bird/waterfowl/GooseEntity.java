@@ -179,6 +179,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     public void setDomestic(boolean domestic) {
         this.entityData.set(DOMESTIC, domestic);
+        this.updateSchedule();
     }
 
     @Override

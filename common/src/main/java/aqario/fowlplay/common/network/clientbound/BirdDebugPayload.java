@@ -55,8 +55,8 @@ public record BirdDebugPayload(BirdData birdData) implements CustomPacketPayload
         boolean flying,
         boolean ambient,
         boolean perched,
-        List<String> possibleActivities,
-        List<String> runningTasks,
+        List<String> activities,
+        List<String> behaviours,
         List<String> memories,
         @Nullable String schedule,
         Set<BlockPos> pois,
@@ -102,8 +102,8 @@ public record BirdDebugPayload(BirdData birdData) implements CustomPacketPayload
             buf.writeBoolean(this.flying);
             buf.writeBoolean(this.ambient);
             buf.writeBoolean(this.perched);
-            buf.writeCollection(this.possibleActivities, FriendlyByteBuf::writeUtf);
-            buf.writeCollection(this.runningTasks, FriendlyByteBuf::writeUtf);
+            buf.writeCollection(this.activities, FriendlyByteBuf::writeUtf);
+            buf.writeCollection(this.behaviours, FriendlyByteBuf::writeUtf);
             buf.writeCollection(this.memories, FriendlyByteBuf::writeUtf);
             buf.writeNullable(this.schedule, FriendlyByteBuf::writeUtf);
             buf.writeCollection(this.pois, BlockPos.STREAM_CODEC);

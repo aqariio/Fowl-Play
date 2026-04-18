@@ -5,7 +5,9 @@ import aqario.fowlplay.common.network.clientbound.BirdDebugPayload;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.debug.BrainDebugRenderer;
@@ -66,7 +68,7 @@ public class BirdDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
     }
 
     private void updateTargetedEntity() {
-        DebugRenderer.getTargetedEntity(this.client.getCameraEntity(), 8).ifPresent(entity -> this.targetedEntity = entity.getUUID());
+        DebugRenderer.getTargetedEntity(this.client.getCameraEntity(), 16).ifPresent(entity -> this.targetedEntity = entity.getUUID());
     }
 
     private boolean isClose(BirdDebugPayload.BirdData birdData) {
@@ -121,12 +123,12 @@ public class BirdDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
             drawString(matrices, vertexConsumers, birdData.pos(), i, birdData.inventory(), -98404, 0.02F);
         }
 
-        for(String string : birdData.runningTasks()) {
+        for(String string : birdData.behaviours()) {
             drawString(matrices, vertexConsumers, birdData.pos(), i, string, -16711681, 0.02F);
             i++;
         }
 
-        for(String string : birdData.possibleActivities()) {
+        for(String string : birdData.activities()) {
             drawString(matrices, vertexConsumers, birdData.pos(), i, string, -16711936, 0.02F);
             i++;
         }
@@ -306,14 +308,48 @@ public class BirdDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
         double f = (double) pos.getX() + 0.5;
         double g = (double) pos.getY() + 1.3 + (double) offsetY * 0.2;
         double h = (double) pos.getZ() + 0.5;
-        DebugRenderer.renderFloatingText(matrices, vertexConsumers, string, f, g, h, color, 0.02F, true, 0.0F, true);
+        renderFloatingText(matrices, vertexConsumers, string, f, g, h, color, 0.02F, true, 0.0F, true);
     }
 
     private static void drawString(PoseStack matrices, MultiBufferSource vertexConsumers, Position pos, int offsetY, String string, int color, float size) {
-        // TODO: partialTick interpolation
+        // TODO: partialTick interpolation to stop jittery movement
         double f = pos.x() + 0.5;
         double g = pos.y() + 2.4 + (double) offsetY * 0.25;
         double h = pos.z() + 0.5;
-        DebugRenderer.renderFloatingText(matrices, vertexConsumers, string, f, g, h, color, size, false, 0.5F, false);
+        renderFloatingText(matrices, vertexConsumers, string, f, g, h, color, size, false, 0.5F, false);
+    }
+
+    public static void renderFloatingText(
+        PoseStack poseStack,
+        MultiBufferSource bufferSource,
+        String text,
+        double x,
+        double y,
+        double z,
+        int color,
+        float scale,
+        boolean bl,
+        float f,
+        boolean transparent
+    ) {
+        Minecraft minecraft = Minecraft.getInstance();
+        Camera camera = minecraft.gameRenderer.getMainCamera();
+        if(camera.isInitialized()) {
+            Font font = minecraft.font;
+            double cx = camera.getPosition().x;
+            double cy = camera.getPosition().y;
+            double cz = camera.getPosition().z;
+            poseStack.pushPose();
+            poseStack.translate((float) (x - cx), (float) (y - cy) + 0.07F, (float) (z - cz));
+//            poseStack.mulPose(Axis.YP.rotationDegrees((float) Math.toDegrees(Math.atan2(cx - x, cz - z))));
+            poseStack.mulPose(camera.rotation());
+            poseStack.scale(scale, -scale, scale);
+            float h = bl ? -font.width(text) / 2.0F : 0.0F;
+            h -= f / scale;
+            font.drawInBatch(
+                text, h, 0.0F, color, false, poseStack.last().pose(), bufferSource, transparent ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL, 0, 15728880
+            );
+            poseStack.popPose();
+        }
     }
 }

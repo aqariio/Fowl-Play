@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-public class GenericDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
+public class GenericDebugRenderer implements FowlPlayDebugRenderers.LerpedDebugRenderer {
     public static final GenericDebugRenderer INSTANCE = new GenericDebugRenderer();
     private final Minecraft client;
     private final Map<UUID, GenericDebugPayload.Data> mobs = Maps.newHashMap();
@@ -42,12 +42,12 @@ public class GenericDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
     }
 
     @Override
-    public void render(PoseStack matrices, MultiBufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ) {
+    public void render(PoseStack matrices, MultiBufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ, double partialTick) {
         if(!FowlPlayClient.DEBUG_GENERIC) {
             return;
         }
         this.removeRemovedData();
-        this.draw(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        this.draw(matrices, vertexConsumers, cameraX, cameraY, cameraZ, partialTick);
         this.updateTargetedEntity();
     }
 
@@ -72,25 +72,25 @@ public class GenericDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
         return playerPos.closerThan(birdPos, 30.0);
     }
 
-    private void draw(PoseStack matrices, MultiBufferSource vertexConsumers, double x, double y, double z) {
+    private void draw(PoseStack matrices, MultiBufferSource vertexConsumers, double x, double y, double z, double partialTick) {
         this.mobs.values().forEach(data -> {
             if(this.isClose(data)) {
-                drawData(matrices, vertexConsumers, data, this.isTargeted(data), x, y, z);
+                drawData(matrices, vertexConsumers, data, this.isTargeted(data), x, y, z, partialTick);
             }
         });
     }
 
     private static void drawData(
-        PoseStack matrices, MultiBufferSource vertexConsumers, GenericDebugPayload.Data data, boolean targeted, double cameraX, double cameraY, double cameraZ
+        PoseStack matrices, MultiBufferSource vertexConsumers, GenericDebugPayload.Data data, boolean targeted, double cameraX, double cameraY, double cameraZ, double partialTick
     ) {
         int i = 0;
         for(Map.Entry<String, String> entry : data.data().entrySet()) {
-            drawString(matrices, vertexConsumers, data.pos(), i, entry.getKey() + ": " + entry.getValue(), targeted ? -1 : 0xaaaaaa, 0.02F);
+            drawString(matrices, vertexConsumers, data.pos(), i, entry.getKey() + ": " + entry.getValue(), targeted ? -1 : 0xaaaaaa, 0.02F, partialTick);
             i++;
         }
     }
 
-    private static void drawString(PoseStack matrices, MultiBufferSource vertexConsumers, Position pos, int offsetY, String string, int color, float size) {
+    private static void drawString(PoseStack matrices, MultiBufferSource vertexConsumers, Position pos, int offsetY, String string, int color, float size, double partialTick) {
         double f = pos.x() + 0.5;
         double g = pos.y() + 1.4 + (double) offsetY * 0.25;
         double h = pos.z() + 0.5;

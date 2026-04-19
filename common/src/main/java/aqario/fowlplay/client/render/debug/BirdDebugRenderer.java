@@ -1,6 +1,7 @@
 package aqario.fowlplay.client.render.debug;
 
 import aqario.fowlplay.client.FowlPlayClient;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.network.clientbound.BirdDebugPayload;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -16,16 +17,18 @@ import net.minecraft.client.renderer.debug.PathfindingRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.util.CommonColors;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class BirdDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
+public class BirdDebugRenderer implements FowlPlayDebugRenderers.LerpedDebugRenderer {
     public static final BirdDebugRenderer INSTANCE = new BirdDebugRenderer();
     private final Minecraft client;
     private final Map<UUID, BirdDebugPayload.BirdData> birds = Maps.newHashMap();
@@ -50,12 +53,12 @@ public class BirdDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
     }
 
     @Override
-    public void render(PoseStack matrices, MultiBufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ) {
+    public void render(PoseStack matrices, MultiBufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ, double partialTick) {
         if(!FowlPlayClient.DEBUG_BIRD) {
             return;
         }
         this.removeRemovedBirds();
-        this.draw(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        this.draw(matrices, vertexConsumers, cameraX, cameraY, cameraZ, partialTick);
         this.updateTargetedEntity();
     }
 
@@ -80,67 +83,73 @@ public class BirdDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
         return playerPos.closerThan(birdPos, 30.0);
     }
 
-    private void draw(PoseStack matrices, MultiBufferSource vertexConsumers, double x, double y, double z) {
+    private void draw(PoseStack matrices, MultiBufferSource vertexConsumers, double x, double y, double z, double partialTick) {
         this.birds.values().forEach(birdData -> {
             if(this.isClose(birdData)) {
-                drawBirdData(matrices, vertexConsumers, birdData, this.isTargeted(birdData), x, y, z);
+                drawBirdData(matrices, vertexConsumers, birdData, this.isTargeted(birdData), x, y, z, partialTick);
             }
         });
     }
 
     private static void drawBirdData(
-        PoseStack matrices, MultiBufferSource vertexConsumers, BirdDebugPayload.BirdData birdData, boolean targeted, double cameraX, double cameraY, double cameraZ
+        PoseStack matrices, MultiBufferSource vertexConsumers, BirdDebugPayload.BirdData birdData, boolean targeted, double cameraX, double cameraY, double cameraZ, double partialTick
     ) {
+        // noinspection ConstantConditions
+        BirdEntity entity = (BirdEntity) Minecraft.getInstance().level.getEntity(birdData.entityId());
+        Vec3 oldPos = entity != null ? new Vec3(entity.xo, entity.yo, entity.zo) : birdData.pos();
+        Vec3 pos = entity != null ? entity.position() : birdData.pos();
         int i = 0;
-        drawString(matrices, vertexConsumers, birdData.pos(), i, birdData.name(), -1, 0.03F);
+        drawString(matrices, vertexConsumers, pos, oldPos, i, birdData.name(), -1, 0.03F, partialTick);
         i++;
-        drawString(matrices, vertexConsumers, birdData.pos(), i, "trusting: " + Arrays.toString(birdData.trusting().toArray()), -3355444, 0.02F);
+        drawString(matrices, vertexConsumers, pos, oldPos, i, "trusting: " + Arrays.toString(birdData.trusting().toArray()), -3355444, 0.02F, partialTick);
         i++;
-        drawString(matrices, vertexConsumers, birdData.pos(), i, "flying: " + birdData.flying(), -1, 0.02F);
+        drawString(matrices, vertexConsumers, pos, oldPos, i, "flying: " + birdData.flying(), -1, 0.02F, partialTick);
         i++;
-        drawString(matrices, vertexConsumers, birdData.pos(), i, "perched: " + birdData.perched(), -1, 0.02F);
+        drawString(matrices, vertexConsumers, pos, oldPos, i, "perched: " + birdData.perched(), -1, 0.02F, partialTick);
         i++;
-        drawString(matrices, vertexConsumers, birdData.pos(), i, "ambient: " + birdData.ambient(), -1, 0.02F);
+        drawString(matrices, vertexConsumers, pos, oldPos, i, "ambient: " + birdData.ambient(), -1, 0.02F, partialTick);
         i++;
-        drawString(matrices, vertexConsumers, birdData.pos(), i, "move control: " + birdData.moveControl(), -1, 0.02F);
+        drawString(matrices, vertexConsumers, pos, oldPos, i, "move control: " + birdData.moveControl(), -1, 0.02F, partialTick);
         i++;
-        drawString(matrices, vertexConsumers, birdData.pos(), i, "navigation: " + birdData.navigation(), -1, 0.02F);
+        drawString(matrices, vertexConsumers, pos, oldPos, i, "navigation: " + birdData.navigation(), -1, 0.02F, partialTick);
         i++;
 
         int j = birdData.health() < birdData.maxHealth() ? -23296 : -1;
         drawString(
             matrices,
             vertexConsumers,
-            birdData.pos(),
+            pos,
+            oldPos,
             i,
             "health: " + String.format(Locale.ROOT, "%.1f", birdData.health()) + " / " + String.format(Locale.ROOT, "%.1f", birdData.maxHealth()),
             j,
-            0.02F
+            0.02F,
+            partialTick
         );
         i++;
 
         if(!birdData.inventory().isEmpty()) {
-            drawString(matrices, vertexConsumers, birdData.pos(), i, birdData.inventory(), -98404, 0.02F);
+            drawString(matrices, vertexConsumers, pos, oldPos, i, birdData.inventory(), -98404, 0.02F, partialTick);
         }
 
         for(String string : birdData.behaviours()) {
-            drawString(matrices, vertexConsumers, birdData.pos(), i, string, -16711681, 0.02F);
+            drawString(matrices, vertexConsumers, pos, oldPos, i, string, -16711681, 0.02F, partialTick);
             i++;
         }
 
         for(String string : birdData.activities()) {
-            drawString(matrices, vertexConsumers, birdData.pos(), i, string, -16711936, 0.02F);
+            drawString(matrices, vertexConsumers, pos, oldPos, i, string, -16711936, 0.02F, partialTick);
             i++;
         }
 
         if(birdData.schedule() != null) {
-            drawString(matrices, vertexConsumers, birdData.pos(), i, birdData.schedule(), -23296, 0.02F);
+            drawString(matrices, vertexConsumers, pos, oldPos, i, birdData.schedule(), -23296, 0.02F, partialTick);
             i++;
         }
 
         if(targeted) {
             for(String string : Lists.reverse(birdData.memories())) {
-                drawString(matrices, vertexConsumers, birdData.pos(), i, string, -3355444, 0.02F);
+                drawString(matrices, vertexConsumers, pos, oldPos, i, string, -3355444, 0.02F, partialTick);
                 i++;
             }
         }
@@ -311,12 +320,11 @@ public class BirdDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
         renderFloatingText(matrices, vertexConsumers, string, f, g, h, color, 0.02F, true, 0.0F, true);
     }
 
-    private static void drawString(PoseStack matrices, MultiBufferSource vertexConsumers, Position pos, int offsetY, String string, int color, float size) {
-        // TODO: partialTick interpolation to stop jittery movement
-        double f = pos.x() + 0.5;
-        double g = pos.y() + 2.4 + (double) offsetY * 0.25;
-        double h = pos.z() + 0.5;
-        renderFloatingText(matrices, vertexConsumers, string, f, g, h, color, size, false, 0.5F, false);
+    private static void drawString(PoseStack matrices, MultiBufferSource vertexConsumers, Position pos, Position oldPos, int offsetY, String string, int color, float size, double partialTick) {
+        double x = Mth.lerp(partialTick, oldPos.x(), pos.x()) + 0.5;
+        double y = Mth.lerp(partialTick, oldPos.y(), pos.y()) + 2.4 + (double) offsetY * 0.25;
+        double z = Mth.lerp(partialTick, oldPos.z(), pos.z()) + 0.5;
+        renderFloatingText(matrices, vertexConsumers, string, x, y, z, color, size, false, 0.5F, false);
     }
 
     public static void renderFloatingText(

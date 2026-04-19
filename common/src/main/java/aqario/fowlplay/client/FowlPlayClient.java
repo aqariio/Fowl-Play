@@ -2,6 +2,7 @@ package aqario.fowlplay.client;
 
 import aqario.fowlplay.client.particle.SmallBubbleParticle;
 import aqario.fowlplay.client.render.debug.BirdDebugRenderer;
+import aqario.fowlplay.client.render.debug.FowlPlayDebugRenderers;
 import aqario.fowlplay.client.render.debug.GenericDebugRenderer;
 import aqario.fowlplay.client.render.entity.*;
 import aqario.fowlplay.client.render.entity.model.*;
@@ -28,11 +29,11 @@ public class FowlPlayClient {
     public static void init() {
         if(FowlPlay.isDebugUtilsLoaded()) {
             ResourceLocation debugBirdId = BirdDebugPayload.TYPE.id();
-            RegisterDebugRenderers.registerCustomDebugRenderer(debugBirdId, BirdDebugRenderer.INSTANCE);
+            FowlPlayDebugRenderers.register(BirdDebugRenderer.INSTANCE);
             RegisterDebugRenderers.registerServerToggle(debugBirdId);
             RegisterDebugRenderers.registerClientHandler(debugBirdId, b -> FowlPlayClient.DEBUG_BIRD = b);
             ResourceLocation debugGenericId = GenericDebugPayload.TYPE.id();
-            RegisterDebugRenderers.registerCustomDebugRenderer(debugGenericId, GenericDebugRenderer.INSTANCE);
+            FowlPlayDebugRenderers.register(GenericDebugRenderer.INSTANCE);
             RegisterDebugRenderers.registerServerToggle(debugGenericId);
             RegisterDebugRenderers.registerClientHandler(debugGenericId, b -> FowlPlayClient.DEBUG_GENERIC = b);
 

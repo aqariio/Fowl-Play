@@ -557,7 +557,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    protected boolean canCall() {
+    public boolean canCall() {
         return !this.isInWaterOrBubble() && super.canCall();
     }
 

@@ -61,8 +61,6 @@ public abstract class BirdEntity extends Animal {
     private boolean ambient;
     private int eatingTime;
     protected int idleAnimationChance;
-    protected int callChance;
-    protected int songChance;
 
     protected BirdEntity(EntityType<? extends BirdEntity> entityType, Level world) {
         super(entityType, world);
@@ -70,8 +68,6 @@ public abstract class BirdEntity extends Animal {
         this.moveControl = this.createMoveControl();
         this.lookControl = new BirdLookControl(this, 85);
         this.idleAnimationChance = this.random.nextInt(this.getIdleAnimationDelay()) - this.getIdleAnimationDelay();
-        this.callChance = this.random.nextInt(this.getCallDelay()) - this.getCallDelay();
-        this.songChance = this.random.nextInt(this.getSongDelay()) - this.getSongDelay();
         this.setPathfindingMalus(PathType.DANGER_FIRE, -1.0f);
         this.setPathfindingMalus(PathType.DANGER_POWDER_SNOW, -1.0f);
         this.setPathfindingMalus(PathType.COCOA, -1.0f);
@@ -391,27 +387,6 @@ public abstract class BirdEntity extends Animal {
         }
     }
 
-    @Override
-    public void baseTick() {
-        super.baseTick();
-        this.level().getProfiler().push("birdBaseTick");
-        // TODO: make bird calls behaviours instead of random events
-        if(this.isAlive() && this.random.nextInt(1000) < this.callChance++) {
-            this.resetCallDelay();
-            if(this.canCall()) {
-                this.playCallSound();
-            }
-        }
-        else if(this.isAlive() && this.random.nextInt(1000) < this.songChance++) {
-            this.resetSongDelay();
-            if(this.canSing()) {
-                this.playSongSound();
-            }
-        }
-
-        this.level().getProfiler().pop();
-    }
-
     protected AnimationStateList createIdleAnimations() {
         return new AnimationStateList();
     }
@@ -475,43 +450,31 @@ public abstract class BirdEntity extends Animal {
         this.idleAnimationChance = -(this.getIdleAnimationDelay() + this.random.nextIntBetweenInclusive(-200, 200));
     }
 
-    protected boolean canCall() {
+    public boolean canCall() {
         return !this.isSleeping();
     }
 
-    protected boolean canSing() {
+    public boolean canSing() {
         return !this.isSleeping() && this.onGround() && !this.isBaby();
     }
 
-    private void resetCallDelay() {
-        this.callChance = -(this.getCallDelay() + this.random.nextIntBetweenInclusive(-150, 150));
-    }
-
-    private void resetSongDelay() {
-        this.songChance = -(this.getSongDelay() + this.random.nextIntBetweenInclusive(-150, 150));
-    }
-
     public final void playCallSound() {
-        SoundEvent call = this.getCallSound();
-        if(call != null) {
-            this.playSound(call, this.getCallVolume(), this.getVoicePitch());
-        }
+        this.playSound(this.getCallSound(), this.getCallVolume(), this.getVoicePitch());
     }
 
     public final void playSongSound() {
-        SoundEvent song = this.getSongSound();
-        if(song != null) {
-            this.playSound(song, this.getSongVolume(), this.getVoicePitch());
-        }
+        this.playSound(this.getSongSound(), this.getSongVolume(), this.getVoicePitch());
     }
 
     @Override
     protected void playHurtSound(DamageSource damageSource) {
-        this.resetCallDelay();
-        this.resetSongDelay();
-        SoundEvent hurt = this.getHurtSound(damageSource);
-        if(hurt != null) {
-            this.playSound(hurt, this.getCallVolume(), this.getVoicePitch());
+        this.playSound(this.getHurtSound(damageSource), this.getCallVolume(), this.getVoicePitch());
+    }
+
+    @Override
+    public void playSound(SoundEvent sound, float volume, float pitch) {
+        if(!this.isSilent() && sound != null) {
+            this.level().playSound(null, this.getX(), this.getY(), this.getZ(), sound, this.getSoundSource(), volume, pitch);
         }
     }
 

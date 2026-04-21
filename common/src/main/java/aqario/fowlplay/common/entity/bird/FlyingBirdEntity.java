@@ -327,7 +327,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     @Override
-    protected boolean canSing() {
+    public boolean canSing() {
         return BirdUtils.isPerched(this) && super.canSing();
     }
 

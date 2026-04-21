@@ -1,16 +1,12 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
-import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.bird.penguin.PenguinEntity;
 import aqario.fowlplay.common.util.BirdUtils;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.tslat.smartbrainlib.api.core.behaviour.AllApplicableBehaviours;
-import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.SequentialBehaviour;
+import net.tslat.smartbrainlib.api.core.behaviour.*;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomSwimTarget;
 import net.tslat.smartbrainlib.util.BrainUtils;
@@ -81,14 +77,6 @@ public class CompositeBehaviours {
             .stopIf(Entity::isInWaterOrBubble);
     }
 
-    public static <E extends BirdEntity> ExtendedBehaviour<E> idleAndLookAround() {
-        return new OneRandomBehaviour<>(
-            new SetRandomLookTarget<>(),
-            new Idle<>()
-                .noTimeout()
-        );
-    }
-
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> tryPickUpFood() {
         return new AllApplicableBehaviours<>(
             CustomBehaviours.setNearestFoodWalkTarget(),
@@ -109,11 +97,37 @@ public class CompositeBehaviours {
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> tryPerch() {
         return new OneRandomBehaviour<>(
             Pair.of(
-                idleAndLookAround()
-                    .runForBetween(30, 100)
+                new OneRandomBehaviour<>(
+                    new OneRandomBehaviour<>(
+                        Pair.of(
+                            new SetRandomLookTarget<>(),
+                            4
+                        ),
+                        Pair.of(
+                            new Idle<>()
+                                .noTimeout(),
+                            5
+                        ),
+                        Pair.of(
+                            new RepeatingBehaviour<>(
+                                new Call<>()
+                            )
+                                .repeatNTimes(entity -> entity.getRandom().nextIntBetweenInclusive(3, 6)),
+                            4
+                        ),
+                        Pair.of(
+                            new RepeatingBehaviour<>(
+                                new Sing<>()
+                            )
+                                .repeatNTimes(entity -> entity.getRandom().nextIntBetweenInclusive(1, 3)),
+                            3
+                        )
+                    )
+                )
+                    .runForBetween(900, 1800)
                     .startCondition(BirdUtils::isPerched)
                     .stopIf(Predicate.not(BirdUtils::isPerched)),
-                8
+                4
             ),
             Pair.of(
                 trySetPerchWalkTarget(),
@@ -124,7 +138,11 @@ public class CompositeBehaviours {
 
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> tryForage() {
         return new SequentialBehaviour<>(
-            idleAndLookAround()
+            new OneRandomBehaviour<>(
+                new SetRandomLookTarget<>(),
+                new Idle<>()
+                    .noTimeout()
+            )
                 .runForBetween(30, 100)
                 .startCondition(Entity::onGround)
                 .stopIf(Predicate.not(Entity::onGround)),

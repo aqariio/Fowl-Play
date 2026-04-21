@@ -302,7 +302,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     @Override
-    protected boolean canSing() {
+    public boolean canSing() {
         if(this.level().isDay()) {
             return false;
         }

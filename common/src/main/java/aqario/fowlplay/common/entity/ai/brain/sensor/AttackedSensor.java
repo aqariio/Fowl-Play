@@ -3,8 +3,8 @@ package aqario.fowlplay.common.entity.ai.brain.sensor;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.entity.bird.TrustingBirdEntity;
 import aqario.fowlplay.common.util.BirdUtils;
-import aqario.fowlplay.core.FowlPlayMemoryTypes;
-import aqario.fowlplay.core.FowlPlaySensorTypes;
+import aqario.fowlplay.core.FPMemoryTypes;
+import aqario.fowlplay.core.FPSensorTypes;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Unit;
@@ -23,8 +23,8 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
         MemoryModuleType.HURT_BY,
         MemoryModuleType.HURT_BY_ENTITY,
         MemoryModuleType.AVOID_TARGET,
-        FowlPlayMemoryTypes.SEES_FOOD.get(),
-        FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get()
+        FPMemoryTypes.SEES_FOOD.get(),
+        FPMemoryTypes.CANNOT_PICKUP_FOOD.get()
     );
 
     public AttackedSensor() {
@@ -39,7 +39,7 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
 
     @Override
     public SensorType<? extends ExtendedSensor<?>> type() {
-        return FowlPlaySensorTypes.ATTACKED.get();
+        return FPSensorTypes.ATTACKED.get();
     }
 
     @Override
@@ -67,9 +67,9 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
     }
 
     public static <T extends BirdEntity> void onAttacked(T bird, LivingEntity attacker) {
-        bird.clearMemory(FowlPlayMemoryTypes.SEES_FOOD.get());
+        bird.clearMemory(FPMemoryTypes.SEES_FOOD.get());
         if(attacker instanceof Player player) {
-            bird.setMemoryWithExpiry(FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get(), Unit.INSTANCE, BirdUtils.CANNOT_PICKUP_FOOD_TICKS);
+            bird.setMemoryWithExpiry(FPMemoryTypes.CANNOT_PICKUP_FOOD.get(), Unit.INSTANCE, BirdUtils.CANNOT_PICKUP_FOOD_TICKS);
             if(bird instanceof TrustingBirdEntity trustingBird && trustingBird.trusts(player)) {
                 trustingBird.stopTrusting(player);
             }

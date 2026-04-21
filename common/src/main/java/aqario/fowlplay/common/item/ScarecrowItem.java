@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.item;
 
 import aqario.fowlplay.common.entity.ScarecrowEntity;
-import aqario.fowlplay.core.FowlPlayEntityTypes;
+import aqario.fowlplay.core.FPEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -34,13 +34,13 @@ public class ScarecrowItem extends Item {
         BlockPos blockPos = placementContext.getClickedPos();
         ItemStack itemStack = usageContext.getItemInHand();
         Vec3 vec3d = Vec3.atBottomCenterOf(blockPos);
-        AABB box = FowlPlayEntityTypes.SCARECROW.get().getDimensions().makeBoundingBox(vec3d.x(), vec3d.y(), vec3d.z());
+        AABB box = FPEntityTypes.SCARECROW.get().getDimensions().makeBoundingBox(vec3d.x(), vec3d.y(), vec3d.z());
         if(!world.noCollision(null, box) || !world.getEntities(null, box).isEmpty()) {
             return InteractionResult.FAIL;
         }
 
         if(world instanceof ServerLevel serverWorld) {
-            ScarecrowEntity scarecrow = FowlPlayEntityTypes.SCARECROW.get()
+            ScarecrowEntity scarecrow = FPEntityTypes.SCARECROW.get()
                 .create(serverWorld, null, blockPos, MobSpawnType.SPAWN_EGG, true, true);
             if(scarecrow == null) {
                 return InteractionResult.FAIL;

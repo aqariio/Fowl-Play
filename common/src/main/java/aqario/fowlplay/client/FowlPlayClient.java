@@ -9,9 +9,9 @@ import aqario.fowlplay.client.render.entity.model.*;
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.network.clientbound.BirdDebugPayload;
 import aqario.fowlplay.common.network.clientbound.GenericDebugPayload;
+import aqario.fowlplay.core.FPEntityTypes;
+import aqario.fowlplay.core.FPParticleTypes;
 import aqario.fowlplay.core.FowlPlay;
-import aqario.fowlplay.core.FowlPlayEntityTypes;
-import aqario.fowlplay.core.FowlPlayParticleTypes;
 import com.google.common.base.Suppliers;
 import dev.architectury.networking.NetworkManager;
 import io.github.flemmli97.debugutils.api.RegisterDebugRenderers;
@@ -99,20 +99,20 @@ public class FowlPlayClient {
     }
 
     public static void registerEntityRenderers() {
-        RenderRegistry.entityRenderer(FowlPlayEntityTypes.BLUE_JAY, BlueJayRenderer::new);
-        RenderRegistry.entityRenderer(FowlPlayEntityTypes.CARDINAL, CardinalRenderer::new);
-        RenderRegistry.entityRenderer(FowlPlayEntityTypes.CHICKADEE, ChickadeeRenderer::new);
-        RenderRegistry.entityRenderer(FowlPlayEntityTypes.CROW, CrowRenderer::new);
-        RenderRegistry.entityRenderer(FowlPlayEntityTypes.DUCK, DuckRenderer::new);
-        RenderRegistry.entityRenderer(FowlPlayEntityTypes.GOOSE, GooseRenderer::new);
-        RenderRegistry.entityRenderer(FowlPlayEntityTypes.GULL, GullRenderer::new);
-        RenderRegistry.entityRenderer(FowlPlayEntityTypes.HAWK, HawkRenderer::new);
-        RenderRegistry.entityRenderer(FowlPlayEntityTypes.PENGUIN, PenguinRenderer::new);
-        RenderRegistry.entityRenderer(FowlPlayEntityTypes.PIGEON, PigeonRenderer::new);
-        RenderRegistry.entityRenderer(FowlPlayEntityTypes.RAVEN, RavenRenderer::new);
-        RenderRegistry.entityRenderer(FowlPlayEntityTypes.ROBIN, RobinRenderer::new);
-        RenderRegistry.entityRenderer(FowlPlayEntityTypes.SPARROW, SparrowRenderer::new);
-        RenderRegistry.entityRenderer(FowlPlayEntityTypes.SCARECROW, ScarecrowRenderer::new);
+        RenderRegistry.entityRenderer(FPEntityTypes.BLUE_JAY, BlueJayRenderer::new);
+        RenderRegistry.entityRenderer(FPEntityTypes.CARDINAL, CardinalRenderer::new);
+        RenderRegistry.entityRenderer(FPEntityTypes.CHICKADEE, ChickadeeRenderer::new);
+        RenderRegistry.entityRenderer(FPEntityTypes.CROW, CrowRenderer::new);
+        RenderRegistry.entityRenderer(FPEntityTypes.DUCK, DuckRenderer::new);
+        RenderRegistry.entityRenderer(FPEntityTypes.GOOSE, GooseRenderer::new);
+        RenderRegistry.entityRenderer(FPEntityTypes.GULL, GullRenderer::new);
+        RenderRegistry.entityRenderer(FPEntityTypes.HAWK, HawkRenderer::new);
+        RenderRegistry.entityRenderer(FPEntityTypes.PENGUIN, PenguinRenderer::new);
+        RenderRegistry.entityRenderer(FPEntityTypes.PIGEON, PigeonRenderer::new);
+        RenderRegistry.entityRenderer(FPEntityTypes.RAVEN, RavenRenderer::new);
+        RenderRegistry.entityRenderer(FPEntityTypes.ROBIN, RobinRenderer::new);
+        RenderRegistry.entityRenderer(FPEntityTypes.SPARROW, SparrowRenderer::new);
+        RenderRegistry.entityRenderer(FPEntityTypes.SCARECROW, ScarecrowRenderer::new);
 
         if(FowlPlayConfig.getInstance().customChickenModel) {
             RenderRegistry.entityRenderer(Suppliers.ofInstance(EntityType.CHICKEN), CustomChickenRenderer::new);
@@ -120,6 +120,6 @@ public class FowlPlayClient {
     }
 
     public static void registerParticleFactories() {
-        RenderRegistry.particleFactory(FowlPlayParticleTypes.SMALL_BUBBLE, SmallBubbleParticle.Provider::new);
+        RenderRegistry.particleFactory(FPParticleTypes.SMALL_BUBBLE, SmallBubbleParticle.Provider::new);
     }
 }

@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public final class FowlPlayMemoryTypes {
+public final class FPMemoryTypes {
     public static final CommonRegister<MemoryModuleType<?>> REGISTRAR = CommonRegister.create(
         BuiltInRegistries.MEMORY_MODULE_TYPE,
         FowlPlay.ID

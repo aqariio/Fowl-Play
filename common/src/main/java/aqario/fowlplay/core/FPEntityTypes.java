@@ -28,7 +28,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Supplier;
 
-public final class FowlPlayEntityTypes {
+public final class FPEntityTypes {
     public static final CommonRegister<EntityType<?>> REGISTRAR = CommonRegister.create(
         BuiltInRegistries.ENTITY_TYPE,
         FowlPlay.ID
@@ -279,7 +279,7 @@ public final class FowlPlayEntityTypes {
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_BLUE_JAYS,
             CustomMobCategory.AMBIENT_BIRDS.mobCategory,
-            FowlPlayEntityTypes.BLUE_JAY,
+            FPEntityTypes.BLUE_JAY,
             FowlPlayConfig.getInstance().blueJaySpawnWeight,
             FowlPlayConfig.getInstance().blueJayMinGroupSize,
             FowlPlayConfig.getInstance().blueJayMaxGroupSize
@@ -287,7 +287,7 @@ public final class FowlPlayEntityTypes {
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_CARDINALS,
             CustomMobCategory.AMBIENT_BIRDS.mobCategory,
-            FowlPlayEntityTypes.CARDINAL,
+            FPEntityTypes.CARDINAL,
             FowlPlayConfig.getInstance().cardinalSpawnWeight,
             FowlPlayConfig.getInstance().cardinalMinGroupSize,
             FowlPlayConfig.getInstance().cardinalMaxGroupSize
@@ -295,7 +295,7 @@ public final class FowlPlayEntityTypes {
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_CHICKADEES,
             CustomMobCategory.AMBIENT_BIRDS.mobCategory,
-            FowlPlayEntityTypes.CHICKADEE,
+            FPEntityTypes.CHICKADEE,
             FowlPlayConfig.getInstance().chickadeeSpawnWeight,
             FowlPlayConfig.getInstance().chickadeeMinGroupSize,
             FowlPlayConfig.getInstance().chickadeeMaxGroupSize
@@ -303,7 +303,7 @@ public final class FowlPlayEntityTypes {
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_CROWS,
             CustomMobCategory.AMBIENT_BIRDS.mobCategory,
-            FowlPlayEntityTypes.CROW,
+            FPEntityTypes.CROW,
             FowlPlayConfig.getInstance().crowSpawnWeight,
             FowlPlayConfig.getInstance().crowMinGroupSize,
             FowlPlayConfig.getInstance().crowMaxGroupSize
@@ -311,7 +311,7 @@ public final class FowlPlayEntityTypes {
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_DUCKS,
             CustomMobCategory.BIRDS.mobCategory,
-            FowlPlayEntityTypes.DUCK,
+            FPEntityTypes.DUCK,
             FowlPlayConfig.getInstance().duckSpawnWeight,
             FowlPlayConfig.getInstance().duckMinGroupSize,
             FowlPlayConfig.getInstance().duckMaxGroupSize
@@ -319,7 +319,7 @@ public final class FowlPlayEntityTypes {
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_GEESE,
             CustomMobCategory.BIRDS.mobCategory,
-            FowlPlayEntityTypes.GOOSE,
+            FPEntityTypes.GOOSE,
             FowlPlayConfig.getInstance().gooseSpawnWeight,
             FowlPlayConfig.getInstance().gooseMinGroupSize,
             FowlPlayConfig.getInstance().gooseMaxGroupSize
@@ -327,7 +327,7 @@ public final class FowlPlayEntityTypes {
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_GULLS,
             CustomMobCategory.BIRDS.mobCategory,
-            FowlPlayEntityTypes.GULL,
+            FPEntityTypes.GULL,
             FowlPlayConfig.getInstance().gullSpawnWeight,
             FowlPlayConfig.getInstance().gullMinGroupSize,
             FowlPlayConfig.getInstance().gullMaxGroupSize
@@ -335,7 +335,7 @@ public final class FowlPlayEntityTypes {
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_HAWKS,
             CustomMobCategory.BIRDS.mobCategory,
-            FowlPlayEntityTypes.HAWK,
+            FPEntityTypes.HAWK,
             FowlPlayConfig.getInstance().hawkSpawnWeight,
             FowlPlayConfig.getInstance().hawkMinGroupSize,
             FowlPlayConfig.getInstance().hawkMaxGroupSize
@@ -343,7 +343,7 @@ public final class FowlPlayEntityTypes {
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_PENGUINS,
             MobCategory.CREATURE,
-            FowlPlayEntityTypes.PENGUIN,
+            FPEntityTypes.PENGUIN,
             FowlPlayConfig.getInstance().penguinSpawnWeight,
             FowlPlayConfig.getInstance().penguinMinGroupSize,
             FowlPlayConfig.getInstance().penguinMaxGroupSize
@@ -351,7 +351,7 @@ public final class FowlPlayEntityTypes {
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_PIGEONS,
             CustomMobCategory.BIRDS.mobCategory,
-            FowlPlayEntityTypes.PIGEON,
+            FPEntityTypes.PIGEON,
             FowlPlayConfig.getInstance().pigeonSpawnWeight,
             FowlPlayConfig.getInstance().pigeonMinGroupSize,
             FowlPlayConfig.getInstance().pigeonMaxGroupSize
@@ -359,7 +359,7 @@ public final class FowlPlayEntityTypes {
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_RAVENS,
             CustomMobCategory.AMBIENT_BIRDS.mobCategory,
-            FowlPlayEntityTypes.RAVEN,
+            FPEntityTypes.RAVEN,
             FowlPlayConfig.getInstance().ravenSpawnWeight,
             FowlPlayConfig.getInstance().ravenMinGroupSize,
             FowlPlayConfig.getInstance().ravenMaxGroupSize
@@ -367,7 +367,7 @@ public final class FowlPlayEntityTypes {
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_ROBINS,
             CustomMobCategory.AMBIENT_BIRDS.mobCategory,
-            FowlPlayEntityTypes.ROBIN,
+            FPEntityTypes.ROBIN,
             FowlPlayConfig.getInstance().robinSpawnWeight,
             FowlPlayConfig.getInstance().robinMinGroupSize,
             FowlPlayConfig.getInstance().robinMaxGroupSize
@@ -375,7 +375,7 @@ public final class FowlPlayEntityTypes {
         addSpawn(
             FowlPlayBiomeTags.SPAWNS_SPARROWS,
             CustomMobCategory.AMBIENT_BIRDS.mobCategory,
-            FowlPlayEntityTypes.SPARROW,
+            FPEntityTypes.SPARROW,
             FowlPlayConfig.getInstance().sparrowSpawnWeight,
             FowlPlayConfig.getInstance().sparrowMinGroupSize,
             FowlPlayConfig.getInstance().sparrowMaxGroupSize
@@ -384,13 +384,13 @@ public final class FowlPlayEntityTypes {
         // Spawn Costs
         setSpawnCost(
             FowlPlayBiomeTags.SPAWNS_DUCKS,
-            FowlPlayEntityTypes.DUCK,
+            FPEntityTypes.DUCK,
             0.8,
             0.1
         );
         setSpawnCost(
             FowlPlayBiomeTags.SPAWNS_GULLS,
-            FowlPlayEntityTypes.GULL,
+            FPEntityTypes.GULL,
             1,
             0.07
         );

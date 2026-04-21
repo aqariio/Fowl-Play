@@ -54,7 +54,6 @@ import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.InWaterSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
-import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -68,7 +67,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     );
     private static final EntityDataAccessor<Holder<PigeonVariant>> VARIANT = SynchedEntityData.defineId(
         PigeonEntity.class,
-        FowlPlayEntityDataSerializers.PIGEON_VARIANT
+        FPEntityDataSerializers.PIGEON_VARIANT
     );
     public final AnimationState sittingState = new AnimationState();
     private static final String RECIPIENT_KEY = "recipient";
@@ -113,12 +112,12 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
 
     @Override
     public Registry<PigeonVariant> variantRegistry() {
-        return FowlPlayBuiltInRegistries.PIGEON_VARIANT;
+        return FPBuiltInRegistries.PIGEON_VARIANT;
     }
 
     @Override
     public ResourceKey<Registry<PigeonVariant>> variantRegistryKey() {
-        return FowlPlayRegistries.PIGEON_VARIANT;
+        return FPRegistries.PIGEON_VARIANT;
     }
 
     @Override
@@ -317,13 +316,13 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FowlPlaySoundEvents.ENTITY_PIGEON_CALL.get();
+        return FPSoundEvents.ENTITY_PIGEON_CALL.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getSongSound() {
-        return FowlPlaySoundEvents.ENTITY_PIGEON_SONG.get();
+        return FPSoundEvents.ENTITY_PIGEON_SONG.get();
     }
 
     @Override
@@ -344,7 +343,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FowlPlaySoundEvents.ENTITY_PIGEON_HURT.get();
+        return FPSoundEvents.ENTITY_PIGEON_HURT.get();
     }
 
     @Override
@@ -386,9 +385,9 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
             new TeleportToTarget(),
             new LookAtTarget<>()
                 .runForBetween(45, 90),
-            new MoveToWalkTarget<>()
-                .startCondition(entity -> !BrainUtils.hasMemory(entity, FowlPlayMemoryTypes.TELEPORT_TARGET.get()))
-                .stopIf(entity -> BrainUtils.hasMemory(entity, FowlPlayMemoryTypes.TELEPORT_TARGET.get()))
+            new MoveToWalkTarget<PigeonEntity>()
+                .startCondition(entity -> !entity.isMemoryPresent(FPMemoryTypes.TELEPORT_TARGET.get()))
+                .stopIf(entity -> entity.isMemoryPresent(FPMemoryTypes.TELEPORT_TARGET.get()))
         );
     }
 
@@ -421,15 +420,15 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     public BrainActivityGroup<? extends PigeonEntity> forageActivity() {
         return BirdBrain.forage(
             new OneRandomBehaviour<>(
-                CompositeBehaviours.tryForage(),
-                CompositeBehaviours.tryPerch()
+                CompositeBehaviours.forage(),
+                CompositeBehaviours.perch()
             )
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends PigeonEntity> perchActivity() {
-        return BirdBrain.perch(
+    public BrainActivityGroup<? extends PigeonEntity> idleActivity() {
+        return BirdBrain.idle(
             new LeaderlessFlocking(
                 5,
                 0.03f,
@@ -437,7 +436,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
                 0.05f,
                 3f
             ),
-            CompositeBehaviours.tryPerch()
+            CompositeBehaviours.perch()
         );
     }
 
@@ -460,14 +459,14 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     @Nullable
     @Override
     public SmartBrainSchedule getSchedule() {
-        return FowlPlaySchedules.FORAGER.get();
+        return FPSchedules.FORAGER.get();
     }
 
     private static boolean shouldFlyToRecipient(PigeonEntity pigeon) {
-        if(!pigeon.isMemoryPresent(FowlPlayMemoryTypes.RECIPIENT.get())) {
+        if(!pigeon.isMemoryPresent(FPMemoryTypes.RECIPIENT.get())) {
             return false;
         }
-        UUID recipientUuid = pigeon.getPresentMemory(FowlPlayMemoryTypes.RECIPIENT.get());
+        UUID recipientUuid = pigeon.getPresentMemory(FPMemoryTypes.RECIPIENT.get());
         Player recipient = pigeon.level().getPlayerByUUID(recipientUuid);
         if(recipient == null) {
             return false;
@@ -476,10 +475,10 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     private static boolean shouldStopFlyingToRecipient(PigeonEntity pigeon) {
-        if(!pigeon.isMemoryPresent(FowlPlayMemoryTypes.RECIPIENT.get())) {
+        if(!pigeon.isMemoryPresent(FPMemoryTypes.RECIPIENT.get())) {
             return true;
         }
-        UUID recipientUuid = pigeon.getPresentMemory(FowlPlayMemoryTypes.RECIPIENT.get());
+        UUID recipientUuid = pigeon.getPresentMemory(FPMemoryTypes.RECIPIENT.get());
         Player recipient = pigeon.level().getPlayerByUUID(recipientUuid);
         if(recipient == null) {
             return true;

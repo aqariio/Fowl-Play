@@ -7,8 +7,8 @@ import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;
 import aqario.fowlplay.common.network.FowlPlayDebugPackets;
 import aqario.fowlplay.common.util.AnimationStateList;
 import aqario.fowlplay.common.util.BirdUtils;
-import aqario.fowlplay.core.FowlPlayMemoryTypes;
-import aqario.fowlplay.core.FowlPlaySoundEvents;
+import aqario.fowlplay.core.FPMemoryTypes;
+import aqario.fowlplay.core.FPSoundEvents;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -215,7 +215,7 @@ public abstract class BirdEntity extends Animal {
             this.take(item, stack.getCount());
             item.discard();
             this.eatingTime = 0;
-            this.clearMemory(FowlPlayMemoryTypes.SEES_FOOD.get());
+            this.clearMemory(FPMemoryTypes.SEES_FOOD.get());
             this.setMemoryWithExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, 18000L);
         }
     }
@@ -510,7 +510,7 @@ public abstract class BirdEntity extends Animal {
 
     @Override
     public SoundEvent getEatingSound(ItemStack stack) {
-        return FowlPlaySoundEvents.ENTITY_BIRD_EAT.get();
+        return FPSoundEvents.ENTITY_BIRD_EAT.get();
     }
 
     protected float getCallVolume() {

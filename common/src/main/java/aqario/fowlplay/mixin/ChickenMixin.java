@@ -3,8 +3,8 @@ package aqario.fowlplay.mixin;
 import aqario.fowlplay.common.entity.bird.VariantHolder;
 import aqario.fowlplay.common.entity.variant.ChickenVariant;
 import aqario.fowlplay.common.util.ChickenAnimationHolder;
-import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
-import aqario.fowlplay.core.FowlPlayRegistries;
+import aqario.fowlplay.core.FPBuiltInRegistries;
+import aqario.fowlplay.core.FPRegistries;
 import aqario.fowlplay.core.platform.DataAttachmentHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -38,7 +38,7 @@ public abstract class ChickenMixin extends Animal implements VariantHolder<Chick
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData) {
-        FowlPlayBuiltInRegistries.CHICKEN_VARIANT
+        FPBuiltInRegistries.CHICKEN_VARIANT
             .getHolder(ChickenVariant.RED_JUNGLEFOWL)
             .ifPresent(this::setVariant);
 
@@ -64,7 +64,7 @@ public abstract class ChickenMixin extends Animal implements VariantHolder<Chick
     private void fowlplay$createChild(ServerLevel level, AgeableMob otherParent, CallbackInfoReturnable<Chicken> cir) {
         Chicken child = EntityType.CHICKEN.create(level);
         if(child != null) {
-            FowlPlayBuiltInRegistries.CHICKEN_VARIANT.getHolder(ChickenVariant.WHITE).ifPresent(
+            FPBuiltInRegistries.CHICKEN_VARIANT.getHolder(ChickenVariant.WHITE).ifPresent(
                 variant -> DataAttachmentHelper.setChickenVariant(child, variant)
             );
         }
@@ -73,12 +73,12 @@ public abstract class ChickenMixin extends Animal implements VariantHolder<Chick
 
     @Override
     public Registry<ChickenVariant> variantRegistry() {
-        return FowlPlayBuiltInRegistries.CHICKEN_VARIANT;
+        return FPBuiltInRegistries.CHICKEN_VARIANT;
     }
 
     @Override
     public ResourceKey<Registry<ChickenVariant>> variantRegistryKey() {
-        return FowlPlayRegistries.CHICKEN_VARIANT;
+        return FPRegistries.CHICKEN_VARIANT;
     }
 
     @Override

@@ -4,7 +4,7 @@ import aqario.fowlplay.common.entity.variant.*;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
-public class FowlPlayRegistries {
+public class FPRegistries {
     public static final ResourceKey<Registry<ChickenVariant>> CHICKEN_VARIANT = createRegistryKey("chicken_variant");
     public static final ResourceKey<Registry<DuckVariant>> DUCK_VARIANT = createRegistryKey("duck_variant");
     public static final ResourceKey<Registry<GooseVariant>> GOOSE_VARIANT = createRegistryKey("goose_variant");

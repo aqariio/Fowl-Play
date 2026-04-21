@@ -1,8 +1,8 @@
 package aqario.fowlplay.common.entity.ai.brain.sensor;
 
 import aqario.fowlplay.common.entity.bird.dove.PigeonEntity;
-import aqario.fowlplay.core.FowlPlayMemoryTypes;
-import aqario.fowlplay.core.FowlPlaySensorTypes;
+import aqario.fowlplay.core.FPMemoryTypes;
+import aqario.fowlplay.core.FPSensorTypes;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Unit;
@@ -17,8 +17,8 @@ import java.util.UUID;
 
 public class PigeonSpecificSensor extends PredicateSensor<UUID, PigeonEntity> {
     private static final List<MemoryModuleType<?>> MEMORIES = ObjectArrayList.of(
-        FowlPlayMemoryTypes.IS_FOLLOWING.get(),
-        FowlPlayMemoryTypes.RECIPIENT.get()
+        FPMemoryTypes.IS_FOLLOWING.get(),
+        FPMemoryTypes.RECIPIENT.get()
     );
     protected UniformInt range = UniformInt.of(5, 10);
 
@@ -42,24 +42,24 @@ public class PigeonSpecificSensor extends PredicateSensor<UUID, PigeonEntity> {
 
     @Override
     public SensorType<? extends ExtendedSensor<?>> type() {
-        return FowlPlaySensorTypes.PIGEON_SPECIFIC_SENSOR.get();
+        return FPSensorTypes.PIGEON_SPECIFIC_SENSOR.get();
     }
 
     @Override
     protected void doTick(ServerLevel world, PigeonEntity pigeon) {
         if(this.predicate().test(null, pigeon)) {
-            pigeon.setMemory(FowlPlayMemoryTypes.RECIPIENT.get(), pigeon.getRecipientUuid());
+            pigeon.setMemory(FPMemoryTypes.RECIPIENT.get(), pigeon.getRecipientUuid());
         }
         else {
-            pigeon.clearMemory(FowlPlayMemoryTypes.RECIPIENT.get());
+            pigeon.clearMemory(FPMemoryTypes.RECIPIENT.get());
         }
         if(pigeon.getOwner() != null
             && pigeon.distanceToSqr(pigeon.getOwner()) > this.range.getMaxValue() * this.range.getMaxValue()
         ) {
-            pigeon.setMemory(FowlPlayMemoryTypes.IS_FOLLOWING.get(), Unit.INSTANCE);
+            pigeon.setMemory(FPMemoryTypes.IS_FOLLOWING.get(), Unit.INSTANCE);
         }
         else {
-            pigeon.clearMemory(FowlPlayMemoryTypes.IS_FOLLOWING.get());
+            pigeon.clearMemory(FPMemoryTypes.IS_FOLLOWING.get());
         }
     }
 }

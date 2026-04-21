@@ -8,7 +8,7 @@ import net.minecraft.world.entity.ai.sensing.SensorType;
 
 import java.util.function.Supplier;
 
-public final class FowlPlaySensorTypes {
+public final class FPSensorTypes {
     public static final CommonRegister<SensorType<?>> REGISTRAR = CommonRegister.create(
         BuiltInRegistries.SENSOR_TYPE,
         FowlPlay.ID

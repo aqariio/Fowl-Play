@@ -2,7 +2,7 @@ package aqario.fowlplay.common.worldgen;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.bird.passerine.SparrowEntity;
-import aqario.fowlplay.core.FowlPlayEntityTypes;
+import aqario.fowlplay.core.FPEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -59,7 +59,7 @@ public class SparrowSpawner implements CustomSpawner {
             > 4L) {
             List<SparrowEntity> nearbySparrows = world.getEntitiesOfClass(SparrowEntity.class, new AABB(pos).inflate(48.0, 8.0, 48.0));
             if (nearbySparrows.size() < MAX_SPARROWS
-                && SpawnPredicates.canSpawnPasserines(FowlPlayEntityTypes.SPARROW.get(), world, MobSpawnType.NATURAL, pos, world.getRandom())
+                && SpawnPredicates.canSpawnPasserines(FPEntityTypes.SPARROW.get(), world, MobSpawnType.NATURAL, pos, world.getRandom())
             ) {
                 return this.spawn(pos, world);
             }
@@ -69,7 +69,7 @@ public class SparrowSpawner implements CustomSpawner {
     }
 
     private int spawn(BlockPos pos, ServerLevel world) {
-        SparrowEntity sparrow = FowlPlayEntityTypes.SPARROW.get().create(world);
+        SparrowEntity sparrow = FPEntityTypes.SPARROW.get().create(world);
         if (sparrow == null) {
             return 0;
         }

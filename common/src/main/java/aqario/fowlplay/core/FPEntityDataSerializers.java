@@ -10,7 +10,7 @@ import net.minecraft.network.syncher.EntityDataSerializer;
 import java.util.List;
 import java.util.UUID;
 
-public final class FowlPlayEntityDataSerializers {
+public final class FPEntityDataSerializers {
     public static final DataSerializerRegister REGISTRAR = DataSerializerRegister.create(FowlPlay.ID);
 
     public static final EntityDataSerializer<Holder<DuckVariant>> DUCK_VARIANT = register(

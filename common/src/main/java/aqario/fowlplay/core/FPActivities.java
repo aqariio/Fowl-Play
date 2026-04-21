@@ -7,7 +7,7 @@ import net.minecraft.world.entity.schedule.Activity;
 
 import java.util.function.Supplier;
 
-public final class FowlPlayActivities {
+public final class FPActivities {
     public static final CommonRegister<Activity> REGISTRAR = CommonRegister.create(
         BuiltInRegistries.ACTIVITY,
         FowlPlay.ID
@@ -17,7 +17,6 @@ public final class FowlPlayActivities {
     public static final Supplier<Activity> FOLLOW = register("follow");
     public static final Supplier<Activity> FORAGE = register("forage");
     public static final Supplier<Activity> HUNT = register("hunt");
-    public static final Supplier<Activity> PERCH = register("perch");
     public static final Supplier<Activity> PICK_UP = register("pick_up");
     public static final Supplier<Activity> SOAR = register("soar");
 

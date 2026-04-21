@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.util.function.Supplier;
 
-public final class FowlPlayBlocks {
+public final class FPBlocks {
     public static final BlockRegister REGISTRAR = BlockRegister.create(FowlPlay.ID);
     public static final Supplier<Block> BIRD_FEEDER = register("bird_feeder",
         () -> new FeederBlock(BlockBehaviour.Properties.of()),

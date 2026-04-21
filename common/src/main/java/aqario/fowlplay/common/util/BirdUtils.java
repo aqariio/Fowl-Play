@@ -4,7 +4,7 @@ import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.entity.bird.Domesticatable;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.bird.TrustingBirdEntity;
-import aqario.fowlplay.core.FowlPlayMemoryTypes;
+import aqario.fowlplay.core.FPMemoryTypes;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.BlockPos;
@@ -76,7 +76,7 @@ public final class BirdUtils {
 
     public static boolean shouldFlyFromAvoidTarget(FlyingBirdEntity bird) {
         if(!bird.isMemoryPresent(MemoryModuleType.AVOID_TARGET)
-            || !bird.isMemoryPresent(FowlPlayMemoryTypes.IS_AVOIDING.get())
+            || !bird.isMemoryPresent(FPMemoryTypes.IS_AVOIDING.get())
         ) {
             return false;
         }
@@ -113,7 +113,7 @@ public final class BirdUtils {
     public static <T extends BirdEntity> void alertOthers(T bird, LivingEntity attacker) {
         getNearbyVisibleAdults(bird).forEach(other -> {
             if(attacker instanceof Player) {
-                other.setMemoryWithExpiry(FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get(), Unit.INSTANCE, CANNOT_PICKUP_FOOD_TICKS);
+                other.setMemoryWithExpiry(FPMemoryTypes.CANNOT_PICKUP_FOOD.get(), Unit.INSTANCE, CANNOT_PICKUP_FOOD_TICKS);
             }
             other.clearMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
             other.setMemoryWithExpiry(MemoryModuleType.AVOID_TARGET, attacker, AVOID_TICKS);
@@ -122,7 +122,7 @@ public final class BirdUtils {
 
     @SuppressWarnings("unchecked")
     public static <T extends BirdEntity> List<T> getNearbyVisibleAdults(T bird) {
-        return (List<T>) bird.getMemory(FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get())
+        return (List<T>) bird.getMemory(FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get())
             .orElse(ImmutableList.of());
     }
 
@@ -131,7 +131,7 @@ public final class BirdUtils {
     }
 
     public static boolean shouldPickupFood(BirdEntity bird) {
-        if(bird.isMemoryPresent(FowlPlayMemoryTypes.CANNOT_PICKUP_FOOD.get())) {
+        if(bird.isMemoryPresent(FPMemoryTypes.CANNOT_PICKUP_FOOD.get())) {
             return false;
         }
         if(!bird.isMemoryPresent(SBLMemoryTypes.NEARBY_ITEMS.get())) {

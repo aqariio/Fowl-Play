@@ -4,29 +4,29 @@ import aqario.fowlplay.common.entity.variant.*;
 import aqario.fowlplay.common.registry.RegistryBuilder;
 import net.minecraft.core.Registry;
 
-public final class FowlPlayBuiltInRegistries {
+public final class FPBuiltInRegistries {
     public static final Registry<ChickenVariant> CHICKEN_VARIANT = RegistryBuilder
-        .create(FowlPlayRegistries.CHICKEN_VARIANT)
+        .create(FPRegistries.CHICKEN_VARIANT)
         .sync()
         .buildAndRegister();
     public static final Registry<DuckVariant> DUCK_VARIANT = RegistryBuilder
-        .create(FowlPlayRegistries.DUCK_VARIANT)
+        .create(FPRegistries.DUCK_VARIANT)
         .sync()
         .buildAndRegister();
     public static final Registry<GooseVariant> GOOSE_VARIANT = RegistryBuilder
-        .create(FowlPlayRegistries.GOOSE_VARIANT)
+        .create(FPRegistries.GOOSE_VARIANT)
         .sync()
         .buildAndRegister();
     public static final Registry<GullVariant> GULL_VARIANT = RegistryBuilder
-        .create(FowlPlayRegistries.GULL_VARIANT)
+        .create(FPRegistries.GULL_VARIANT)
         .sync()
         .buildAndRegister();
     public static final Registry<PigeonVariant> PIGEON_VARIANT = RegistryBuilder
-        .create(FowlPlayRegistries.PIGEON_VARIANT)
+        .create(FPRegistries.PIGEON_VARIANT)
         .sync()
         .buildAndRegister();
     public static final Registry<SparrowVariant> SPARROW_VARIANT = RegistryBuilder
-        .create(FowlPlayRegistries.SPARROW_VARIANT)
+        .create(FPRegistries.SPARROW_VARIANT)
         .sync()
         .buildAndRegister();
 

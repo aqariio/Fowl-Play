@@ -11,10 +11,7 @@ import java.util.List;
 
 public class Sing<E extends BirdEntity> extends ExtendedBehaviour<E> {
     public Sing() {
-        this.runFor(entity -> entity.getRandom().nextIntBetweenInclusive(
-            entity.getSongDelay(),
-            entity.getSongDelay() + 40
-        ));
+        this.runFor(entity -> 120);
     }
 
     @Override

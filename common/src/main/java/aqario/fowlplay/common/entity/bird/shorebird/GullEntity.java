@@ -10,9 +10,9 @@ import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.bird.TrustingBirdEntity;
 import aqario.fowlplay.common.entity.bird.VariantHolder;
 import aqario.fowlplay.common.entity.variant.GullVariant;
+import aqario.fowlplay.common.util.BiPredicates;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.common.util.CylindricalRadius;
-import aqario.fowlplay.common.util.Utils;
 import aqario.fowlplay.core.*;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
@@ -61,7 +61,7 @@ import java.util.function.Predicate;
 public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEntity>, VariantHolder<GullVariant> {
     private static final EntityDataAccessor<Holder<GullVariant>> VARIANT = SynchedEntityData.defineId(
         GullEntity.class,
-        FowlPlayEntityDataSerializers.GULL_VARIANT
+        FPEntityDataSerializers.GULL_VARIANT
     );
 
     public GullEntity(EntityType<? extends GullEntity> type, Level level) {
@@ -123,12 +123,12 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
 
     @Override
     public Registry<GullVariant> variantRegistry() {
-        return FowlPlayBuiltInRegistries.GULL_VARIANT;
+        return FPBuiltInRegistries.GULL_VARIANT;
     }
 
     @Override
     public ResourceKey<Registry<GullVariant>> variantRegistryKey() {
-        return FowlPlayRegistries.GULL_VARIANT;
+        return FPRegistries.GULL_VARIANT;
     }
 
     @Override
@@ -209,13 +209,13 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FowlPlaySoundEvents.ENTITY_GULL_CALL.get();
+        return FPSoundEvents.ENTITY_GULL_CALL.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getSongSound() {
-        return FowlPlaySoundEvents.ENTITY_GULL_LONG_CALL.get();
+        return FPSoundEvents.ENTITY_GULL_LONG_CALL.get();
     }
 
     @Override
@@ -231,7 +231,7 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FowlPlaySoundEvents.ENTITY_GULL_HURT.get();
+        return FPSoundEvents.ENTITY_GULL_HURT.get();
     }
 
     @Override
@@ -292,7 +292,7 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     public BrainActivityGroup<? extends GullEntity> forageActivity() {
         return BirdBrain.forage(
             new SetHuntTarget<>()
-                .targetPredicate(Utils.not(BirdUtils::isSelfAndTargetInWater)),
+                .targetPredicate(BiPredicates.not(BirdUtils::isSelfAndTargetInWater)),
             new OneRandomBehaviour<>(
                 Pair.of(
                     CompositeBehaviours.trySetNonAirWalkTarget(),
@@ -343,7 +343,7 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     public BrainActivityGroup<GullEntity> soarActivity() {
         return BirdBrain.soar(
             new SetHuntTarget<>()
-                .targetPredicate(Utils.not(BirdUtils::isSelfAndTargetInWater)),
+                .targetPredicate(BiPredicates.not(BirdUtils::isSelfAndTargetInWater)),
             new SetRandomFlightTarget<>()
         );
     }
@@ -351,7 +351,7 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     @Nullable
     @Override
     public SmartBrainSchedule getSchedule() {
-        return FowlPlaySchedules.SEABIRD.get();
+        return FPSchedules.SEABIRD.get();
     }
 
     @Override

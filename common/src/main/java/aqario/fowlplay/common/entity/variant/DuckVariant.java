@@ -2,8 +2,8 @@ package aqario.fowlplay.common.entity.variant;
 
 import aqario.fowlplay.common.registry.CommonRegister;
 import aqario.fowlplay.common.util.PathBuilder;
+import aqario.fowlplay.core.FPRegistries;
 import aqario.fowlplay.core.FowlPlay;
-import aqario.fowlplay.core.FowlPlayRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -16,10 +16,10 @@ public record DuckVariant(
     String id
 ) {
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<DuckVariant>> PACKET_CODEC = ByteBufCodecs.holderRegistry(
-        FowlPlayRegistries.DUCK_VARIANT
+        FPRegistries.DUCK_VARIANT
     );
     public static final CommonRegister<DuckVariant> REGISTRAR = CommonRegister.create(
-        FowlPlayRegistries.DUCK_VARIANT,
+        FPRegistries.DUCK_VARIANT,
         FowlPlay.ID
     );
     public static final ResourceKey<DuckVariant> GREEN_HEADED = register("green_headed");
@@ -42,7 +42,7 @@ public record DuckVariant(
     }
 
     private static ResourceKey<DuckVariant> register(String id) {
-        ResourceKey<DuckVariant> key = ResourceKey.create(FowlPlayRegistries.DUCK_VARIANT, FowlPlay.id(id));
+        ResourceKey<DuckVariant> key = ResourceKey.create(FPRegistries.DUCK_VARIANT, FowlPlay.id(id));
         REGISTRAR.register(id, () -> new DuckVariant(id));
         return key;
     }

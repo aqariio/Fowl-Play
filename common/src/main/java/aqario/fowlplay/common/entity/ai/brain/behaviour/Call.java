@@ -11,10 +11,7 @@ import java.util.List;
 
 public class Call<E extends BirdEntity> extends ExtendedBehaviour<E> {
     public Call() {
-        this.runFor(entity -> entity.getRandom().nextIntBetweenInclusive(
-            entity.getCallDelay(),
-            entity.getCallDelay() + 40
-        ));
+        this.runFor(entity -> 60);
     }
 
     @Override

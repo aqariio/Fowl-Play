@@ -63,7 +63,7 @@ import java.util.List;
 public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEntity>, VariantHolder<DuckVariant>, Domesticatable, Flocking {
     private static final EntityDataAccessor<Holder<DuckVariant>> VARIANT = SynchedEntityData.defineId(
         DuckEntity.class,
-        FowlPlayEntityDataSerializers.DUCK_VARIANT
+        FPEntityDataSerializers.DUCK_VARIANT
     );
     private static final EntityDataAccessor<Boolean> CLIPPED = SynchedEntityData.defineId(
         DuckEntity.class,
@@ -119,7 +119,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
 
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
-        DuckEntity child = FowlPlayEntityTypes.DUCK.get().create(level);
+        DuckEntity child = FPEntityTypes.DUCK.get().create(level);
         if(child != null && otherParent instanceof DuckEntity parent2) {
             Holder<DuckVariant> variant = Utils.getRandomOf(child.getRandom(), this, parent2).getVariant();
             child.setVariant(variant);
@@ -172,12 +172,12 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
 
     @Override
     public Registry<DuckVariant> variantRegistry() {
-        return FowlPlayBuiltInRegistries.DUCK_VARIANT;
+        return FPBuiltInRegistries.DUCK_VARIANT;
     }
 
     @Override
     public ResourceKey<Registry<DuckVariant>> variantRegistryKey() {
-        return FowlPlayRegistries.DUCK_VARIANT;
+        return FPRegistries.DUCK_VARIANT;
     }
 
     @Override
@@ -250,7 +250,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FowlPlaySoundEvents.ENTITY_DUCK_CALL.get();
+        return FPSoundEvents.ENTITY_DUCK_CALL.get();
     }
 
     @Override
@@ -261,7 +261,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FowlPlaySoundEvents.ENTITY_DUCK_HURT.get();
+        return FPSoundEvents.ENTITY_DUCK_HURT.get();
     }
 
     @Override
@@ -376,7 +376,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     @Nullable
     @Override
     public SmartBrainSchedule getSchedule() {
-        return FowlPlaySchedules.WATERFOWL.get();
+        return FPSchedules.WATERFOWL.get();
     }
 
     @Override

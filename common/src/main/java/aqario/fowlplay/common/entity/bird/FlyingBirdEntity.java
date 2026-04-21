@@ -4,7 +4,7 @@ import aqario.fowlplay.common.entity.ai.navigation.FlightNavigation;
 import aqario.fowlplay.common.entity.ai.navigation.GroundNavigation;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.common.util.CylindricalRadius;
-import aqario.fowlplay.core.FowlPlaySoundEvents;
+import aqario.fowlplay.core.FPSoundEvents;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -87,7 +87,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     @Override
     protected void onFlap() {
         // TODO: make this synced with the animation
-        this.playSound(FowlPlaySoundEvents.ENTITY_BIRD_FLAP.get(), this.getFlapVolume(), this.getFlapPitch());
+        this.playSound(FPSoundEvents.ENTITY_BIRD_FLAP.get(), this.getFlapVolume(), this.getFlapPitch());
     }
 
     public abstract float getFlapVolume();

@@ -12,8 +12,8 @@ import aqario.fowlplay.common.entity.bird.Flocking;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.util.AnimationStateList;
 import aqario.fowlplay.common.util.BirdUtils;
-import aqario.fowlplay.core.FowlPlaySchedules;
-import aqario.fowlplay.core.FowlPlaySoundEvents;
+import aqario.fowlplay.core.FPSchedules;
+import aqario.fowlplay.core.FPSoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -27,7 +27,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
-import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FloatToSurfaceOfFluid;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
@@ -171,13 +170,13 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FowlPlaySoundEvents.ENTITY_SPARROW_CALL.get();
+        return FPSoundEvents.ENTITY_SPARROW_CALL.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getSongSound() {
-        return FowlPlaySoundEvents.ENTITY_SPARROW_SONG.get();
+        return FPSoundEvents.ENTITY_SPARROW_SONG.get();
     }
 
     @Override
@@ -203,7 +202,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FowlPlaySoundEvents.ENTITY_SPARROW_HURT.get();
+        return FPSoundEvents.ENTITY_SPARROW_HURT.get();
     }
 
     @Override
@@ -247,16 +246,13 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     @Override
     public BrainActivityGroup<? extends SparrowEntity> forageActivity() {
         return BirdBrain.forage(
-            new OneRandomBehaviour<>(
-                CompositeBehaviours.tryForage(),
-                CompositeBehaviours.tryPerch()
-            )
+            CompositeBehaviours.forage()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends SparrowEntity> perchActivity() {
-        return BirdBrain.perch(
+    public BrainActivityGroup<? extends SparrowEntity> idleActivity() {
+        return BirdBrain.idle(
             new LeaderlessFlocking(
                 3,
                 0.03f,
@@ -264,7 +260,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
                 0.05f,
                 3f
             ),
-            CompositeBehaviours.tryPerch()
+            CompositeBehaviours.perch()
         );
     }
 
@@ -286,7 +282,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     @Nullable
     @Override
     public SmartBrainSchedule getSchedule() {
-        return FowlPlaySchedules.FORAGER.get();
+        return FPSchedules.FORAGER.get();
     }
 
     @Override

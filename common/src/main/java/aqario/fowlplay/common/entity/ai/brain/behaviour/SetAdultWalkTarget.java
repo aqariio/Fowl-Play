@@ -2,7 +2,7 @@ package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.util.MemoryList;
-import aqario.fowlplay.core.FowlPlayMemoryTypes;
+import aqario.fowlplay.core.FPMemoryTypes;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.ai.behavior.EntityTracker;
@@ -16,11 +16,11 @@ public class SetAdultWalkTarget {
     public static AnonymousBehaviour<BirdEntity> create(UniformInt executionRange) {
         return new AnonymousBehaviour<>(
             MemoryList.create(3)
-                .present(FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get())
+                .present(FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get())
                 .registered(MemoryModuleType.LOOK_TARGET)
                 .absent(MemoryModuleType.WALK_TARGET),
             bird -> {
-                List<BirdEntity> nearbyAdults = (List<BirdEntity>) bird.getPresentMemory(FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
+                List<BirdEntity> nearbyAdults = (List<BirdEntity>) bird.getPresentMemory(FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
                 if(nearbyAdults.isEmpty()) {
                     return false;
                 }

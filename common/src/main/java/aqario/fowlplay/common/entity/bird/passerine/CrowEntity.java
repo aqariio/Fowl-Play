@@ -8,9 +8,9 @@ import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.bird.TrustingBirdEntity;
 import aqario.fowlplay.common.util.BirdUtils;
-import aqario.fowlplay.core.FowlPlayMemoryTypes;
-import aqario.fowlplay.core.FowlPlaySchedules;
-import aqario.fowlplay.core.FowlPlaySoundEvents;
+import aqario.fowlplay.core.FPMemoryTypes;
+import aqario.fowlplay.core.FPSchedules;
+import aqario.fowlplay.core.FPSoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import com.mojang.datafixers.util.Pair;
@@ -104,7 +104,7 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
         if(!target.getType().is(FowlPlayEntityTypeTags.CROW_ATTACK_TARGETS) && (hurtBy == null || !hurtBy.equals(target))) {
             return false;
         }
-        Optional<List<? extends AgeableMob>> nearbyAdults = Optional.ofNullable(BrainUtils.getMemory(this, FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get()));
+        Optional<List<? extends AgeableMob>> nearbyAdults = Optional.ofNullable(BrainUtils.getMemory(this, FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get()));
         return nearbyAdults.filter(passiveEntities -> passiveEntities.size() >= 3).isPresent();
     }
 
@@ -138,7 +138,7 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FowlPlaySoundEvents.ENTITY_CROW_CALL.get();
+        return FPSoundEvents.ENTITY_CROW_CALL.get();
     }
 
     @Override
@@ -154,7 +154,7 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FowlPlaySoundEvents.ENTITY_CROW_HURT.get();
+        return FPSoundEvents.ENTITY_CROW_HURT.get();
     }
 
     @Override
@@ -212,15 +212,15 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     public BrainActivityGroup<? extends CrowEntity> forageActivity() {
         return BirdBrain.forage(
             new OneRandomBehaviour<>(
-                CompositeBehaviours.tryForage(),
-                CompositeBehaviours.tryPerch()
+                CompositeBehaviours.forage(),
+                CompositeBehaviours.perch()
             )
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends CrowEntity> perchActivity() {
-        return BirdBrain.perch(
+    public BrainActivityGroup<? extends CrowEntity> idleActivity() {
+        return BirdBrain.idle(
             new LeaderlessFlocking(
                 3,
                 0.03f,
@@ -228,7 +228,7 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
                 0.05f,
                 3f
             ),
-            CompositeBehaviours.tryPerch()
+            CompositeBehaviours.perch()
         );
     }
 
@@ -250,7 +250,7 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     @Nullable
     @Override
     public SmartBrainSchedule getSchedule() {
-        return FowlPlaySchedules.FORAGER.get();
+        return FPSchedules.FORAGER.get();
     }
 
     @Override

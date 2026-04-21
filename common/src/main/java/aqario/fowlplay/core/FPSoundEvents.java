@@ -6,7 +6,7 @@ import net.minecraft.sounds.SoundEvent;
 
 import java.util.function.Supplier;
 
-public final class FowlPlaySoundEvents {
+public final class FPSoundEvents {
     public static final CommonRegister<SoundEvent> REGISTRAR = CommonRegister.create(
         BuiltInRegistries.SOUND_EVENT,
         FowlPlay.ID

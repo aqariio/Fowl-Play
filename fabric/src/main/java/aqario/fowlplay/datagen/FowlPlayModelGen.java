@@ -1,6 +1,6 @@
 package aqario.fowlplay.datagen;
 
-import aqario.fowlplay.core.FowlPlayItems;
+import aqario.fowlplay.core.FPItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.models.BlockModelGenerators;
@@ -15,20 +15,20 @@ public class FowlPlayModelGen extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockModelGenerators generator) {
-        this.registerSpawnEgg(generator, FowlPlayItems.BLUE_JAY_SPAWN_EGG.get());
-        this.registerSpawnEgg(generator, FowlPlayItems.CARDINAL_SPAWN_EGG.get());
-        this.registerSpawnEgg(generator, FowlPlayItems.CHICKADEE_SPAWN_EGG.get());
-        this.registerSpawnEgg(generator, FowlPlayItems.CROW_SPAWN_EGG.get());
-        this.registerSpawnEgg(generator, FowlPlayItems.DUCK_SPAWN_EGG.get());
-        this.registerSpawnEgg(generator, FowlPlayItems.GOOSE_SPAWN_EGG.get());
-        this.registerSpawnEgg(generator, FowlPlayItems.GULL_SPAWN_EGG.get());
-        this.registerSpawnEgg(generator, FowlPlayItems.HAWK_SPAWN_EGG.get());
-        this.registerSpawnEgg(generator, FowlPlayItems.PENGUIN_SPAWN_EGG.get());
-        this.registerSpawnEgg(generator, FowlPlayItems.PIGEON_SPAWN_EGG.get());
-        this.registerSpawnEgg(generator, FowlPlayItems.RAVEN_SPAWN_EGG.get());
-        this.registerSpawnEgg(generator, FowlPlayItems.ROBIN_SPAWN_EGG.get());
-        this.registerSpawnEgg(generator, FowlPlayItems.SPARROW_SPAWN_EGG.get());
-        this.registerItem(generator, FowlPlayItems.SCARECROW.get());
+        this.registerSpawnEgg(generator, FPItems.BLUE_JAY_SPAWN_EGG.get());
+        this.registerSpawnEgg(generator, FPItems.CARDINAL_SPAWN_EGG.get());
+        this.registerSpawnEgg(generator, FPItems.CHICKADEE_SPAWN_EGG.get());
+        this.registerSpawnEgg(generator, FPItems.CROW_SPAWN_EGG.get());
+        this.registerSpawnEgg(generator, FPItems.DUCK_SPAWN_EGG.get());
+        this.registerSpawnEgg(generator, FPItems.GOOSE_SPAWN_EGG.get());
+        this.registerSpawnEgg(generator, FPItems.GULL_SPAWN_EGG.get());
+        this.registerSpawnEgg(generator, FPItems.HAWK_SPAWN_EGG.get());
+        this.registerSpawnEgg(generator, FPItems.PENGUIN_SPAWN_EGG.get());
+        this.registerSpawnEgg(generator, FPItems.PIGEON_SPAWN_EGG.get());
+        this.registerSpawnEgg(generator, FPItems.RAVEN_SPAWN_EGG.get());
+        this.registerSpawnEgg(generator, FPItems.ROBIN_SPAWN_EGG.get());
+        this.registerSpawnEgg(generator, FPItems.SPARROW_SPAWN_EGG.get());
+        this.registerItem(generator, FPItems.SCARECROW.get());
     }
 
     @Override

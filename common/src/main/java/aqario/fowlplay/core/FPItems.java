@@ -11,83 +11,83 @@ import net.minecraft.world.item.Item;
 
 import java.util.function.Supplier;
 
-public final class FowlPlayItems {
+public final class FPItems {
     public static final ItemRegister REGISTRAR = ItemRegister.create(FowlPlay.ID);
     public static final Supplier<Item> BLUE_JAY_SPAWN_EGG = registerSpawnEgg(
         "blue_jay_spawn_egg",
-        FowlPlayEntityTypes.BLUE_JAY,
+        FPEntityTypes.BLUE_JAY,
         0x598FCC,
         0xCED8E5
     );
     public static final Supplier<Item> CARDINAL_SPAWN_EGG = registerSpawnEgg(
         "cardinal_spawn_egg",
-        FowlPlayEntityTypes.CARDINAL,
+        FPEntityTypes.CARDINAL,
         0xDB2929,
         0x42312F
     );
     public static final Supplier<Item> CHICKADEE_SPAWN_EGG = registerSpawnEgg(
         "chickadee_spawn_egg",
-        FowlPlayEntityTypes.CHICKADEE,
+        FPEntityTypes.CHICKADEE,
         0xE8E5E1,
         0x8A8B8E
     );
     public static final Supplier<Item> CROW_SPAWN_EGG = registerSpawnEgg(
         "crow_spawn_egg",
-        FowlPlayEntityTypes.CROW,
+        FPEntityTypes.CROW,
         0x3B3B3D,
         0x1C1C1E
     );
     public static final Supplier<Item> DUCK_SPAWN_EGG = registerSpawnEgg(
         "duck_spawn_egg",
-        FowlPlayEntityTypes.DUCK,
+        FPEntityTypes.DUCK,
         0xA58C7C,
         0x1D7F3C
     );
     public static final Supplier<Item> GOOSE_SPAWN_EGG = registerSpawnEgg(
         "goose_spawn_egg",
-        FowlPlayEntityTypes.GOOSE,
+        FPEntityTypes.GOOSE,
         0xC6BFBC,
         0xA3958F
     );
     public static final Supplier<Item> GULL_SPAWN_EGG = registerSpawnEgg(
         "gull_spawn_egg",
-        FowlPlayEntityTypes.GULL,
+        FPEntityTypes.GULL,
         0xeaedf0,
         0xffd850
     );
     public static final Supplier<Item> HAWK_SPAWN_EGG = registerSpawnEgg(
         "hawk_spawn_egg",
-        FowlPlayEntityTypes.HAWK,
+        FPEntityTypes.HAWK,
         0x544135,
         0xE5D8C0
     );
     public static final Supplier<Item> PENGUIN_SPAWN_EGG = registerSpawnEgg(
         "penguin_spawn_egg",
-        FowlPlayEntityTypes.PENGUIN,
+        FPEntityTypes.PENGUIN,
         0x151419,
         0xfafafa
     );
     public static final Supplier<Item> PIGEON_SPAWN_EGG = registerSpawnEgg(
         "pigeon_spawn_egg",
-        FowlPlayEntityTypes.PIGEON,
+        FPEntityTypes.PIGEON,
         0xBBBDBF,
         0x467A58
     );
     public static final Supplier<Item> RAVEN_SPAWN_EGG = registerSpawnEgg(
         "raven_spawn_egg",
-        FowlPlayEntityTypes.RAVEN,
+        FPEntityTypes.RAVEN,
         0x3B3B3D,
         0x1C1C1E
     );
     public static final Supplier<Item> ROBIN_SPAWN_EGG = registerSpawnEgg(
         "robin_spawn_egg",
-        FowlPlayEntityTypes.ROBIN,
+        FPEntityTypes.ROBIN,
         0x66696A,
         0xFF823F
     );
     public static final Supplier<Item> SPARROW_SPAWN_EGG = registerSpawnEgg(
         "sparrow_spawn_egg",
-        FowlPlayEntityTypes.SPARROW,
+        FPEntityTypes.SPARROW,
         0x5B3423,
         0xBCAE91
     );

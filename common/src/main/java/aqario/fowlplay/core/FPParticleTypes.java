@@ -7,7 +7,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.function.Supplier;
 
-public final class FowlPlayParticleTypes {
+public final class FPParticleTypes {
     public static final CommonRegister<ParticleType<?>> REGISTRAR = CommonRegister.create(
         BuiltInRegistries.PARTICLE_TYPE,
         FowlPlay.ID

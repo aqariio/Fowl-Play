@@ -2,8 +2,8 @@ package aqario.fowlplay.common.entity.ai.brain;
 
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.util.ActivityListBuilder;
-import aqario.fowlplay.core.FowlPlayActivities;
-import aqario.fowlplay.core.FowlPlayMemoryTypes;
+import aqario.fowlplay.core.FPActivities;
+import aqario.fowlplay.core.FPMemoryTypes;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.minecraft.world.entity.ai.behavior.Behavior;
@@ -85,13 +85,13 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
     @SafeVarargs
     static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> avoid(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(Activity.AVOID).priority(10).behaviours(behaviours)
-            .requireAndWipeMemoriesOnUse(FowlPlayMemoryTypes.IS_AVOIDING.get());
+            .requireAndWipeMemoriesOnUse(FPMemoryTypes.IS_AVOIDING.get());
     }
 
     @SafeVarargs
     static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> deliver(Behavior<? super T>... behaviours) {
-        return new BrainActivityGroup<T>(FowlPlayActivities.DELIVER.get()).priority(10).behaviours(behaviours)
-            .requireAndWipeMemoriesOnUse(FowlPlayMemoryTypes.RECIPIENT.get());
+        return new BrainActivityGroup<T>(FPActivities.DELIVER.get()).priority(10).behaviours(behaviours)
+            .requireAndWipeMemoriesOnUse(FPMemoryTypes.RECIPIENT.get());
     }
 
     @SafeVarargs
@@ -102,18 +102,18 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
 
     @SafeVarargs
     static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> follow(Behavior<? super T>... behaviours) {
-        return new BrainActivityGroup<T>(FowlPlayActivities.FOLLOW.get()).priority(10).behaviours(behaviours)
-            .requireAndWipeMemoriesOnUse(FowlPlayMemoryTypes.IS_FOLLOWING.get());
+        return new BrainActivityGroup<T>(FPActivities.FOLLOW.get()).priority(10).behaviours(behaviours)
+            .requireAndWipeMemoriesOnUse(FPMemoryTypes.IS_FOLLOWING.get());
     }
 
     @SafeVarargs
     static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> forage(Behavior<? super T>... behaviours) {
-        return new BrainActivityGroup<T>(FowlPlayActivities.FORAGE.get()).priority(10).behaviours(behaviours);
+        return new BrainActivityGroup<T>(FPActivities.FORAGE.get()).priority(10).behaviours(behaviours);
     }
 
     @SafeVarargs
     static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> hunt(Behavior<? super T>... behaviours) {
-        return new BrainActivityGroup<T>(FowlPlayActivities.HUNT.get()).priority(10).behaviours(behaviours);
+        return new BrainActivityGroup<T>(FPActivities.HUNT.get()).priority(10).behaviours(behaviours);
     }
 
     @SafeVarargs
@@ -122,14 +122,9 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
     }
 
     @SafeVarargs
-    static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> perch(Behavior<? super T>... behaviours) {
-        return new BrainActivityGroup<T>(FowlPlayActivities.PERCH.get()).priority(10).behaviours(behaviours);
-    }
-
-    @SafeVarargs
     static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> pickUp(Behavior<? super T>... behaviours) {
-        return new BrainActivityGroup<T>(FowlPlayActivities.PICK_UP.get()).priority(10).behaviours(behaviours)
-            .requireAndWipeMemoriesOnUse(FowlPlayMemoryTypes.SEES_FOOD.get());
+        return new BrainActivityGroup<T>(FPActivities.PICK_UP.get()).priority(10).behaviours(behaviours)
+            .requireAndWipeMemoriesOnUse(FPMemoryTypes.SEES_FOOD.get());
     }
 
     @SafeVarargs
@@ -139,7 +134,7 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
 
     @SafeVarargs
     static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> soar(Behavior<? super T>... behaviours) {
-        return new BrainActivityGroup<T>(FowlPlayActivities.SOAR.get()).priority(10).behaviours(behaviours);
+        return new BrainActivityGroup<T>(FPActivities.SOAR.get()).priority(10).behaviours(behaviours);
     }
 
     @Override
@@ -167,15 +162,14 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
     @Override
     default List<Activity> getActivityPriorities() {
         return ObjectArrayList.of(
-            FowlPlayActivities.DELIVER.get(),
+            FPActivities.DELIVER.get(),
             Activity.AVOID,
             Activity.FIGHT,
-            FowlPlayActivities.FOLLOW.get(),
-            FowlPlayActivities.PICK_UP.get(),
-            FowlPlayActivities.HUNT.get(),
-            FowlPlayActivities.FORAGE.get(),
-            FowlPlayActivities.SOAR.get(),
-            FowlPlayActivities.PERCH.get(),
+            FPActivities.FOLLOW.get(),
+            FPActivities.PICK_UP.get(),
+            FPActivities.HUNT.get(),
+            FPActivities.FORAGE.get(),
+            FPActivities.SOAR.get(),
             Activity.IDLE,
             Activity.REST
         );
@@ -184,11 +178,11 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
     @Override
     default Set<Activity> getScheduleIgnoringActivities() {
         return ObjectArraySet.of(
-            FowlPlayActivities.DELIVER.get(),
+            FPActivities.DELIVER.get(),
             Activity.AVOID,
             Activity.FIGHT,
-            FowlPlayActivities.FOLLOW.get(),
-            FowlPlayActivities.PICK_UP.get()
+            FPActivities.FOLLOW.get(),
+            FPActivities.PICK_UP.get()
         );
     }
 

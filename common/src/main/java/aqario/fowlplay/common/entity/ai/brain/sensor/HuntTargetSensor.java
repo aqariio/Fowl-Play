@@ -1,8 +1,8 @@
 package aqario.fowlplay.common.entity.ai.brain.sensor;
 
 import aqario.fowlplay.common.entity.bird.BirdEntity;
-import aqario.fowlplay.core.FowlPlayMemoryTypes;
-import aqario.fowlplay.core.FowlPlaySensorTypes;
+import aqario.fowlplay.core.FPMemoryTypes;
+import aqario.fowlplay.core.FPSensorTypes;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
@@ -19,7 +19,7 @@ import java.util.function.BiPredicate;
 public class HuntTargetSensor<E extends BirdEntity> extends EntityFilteringSensor<LivingEntity, E> {
     @Override
     protected MemoryModuleType<LivingEntity> getMemory() {
-        return FowlPlayMemoryTypes.NEAREST_HUNTABLE.get();
+        return FPMemoryTypes.NEAREST_HUNTABLE.get();
     }
 
     @Override
@@ -29,7 +29,7 @@ public class HuntTargetSensor<E extends BirdEntity> extends EntityFilteringSenso
 
     @Override
     public SensorType<? extends ExtendedSensor<?>> type() {
-        return FowlPlaySensorTypes.HUNT_TARGETS.get();
+        return FPSensorTypes.HUNT_TARGETS.get();
     }
 
     protected BiPredicate<LivingEntity, E> predicate() {

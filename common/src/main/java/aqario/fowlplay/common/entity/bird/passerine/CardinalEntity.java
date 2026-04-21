@@ -11,8 +11,8 @@ import aqario.fowlplay.common.entity.ai.brain.sensor.NearbyFoodSensor;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.util.BirdUtils;
-import aqario.fowlplay.core.FowlPlaySchedules;
-import aqario.fowlplay.core.FowlPlaySoundEvents;
+import aqario.fowlplay.core.FPSchedules;
+import aqario.fowlplay.core.FPSoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -72,13 +72,13 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FowlPlaySoundEvents.ENTITY_CARDINAL_CALL.get();
+        return FPSoundEvents.ENTITY_CARDINAL_CALL.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getSongSound() {
-        return FowlPlaySoundEvents.ENTITY_CARDINAL_SONG.get();
+        return FPSoundEvents.ENTITY_CARDINAL_SONG.get();
     }
 
     @Override
@@ -99,7 +99,7 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FowlPlaySoundEvents.ENTITY_CARDINAL_HURT.get();
+        return FPSoundEvents.ENTITY_CARDINAL_HURT.get();
     }
 
     @Override
@@ -144,16 +144,16 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
     public BrainActivityGroup<? extends CardinalEntity> forageActivity() {
         return BirdBrain.forage(
             new OneRandomBehaviour<>(
-                CompositeBehaviours.tryForage(),
-                CompositeBehaviours.tryPerch()
+                CompositeBehaviours.forage(),
+                CompositeBehaviours.perch()
             )
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends CardinalEntity> perchActivity() {
-        return BirdBrain.perch(
-            CompositeBehaviours.tryPerch()
+    public BrainActivityGroup<? extends CardinalEntity> idleActivity() {
+        return BirdBrain.idle(
+            CompositeBehaviours.perch()
         );
     }
 
@@ -175,7 +175,7 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
     @Nullable
     @Override
     public SmartBrainSchedule getSchedule() {
-        return FowlPlaySchedules.FORAGER.get();
+        return FPSchedules.FORAGER.get();
     }
 
     @Override

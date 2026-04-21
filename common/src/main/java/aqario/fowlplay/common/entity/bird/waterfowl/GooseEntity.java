@@ -69,7 +69,7 @@ import java.util.List;
 public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEntity>, VariantHolder<GooseVariant>, Domesticatable, Flocking {
     private static final EntityDataAccessor<Holder<GooseVariant>> VARIANT = SynchedEntityData.defineId(
         GooseEntity.class,
-        FowlPlayEntityDataSerializers.GOOSE_VARIANT
+        FPEntityDataSerializers.GOOSE_VARIANT
     );
     private static final EntityDataAccessor<Boolean> CLIPPED = SynchedEntityData.defineId(
         GooseEntity.class,
@@ -128,7 +128,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Nullable
     @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
-        GooseEntity child = FowlPlayEntityTypes.GOOSE.get().create(level);
+        GooseEntity child = FPEntityTypes.GOOSE.get().create(level);
         if(child != null && otherParent instanceof GooseEntity parent2) {
             Holder<GooseVariant> variant = Utils.getRandomOf(child.getRandom(), this, parent2).getVariant();
             child.setVariant(variant);
@@ -202,12 +202,12 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
 
     @Override
     public Registry<GooseVariant> variantRegistry() {
-        return FowlPlayBuiltInRegistries.GOOSE_VARIANT;
+        return FPBuiltInRegistries.GOOSE_VARIANT;
     }
 
     @Override
     public ResourceKey<Registry<GooseVariant>> variantRegistryKey() {
-        return FowlPlayRegistries.GOOSE_VARIANT;
+        return FPRegistries.GOOSE_VARIANT;
     }
 
     @Override
@@ -342,12 +342,12 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     protected SoundEvent getCallSound() {
         if(this.getVariant().is(GooseVariant.GREYLAG)) {
-            return FowlPlaySoundEvents.ENTITY_GREYLAG_GOOSE_CALL.get();
+            return FPSoundEvents.ENTITY_GREYLAG_GOOSE_CALL.get();
         }
         if(this.getVariant().is(GooseVariant.SWAN)) {
-            return FowlPlaySoundEvents.ENTITY_SWAN_GOOSE_CALL.get();
+            return FPSoundEvents.ENTITY_SWAN_GOOSE_CALL.get();
         }
-        return FowlPlaySoundEvents.ENTITY_CANADA_GOOSE_CALL.get();
+        return FPSoundEvents.ENTITY_CANADA_GOOSE_CALL.get();
     }
 
     @Override
@@ -359,12 +359,12 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         if(this.getVariant().is(GooseVariant.GREYLAG)) {
-            return FowlPlaySoundEvents.ENTITY_GREYLAG_GOOSE_HURT.get();
+            return FPSoundEvents.ENTITY_GREYLAG_GOOSE_HURT.get();
         }
         if(this.getVariant().is(GooseVariant.SWAN)) {
-            return FowlPlaySoundEvents.ENTITY_SWAN_GOOSE_HURT.get();
+            return FPSoundEvents.ENTITY_SWAN_GOOSE_HURT.get();
         }
-        return FowlPlaySoundEvents.ENTITY_CANADA_GOOSE_HURT.get();
+        return FPSoundEvents.ENTITY_CANADA_GOOSE_HURT.get();
     }
 
     @Override
@@ -491,8 +491,8 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     public SmartBrainSchedule getSchedule() {
         return this.isDomestic()
-            ? FowlPlaySchedules.WATERFOWL_DOMESTIC.get()
-            : FowlPlaySchedules.WATERFOWL.get();
+            ? FPSchedules.WATERFOWL_DOMESTIC.get()
+            : FPSchedules.WATERFOWL.get();
     }
 
     @Override

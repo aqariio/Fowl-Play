@@ -9,10 +9,10 @@ import aqario.fowlplay.common.entity.ai.control.AquaticBirdMoveControl;
 import aqario.fowlplay.common.entity.ai.navigation.AmphibiousNavigation;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.util.BirdUtils;
-import aqario.fowlplay.core.FowlPlayEntityTypes;
-import aqario.fowlplay.core.FowlPlayParticleTypes;
-import aqario.fowlplay.core.FowlPlaySchedules;
-import aqario.fowlplay.core.FowlPlaySoundEvents;
+import aqario.fowlplay.core.FPEntityTypes;
+import aqario.fowlplay.core.FPParticleTypes;
+import aqario.fowlplay.core.FPSchedules;
+import aqario.fowlplay.core.FPSoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
 import aqario.fowlplay.core.tags.FowlPlayBlockTags;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
@@ -145,7 +145,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     @Nullable
     @Override
     public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
-        return FowlPlayEntityTypes.PENGUIN.get().create(world);
+        return FPEntityTypes.PENGUIN.get().create(world);
     }
 
     @Override
@@ -257,7 +257,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
         Vec3 velocity = this.getLookAngle().reverse().scale(0.5);
         for(int i = 0; i < SWIM_PARTICLE_COUNT; i++) {
             this.level().addParticle(
-                FowlPlayParticleTypes.SMALL_BUBBLE.get(),
+                FPParticleTypes.SMALL_BUBBLE.get(),
                 this.getX() + (this.random.nextFloat() * 0.75F - 0.375F),
                 (this.getY() + this.getBoundingBox().getYsize() / 2) + (this.random.nextFloat() * 0.75F - 0.375F),
                 this.getZ() + (this.random.nextFloat() * 0.75F - 0.375F),
@@ -564,7 +564,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return this.isBaby() ? FowlPlaySoundEvents.ENTITY_PENGUIN_BABY_CALL.get() : FowlPlaySoundEvents.ENTITY_PENGUIN_CALL.get();
+        return this.isBaby() ? FPSoundEvents.ENTITY_PENGUIN_BABY_CALL.get() : FPSoundEvents.ENTITY_PENGUIN_CALL.get();
     }
 
     @Override
@@ -574,12 +574,12 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @Override
     protected SoundEvent getSwimSound() {
-        return FowlPlaySoundEvents.ENTITY_PENGUIN_SWIM.get();
+        return FPSoundEvents.ENTITY_PENGUIN_SWIM.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FowlPlaySoundEvents.ENTITY_PENGUIN_HURT.get();
+        return FPSoundEvents.ENTITY_PENGUIN_HURT.get();
     }
 
     @Override
@@ -743,7 +743,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @Override
     public SmartBrainSchedule getSchedule() {
-        return FowlPlaySchedules.PENGUIN.get();
+        return FPSchedules.PENGUIN.get();
     }
 
     @Override

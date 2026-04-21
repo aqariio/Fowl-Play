@@ -34,8 +34,8 @@ public class FowlPlay {
         LOGGER.info("Loading {} {}", mod.getName(), mod.getVersion());
         FowlPlayConfig.load();
 
-        FowlPlayRegistries.init();
-        FowlPlayBuiltInRegistries.init();
+        FPRegistries.init();
+        FPBuiltInRegistries.init();
     }
 
     public static void init() {
@@ -46,16 +46,16 @@ public class FowlPlay {
         PigeonVariant.REGISTRAR.register();
         SparrowVariant.REGISTRAR.register();
 
-        FowlPlayActivities.REGISTRAR.register();
-        FowlPlayBlocks.REGISTRAR.register();
-        FowlPlayEntityTypes.REGISTRAR.register();
-        FowlPlayItems.REGISTRAR.register();
-        FowlPlayMemoryTypes.REGISTRAR.register();
-        FowlPlayParticleTypes.REGISTRAR.register();
-        FowlPlaySchedules.REGISTRAR.register();
-        FowlPlaySensorTypes.REGISTRAR.register();
-        FowlPlaySoundEvents.REGISTRAR.register();
-        FowlPlayEntityDataSerializers.REGISTRAR.register();
+        FPActivities.REGISTRAR.register();
+        FPBlocks.REGISTRAR.register();
+        FPEntityTypes.REGISTRAR.register();
+        FPItems.REGISTRAR.register();
+        FPMemoryTypes.REGISTRAR.register();
+        FPParticleTypes.REGISTRAR.register();
+        FPSchedules.REGISTRAR.register();
+        FPSensorTypes.REGISTRAR.register();
+        FPSoundEvents.REGISTRAR.register();
+        FPEntityDataSerializers.REGISTRAR.register();
 
         BiomeModifier.register();
         initSpawners();

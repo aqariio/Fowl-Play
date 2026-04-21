@@ -21,14 +21,14 @@ public class FowlPlaySchedules {
         .activityAt(6000, FowlPlayActivities.PERCH)
         .activityAt(8000, FowlPlayActivities.FORAGE)
         .activityAt(11000, FowlPlayActivities.PERCH)
-        .activityAt(12500, Activity.REST)
+        .activityAt(13000, Activity.REST)
         .activityAt(23000, FowlPlayActivities.PERCH)
     );
     public static final Supplier<ExtendedSchedule> PENGUIN = register("penguin", new ExtendedSchedule()
         .activityAt(0, Activity.IDLE)
         .activityAt(4000, FowlPlayActivities.HUNT)
         .activityAt(8000, Activity.IDLE)
-        .activityAt(12500, Activity.REST)
+        .activityAt(13000, Activity.REST)
         .activityAt(23000, Activity.IDLE)
     );
     public static final Supplier<ExtendedSchedule> RAPTOR = register("raptor", new ExtendedSchedule()
@@ -37,7 +37,7 @@ public class FowlPlaySchedules {
         .activityAt(6000, FowlPlayActivities.PERCH)
         .activityAt(8000, FowlPlayActivities.SOAR)
         .activityAt(11000, FowlPlayActivities.PERCH)
-        .activityAt(12500, Activity.REST)
+        .activityAt(13000, Activity.REST)
         .activityAt(23000, FowlPlayActivities.PERCH)
     );
     public static final Supplier<ExtendedSchedule> SEABIRD = register("seabird", new ExtendedSchedule()
@@ -46,7 +46,7 @@ public class FowlPlaySchedules {
         .activityAt(6000, FowlPlayActivities.FORAGE)
         .activityAt(8000, FowlPlayActivities.SOAR)
         .activityAt(11000, Activity.IDLE)
-        .activityAt(12500, Activity.REST)
+        .activityAt(13000, Activity.REST)
         .activityAt(23000, Activity.IDLE)
     );
     public static final Supplier<ExtendedSchedule> WATERFOWL = register("waterfowl", new ExtendedSchedule()
@@ -55,7 +55,7 @@ public class FowlPlaySchedules {
         .activityAt(6000, Activity.IDLE)
         .activityAt(8000, FowlPlayActivities.FORAGE)
         .activityAt(11000, Activity.IDLE)
-        .activityAt(12500, Activity.REST)
+        .activityAt(13000, Activity.REST)
         .activityAt(23000, Activity.IDLE)
     );
     public static final Supplier<ExtendedSchedule> WATERFOWL_DOMESTIC = register("waterfowl_domestic", new ExtendedSchedule()

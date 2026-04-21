@@ -38,11 +38,6 @@ public final class BirdUtils {
     public static final int CANNOT_PICKUP_FOOD_TICKS = 1200;
     public static final UniformInt STAY_NEAR_ENTITY_RANGE = UniformInt.of(16, 32);
 
-    public static boolean isDaytime(BirdEntity entity) {
-        Level world = entity.level();
-        return !world.dimensionType().hasFixedTime() && (world.getDayTime() < 12500 || world.getDayTime() > 23000);
-    }
-
     public static boolean shouldLandAtDestination(FlyingBirdEntity bird, BlockPos destination) {
         Level world = bird.level();
         return !world.getBlockState(destination).isAir()

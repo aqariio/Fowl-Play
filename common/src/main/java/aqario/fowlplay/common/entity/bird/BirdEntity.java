@@ -476,11 +476,11 @@ public abstract class BirdEntity extends Animal {
     }
 
     protected boolean canCall() {
-        return BirdUtils.isDaytime(this);
+        return !this.isSleeping();
     }
 
     protected boolean canSing() {
-        return BirdUtils.isDaytime(this) && this.onGround() && !this.isBaby();
+        return !this.isSleeping() && this.onGround() && !this.isBaby();
     }
 
     private void resetCallDelay() {

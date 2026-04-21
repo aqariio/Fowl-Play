@@ -742,7 +742,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     @Override
-    public @Nullable SmartBrainSchedule getSchedule() {
+    public SmartBrainSchedule getSchedule() {
         return FowlPlaySchedules.PENGUIN.get();
     }
 

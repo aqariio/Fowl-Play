@@ -10,6 +10,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.tslat.smartbrainlib.api.core.behaviour.AllApplicableBehaviours;
 import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
+import net.tslat.smartbrainlib.api.core.behaviour.SequentialBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomSwimTarget;
 import net.tslat.smartbrainlib.util.BrainUtils;
@@ -84,6 +85,7 @@ public class CompositeBehaviours {
         return new OneRandomBehaviour<>(
             new SetRandomLookTarget<>(),
             new Idle<>()
+                .noTimeout()
         );
     }
 
@@ -95,19 +97,13 @@ public class CompositeBehaviours {
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static ExtendedBehaviour<PenguinEntity> slideToWater() {
         return new AllApplicableBehaviours<>(
-            Pair.of(
-                SlideBehaviours.startSliding(),
-                1
-            ),
-            Pair.of(
-                new SetRandomSwimTarget<>()
-                    .setRadius(64, 24),
-                2
-            )
-        ).startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.HAS_HUNTING_COOLDOWN));
+            SlideBehaviours.startSliding(),
+            new SetRandomSwimTarget<>()
+                .setRadius(64, 24)
+        )
+            .startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.HAS_HUNTING_COOLDOWN));
     }
 
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> tryPerch() {
@@ -127,18 +123,12 @@ public class CompositeBehaviours {
     }
 
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> tryForage() {
-        return new OneRandomBehaviour<>(
-            Pair.of(
-                idleAndLookAround()
-                    .runForBetween(30, 100)
-                    .startCondition(Entity::onGround)
-                    .stopIf(Predicate.not(Entity::onGround)),
-                2
-            ),
-            Pair.of(
-                trySetGroundWalkTarget(),
-                1
-            )
+        return new SequentialBehaviour<>(
+            idleAndLookAround()
+                .runForBetween(30, 100)
+                .startCondition(Entity::onGround)
+                .stopIf(Predicate.not(Entity::onGround)),
+            trySetGroundWalkTarget()
         );
     }
 }

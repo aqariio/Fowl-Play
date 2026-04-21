@@ -29,8 +29,15 @@ public class CustomBehaviours {
 
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> idleIfNotFlying() {
         return new Idle<E>()
-            .startCondition(entity -> !entity.isFlying() && !BirdUtils.isPerched(entity))
-            .stopIf(entity -> entity.isFlying() || BirdUtils.isPerched(entity));
+            .noTimeout()
+            .startCondition(entity -> !entity.isFlying()
+                && !BirdUtils.isPerched(entity)
+                && !entity.isMemoryPresent(MemoryModuleType.WALK_TARGET)
+            )
+            .stopIf(entity -> entity.isFlying()
+                || BirdUtils.isPerched(entity)
+                || entity.isMemoryPresent(MemoryModuleType.WALK_TARGET)
+            );
     }
 
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> sleepIfPerched() {

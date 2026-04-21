@@ -15,15 +15,10 @@ import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
 import aqario.fowlplay.core.tags.FowlPlayItemTags;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.VariantHolder;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
@@ -42,41 +37,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEntity>, VariantHolder<RobinEntity.Variant> {
-    private static final EntityDataAccessor<String> VARIANT = SynchedEntityData.defineId(RobinEntity.class, EntityDataSerializers.STRING);
-
+public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEntity> {
     public RobinEntity(EntityType<? extends RobinEntity> entityType, Level world) {
         super(entityType, world);
-    }
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(VARIANT, /*Util.getRandom(Variant.VARIANTS, random).toString()*/ Variant.AMERICAN.toString());
-    }
-
-    @Override
-    public Variant getVariant() {
-        return Variant.valueOf(this.entityData.get(VARIANT));
-    }
-
-    @Override
-    public void setVariant(Variant variant) {
-        this.entityData.set(VARIANT, variant.toString());
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
-        super.addAdditionalSaveData(nbt);
-        nbt.putString("variant", this.getVariant().toString());
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
-        super.readAdditionalSaveData(nbt);
-        if(nbt.contains("variant")) {
-            this.setVariant(Variant.valueOf(nbt.getString("variant")));
-        }
     }
 
     @Override
@@ -234,20 +197,5 @@ public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEnti
     protected void customServerAiStep() {
         this.tickBrain(this);
         super.customServerAiStep();
-    }
-
-    public enum Variant {
-        AMERICAN("american"),
-        REDBREAST("redbreast");
-
-        private final String id;
-
-        Variant(String id) {
-            this.id = id;
-        }
-
-        public String getId() {
-            return this.id;
-        }
     }
 }

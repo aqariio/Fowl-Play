@@ -105,7 +105,7 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
             return false;
         }
         Optional<List<? extends AgeableMob>> nearbyAdults = Optional.ofNullable(BrainUtils.getMemory(this, FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get()));
-        return nearbyAdults.filter(passiveEntities -> passiveEntities.size() >= 4).isPresent();
+        return nearbyAdults.filter(passiveEntities -> passiveEntities.size() >= 3).isPresent();
     }
 
     @Override

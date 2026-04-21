@@ -44,8 +44,6 @@ import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeAttack;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.BreedWithPartner;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowParent;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
@@ -58,6 +56,7 @@ import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEntity>, VariantHolder<GullVariant> {
     private static final EntityDataAccessor<Holder<GullVariant>> VARIANT = SynchedEntityData.defineId(
@@ -300,7 +299,7 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
                     1
                 ),
                 Pair.of(
-                    CustomBehaviours.idleIfNotFlying()
+                    CustomBehaviours.idleIfNotMoving()
                         .runForBetween(100, 300),
                     2
                 )
@@ -312,14 +311,14 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     @Override
     public BrainActivityGroup<? extends GullEntity> idleActivity() {
         return BirdBrain.idle(
-            new BreedWithPartner<>(),
-            new FollowParent<>(),
             SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
-            new SetRandomLookTarget<>()
-                .lookChance(0.02f),
+            new SetRandomLookTarget<GullEntity>()
+                .lookChance(0.02f)
+                .startCondition(Predicate.not(FlyingBirdEntity::isFlying))
+                .stopIf(FlyingBirdEntity::isFlying),
             new OneRandomBehaviour<>(
                 CompositeBehaviours.trySetNonAirWalkTarget(),
-                CustomBehaviours.idleIfNotFlying()
+                CustomBehaviours.idleIfNotMoving()
                     .runForBetween(100, 300)
             )
         );

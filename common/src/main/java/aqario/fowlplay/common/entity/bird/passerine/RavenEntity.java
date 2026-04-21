@@ -122,13 +122,6 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     }
 
     @Override
-    public void updateAnimationStates() {
-        this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
-        this.glidingState.animateWhen(this.isFlying(), this.tickCount);
-        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
-    }
-
-    @Override
     public float getFlapVolume() {
         return 0.8f;
     }

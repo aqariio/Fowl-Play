@@ -10,6 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 
 public class RobinRenderer extends MobRenderer<RobinEntity, RobinModel> {
+    private static final ResourceLocation TEXTURE = FowlPlay.id("textures/entity/robin/american_robin.png");
+
     public RobinRenderer(EntityRendererProvider.Context context) {
         super(context, new RobinModel(context.bakeLayer(RobinModel.MODEL_LAYER)), 0.15f);
         this.addLayer(new BirdHeldItemLayer<>(
@@ -21,6 +23,6 @@ public class RobinRenderer extends MobRenderer<RobinEntity, RobinModel> {
 
     @Override
     public ResourceLocation getTextureLocation(RobinEntity entity) {
-        return FowlPlay.id("textures/entity/robin/" + entity.getVariant().getId() + "_robin.png");
+        return TEXTURE;
     }
 }

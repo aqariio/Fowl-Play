@@ -448,7 +448,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
                     1
                 ),
                 Pair.of(
-                    CustomBehaviours.idleIfNotFlying()
+                    CustomBehaviours.idleIfNotMoving()
                         .runForBetween(100, 300),
                     2
                 )
@@ -466,7 +466,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
                 .lookChance(0.02f),
             new OneRandomBehaviour<>(
                 CompositeBehaviours.trySetWaterWalkTarget(),
-                CustomBehaviours.idleIfNotFlying()
+                CustomBehaviours.idleIfNotMoving()
                     .runForBetween(100, 300)
             )
         );

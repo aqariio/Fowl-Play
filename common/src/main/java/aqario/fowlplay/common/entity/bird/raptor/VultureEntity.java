@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.entity.bird.raptor;
 
-import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -145,11 +144,6 @@ public class VultureEntity extends TrustingBirdEntity implements BirdBrain<Vultu
     @Override
     protected SoundEvent getCallSound() {
         return FowlPlaySoundEvents.ENTITY_VULTURE_CALL.get();
-    }
-
-    @Override
-    protected float getCallVolume() {
-        return FowlPlayConfig.getInstance().hawkCallVolume;
     }
 
     @Override

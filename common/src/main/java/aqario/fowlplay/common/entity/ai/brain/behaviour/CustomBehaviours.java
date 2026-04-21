@@ -27,7 +27,7 @@ public class CustomBehaviours {
             .speed(BirdUtils.FAST_SPEED);
     }
 
-    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> idleIfNotFlying() {
+    public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> idleIfNotMoving() {
         return new Idle<E>()
             .noTimeout()
             .startCondition(entity -> !entity.isFlying()

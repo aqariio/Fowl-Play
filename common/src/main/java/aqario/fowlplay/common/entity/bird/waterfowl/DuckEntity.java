@@ -334,7 +334,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
                     1
                 ),
                 Pair.of(
-                    CustomBehaviours.idleIfNotFlying()
+                    CustomBehaviours.idleIfNotMoving()
                         .runForBetween(100, 300),
                     2
                 )
@@ -352,7 +352,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
                 .lookChance(0.02f),
             new OneRandomBehaviour<>(
                 CompositeBehaviours.trySetWaterWalkTarget(),
-                CustomBehaviours.idleIfNotFlying()
+                CustomBehaviours.idleIfNotMoving()
                     .runForBetween(100, 300)
             )
         );

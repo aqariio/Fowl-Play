@@ -14,7 +14,7 @@ public class FPSchedules {
         FowlPlay.ID
     );
 
-    // TODO: have separate schedules for babies and adults, and separate schedules for domestic and wild variants
+    // TODO: have separate schedules for babies and adults
     public static final Supplier<ExtendedSchedule> FORAGER = register("forager", new ExtendedSchedule()
         .activityAt(0, Activity.IDLE)
         .activityAt(1000, FPActivities.FORAGE)
@@ -58,7 +58,7 @@ public class FPSchedules {
         .activityAt(13000, Activity.REST)
         .activityAt(23000, Activity.IDLE)
     );
-    public static final Supplier<ExtendedSchedule> WATERFOWL_DOMESTIC = register("waterfowl_domestic", new ExtendedSchedule()
+    public static final Supplier<ExtendedSchedule> DOMESTIC = register("domestic", new ExtendedSchedule()
         .activityAt(0, Activity.IDLE)
         .activityAt(12500, Activity.REST)
         .activityAt(23000, Activity.IDLE)

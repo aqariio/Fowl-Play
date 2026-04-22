@@ -28,4 +28,9 @@ public class Sing<E extends BirdEntity> extends ExtendedBehaviour<E> {
     protected void start(E entity) {
         entity.playSongSound();
     }
+
+    @Override
+    protected boolean shouldKeepRunning(E entity) {
+        return true;
+    }
 }

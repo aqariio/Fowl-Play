@@ -28,4 +28,9 @@ public class Call<E extends BirdEntity> extends ExtendedBehaviour<E> {
     protected void start(E entity) {
         entity.playCallSound();
     }
+
+    @Override
+    protected boolean shouldKeepRunning(E entity) {
+        return true;
+    }
 }

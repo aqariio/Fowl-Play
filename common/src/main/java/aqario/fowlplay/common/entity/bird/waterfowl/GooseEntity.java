@@ -491,7 +491,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     public SmartBrainSchedule getSchedule() {
         return this.isDomestic()
-            ? FPSchedules.WATERFOWL_DOMESTIC.get()
+            ? FPSchedules.DOMESTIC.get()
             : FPSchedules.WATERFOWL.get();
     }
 

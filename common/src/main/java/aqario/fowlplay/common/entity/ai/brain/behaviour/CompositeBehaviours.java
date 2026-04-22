@@ -1,5 +1,6 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
+import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.bird.penguin.PenguinEntity;
 import aqario.fowlplay.common.util.BirdUtils;
@@ -7,10 +8,12 @@ import com.google.common.base.Predicates;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.tslat.smartbrainlib.api.core.behaviour.*;
+import net.tslat.smartbrainlib.api.core.behaviour.AllApplicableBehaviours;
+import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
+import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
+import net.tslat.smartbrainlib.api.core.behaviour.RepeatingBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomSwimTarget;
-import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.function.Predicate;
 
@@ -92,7 +95,29 @@ public class CompositeBehaviours {
             new SetRandomSwimTarget<>()
                 .setRadius(64, 24)
         )
-            .startCondition(entity -> !BrainUtils.hasMemory(entity, MemoryModuleType.HAS_HUNTING_COOLDOWN));
+            .startCondition(entity -> !entity.isMemoryPresent(MemoryModuleType.HAS_HUNTING_COOLDOWN));
+    }
+
+    public static <E extends BirdEntity> ExtendedBehaviour<E> call() {
+        return new RepeatingBehaviour<E>(
+            new Call<>()
+        )
+            .repeatNTimes(entity -> entity.getRandom().nextIntBetweenInclusive(3, 6))
+            .cooldownFor(entity -> entity.getRandom().nextIntBetweenInclusive(
+                entity.getCallDelay() - 80,
+                entity.getCallDelay() + 80
+            ));
+    }
+
+    public static <E extends BirdEntity> ExtendedBehaviour<E> sing() {
+        return new RepeatingBehaviour<E>(
+            new Sing<>()
+        )
+            .repeatNTimes(entity -> entity.getRandom().nextIntBetweenInclusive(1, 3))
+            .cooldownFor(entity -> entity.getRandom().nextIntBetweenInclusive(
+                entity.getSongDelay() - 120,
+                entity.getSongDelay() + 120
+            ));
     }
 
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> perch() {
@@ -109,17 +134,11 @@ public class CompositeBehaviours {
                         5
                     ),
                     Pair.of(
-                        new RepeatingBehaviour<>(
-                            new Call<>()
-                        )
-                            .repeatNTimes(entity -> entity.getRandom().nextIntBetweenInclusive(3, 6)),
+                        call(),
                         4
                     ),
                     Pair.of(
-                        new RepeatingBehaviour<>(
-                            new Sing<>()
-                        )
-                            .repeatNTimes(entity -> entity.getRandom().nextIntBetweenInclusive(1, 3)),
+                        sing(),
                         3
                     )
                 )
@@ -136,13 +155,13 @@ public class CompositeBehaviours {
     }
 
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> forage() {
-        return new SequentialBehaviour<>(
+        return new OneRandomBehaviour<>(
             new OneRandomBehaviour<E>(
                 new SetRandomLookTarget<>(),
                 new Idle<>()
                     .noTimeout()
             )
-                .runForBetween(30, 100)
+                .runForBetween(200, 400)
                 .startCondition(Predicates.and(
                     E::onGround,
                     Predicates.not(BirdUtils::isPerched)

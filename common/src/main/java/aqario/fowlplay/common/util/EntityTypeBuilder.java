@@ -46,8 +46,8 @@ public class EntityTypeBuilder<T extends Entity> {
     private int minCount;
     private int maxCount;
     private boolean hasSpawnCost = false;
-    private float energyBudget;
-    private float charge;
+    private double energyBudget;
+    private double charge;
 
     private EntityTypeBuilder(EntityType.EntityFactory<T> factory, MobCategory category) {
         this.factory = factory;
@@ -157,7 +157,7 @@ public class EntityTypeBuilder<T extends Entity> {
         return this;
     }
 
-    public EntityTypeBuilder<T> spawnRestriction(SpawnPlacementType location, Heightmap.Types heightmap, SpawnPlacements.SpawnPredicate<T> spawnPredicate) {
+    public EntityTypeBuilder<T> spawnPlacement(SpawnPlacementType location, Heightmap.Types heightmap, SpawnPlacements.SpawnPredicate<T> spawnPredicate) {
         this.spawnPlacement = location;
         this.heightmap = heightmap;
         this.spawnPredicate = spawnPredicate;
@@ -173,7 +173,7 @@ public class EntityTypeBuilder<T extends Entity> {
         return this;
     }
 
-    public EntityTypeBuilder<T> spawnCost(TagKey<Biome> biome, int energyBudget, int charge) {
+    public EntityTypeBuilder<T> spawnCost(TagKey<Biome> biome, double energyBudget, double charge) {
         this.hasSpawnCost = true;
         this.biomeTag = biome;
         this.energyBudget = energyBudget;

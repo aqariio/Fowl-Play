@@ -398,18 +398,6 @@ public final class FPEntityTypes {
 
     // TODO: use biome property based spawning to more accurately reflect real life habitats
     public static <T extends Entity> void addSpawn(TagKey<Biome> tag, MobCategory category, Supplier<EntityType<T>> type, int weight, int minCount, int maxCount) {
-//        BiomeModifications.addProperties(
-//            context -> context.hasTag(tag),
-//            (context, mutable) -> mutable.getSpawnProperties().addSpawn(
-//                category,
-//                new MobSpawnSettings.SpawnerData(
-//                    type.get(),
-//                    weight,
-//                    minCount,
-//                    maxCount
-//                )
-//            )
-//        );
         BiomeModifier.add(
             context -> context.is(tag),
             (context, modifier) -> modifier.addSpawn(
@@ -425,16 +413,6 @@ public final class FPEntityTypes {
     }
 
     public static <T extends Entity> void setSpawnCost(TagKey<Biome> tag, Supplier<EntityType<T>> type, double energyBudget, double charge) {
-//        BiomeModifications.addProperties(
-//            context -> context.hasTag(tag),
-//            (context, mutable) -> mutable.getSpawnProperties().setSpawnCost(
-//                type.get(),
-//                new MobSpawnSettings.MobSpawnCost(
-//                    energyBudget,
-//                    charge
-//                )
-//            )
-//        );
         BiomeModifier.add(
             context -> context.is(tag),
             (context, modifier) -> modifier.setSpawnCost(

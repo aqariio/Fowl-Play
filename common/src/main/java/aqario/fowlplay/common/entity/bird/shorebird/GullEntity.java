@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.entity.bird.shorebird;
 
-import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -209,29 +208,19 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FPSoundEvents.ENTITY_GULL_CALL.get();
+        return FPSoundEvents.GULL_CALL.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getSongSound() {
-        return FPSoundEvents.ENTITY_GULL_LONG_CALL.get();
-    }
-
-    @Override
-    protected float getCallVolume() {
-        return FowlPlayConfig.getInstance().gullCallVolume;
-    }
-
-    @Override
-    protected float getSongVolume() {
-        return FowlPlayConfig.getInstance().gullSongVolume;
+        return FPSoundEvents.GULL_LONG_CALL.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FPSoundEvents.ENTITY_GULL_HURT.get();
+        return FPSoundEvents.GULL_HURT.get();
     }
 
     @Override

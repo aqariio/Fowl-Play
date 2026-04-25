@@ -459,22 +459,22 @@ public abstract class BirdEntity extends Animal {
     }
 
     public final void playCallSound() {
-        this.playSound(this.getCallSound(), this.getCallVolume(), this.getVoicePitch());
+        this.playSound(this.getCallSound(), 1, this.getVoicePitch());
     }
 
     public final void playSongSound() {
-        this.playSound(this.getSongSound(), this.getSongVolume(), this.getVoicePitch());
+        this.playSound(this.getSongSound(), 1, this.getVoicePitch());
     }
 
     @Override
     protected void playHurtSound(DamageSource damageSource) {
-        this.playSound(this.getHurtSound(damageSource), this.getCallVolume(), this.getVoicePitch());
+        this.playSound(this.getHurtSound(damageSource), 1, this.getVoicePitch());
     }
 
     @Override
     public void playSound(SoundEvent sound, float volume, float pitch) {
         if(!this.isSilent() && sound != null) {
-            this.level().playSound(null, this.getX(), this.getY(), this.getZ(), sound, this.getSoundSource(), volume, pitch);
+            this.level().playSound(null, this, sound, this.getSoundSource(), volume, pitch);
         }
     }
 
@@ -510,15 +510,7 @@ public abstract class BirdEntity extends Animal {
 
     @Override
     public SoundEvent getEatingSound(ItemStack stack) {
-        return FPSoundEvents.ENTITY_BIRD_EAT.get();
-    }
-
-    protected float getCallVolume() {
-        return 1.0F;
-    }
-
-    protected float getSongVolume() {
-        return 1.0F;
+        return FPSoundEvents.BIRD_EAT.get();
     }
 
     @Override

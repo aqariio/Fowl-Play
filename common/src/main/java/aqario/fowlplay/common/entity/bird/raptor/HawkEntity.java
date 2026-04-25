@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.entity.bird.raptor;
 
-import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -143,12 +142,7 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FPSoundEvents.ENTITY_HAWK_CALL.get();
-    }
-
-    @Override
-    protected float getCallVolume() {
-        return FowlPlayConfig.getInstance().hawkCallVolume;
+        return FPSoundEvents.HAWK_CALL.get();
     }
 
     @Override
@@ -159,7 +153,7 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FPSoundEvents.ENTITY_HAWK_HURT.get();
+        return FPSoundEvents.HAWK_HURT.get();
     }
 
     @Override

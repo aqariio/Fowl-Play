@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.entity.bird.dove;
 
-import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -316,13 +315,13 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FPSoundEvents.ENTITY_PIGEON_CALL.get();
+        return FPSoundEvents.PIGEON_CALL.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getSongSound() {
-        return FPSoundEvents.ENTITY_PIGEON_SONG.get();
+        return FPSoundEvents.PIGEON_SONG.get();
     }
 
     @Override
@@ -330,20 +329,10 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
         return 120;
     }
 
-    @Override
-    protected float getCallVolume() {
-        return FowlPlayConfig.getInstance().pigeonCallVolume;
-    }
-
-    @Override
-    protected float getSongVolume() {
-        return FowlPlayConfig.getInstance().pigeonSongVolume;
-    }
-
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FPSoundEvents.ENTITY_PIGEON_HURT.get();
+        return FPSoundEvents.PIGEON_HURT.get();
     }
 
     @Override

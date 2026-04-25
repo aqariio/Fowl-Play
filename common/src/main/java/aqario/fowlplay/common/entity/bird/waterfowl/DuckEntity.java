@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.entity.bird.waterfowl;
 
-import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -250,18 +249,13 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FPSoundEvents.ENTITY_DUCK_CALL.get();
-    }
-
-    @Override
-    protected float getCallVolume() {
-        return FowlPlayConfig.getInstance().duckCallVolume;
+        return FPSoundEvents.DUCK_CALL.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FPSoundEvents.ENTITY_DUCK_HURT.get();
+        return FPSoundEvents.DUCK_HURT.get();
     }
 
     @Override

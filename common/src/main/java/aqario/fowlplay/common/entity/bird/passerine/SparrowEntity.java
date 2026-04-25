@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.entity.bird.passerine;
 
-import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -170,23 +169,13 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FPSoundEvents.ENTITY_SPARROW_CALL.get();
+        return FPSoundEvents.SPARROW_CALL.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getSongSound() {
-        return FPSoundEvents.ENTITY_SPARROW_SONG.get();
-    }
-
-    @Override
-    protected float getCallVolume() {
-        return FowlPlayConfig.getInstance().sparrowCallVolume;
-    }
-
-    @Override
-    protected float getSongVolume() {
-        return FowlPlayConfig.getInstance().sparrowSongVolume;
+        return FPSoundEvents.SPARROW_SONG.get();
     }
 
     @Override
@@ -202,7 +191,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FPSoundEvents.ENTITY_SPARROW_HURT.get();
+        return FPSoundEvents.SPARROW_HURT.get();
     }
 
     @Override

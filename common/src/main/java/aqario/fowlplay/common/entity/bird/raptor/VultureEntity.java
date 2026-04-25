@@ -143,7 +143,7 @@ public class VultureEntity extends TrustingBirdEntity implements BirdBrain<Vultu
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FPSoundEvents.ENTITY_VULTURE_CALL.get();
+        return FPSoundEvents.VULTURE_CALL.get();
     }
 
     @Override
@@ -154,7 +154,7 @@ public class VultureEntity extends TrustingBirdEntity implements BirdBrain<Vultu
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FPSoundEvents.ENTITY_VULTURE_HURT.get();
+        return FPSoundEvents.VULTURE_HURT.get();
     }
 
     @Override

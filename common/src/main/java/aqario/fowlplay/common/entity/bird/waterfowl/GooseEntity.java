@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.entity.bird.waterfowl;
 
-import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -342,29 +341,24 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     protected SoundEvent getCallSound() {
         if(this.getVariant().is(GooseVariant.GREYLAG)) {
-            return FPSoundEvents.ENTITY_GREYLAG_GOOSE_CALL.get();
+            return FPSoundEvents.GREYLAG_GOOSE_CALL.get();
         }
         if(this.getVariant().is(GooseVariant.SWAN)) {
-            return FPSoundEvents.ENTITY_SWAN_GOOSE_CALL.get();
+            return FPSoundEvents.SWAN_GOOSE_CALL.get();
         }
-        return FPSoundEvents.ENTITY_CANADA_GOOSE_CALL.get();
-    }
-
-    @Override
-    protected float getCallVolume() {
-        return FowlPlayConfig.getInstance().gooseCallVolume;
+        return FPSoundEvents.CANADA_GOOSE_CALL.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         if(this.getVariant().is(GooseVariant.GREYLAG)) {
-            return FPSoundEvents.ENTITY_GREYLAG_GOOSE_HURT.get();
+            return FPSoundEvents.GREYLAG_GOOSE_HURT.get();
         }
         if(this.getVariant().is(GooseVariant.SWAN)) {
-            return FPSoundEvents.ENTITY_SWAN_GOOSE_HURT.get();
+            return FPSoundEvents.SWAN_GOOSE_HURT.get();
         }
-        return FPSoundEvents.ENTITY_CANADA_GOOSE_HURT.get();
+        return FPSoundEvents.CANADA_GOOSE_HURT.get();
     }
 
     @Override

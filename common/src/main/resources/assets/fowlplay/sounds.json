@@ -22,49 +22,133 @@
   },
   "entity.blue_jay.call": {
     "sounds": [
-      "fowlplay:mob/blue_jay/call1",
-      "fowlplay:mob/blue_jay/call2",
-      "fowlplay:mob/blue_jay/call3",
-      "fowlplay:mob/blue_jay/call4",
-      "fowlplay:mob/blue_jay/call5",
-      "fowlplay:mob/blue_jay/call6"
+      {
+        "attenuation_distance": 80,
+        "name": "fowlplay:mob/blue_jay/call1"
+      },
+      {
+        "attenuation_distance": 80,
+        "name": "fowlplay:mob/blue_jay/call2"
+      },
+      {
+        "attenuation_distance": 80,
+        "name": "fowlplay:mob/blue_jay/call3"
+      },
+      {
+        "attenuation_distance": 80,
+        "name": "fowlplay:mob/blue_jay/call4"
+      },
+      {
+        "attenuation_distance": 80,
+        "name": "fowlplay:mob/blue_jay/call5"
+      },
+      {
+        "attenuation_distance": 80,
+        "name": "fowlplay:mob/blue_jay/call6"
+      }
     ],
     "subtitle": "subtitles.entity.blue_jay.call"
   },
   "entity.blue_jay.hurt": {
     "sounds": [
-      "fowlplay:mob/blue_jay/call1",
-      "fowlplay:mob/blue_jay/call2",
-      "fowlplay:mob/blue_jay/call3",
-      "fowlplay:mob/blue_jay/call4",
-      "fowlplay:mob/blue_jay/call5",
-      "fowlplay:mob/blue_jay/call6"
+      {
+        "attenuation_distance": 80,
+        "name": "fowlplay:mob/blue_jay/call1"
+      },
+      {
+        "attenuation_distance": 80,
+        "name": "fowlplay:mob/blue_jay/call2"
+      },
+      {
+        "attenuation_distance": 80,
+        "name": "fowlplay:mob/blue_jay/call3"
+      },
+      {
+        "attenuation_distance": 80,
+        "name": "fowlplay:mob/blue_jay/call4"
+      },
+      {
+        "attenuation_distance": 80,
+        "name": "fowlplay:mob/blue_jay/call5"
+      },
+      {
+        "attenuation_distance": 80,
+        "name": "fowlplay:mob/blue_jay/call6"
+      }
     ],
     "subtitle": "subtitles.entity.blue_jay.hurt"
   },
   "entity.canada_goose.call": {
     "sounds": [
-      "fowlplay:mob/goose/canada/call1",
-      "fowlplay:mob/goose/canada/call2",
-      "fowlplay:mob/goose/canada/call3",
-      "fowlplay:mob/goose/canada/call4",
-      "fowlplay:mob/goose/canada/call5",
-      "fowlplay:mob/goose/canada/call6",
-      "fowlplay:mob/goose/canada/call7",
-      "fowlplay:mob/goose/canada/call8"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/canada_goose/call1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/canada_goose/call2"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/canada_goose/call3"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/canada_goose/call4"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/canada_goose/call5"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/canada_goose/call6"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/canada_goose/call7"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/canada_goose/call8"
+      }
     ],
     "subtitle": "subtitles.entity.canada_goose.call"
   },
   "entity.canada_goose.hurt": {
     "sounds": [
-      "fowlplay:mob/goose/canada/call1",
-      "fowlplay:mob/goose/canada/call2",
-      "fowlplay:mob/goose/canada/call3",
-      "fowlplay:mob/goose/canada/call4",
-      "fowlplay:mob/goose/canada/call5",
-      "fowlplay:mob/goose/canada/call6",
-      "fowlplay:mob/goose/canada/call7",
-      "fowlplay:mob/goose/canada/call8"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/canada_goose/call1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/canada_goose/call2"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/canada_goose/call3"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/canada_goose/call4"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/canada_goose/call5"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/canada_goose/call6"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/canada_goose/call7"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/canada_goose/call8"
+      }
     ],
     "subtitle": "subtitles.entity.canada_goose.hurt"
   },
@@ -84,62 +168,155 @@
   },
   "entity.cardinal.song": {
     "sounds": [
-      "fowlplay:mob/cardinal/song1",
-      "fowlplay:mob/cardinal/song2",
-      "fowlplay:mob/cardinal/song3",
-      "fowlplay:mob/cardinal/song4",
-      "fowlplay:mob/cardinal/song5",
-      "fowlplay:mob/cardinal/song6",
-      "fowlplay:mob/cardinal/song7",
-      "fowlplay:mob/cardinal/song8"
+      {
+        "attenuation_distance": 64,
+        "name": "fowlplay:mob/cardinal/song1"
+      },
+      {
+        "attenuation_distance": 64,
+        "name": "fowlplay:mob/cardinal/song2"
+      },
+      {
+        "attenuation_distance": 64,
+        "name": "fowlplay:mob/cardinal/song3"
+      },
+      {
+        "attenuation_distance": 64,
+        "name": "fowlplay:mob/cardinal/song4"
+      },
+      {
+        "attenuation_distance": 64,
+        "name": "fowlplay:mob/cardinal/song5"
+      },
+      {
+        "attenuation_distance": 64,
+        "name": "fowlplay:mob/cardinal/song6"
+      },
+      {
+        "attenuation_distance": 64,
+        "name": "fowlplay:mob/cardinal/song7"
+      },
+      {
+        "attenuation_distance": 64,
+        "name": "fowlplay:mob/cardinal/song8"
+      }
     ],
     "subtitle": "subtitles.entity.cardinal.song"
   },
   "entity.chickadee.call": {
     "sounds": [
-      "fowlplay:mob/chickadee/call1",
-      "fowlplay:mob/chickadee/call2",
-      "fowlplay:mob/chickadee/call3",
-      "fowlplay:mob/chickadee/call4",
-      "fowlplay:mob/chickadee/call5",
-      "fowlplay:mob/chickadee/call6",
-      "fowlplay:mob/chickadee/call7",
-      "fowlplay:mob/chickadee/call8",
-      "fowlplay:mob/chickadee/call9"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/call1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/call2"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/call3"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/call4"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/call5"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/call6"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/call7"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/call8"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/call9"
+      }
     ],
     "subtitle": "subtitles.entity.chickadee.call"
   },
   "entity.chickadee.hurt": {
     "sounds": [
-      "fowlplay:mob/chickadee/call1",
-      "fowlplay:mob/chickadee/call2"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/call1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/call2"
+      }
     ],
     "subtitle": "subtitles.entity.chickadee.hurt"
   },
   "entity.chickadee.song": {
     "sounds": [
-      "fowlplay:mob/chickadee/song1",
-      "fowlplay:mob/chickadee/song2",
-      "fowlplay:mob/chickadee/song3",
-      "fowlplay:mob/chickadee/song4",
-      "fowlplay:mob/chickadee/song5",
-      "fowlplay:mob/chickadee/song6"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/song1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/song2"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/song3"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/song4"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/song5"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/chickadee/song6"
+      }
     ],
     "subtitle": "subtitles.entity.chickadee.song"
   },
   "entity.crow.call": {
     "sounds": [
-      "fowlplay:mob/crow/call1",
-      "fowlplay:mob/crow/call2",
-      "fowlplay:mob/crow/call3",
-      "fowlplay:mob/crow/call4"
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/crow/call1"
+      },
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/crow/call2"
+      },
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/crow/call3"
+      },
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/crow/call4"
+      }
     ],
     "subtitle": "subtitles.entity.crow.call"
   },
   "entity.crow.hurt": {
     "sounds": [
-      "fowlplay:mob/crow/hurt1",
-      "fowlplay:mob/crow/hurt2"
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/crow/hurt1"
+      },
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/crow/hurt2"
+      }
     ],
     "subtitle": "subtitles.entity.crow.hurt"
   },
@@ -159,74 +336,167 @@
   },
   "entity.greylag_goose.call": {
     "sounds": [
-      "fowlplay:mob/goose/greylag/call1",
-      "fowlplay:mob/goose/greylag/call2",
-      "fowlplay:mob/goose/greylag/call3",
-      "fowlplay:mob/goose/greylag/call4"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/greylag_goose/call1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/greylag_goose/call2"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/greylag_goose/call3"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/greylag_goose/call4"
+      }
     ],
     "subtitle": "subtitles.entity.greylag_goose.call"
   },
   "entity.greylag_goose.hurt": {
     "sounds": [
-      "fowlplay:mob/goose/greylag/call1",
-      "fowlplay:mob/goose/greylag/call2",
-      "fowlplay:mob/goose/greylag/call3",
-      "fowlplay:mob/goose/greylag/call4"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/greylag_goose/call1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/greylag_goose/call2"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/greylag_goose/call3"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/greylag_goose/call4"
+      }
     ],
     "subtitle": "subtitles.entity.greylag_goose.hurt"
   },
   "entity.gull.call": {
     "sounds": [
-      "fowlplay:mob/gull/call1",
-      "fowlplay:mob/gull/call2",
-      "fowlplay:mob/gull/call3",
-      "fowlplay:mob/gull/call4"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/gull/call1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/gull/call2"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/gull/call3"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/gull/call4"
+      }
     ],
     "subtitle": "subtitles.entity.gull.call"
   },
   "entity.gull.hurt": {
     "sounds": [
-      "fowlplay:mob/gull/hurt1",
-      "fowlplay:mob/gull/hurt2"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/gull/call1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/gull/call2"
+      }
     ],
     "subtitle": "subtitles.entity.gull.hurt"
   },
   "entity.gull.long_call": {
     "sounds": [
-      "fowlplay:mob/gull/long_call1",
-      "fowlplay:mob/gull/long_call2",
-      "fowlplay:mob/gull/long_call3"
+      {
+        "attenuation_distance": 48,
+        "name": "fowlplay:mob/gull/long_call1"
+      },
+      {
+        "attenuation_distance": 48,
+        "name": "fowlplay:mob/gull/long_call2"
+      },
+      {
+        "attenuation_distance": 48,
+        "name": "fowlplay:mob/gull/long_call3"
+      }
     ],
     "subtitle": "subtitles.entity.gull.long_call"
   },
   "entity.hawk.call": {
     "sounds": [
-      "fowlplay:mob/hawk/call1",
-      "fowlplay:mob/hawk/call2",
-      "fowlplay:mob/hawk/call3",
-      "fowlplay:mob/hawk/call4",
-      "fowlplay:mob/hawk/call5"
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/hawk/call1"
+      },
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/hawk/call2"
+      },
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/hawk/call3"
+      },
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/hawk/call4"
+      },
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/hawk/call5"
+      }
     ],
     "subtitle": "subtitles.entity.hawk.call"
   },
   "entity.hawk.hurt": {
     "sounds": [
-      "fowlplay:mob/hawk/call1",
-      "fowlplay:mob/hawk/call2"
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/hawk/call1"
+      },
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/hawk/call2"
+      }
     ],
     "subtitle": "subtitles.entity.hawk.hurt"
   },
+  "entity.penguin.baby.call": {
+    "sounds": [
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/penguin/baby/call1"
+      }
+    ],
+    "subtitle": "subtitles.entity.penguin.baby.call"
+  },
   "entity.penguin.call": {
     "sounds": [
-      "fowlplay:mob/penguin/call1",
-      "fowlplay:mob/penguin/call2",
-      "fowlplay:mob/penguin/call3"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/penguin/call1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/penguin/call2"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/penguin/call3"
+      }
     ],
     "subtitle": "subtitles.entity.penguin.call"
   },
   "entity.penguin.hurt": {
     "sounds": [
-      "fowlplay:mob/penguin/hurt"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/penguin/hurt1"
+      }
     ],
     "subtitle": "subtitles.entity.penguin.hurt"
   },
@@ -239,12 +509,6 @@
       "fowlplay:mob/penguin/swim/swim5"
     ],
     "subtitle": "subtitles.entity.penguin.swim"
-  },
-  "entity.penguin_baby.call": {
-    "sounds": [
-      "fowlplay:mob/penguin/baby_call"
-    ],
-    "subtitle": "subtitles.entity.penguin_baby.call"
   },
   "entity.pigeon.call": {
     "sounds": [
@@ -264,95 +528,212 @@
   },
   "entity.pigeon.song": {
     "sounds": [
-      "fowlplay:mob/pigeon/song1"
+      {
+        "attenuation_distance": 48,
+        "name": "fowlplay:mob/pigeon/song1"
+      }
     ],
     "subtitle": "subtitles.entity.pigeon.song"
   },
   "entity.raven.call": {
     "sounds": [
-      "fowlplay:mob/raven/call1",
-      "fowlplay:mob/raven/call2",
-      "fowlplay:mob/raven/call3",
-      "fowlplay:mob/raven/call4"
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/raven/call1"
+      },
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/raven/call2"
+      },
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/raven/call3"
+      },
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/raven/call4"
+      }
     ],
     "subtitle": "subtitles.entity.raven.call"
   },
   "entity.raven.hurt": {
     "sounds": [
-      "fowlplay:mob/raven/hurt1",
-      "fowlplay:mob/raven/hurt2"
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/raven/hurt1"
+      },
+      {
+        "attenuation_distance": 96,
+        "name": "fowlplay:mob/raven/hurt2"
+      }
     ],
     "subtitle": "subtitles.entity.raven.hurt"
   },
   "entity.robin.call": {
     "sounds": [
-      "fowlplay:mob/robin/call1",
-      "fowlplay:mob/robin/call2",
-      "fowlplay:mob/robin/call3",
-      "fowlplay:mob/robin/call4",
-      "fowlplay:mob/robin/call5",
-      "fowlplay:mob/robin/call6"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/robin/call1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/robin/call2"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/robin/call3"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/robin/call4"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/robin/call5"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/robin/call6"
+      }
     ],
     "subtitle": "subtitles.entity.robin.call"
   },
   "entity.robin.hurt": {
     "sounds": [
-      "fowlplay:mob/robin/hurt1",
-      "fowlplay:mob/robin/hurt2"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/robin/hurt1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/robin/hurt2"
+      }
     ],
     "subtitle": "subtitles.entity.robin.hurt"
   },
   "entity.robin.song": {
     "sounds": [
-      "fowlplay:mob/robin/song1",
-      "fowlplay:mob/robin/song2",
-      "fowlplay:mob/robin/song3",
-      "fowlplay:mob/robin/song4"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/robin/song1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/robin/song2"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/robin/song3"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/robin/song4"
+      }
     ],
     "subtitle": "subtitles.entity.robin.song"
   },
   "entity.sparrow.call": {
     "sounds": [
-      "fowlplay:mob/sparrow/call1",
-      "fowlplay:mob/sparrow/call2",
-      "fowlplay:mob/sparrow/call3",
-      "fowlplay:mob/sparrow/call4",
-      "fowlplay:mob/sparrow/call5"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/sparrow/call1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/sparrow/call2"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/sparrow/call3"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/sparrow/call4"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/sparrow/call5"
+      }
     ],
     "subtitle": "subtitles.entity.sparrow.call"
   },
   "entity.sparrow.hurt": {
     "sounds": [
-      "fowlplay:mob/sparrow/call3",
-      "fowlplay:mob/sparrow/call4",
-      "fowlplay:mob/sparrow/call5"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/sparrow/call3"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/sparrow/call4"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/sparrow/call5"
+      }
     ],
     "subtitle": "subtitles.entity.sparrow.hurt"
   },
   "entity.sparrow.song": {
     "sounds": [
-      "fowlplay:mob/sparrow/song1",
-      "fowlplay:mob/sparrow/song2",
-      "fowlplay:mob/sparrow/song3",
-      "fowlplay:mob/sparrow/song4"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/sparrow/song1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/sparrow/song2"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/sparrow/song3"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/sparrow/song4"
+      }
     ],
     "subtitle": "subtitles.entity.sparrow.song"
   },
   "entity.swan_goose.call": {
     "sounds": [
-      "fowlplay:mob/goose/greylag/call1",
-      "fowlplay:mob/goose/greylag/call2",
-      "fowlplay:mob/goose/greylag/call3",
-      "fowlplay:mob/goose/greylag/call4"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/swan_goose/call1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/swan_goose/call2"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/swan_goose/call3"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/swan_goose/call4"
+      }
     ],
     "subtitle": "subtitles.entity.swan_goose.call"
   },
   "entity.swan_goose.hurt": {
     "sounds": [
-      "fowlplay:mob/goose/greylag/call1",
-      "fowlplay:mob/goose/greylag/call2",
-      "fowlplay:mob/goose/greylag/call3",
-      "fowlplay:mob/goose/greylag/call4"
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/swan_goose/call1"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/swan_goose/call2"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/swan_goose/call3"
+      },
+      {
+        "attenuation_distance": 32,
+        "name": "fowlplay:mob/swan_goose/call4"
+      }
     ],
     "subtitle": "subtitles.entity.swan_goose.hurt"
   }

@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.entity.bird.passerine;
 
-import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -82,23 +81,13 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FPSoundEvents.ENTITY_CHICKADEE_CALL.get();
+        return FPSoundEvents.CHICKADEE_CALL.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getSongSound() {
-        return FPSoundEvents.ENTITY_CHICKADEE_SONG.get();
-    }
-
-    @Override
-    protected float getCallVolume() {
-        return FowlPlayConfig.getInstance().chickadeeCallVolume;
-    }
-
-    @Override
-    protected float getSongVolume() {
-        return FowlPlayConfig.getInstance().chickadeeSongVolume;
+        return FPSoundEvents.CHICKADEE_SONG.get();
     }
 
     @Override
@@ -114,7 +103,7 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FPSoundEvents.ENTITY_CHICKADEE_HURT.get();
+        return FPSoundEvents.CHICKADEE_HURT.get();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.entity.bird.passerine;
 
-import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -72,12 +71,7 @@ public class BlueJayEntity extends FlyingBirdEntity implements BirdBrain<BlueJay
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FPSoundEvents.ENTITY_BLUE_JAY_CALL.get();
-    }
-
-    @Override
-    protected float getCallVolume() {
-        return FowlPlayConfig.getInstance().blueJayCallVolume;
+        return FPSoundEvents.BLUE_JAY_CALL.get();
     }
 
     @Override
@@ -88,7 +82,7 @@ public class BlueJayEntity extends FlyingBirdEntity implements BirdBrain<BlueJay
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FPSoundEvents.ENTITY_BLUE_JAY_HURT.get();
+        return FPSoundEvents.BLUE_JAY_HURT.get();
     }
 
     @Override

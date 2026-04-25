@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.entity.bird.passerine;
 
-import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -72,23 +71,13 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FPSoundEvents.ENTITY_CARDINAL_CALL.get();
+        return FPSoundEvents.CARDINAL_CALL.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getSongSound() {
-        return FPSoundEvents.ENTITY_CARDINAL_SONG.get();
-    }
-
-    @Override
-    protected float getCallVolume() {
-        return FowlPlayConfig.getInstance().cardinalCallVolume;
-    }
-
-    @Override
-    protected float getSongVolume() {
-        return FowlPlayConfig.getInstance().cardinalSongVolume;
+        return FPSoundEvents.CARDINAL_SONG.get();
     }
 
     @Override
@@ -99,7 +88,7 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FPSoundEvents.ENTITY_CARDINAL_HURT.get();
+        return FPSoundEvents.CARDINAL_HURT.get();
     }
 
     @Override

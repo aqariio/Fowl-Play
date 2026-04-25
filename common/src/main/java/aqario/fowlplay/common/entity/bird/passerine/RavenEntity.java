@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.entity.bird.passerine;
 
-import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -139,12 +138,7 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return FPSoundEvents.ENTITY_RAVEN_CALL.get();
-    }
-
-    @Override
-    protected float getCallVolume() {
-        return FowlPlayConfig.getInstance().ravenCallVolume;
+        return FPSoundEvents.RAVEN_CALL.get();
     }
 
     @Override
@@ -155,7 +149,7 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FPSoundEvents.ENTITY_RAVEN_HURT.get();
+        return FPSoundEvents.RAVEN_HURT.get();
     }
 
     @Override

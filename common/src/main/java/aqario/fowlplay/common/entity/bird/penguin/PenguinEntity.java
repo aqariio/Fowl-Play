@@ -1,6 +1,5 @@
 package aqario.fowlplay.common.entity.bird.penguin;
 
-import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -564,22 +563,17 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        return this.isBaby() ? FPSoundEvents.ENTITY_PENGUIN_BABY_CALL.get() : FPSoundEvents.ENTITY_PENGUIN_CALL.get();
-    }
-
-    @Override
-    protected float getCallVolume() {
-        return FowlPlayConfig.getInstance().penguinCallVolume;
+        return this.isBaby() ? FPSoundEvents.PENGUIN_BABY_CALL.get() : FPSoundEvents.PENGUIN_CALL.get();
     }
 
     @Override
     protected SoundEvent getSwimSound() {
-        return FPSoundEvents.ENTITY_PENGUIN_SWIM.get();
+        return FPSoundEvents.PENGUIN_SWIM.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return FPSoundEvents.ENTITY_PENGUIN_HURT.get();
+        return FPSoundEvents.PENGUIN_HURT.get();
     }
 
     @Override

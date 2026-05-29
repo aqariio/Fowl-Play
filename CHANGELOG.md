@@ -1,3 +1,17 @@
+## 1.2.0
+
+- Bird hunting behaviour rework
+  - There is now a cooldown after a bird kills its prey or eats food, during which it will not hunt again
+- Birds now drop the item they're holding when hurt
+- Birds will now sleep at night
+  - They can still be disturbed by a nearby player
+- Change bird calls from being played randomly to being determined by behaviours
+- Fix bird calls sometimes being too loud
+- Fix crash caused by duplicate activity names
+- Tweak bird flapping animations
+- Add French localization
+- Update Chinese localization
+
 ## 1.1.2
 
 - Fix geese sometimes not breeding

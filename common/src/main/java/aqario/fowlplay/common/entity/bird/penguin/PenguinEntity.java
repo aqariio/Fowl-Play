@@ -63,7 +63,6 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.InvalidateMemory;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowParent;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowTemptation;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomSwimTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
@@ -605,7 +604,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
             new SetAttackTarget<>(),
             new LookAtTarget<>()
                 .runFor(entity -> entity.getRandom().nextIntBetweenInclusive(45, 90)),
-            new MoveToWalkTarget<>()
+            new BirdMoveToWalkTarget<>()
         );
     }
 

@@ -43,7 +43,6 @@ import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeAttack;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetAttackTarget;
@@ -255,7 +254,7 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
             new SetAttackTarget<>(),
             new LookAtTarget<>()
                 .runForBetween(45, 90),
-            new MoveToWalkTarget<>()
+            new BirdMoveToWalkTarget<>()
         );
     }
 

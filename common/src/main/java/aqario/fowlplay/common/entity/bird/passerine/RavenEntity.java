@@ -34,7 +34,6 @@ import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeAttack;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FloatToSurfaceOfFluid;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetAttackTarget;
@@ -183,7 +182,7 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
             SetEntityLookTarget.create(BirdUtils::isPlayerHoldingFood),
             new LookAtTarget<>()
                 .runForBetween(45, 90),
-            new MoveToWalkTarget<>()
+            new BirdMoveToWalkTarget<>()
         );
     }
 

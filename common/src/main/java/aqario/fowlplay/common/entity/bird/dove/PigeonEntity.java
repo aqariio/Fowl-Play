@@ -47,7 +47,6 @@ import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FloatToSurfaceOfFluid;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
 import net.tslat.smartbrainlib.api.core.schedule.SmartBrainSchedule;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.InWaterSensor;
@@ -374,7 +373,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
             new TeleportToTarget(),
             new LookAtTarget<>()
                 .runForBetween(45, 90),
-            new MoveToWalkTarget<PigeonEntity>()
+            new BirdMoveToWalkTarget<PigeonEntity>()
                 .startCondition(entity -> !entity.isMemoryPresent(FPMemoryTypes.TELEPORT_TARGET.get()))
                 .stopIf(entity -> entity.isMemoryPresent(FPMemoryTypes.TELEPORT_TARGET.get()))
         );

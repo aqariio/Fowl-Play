@@ -52,7 +52,6 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeA
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.BreedWithPartner;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowParent;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetAttackTarget;
@@ -404,7 +403,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
             new SetAttackTarget<>(),
             new LookAtTarget<>()
                 .runForBetween(45, 90),
-            new MoveToWalkTarget<>()
+            new BirdMoveToWalkTarget<>()
         );
     }
 

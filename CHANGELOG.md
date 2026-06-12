@@ -1,10 +1,12 @@
 ## 1.2.0
 
 - Bird hunting behaviour rework
+  - Birds that hunt now only do so during certain times of day
   - There is now a cooldown after a bird kills its prey or eats food, during which it will not hunt again
-- Birds now drop the item they're holding when hurt
-- Birds will now sleep at night
+- Add a sleep cycle to all birds
+  - Birds will now find a safe place to sleep at night (ie. trees, lakes, rivers)
   - They can still be disturbed by a nearby player
+- Birds now drop the item they're holding when hurt
 - Change bird calls from being played randomly to being determined by behaviours
 - Fix bird calls sometimes being too loud
 - Fix crash caused by duplicate activity names

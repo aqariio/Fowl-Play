@@ -1,6 +1,7 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.ChickadeeAnimations;
+import aqario.fowlplay.client.render.entity.animation.SparrowAnimations;
 import aqario.fowlplay.common.entity.bird.passerine.ChickadeeEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -65,5 +66,6 @@ public class ChickadeeModel extends FlyingBirdModel<ChickadeeEntity> {
         this.animate(entity.swimmingState, ChickadeeAnimations.SWIMMING, ageInTicks);
         this.animate(entity.glidingState, ChickadeeAnimations.GLIDING, ageInTicks);
         this.animate(entity.flappingState, ChickadeeAnimations.FLAPPING, ageInTicks);
+        this.animate(entity.sleepingState, SparrowAnimations.SLEEPING, ageInTicks);
     }
 }

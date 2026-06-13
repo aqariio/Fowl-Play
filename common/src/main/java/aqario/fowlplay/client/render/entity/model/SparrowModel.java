@@ -67,6 +67,7 @@ public class SparrowModel extends FlyingBirdModel<SparrowEntity> {
         this.animate(entity.flappingState, SparrowAnimations.FLAPPING, ageInTicks);
         this.animate(entity.preeningState, SparrowAnimations.PREENING, ageInTicks);
         this.animate(entity.scratchingState, SparrowAnimations.SCRATCHING, ageInTicks);
+        this.animate(entity.sleepingState, SparrowAnimations.SLEEPING, ageInTicks);
     }
 
     @Override

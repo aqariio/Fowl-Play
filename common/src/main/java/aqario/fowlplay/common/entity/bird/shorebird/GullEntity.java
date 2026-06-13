@@ -191,6 +191,7 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
             this.idleAnimStates.stopAll();
         }
         else {
+            this.sleepingState.stop();
             this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
             this.glidingState.animateWhen(this.isFlying(), this.tickCount);
             this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);

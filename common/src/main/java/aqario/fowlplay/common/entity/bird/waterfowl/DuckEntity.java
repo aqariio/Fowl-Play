@@ -232,6 +232,7 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
             this.idleAnimStates.stopAll();
         }
         else {
+            this.sleepingState.stop();
             this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
             this.flappingState.animateWhen(this.isFlying(), this.tickCount);
             this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);

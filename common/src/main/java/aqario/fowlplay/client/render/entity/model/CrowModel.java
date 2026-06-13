@@ -69,6 +69,7 @@ public class CrowModel extends FlyingBirdModel<CrowEntity> {
         this.animate(entity.swimmingState, CrowAnimations.SWIMMING, ageInTicks);
         this.animate(entity.glidingState, CrowAnimations.GLIDING, ageInTicks);
         this.animate(entity.flappingState, CrowAnimations.FLAPPING, ageInTicks);
+        this.animate(entity.sleepingState, CrowAnimations.SLEEPING, ageInTicks);
     }
 
     @Override

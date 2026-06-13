@@ -268,10 +268,20 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
 
     @Override
     public void updateAnimationStates() {
-        this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble() && !this.isInSittingPose(), this.tickCount);
-        this.flappingState.animateWhen(this.isFlying(), this.tickCount);
-        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
-        this.sittingState.animateWhen(this.isInSittingPose(), this.tickCount);
+        if(this.isSleeping()) {
+            this.sleepingState.start(this.tickCount);
+            this.standingState.stop();
+            this.swimmingState.stop();
+            this.sittingState.stop();
+            this.idleAnimStates.stopAll();
+        }
+        else {
+            this.sleepingState.stop();
+            this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble() && !this.isInSittingPose(), this.tickCount);
+            this.flappingState.animateWhen(this.isFlying(), this.tickCount);
+            this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+            this.sittingState.animateWhen(this.isInSittingPose(), this.tickCount);
+        }
     }
 
     @Override

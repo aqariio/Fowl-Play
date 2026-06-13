@@ -566,4 +566,43 @@ public class PigeonAnimations {
             )
         )
         .build();
+
+    public static final AnimationDefinition SLEEPING = AnimationDefinition.Builder.withLength(1.0F).looping()
+        .addAnimation("body", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(-10.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("body", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, -1.25F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("neck", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(-5.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("neck", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, -0.4F, 0.15F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("head", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(-145.0F, 0.0F, -180.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("head", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, -0.25F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("left_wing", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.3098F, -3.6817F, -3.3718F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("left_wing", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(-0.2F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("right_wing", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.3098F, 3.6817F, 3.3718F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("right_wing", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.2F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("left_leg", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(-0.0547F, -4.8292F, -3.7028F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("right_leg", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(-0.0547F, 4.8292F, 3.7028F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .build();
 }

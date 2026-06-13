@@ -57,9 +57,18 @@ public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEnti
 
     @Override
     public void updateAnimationStates() {
-        this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
-        this.flappingState.animateWhen(this.isFlying(), this.tickCount);
-        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+        if(this.isSleeping()) {
+            this.sleepingState.start(this.tickCount);
+            this.standingState.stop();
+            this.swimmingState.stop();
+            this.idleAnimStates.stopAll();
+        }
+        else {
+            this.sleepingState.stop();
+            this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
+            this.flappingState.animateWhen(this.isFlying(), this.tickCount);
+            this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+        }
     }
 
     @Override

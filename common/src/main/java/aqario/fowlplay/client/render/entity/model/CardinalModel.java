@@ -69,5 +69,6 @@ public class CardinalModel extends FlyingBirdModel<CardinalEntity> {
         this.animate(entity.swimmingState, CardinalAnimations.SWIMMING, ageInTicks);
         this.animate(entity.glidingState, CardinalAnimations.GLIDING, ageInTicks);
         this.animate(entity.flappingState, CardinalAnimations.FLAPPING, ageInTicks);
+        this.animate(entity.sleepingState, CardinalAnimations.SLEEPING, ageInTicks);
     }
 }

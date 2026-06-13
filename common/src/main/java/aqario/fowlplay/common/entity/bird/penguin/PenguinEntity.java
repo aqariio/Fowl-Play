@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.bird.penguin;
 
-import aqario.fowlplay.common.entity.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
+import aqario.fowlplay.common.entity.ai.brain.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.entity.ai.control.AquaticBirdMoveControl;

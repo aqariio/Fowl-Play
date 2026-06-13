@@ -69,5 +69,6 @@ public class DuckModel extends FlyingBirdModel<DuckEntity> {
         this.animate(entity.swimmingState, DuckAnimations.SWIMMING, ageInTicks);
         this.animate(entity.glidingState, DuckAnimations.GLIDING, ageInTicks);
         this.animate(entity.flappingState, DuckAnimations.FLAPPING, ageInTicks);
+        this.animate(entity.sleepingState, entity.isInWaterOrBubble() ? DuckAnimations.SLEEPING_WATER : DuckAnimations.SLEEPING_LAND, ageInTicks);
     }
 }

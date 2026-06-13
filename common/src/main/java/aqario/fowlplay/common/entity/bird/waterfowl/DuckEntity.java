@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.bird.waterfowl;
 
-import aqario.fowlplay.common.entity.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
+import aqario.fowlplay.common.entity.ai.brain.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.AttackedSensor;
 import aqario.fowlplay.common.entity.ai.brain.sensor.AvoidTargetSensor;
@@ -225,9 +225,17 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
 
     @Override
     public void updateAnimationStates() {
-        this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
-        this.flappingState.animateWhen(this.isFlying(), this.tickCount);
-        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+        if(this.isSleeping()) {
+            this.sleepingState.start(this.tickCount);
+            this.standingState.stop();
+            this.swimmingState.stop();
+            this.idleAnimStates.stopAll();
+        }
+        else {
+            this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
+            this.flappingState.animateWhen(this.isFlying(), this.tickCount);
+            this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+        }
     }
 
     @Override

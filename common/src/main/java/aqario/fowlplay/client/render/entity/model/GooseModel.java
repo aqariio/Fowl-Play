@@ -77,6 +77,6 @@ public class GooseModel extends FlyingBirdModel<GooseEntity> {
         this.animate(entity.swimmingState, GooseAnimations.SWIMMING, ageInTicks);
         this.animate(entity.glidingState, GooseAnimations.GLIDING, ageInTicks);
         this.animate(entity.flappingState, GooseAnimations.FLAPPING, ageInTicks);
-        this.animate(entity.sleepingState, GooseAnimations.SLEEPING, ageInTicks);
+        this.animate(entity.sleepingState, entity.isInWaterOrBubble() ? GooseAnimations.SLEEPING_WATER : GooseAnimations.SLEEPING_LAND, ageInTicks);
     }
 }

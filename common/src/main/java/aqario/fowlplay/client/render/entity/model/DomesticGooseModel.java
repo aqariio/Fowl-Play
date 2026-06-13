@@ -71,5 +71,6 @@ public class DomesticGooseModel extends GooseModel {
         this.animate(entity.swimmingState, DomesticGooseAnimations.SWIMMING, ageInTicks);
         this.animate(entity.glidingState, DomesticGooseAnimations.GLIDING, ageInTicks);
         this.animate(entity.flappingState, DomesticGooseAnimations.FLAPPING, ageInTicks);
+        this.animate(entity.sleepingState, entity.isInWaterOrBubble() ? DomesticGooseAnimations.SLEEPING_WATER : DomesticGooseAnimations.SLEEPING_LAND, ageInTicks);
     }
 }

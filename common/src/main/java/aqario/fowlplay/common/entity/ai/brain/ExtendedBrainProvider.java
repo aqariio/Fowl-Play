@@ -1,6 +1,5 @@
-package aqario.fowlplay.common.entity;
+package aqario.fowlplay.common.entity.ai.brain;
 
-import aqario.fowlplay.common.entity.ai.brain.ExtendedBrain;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -43,6 +42,7 @@ public class ExtendedBrainProvider<E extends LivingEntity & SmartBrainOwner<E>> 
         this.nonStaticMemories = nonStaticMemories;
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public final SmartBrain<E> makeBrain(Dynamic<?> codecLoader) {
         List<? extends ExtendedSensor<? extends E>> sensors = this.owner.getSensors();

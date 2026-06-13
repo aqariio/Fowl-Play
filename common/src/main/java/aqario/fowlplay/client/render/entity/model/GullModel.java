@@ -71,5 +71,6 @@ public class GullModel extends FlyingBirdModel<GullEntity> {
         this.animate(entity.standingState, GullAnimations.STANDING, ageInTicks);
         this.animate(entity.swimmingState, GullAnimations.SWIMMING, ageInTicks);
         this.animate(entity.glidingState, GullAnimations.GLIDING, ageInTicks);
+        this.animate(entity.sleepingState, entity.isInWaterOrBubble() ? GullAnimations.SLEEPING_WATER : GullAnimations.SLEEPING_LAND, ageInTicks);
     }
 }

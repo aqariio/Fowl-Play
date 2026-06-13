@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.bird.shorebird;
 
-import aqario.fowlplay.common.entity.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
+import aqario.fowlplay.common.entity.ai.brain.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.entity.ai.navigation.AmphibiousNavigation;
@@ -184,9 +184,17 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
 
     @Override
     public void updateAnimationStates() {
-        this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
-        this.glidingState.animateWhen(this.isFlying(), this.tickCount);
-        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+        if(this.isSleeping()) {
+            this.sleepingState.start(this.tickCount);
+            this.standingState.stop();
+            this.swimmingState.stop();
+            this.idleAnimStates.stopAll();
+        }
+        else {
+            this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
+            this.glidingState.animateWhen(this.isFlying(), this.tickCount);
+            this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
+        }
     }
 
     @Override

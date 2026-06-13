@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.bird.passerine;
 
-import aqario.fowlplay.common.entity.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
+import aqario.fowlplay.common.entity.ai.brain.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.AttackedSensor;
 import aqario.fowlplay.common.entity.ai.brain.sensor.AvoidTargetSensor;

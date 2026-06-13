@@ -3,7 +3,7 @@
 - Bird hunting behaviour rework
   - Birds that hunt now only do so during certain times of day
   - There is now a cooldown after a bird kills its prey or eats food, during which it will not hunt again
-- Add a sleep cycle to all birds
+- Add sleep cycles for all birds
   - Birds will now find a safe place to sleep at night (ie. trees, lakes, rivers)
   - They can still be disturbed by a nearby player
 - Birds now drop the item they're holding when hurt

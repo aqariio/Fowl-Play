@@ -1,6 +1,7 @@
 package aqario.fowlplay.common.entity.bird;
 
 import aqario.fowlplay.common.entity.CustomMobCategory;
+import aqario.fowlplay.common.entity.CustomSoundSource;
 import aqario.fowlplay.common.entity.ai.control.BirdBodyRotationControl;
 import aqario.fowlplay.common.entity.ai.control.BirdLookControl;
 import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;
@@ -19,6 +20,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
@@ -476,6 +478,11 @@ public abstract class BirdEntity extends Animal {
         if(!this.isSilent() && sound != null) {
             this.level().playSound(null, this, sound, this.getSoundSource(), volume, pitch);
         }
+    }
+
+    @Override
+    public SoundSource getSoundSource() {
+        return CustomSoundSource.BIRDS.soundSource;
     }
 
     public int getCallDelay() {

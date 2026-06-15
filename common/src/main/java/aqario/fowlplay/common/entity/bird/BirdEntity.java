@@ -417,31 +417,31 @@ public abstract class BirdEntity extends Animal {
         }
         else {
             this.sleepingState.stop();
-        }
-        // on land
-        if(!this.isInWaterOrBubble()) {
-            if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {
-                this.resetIdleAnimationDelay();
-                this.standingState.stop();
-                this.idleAnimStates.stopAll();
-                this.idleAnimStates.startRandom(this.tickCount);
-            }
-            else if(this.isMoving()) {
-                this.idleAnimStates.stopAll();
-            }
-            if(!this.idleAnimStates.containsStarted()) {
-                this.standingState.startIfStopped(this.tickCount);
+            // on land
+            if(!this.isInWaterOrBubble()) {
+                if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {
+                    this.resetIdleAnimationDelay();
+                    this.standingState.stop();
+                    this.idleAnimStates.stopAll();
+                    this.idleAnimStates.startRandom(this.tickCount);
+                }
+                else if(this.isMoving()) {
+                    this.idleAnimStates.stopAll();
+                }
+                if(!this.idleAnimStates.containsStarted()) {
+                    this.standingState.startIfStopped(this.tickCount);
+                }
+                else {
+                    this.standingState.stop();
+                }
             }
             else {
                 this.standingState.stop();
+                this.idleAnimStates.stopAll();
             }
+            // in water
+            this.swimmingState.animateWhen(this.isInWaterOrBubble(), this.tickCount);
         }
-        else {
-            this.standingState.stop();
-            this.idleAnimStates.stopAll();
-        }
-        // in water
-        this.swimmingState.animateWhen(this.isInWaterOrBubble(), this.tickCount);
     }
 
     protected int getIdleAnimationDelay() {

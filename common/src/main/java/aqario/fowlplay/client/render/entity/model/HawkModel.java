@@ -81,6 +81,7 @@ public class HawkModel extends FlyingBirdModel<HawkEntity> {
         this.animate(entity.standingState, HawkAnimations.STANDING, ageInTicks);
         this.animate(entity.swimmingState, HawkAnimations.SWIMMING, ageInTicks);
         this.animate(entity.glidingState, HawkAnimations.GLIDING, ageInTicks);
+        this.animate(entity.sleepingState, HawkAnimations.SLEEPING, ageInTicks);
     }
 
     @Override

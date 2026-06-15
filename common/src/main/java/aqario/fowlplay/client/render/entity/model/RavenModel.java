@@ -80,6 +80,7 @@ public class RavenModel extends FlyingBirdModel<RavenEntity> {
         this.animate(entity.standingState, RavenAnimations.STANDING, ageInTicks);
         this.animate(entity.swimmingState, RavenAnimations.SWIMMING, ageInTicks);
         this.animate(entity.glidingState, RavenAnimations.GLIDING, ageInTicks);
+        this.animate(entity.sleepingState, RavenAnimations.SLEEPING, ageInTicks);
     }
 
     @Override

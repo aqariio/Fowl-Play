@@ -40,20 +40,20 @@ You can talk about the mod in my **[GitHub Discussions](https://github.com/aqari
 
 ## Features
 
-#### Birds:
+#### Birds (plus variants):
 
 - Penguins (Emperor penguin)
 - Gulls (Herring gull, ring-billed gull)
-- Robins (American robin)
+- American Robin
 - Pigeons (Rock pigeon — with various colour and pattern variants)
-- Cardinals (Northern cardinal)
+- Northern Cardinal
 - Blue Jays
 - Old world Sparrows (House sparrow)
 - Chickadees (Black-capped chickadee)
 - Ravens (Common raven)
-- Ducks (Mallard duck)
+- Ducks (Mallard duck + special name tag variant)
 - Hawks (Red-tailed hawk)
-- Crows (American/carrion crow)
+- Crows (American crow)
 - Geese (Greylag goose, canada goose, swan goose, emden goose, chinese goose)
 
 #### Other:

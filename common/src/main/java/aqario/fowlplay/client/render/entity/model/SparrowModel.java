@@ -1,7 +1,7 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.SparrowAnimations;
-import aqario.fowlplay.common.entity.SparrowEntity;
+import aqario.fowlplay.common.entity.bird.passerine.SparrowEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -67,6 +67,7 @@ public class SparrowModel extends FlyingBirdModel<SparrowEntity> {
         this.animate(entity.flappingState, SparrowAnimations.FLAPPING, ageInTicks);
         this.animate(entity.preeningState, SparrowAnimations.PREENING, ageInTicks);
         this.animate(entity.scratchingState, SparrowAnimations.SCRATCHING, ageInTicks);
+        this.animate(entity.sleepingState, SparrowAnimations.SLEEPING, ageInTicks);
     }
 
     @Override

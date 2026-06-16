@@ -1,9 +1,9 @@
 package aqario.fowlplay.common.entity.ai.brain.sensor;
 
-import aqario.fowlplay.common.entity.BirdEntity;
-import aqario.fowlplay.common.util.Birds;
-import aqario.fowlplay.core.FowlPlayMemoryTypes;
-import aqario.fowlplay.core.FowlPlaySensorTypes;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
+import aqario.fowlplay.common.util.BirdUtils;
+import aqario.fowlplay.core.FPMemoryTypes;
+import aqario.fowlplay.core.FPSensorTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,17 +30,17 @@ public class AvoidTargetSensor<E extends BirdEntity> extends EntityFilteringSens
 
     @Override
     public List<MemoryModuleType<?>> memoriesUsed() {
-        return List.of(this.getMemory(), MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES, FowlPlayMemoryTypes.IS_AVOIDING.get());
+        return List.of(this.getMemory(), MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES, FPMemoryTypes.IS_AVOIDING.get());
     }
 
     @Override
     public SensorType<? extends ExtendedSensor<?>> type() {
-        return FowlPlaySensorTypes.AVOID_TARGETS.get();
+        return FPSensorTypes.AVOID_TARGETS.get();
     }
 
     @Override
     protected BiPredicate<LivingEntity, E> predicate() {
-        return (target, self) -> Birds.shouldAvoid(self, target);
+        return (target, self) -> BirdUtils.shouldAvoid(self, target);
     }
 
     @Override
@@ -58,10 +58,10 @@ public class AvoidTargetSensor<E extends BirdEntity> extends EntityFilteringSens
             BrainUtils.clearMemory(bird, this.getMemory());
         }
         if(avoidTarget != null && avoidTarget.closerThan(bird, bird.getFleeRange(avoidTarget))) {
-            BrainUtils.setMemory(bird, FowlPlayMemoryTypes.IS_AVOIDING.get(), Unit.INSTANCE);
+            BrainUtils.setMemory(bird, FPMemoryTypes.IS_AVOIDING.get(), Unit.INSTANCE);
         }
         else {
-            BrainUtils.clearMemory(bird, FowlPlayMemoryTypes.IS_AVOIDING.get());
+            BrainUtils.clearMemory(bird, FPMemoryTypes.IS_AVOIDING.get());
         }
     }
 }

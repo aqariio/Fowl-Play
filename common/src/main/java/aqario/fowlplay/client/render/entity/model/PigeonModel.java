@@ -1,7 +1,7 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.PigeonAnimations;
-import aqario.fowlplay.common.entity.PigeonEntity;
+import aqario.fowlplay.common.entity.bird.dove.PigeonEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -69,5 +69,6 @@ public class PigeonModel extends FlyingBirdModel<PigeonEntity> {
         this.animate(entity.glidingState, PigeonAnimations.GLIDING, ageInTicks);
         this.animate(entity.flappingState, PigeonAnimations.FLAPPING, ageInTicks);
         this.animate(entity.sittingState, PigeonAnimations.SITTING, ageInTicks);
+        this.animate(entity.sleepingState, PigeonAnimations.SLEEPING, ageInTicks);
     }
 }

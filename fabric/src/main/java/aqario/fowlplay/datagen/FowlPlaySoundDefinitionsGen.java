@@ -1,7 +1,7 @@
 package aqario.fowlplay.datagen;
 
+import aqario.fowlplay.core.FPSoundEvents;
 import aqario.fowlplay.core.FowlPlay;
-import aqario.fowlplay.core.FowlPlaySoundEvents;
 import aqario.fowlplay.datagen.provider.SoundDefinition;
 import aqario.fowlplay.datagen.provider.SoundDefinitionsProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 public class FowlPlaySoundDefinitionsGen extends SoundDefinitionsProvider {
     protected FowlPlaySoundDefinitionsGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
@@ -18,59 +19,59 @@ public class FowlPlaySoundDefinitionsGen extends SoundDefinitionsProvider {
 
     @Override
     public void generateSounds() {
-        this.addVariousVanilla(FowlPlaySoundEvents.ENTITY_BIRD_EAT.get(), "mob/parrot/eat", 3);
-        this.addVariousVanilla(FowlPlaySoundEvents.ENTITY_BIRD_FLAP.get(), "mob/parrot/fly", 8);
+        this.addVariousVanilla(FPSoundEvents.BIRD_EAT.get(), "mob/parrot/eat", 3);
+        this.addVariousVanilla(FPSoundEvents.BIRD_FLAP.get(), "mob/parrot/fly", 8);
 
-        this.addVarious(FowlPlaySoundEvents.ENTITY_BLUE_JAY_CALL.get(), "mob/blue_jay/call", 6);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_BLUE_JAY_HURT.get(), "mob/blue_jay/call", 6);
+        this.addBird(FPSoundEvents.BLUE_JAY_CALL, "call", 6);
+        this.addBird(FPSoundEvents.BLUE_JAY_HURT, "call", 6);
 
-        this.addVarious(FowlPlaySoundEvents.ENTITY_CARDINAL_CALL.get(), "mob/cardinal/call", 2);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_CARDINAL_SONG.get(), "mob/cardinal/song", 8);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_CARDINAL_HURT.get(), "mob/cardinal/call", 2);
+        this.addBird(FPSoundEvents.CARDINAL_CALL, "call", 2);
+        this.addBird(FPSoundEvents.CARDINAL_SONG, "song", 8);
+        this.addBird(FPSoundEvents.CARDINAL_HURT, "call", 2);
 
-        this.addVarious(FowlPlaySoundEvents.ENTITY_CHICKADEE_CALL.get(), "mob/chickadee/call", 9);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_CHICKADEE_SONG.get(), "mob/chickadee/song", 6);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_CHICKADEE_HURT.get(), "mob/chickadee/call", 2);
+        this.addBird(FPSoundEvents.CHICKADEE_CALL, "call", 9);
+        this.addBird(FPSoundEvents.CHICKADEE_SONG, "song", 6);
+        this.addBird(FPSoundEvents.CHICKADEE_HURT, "call", 2);
 
-        this.addVarious(FowlPlaySoundEvents.ENTITY_CROW_CALL.get(), "mob/crow/call", 4);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_CROW_HURT.get(), "mob/crow/hurt", 2);
+        this.addBird(FPSoundEvents.CROW_CALL, "call", 4);
+        this.addBird(FPSoundEvents.CROW_HURT, "hurt", 2);
 
-        this.addVarious(FowlPlaySoundEvents.ENTITY_DUCK_CALL.get(), "mob/duck/call", 2);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_DUCK_HURT.get(), "mob/duck/call", 2);
+        this.addBird(FPSoundEvents.DUCK_CALL, "call", 2);
+        this.addBird(FPSoundEvents.DUCK_HURT, "call", 2);
 
-        this.addVarious(FowlPlaySoundEvents.ENTITY_CANADA_GOOSE_CALL.get(), "mob/goose/canada/call", 8);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_CANADA_GOOSE_HURT.get(), "mob/goose/canada/call", 8);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_GREYLAG_GOOSE_CALL.get(), "mob/goose/greylag/call", 4);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_GREYLAG_GOOSE_HURT.get(), "mob/goose/greylag/call", 4);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_SWAN_GOOSE_CALL.get(), "mob/goose/greylag/call", 4);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_SWAN_GOOSE_HURT.get(), "mob/goose/greylag/call", 4);
+        this.addBird(FPSoundEvents.CANADA_GOOSE_CALL, "call", 8);
+        this.addBird(FPSoundEvents.CANADA_GOOSE_HURT, "call", 8);
+        this.addBird(FPSoundEvents.GREYLAG_GOOSE_CALL, "call", 4);
+        this.addBird(FPSoundEvents.GREYLAG_GOOSE_HURT, "call", 4);
+        this.addBird(FPSoundEvents.SWAN_GOOSE_CALL, "call", 4);
+        this.addBird(FPSoundEvents.SWAN_GOOSE_HURT, "call", 4);
 
-        this.addVarious(FowlPlaySoundEvents.ENTITY_GULL_CALL.get(), "mob/gull/call", 4);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_GULL_LONG_CALL.get(), "mob/gull/long_call", 3);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_GULL_HURT.get(), "mob/gull/hurt", 2);
+        this.addBird(FPSoundEvents.GULL_CALL, "call", 4);
+        this.addBird(FPSoundEvents.GULL_LONG_CALL, "long_call", 3);
+        this.addBird(FPSoundEvents.GULL_HURT, "call", 2);
 
-        this.addVarious(FowlPlaySoundEvents.ENTITY_HAWK_CALL.get(), "mob/hawk/call", 5);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_HAWK_HURT.get(), "mob/hawk/call", 2);
+        this.addBird(FPSoundEvents.HAWK_CALL, "call", 5);
+        this.addBird(FPSoundEvents.HAWK_HURT, "call", 2);
 
-        this.addVarious(FowlPlaySoundEvents.ENTITY_PENGUIN_CALL.get(), "mob/penguin/call", 3);
-        this.addOne(FowlPlaySoundEvents.ENTITY_PENGUIN_BABY_CALL.get(), "mob/penguin/baby_call");
-        this.addVarious(FowlPlaySoundEvents.ENTITY_PENGUIN_SWIM.get(), "mob/penguin/swim/swim", 5);
-        this.addOne(FowlPlaySoundEvents.ENTITY_PENGUIN_HURT.get(), "mob/penguin/hurt");
+        this.addBird(FPSoundEvents.PENGUIN_CALL, "call", 3);
+        this.addBird(FPSoundEvents.PENGUIN_BABY_CALL, "call", 1);
+        this.addBird(FPSoundEvents.PENGUIN_SWIM, "swim/swim", 5);
+        this.addBird(FPSoundEvents.PENGUIN_HURT, "hurt", 1);
 
-        this.addVarious(FowlPlaySoundEvents.ENTITY_PIGEON_CALL.get(), "mob/pigeon/call", 3);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_PIGEON_SONG.get(), "mob/pigeon/song", 1);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_PIGEON_HURT.get(), "mob/pigeon/call", 3);
+        this.addBird(FPSoundEvents.PIGEON_CALL, "call", 3);
+        this.addBird(FPSoundEvents.PIGEON_SONG, "song", 1);
+        this.addBird(FPSoundEvents.PIGEON_HURT, "call", 3);
 
-        this.addVarious(FowlPlaySoundEvents.ENTITY_RAVEN_CALL.get(), "mob/raven/call", 4);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_RAVEN_HURT.get(), "mob/raven/hurt", 2);
+        this.addBird(FPSoundEvents.RAVEN_CALL, "call", 4);
+        this.addBird(FPSoundEvents.RAVEN_HURT, "hurt", 2);
 
-        this.addVarious(FowlPlaySoundEvents.ENTITY_ROBIN_CALL.get(), "mob/robin/call", 6);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_ROBIN_SONG.get(), "mob/robin/song", 4);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_ROBIN_HURT.get(), "mob/robin/hurt", 2);
+        this.addBird(FPSoundEvents.ROBIN_CALL, "call", 6);
+        this.addBird(FPSoundEvents.ROBIN_SONG, "song", 4);
+        this.addBird(FPSoundEvents.ROBIN_HURT, "hurt", 2);
 
-        this.addVarious(FowlPlaySoundEvents.ENTITY_SPARROW_CALL.get(), "mob/sparrow/call", 5);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_SPARROW_SONG.get(), "mob/sparrow/song", 4);
-        this.addVarious(FowlPlaySoundEvents.ENTITY_SPARROW_HURT.get(), "mob/sparrow/call", 3, 5);
+        this.addBird(FPSoundEvents.SPARROW_CALL, "call", 5);
+        this.addBird(FPSoundEvents.SPARROW_SONG, "song", 4);
+        this.addBird(FPSoundEvents.SPARROW_HURT, "call", 3, 5);
     }
 
     private void addVarious(SoundEvent soundEvent, String location, int start, int end) {
@@ -110,6 +111,25 @@ public class FowlPlaySoundDefinitionsGen extends SoundDefinitionsProvider {
         SoundDefinition definition = SoundDefinition.builder()
             .with(sound(ResourceLocation.withDefaultNamespace(location)))
             .subtitle("subtitles." + soundEvent.getLocation().getPath());
+        this.add(soundEvent, definition);
+    }
+
+    private void addBird(Supplier<SoundEvent> soundEvent, String name, int variations) {
+        this.addBird(soundEvent, name, 1, variations);
+    }
+
+    private void addBird(Supplier<SoundEvent> soundEvent, String name, int rangeStart, int rangeEnd) {
+        ResourceLocation sound = soundEvent.get().getLocation();
+        String location = sound.getPath()
+            .replace("entity", "mob")
+            .replace(".", "/");
+        location = location.substring(0, location.lastIndexOf('/') + 1) + name;
+        SoundDefinition definition = SoundDefinition.builder();
+        for(int i = rangeStart; i <= rangeEnd; i++) {
+            definition.with(sound(FowlPlay.id(location + i))
+                .attenuationDistance((int) soundEvent.get().getRange(1)));
+        }
+        definition.subtitle("subtitles." + sound.getPath());
         this.add(soundEvent, definition);
     }
 }

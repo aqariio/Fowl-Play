@@ -1,17 +1,13 @@
 package aqario.fowlplay.common.entity.ai.control;
 
-import aqario.fowlplay.common.entity.BirdEntity;
-import aqario.fowlplay.common.entity.FlyingBirdEntity;
-import aqario.fowlplay.common.util.Birds;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
+import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
+import aqario.fowlplay.common.util.BirdUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BirdMoveControl extends MoveControl {
     protected final BirdEntity bird;
@@ -28,12 +24,11 @@ public class BirdMoveControl extends MoveControl {
             this.tickFlying(flyingBird);
         }
         else {
-//            this.tickWalking();
-            super.tick();
+            this.tickWalking();
         }
     }
 
-    private void tickFlying(FlyingBirdEntity bird) {
+    protected void tickFlying(FlyingBirdEntity bird) {
         this.operation = Operation.MOVE_TO;
 
         // vector pointing to target
@@ -50,11 +45,11 @@ public class BirdMoveControl extends MoveControl {
         bird.yHeadRot = bird.getYRot();
 
         // speed
-        float speed = (float) bird.getAttributeValue(Attributes.FLYING_SPEED) * Birds.FLY_SPEED;
+        float speed = (float) bird.getAttributeValue(Attributes.FLYING_SPEED) * BirdUtils.FLY_SPEED;
         BlockPos destination;
         // decelerate when landing
         if((destination = bird.getNavigation().getTargetPos()) != null
-            && Birds.shouldLandAtDestination(bird, destination)
+            && BirdUtils.shouldLandAtDestination(bird, destination)
         ) {
             double dist = bird.distanceToSqr(Vec3.atBottomCenterOf(destination));
             if(dist < DECELERATE_DISTANCE * DECELERATE_DISTANCE) {
@@ -82,49 +77,50 @@ public class BirdMoveControl extends MoveControl {
         return Math.max(1 / (DECELERATE_DISTANCE * DECELERATE_DISTANCE) * x, 0.25);
     }
 
-    private void tickWalking() {
-        if(this.operation == Operation.MOVE_TO) {
-            this.operation = Operation.WAIT;
-            Vec3 distance = new Vec3(this.wantedX - this.bird.getX(), this.wantedY - this.bird.getY(), this.wantedZ - this.bird.getZ());
-            if(distance.lengthSqr() < 2.5000003E-7F) {
-                this.bird.setZza(0.0F);
-                this.operation = Operation.WAIT;
-                return;
-            }
-            float angle = (float) (Mth.atan2(distance.z, distance.x) * 180.0F / (float) Math.PI) - 90.0F;
-            this.bird.setYRot(this.rotlerp(this.bird.getYRot(), angle, 15.0F));
-            this.bird.setSpeed((float) (this.speedModifier * this.bird.getAttributeValue(Attributes.MOVEMENT_SPEED)));
-            BlockPos pos = this.bird.blockPosition();
-            BlockState state = this.bird.level().getBlockState(pos);
-            VoxelShape collisionShape = state.getCollisionShape(this.bird.level(), pos);
-            double horizontalSqDistance = distance.x * distance.x + distance.z * distance.z;
-            if(distance.y > (double) this.bird.maxUpStep() && horizontalSqDistance < (double) Math.max(1.0F, this.bird.getBbWidth())
-                || !collisionShape.isEmpty()
-                && this.bird.getY() < collisionShape.max(Direction.Axis.Y) + (double) pos.getY()
-                && !state.is(BlockTags.DOORS)
-                && !state.is(BlockTags.FENCES)) {
-                this.bird.getJumpControl().jump();
-                this.operation = Operation.JUMPING;
-            }
-            if(distance.y < (double) this.bird.maxUpStep() && horizontalSqDistance < (double) Math.max(1.0F, this.bird.getBbWidth())
-                || !collisionShape.isEmpty()
-                && this.bird.getY() > collisionShape.max(Direction.Axis.Y) + (double) pos.getY()
-                && !state.is(BlockTags.DOORS)
-                && !state.is(BlockTags.FENCES)) {
-                this.bird.setShiftKeyDown(true);
-            }
-        }
-        else if(this.operation == Operation.JUMPING) {
-            this.bird.setSpeed((float) (this.speedModifier * this.bird.getAttributeValue(Attributes.MOVEMENT_SPEED)));
-            if(this.bird.onGround()) {
-                this.operation = Operation.WAIT;
-            }
-        }
-        else if(this.operation == Operation.STRAFE) {
-            this.operation = Operation.WAIT;
-        }
-        else {
-            this.bird.setZza(0.0F);
-        }
+    protected void tickWalking() {
+        super.tick();
+//        if(this.operation == Operation.MOVE_TO) {
+//            this.operation = Operation.WAIT;
+//            Vec3 distance = new Vec3(this.wantedX - this.bird.getX(), this.wantedY - this.bird.getY(), this.wantedZ - this.bird.getZ());
+//            if(distance.lengthSqr() < 2.5000003E-7F) {
+//                this.bird.setZza(0.0F);
+//                this.operation = Operation.WAIT;
+//                return;
+//            }
+//            float angle = (float) (Mth.atan2(distance.z, distance.x) * 180.0F / (float) Math.PI) - 90.0F;
+//            this.bird.setYRot(this.rotlerp(this.bird.getYRot(), angle, 15.0F));
+//            this.bird.setSpeed((float) (this.speedModifier * this.bird.getAttributeValue(Attributes.MOVEMENT_SPEED)));
+//            BlockPos pos = this.bird.blockPosition();
+//            BlockState state = this.bird.level().getBlockState(pos);
+//            VoxelShape collisionShape = state.getCollisionShape(this.bird.level(), pos);
+//            double horizontalSqDistance = distance.x * distance.x + distance.z * distance.z;
+//            if(distance.y > (double) this.bird.maxUpStep() && horizontalSqDistance < (double) Math.max(1.0F, this.bird.getBbWidth())
+//                || !collisionShape.isEmpty()
+//                && this.bird.getY() < collisionShape.max(Direction.Axis.Y) + (double) pos.getY()
+//                && !state.is(BlockTags.DOORS)
+//                && !state.is(BlockTags.FENCES)) {
+//                this.bird.getJumpControl().jump();
+//                this.operation = Operation.JUMPING;
+//            }
+//            if(distance.y < (double) this.bird.maxUpStep() && horizontalSqDistance < (double) Math.max(1.0F, this.bird.getBbWidth())
+//                || !collisionShape.isEmpty()
+//                && this.bird.getY() > collisionShape.max(Direction.Axis.Y) + (double) pos.getY()
+//                && !state.is(BlockTags.DOORS)
+//                && !state.is(BlockTags.FENCES)) {
+//                this.bird.setShiftKeyDown(true);
+//            }
+//        }
+//        else if(this.operation == Operation.JUMPING) {
+//            this.bird.setSpeed((float) (this.speedModifier * this.bird.getAttributeValue(Attributes.MOVEMENT_SPEED)));
+//            if(this.bird.onGround()) {
+//                this.operation = Operation.WAIT;
+//            }
+//        }
+//        else if(this.operation == Operation.STRAFE) {
+//            this.operation = Operation.WAIT;
+//        }
+//        else {
+//            this.bird.setZza(0.0F);
+//        }
     }
 }

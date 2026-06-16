@@ -1,15 +1,15 @@
 package aqario.fowlplay.mixin;
 
-import aqario.fowlplay.common.util.Birds;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.shapes.EntityCollisionContext;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.level.block.WallBlock;
+import aqario.fowlplay.common.util.BirdUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,7 +33,7 @@ public class WallBlockMixin {
     private void fowlplay$lowerWallHeight(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir) {
         if(context instanceof EntityCollisionContext entityContext
             && entityContext.getEntity() != null
-            && Birds.isNotFlightless(entityContext.getEntity())
+            && BirdUtils.isNotFlightless(entityContext.getEntity())
         ) {
             VoxelShape originalShape = this.collisionShapeByIndex.get(state);
             if(originalShape.max(Direction.Axis.Y) > 1) {

@@ -1,15 +1,19 @@
 package aqario.fowlplay.common.util;
 
+import aqario.fowlplay.common.worldgen.BiomeModifier;
 import com.google.common.collect.ImmutableSet;
 import dev.architectury.registry.level.entity.EntityAttributeRegistry;
 import dev.architectury.registry.level.entity.SpawnPlacementsRegistry;
 import net.minecraft.Util;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
@@ -36,6 +40,14 @@ public class EntityTypeBuilder<T extends Entity> {
     private SpawnPlacementType spawnPlacement;
     private Heightmap.Types heightmap;
     private SpawnPlacements.SpawnPredicate<T> spawnPredicate;
+    private boolean hasSpawn = false;
+    private TagKey<Biome> biomeTag;
+    private int weight;
+    private int minCount;
+    private int maxCount;
+    private boolean hasSpawnCost = false;
+    private double energyBudget;
+    private double charge;
 
     private EntityTypeBuilder(EntityType.EntityFactory<T> factory, MobCategory category) {
         this.factory = factory;
@@ -145,10 +157,27 @@ public class EntityTypeBuilder<T extends Entity> {
         return this;
     }
 
-    public EntityTypeBuilder<T> spawnRestriction(SpawnPlacementType location, Heightmap.Types heightmap, SpawnPlacements.SpawnPredicate<T> spawnPredicate) {
+    public EntityTypeBuilder<T> spawnPlacement(SpawnPlacementType location, Heightmap.Types heightmap, SpawnPlacements.SpawnPredicate<T> spawnPredicate) {
         this.spawnPlacement = location;
         this.heightmap = heightmap;
         this.spawnPredicate = spawnPredicate;
+        return this;
+    }
+
+    public EntityTypeBuilder<T> spawn(TagKey<Biome> biome, int weight, int minCount, int maxCount) {
+        this.hasSpawn = true;
+        this.biomeTag = biome;
+        this.weight = weight;
+        this.minCount = minCount;
+        this.maxCount = maxCount;
+        return this;
+    }
+
+    public EntityTypeBuilder<T> spawnCost(TagKey<Biome> biome, double energyBudget, double charge) {
+        this.hasSpawnCost = true;
+        this.biomeTag = biome;
+        this.energyBudget = energyBudget;
+        this.charge = charge;
         return this;
     }
 
@@ -176,6 +205,34 @@ public class EntityTypeBuilder<T extends Entity> {
             this.updateInterval,
             this.requiredFeatures
         );
+
+        if(this.hasSpawn) {
+            BiomeModifier.add(
+                context -> context.is(this.biomeTag),
+                (context, modifier) -> modifier.addSpawn(
+                    this.category,
+                    new MobSpawnSettings.SpawnerData(
+                        type,
+                        this.weight,
+                        this.minCount,
+                        this.maxCount
+                    )
+                )
+            );
+        }
+
+        if(this.hasSpawnCost) {
+            BiomeModifier.add(
+                context -> context.is(this.biomeTag),
+                (context, modifier) -> modifier.setSpawnCost(
+                    type,
+                    new MobSpawnSettings.MobSpawnCost(
+                        this.energyBudget,
+                        this.charge
+                    )
+                )
+            );
+        }
 
         if(type.getBaseClass().isAssignableFrom(LivingEntity.class)) {
             if(this.attributeBuilder != null) {

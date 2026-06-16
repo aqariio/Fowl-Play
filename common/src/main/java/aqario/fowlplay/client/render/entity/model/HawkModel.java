@@ -1,7 +1,7 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.HawkAnimations;
-import aqario.fowlplay.common.entity.HawkEntity;
+import aqario.fowlplay.common.entity.bird.raptor.HawkEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -81,6 +81,7 @@ public class HawkModel extends FlyingBirdModel<HawkEntity> {
         this.animate(entity.standingState, HawkAnimations.STANDING, ageInTicks);
         this.animate(entity.swimmingState, HawkAnimations.SWIMMING, ageInTicks);
         this.animate(entity.glidingState, HawkAnimations.GLIDING, ageInTicks);
+        this.animate(entity.sleepingState, HawkAnimations.SLEEPING, ageInTicks);
     }
 
     @Override

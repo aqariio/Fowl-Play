@@ -1,7 +1,7 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.RobinAnimations;
-import aqario.fowlplay.common.entity.RobinEntity;
+import aqario.fowlplay.common.entity.bird.passerine.RobinEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -65,5 +65,6 @@ public class RobinModel extends FlyingBirdModel<RobinEntity> {
         this.animate(entity.swimmingState, RobinAnimations.SWIMMING, ageInTicks);
         this.animate(entity.glidingState, RobinAnimations.GLIDING, ageInTicks);
         this.animate(entity.flappingState, RobinAnimations.FLAPPING, ageInTicks);
+        this.animate(entity.sleepingState, RobinAnimations.SLEEPING, ageInTicks);
     }
 }

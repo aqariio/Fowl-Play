@@ -1,6 +1,6 @@
 package aqario.fowlplay.datagen;
 
-import aqario.fowlplay.core.FowlPlayEntityTypes;
+import aqario.fowlplay.core.FPEntityTypes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
 import net.minecraft.core.HolderLookup;
@@ -29,19 +29,19 @@ public class FowlPlayEntityLootTableGen extends SimpleFabricLootTableProvider {
 
     @Override
     public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> exporter) {
-        this.registerBird(exporter, FowlPlayEntityTypes.BLUE_JAY.get());
-        this.registerBird(exporter, FowlPlayEntityTypes.CARDINAL.get());
-        this.registerBird(exporter, FowlPlayEntityTypes.CHICKADEE.get());
-        this.registerBird(exporter, FowlPlayEntityTypes.CROW.get());
-        this.registerBird(exporter, FowlPlayEntityTypes.DUCK.get());
-        this.registerBird(exporter, FowlPlayEntityTypes.GOOSE.get());
-        this.registerBird(exporter, FowlPlayEntityTypes.GULL.get());
-        this.registerBird(exporter, FowlPlayEntityTypes.HAWK.get());
-        this.registerBird(exporter, FowlPlayEntityTypes.PENGUIN.get());
-        this.registerBird(exporter, FowlPlayEntityTypes.PIGEON.get());
-        this.registerBird(exporter, FowlPlayEntityTypes.RAVEN.get());
-        this.registerBird(exporter, FowlPlayEntityTypes.ROBIN.get());
-        this.registerBird(exporter, FowlPlayEntityTypes.SPARROW.get());
+        this.registerBird(exporter, FPEntityTypes.BLUE_JAY.get());
+        this.registerBird(exporter, FPEntityTypes.CARDINAL.get());
+        this.registerBird(exporter, FPEntityTypes.CHICKADEE.get());
+        this.registerBird(exporter, FPEntityTypes.CROW.get());
+        this.registerBird(exporter, FPEntityTypes.DUCK.get());
+        this.registerBird(exporter, FPEntityTypes.GOOSE.get());
+        this.registerBird(exporter, FPEntityTypes.GULL.get());
+        this.registerBird(exporter, FPEntityTypes.HAWK.get());
+        this.registerBird(exporter, FPEntityTypes.PENGUIN.get());
+        this.registerBird(exporter, FPEntityTypes.PIGEON.get());
+        this.registerBird(exporter, FPEntityTypes.RAVEN.get());
+        this.registerBird(exporter, FPEntityTypes.ROBIN.get());
+        this.registerBird(exporter, FPEntityTypes.SPARROW.get());
     }
 
     private void registerBird(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> exporter, EntityType<?> type) {

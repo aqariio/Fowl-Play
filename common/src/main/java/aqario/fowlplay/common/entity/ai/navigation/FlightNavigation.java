@@ -1,12 +1,11 @@
 package aqario.fowlplay.common.entity.ai.navigation;
 
-import aqario.fowlplay.common.entity.FlyingBirdEntity;
-import aqario.fowlplay.common.util.Birds;
+import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
+import aqario.fowlplay.common.util.BirdUtils;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.level.Level;
@@ -61,17 +60,17 @@ public class FlightNavigation extends GroundPathNavigation implements ExtendedNa
         return newPath;
     }
 
-    @Override
-    public boolean moveTo(double x, double y, double z, double speed) {
-        this.bird.getMoveControl().setWantedPosition(x, y, z, speed);
-        return true;
-    }
-
-    @Override
-    public boolean moveTo(Entity entity, double speed) {
-        this.bird.getMoveControl().setWantedPosition(entity.getX(), entity.getY(), entity.getZ(), speed);
-        return true;
-    }
+//    @Override
+//    public boolean moveTo(double x, double y, double z, double speed) {
+//        this.bird.getMoveControl().setWantedPosition(x, y, z, speed);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean moveTo(Entity entity, double speed) {
+//        this.bird.getMoveControl().setWantedPosition(entity.getX(), entity.getY(), entity.getZ(), speed);
+//        return true;
+//    }
 
     @Override
     protected boolean canMoveDirectly(Vec3 origin, Vec3 target) {
@@ -93,6 +92,7 @@ public class FlightNavigation extends GroundPathNavigation implements ExtendedNa
         return pos.y;
     }
 
+    @Nullable
     @Override
     public Path createPath(BlockPos target, int distance) {
         return this.createPath(ImmutableSet.of(target), 16, false, distance, 64);
@@ -123,7 +123,7 @@ public class FlightNavigation extends GroundPathNavigation implements ExtendedNa
                 && this.path.isDone()
                 && this.getTargetPos() != null
                 && this.bird.position().closerThan(this.getTargetPos().getBottomCenter(), 2)
-                && Birds.shouldLandAtDestination(this.bird, this.getTargetPos())
+                && BirdUtils.shouldLandAtDestination(this.bird, this.getTargetPos())
             ) {
                 this.bird.stopFlying();
             }
@@ -167,7 +167,7 @@ public class FlightNavigation extends GroundPathNavigation implements ExtendedNa
         final Vec3 nextNodePos = this.getEntityPosAtNode(this.getPath().getNextNodeIndex());
 
         if(this.path.getNextNodeIndex() + 1 >= this.path.getNodeCount()
-            && Birds.shouldLandAtDestination(this.bird, this.getTargetPos())
+            && BirdUtils.shouldLandAtDestination(this.bird, this.getTargetPos())
         ) {
             return this.getTempMobPos().closerThan(nextNodePos, 0.5);
         }

@@ -1,9 +1,9 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
-import aqario.fowlplay.common.entity.Flocking;
-import aqario.fowlplay.common.entity.FlyingBirdEntity;
+import aqario.fowlplay.common.entity.bird.Flocking;
+import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.util.MemoryList;
-import aqario.fowlplay.core.FowlPlayMemoryTypes;
+import aqario.fowlplay.core.FPMemoryTypes;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.AgeableMob;
@@ -19,11 +19,11 @@ import java.util.List;
 public class GuidedFlocking extends ExtendedBehaviour<FlyingBirdEntity> {
     private static final MemoryList MEMORIES = MemoryList.create(3)
         .present(
-            FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get()
+            FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get()
         )
         .absent(
-            FowlPlayMemoryTypes.IS_AVOIDING.get(),
-            FowlPlayMemoryTypes.SEES_FOOD.get()
+            FPMemoryTypes.IS_AVOIDING.get(),
+            FPMemoryTypes.SEES_FOOD.get()
         );
     private static final int VIEW_RADIUS = 8;
     public float coherence;
@@ -49,10 +49,10 @@ public class GuidedFlocking extends ExtendedBehaviour<FlyingBirdEntity> {
             return false;
         }
         Brain<?> brain = bird.getBrain();
-        if(!BrainUtils.hasMemory(brain, FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get())) {
+        if(!BrainUtils.hasMemory(brain, FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get())) {
             return false;
         }
-        this.nearbyBirds = BrainUtils.getMemory(brain, FowlPlayMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
+        this.nearbyBirds = BrainUtils.getMemory(brain, FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
         assert this.nearbyBirds != null;
         this.nearbyBirds.removeIf(entity -> entity.distanceToSqr(bird) > VIEW_RADIUS * VIEW_RADIUS);
         if(this.nearbyBirds.isEmpty()) {

@@ -1,9 +1,9 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
-import aqario.fowlplay.common.entity.PigeonEntity;
 import aqario.fowlplay.common.entity.ai.brain.TeleportTarget;
+import aqario.fowlplay.common.entity.bird.dove.PigeonEntity;
 import aqario.fowlplay.common.util.MemoryList;
-import aqario.fowlplay.core.FowlPlayMemoryTypes;
+import aqario.fowlplay.core.FPMemoryTypes;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,7 +17,7 @@ import java.util.List;
 public class SetOwnerWalkOrTpTarget extends SpeedModifiableBehaviour<PigeonEntity> {
     private static final MemoryList MEMORIES = MemoryList.create(3)
         .registered(
-            FowlPlayMemoryTypes.TELEPORT_TARGET.get(),
+            FPMemoryTypes.TELEPORT_TARGET.get(),
             MemoryModuleType.LOOK_TARGET,
             MemoryModuleType.WALK_TARGET
         );
@@ -63,7 +63,7 @@ public class SetOwnerWalkOrTpTarget extends SpeedModifiableBehaviour<PigeonEntit
             this.updateCountdownTicks = 20;
             if(!pigeon.isLeashed() && !pigeon.isPassenger()) {
                 if(pigeon.distanceToSqr(this.owner) >= 144.0) {
-                    pigeon.setMemory(FowlPlayMemoryTypes.TELEPORT_TARGET.get(), new TeleportTarget(this.owner));
+                    pigeon.setMemory(FPMemoryTypes.TELEPORT_TARGET.get(), new TeleportTarget(this.owner));
                 }
                 pigeon.setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(this.owner, this.speedModifier.apply(pigeon, this.owner.position()), 0));
             }

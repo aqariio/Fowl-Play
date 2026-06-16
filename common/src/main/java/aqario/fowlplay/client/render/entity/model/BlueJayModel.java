@@ -1,7 +1,7 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.BlueJayAnimations;
-import aqario.fowlplay.common.entity.BlueJayEntity;
+import aqario.fowlplay.common.entity.bird.passerine.BlueJayEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -69,5 +69,6 @@ public class BlueJayModel extends FlyingBirdModel<BlueJayEntity> {
         this.animate(entity.swimmingState, BlueJayAnimations.SWIMMING, ageInTicks);
         this.animate(entity.glidingState, BlueJayAnimations.GLIDING, ageInTicks);
         this.animate(entity.flappingState, BlueJayAnimations.FLAPPING, ageInTicks);
+        this.animate(entity.sleepingState, BlueJayAnimations.SLEEPING, ageInTicks);
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
 public final class FowlPlayItemTags {
+    public static final TagKey<Item> BIRD_FEED = create("bird_feed");
     public static final TagKey<Item> BLUE_JAY_FOOD = create("blue_jay_food");
     public static final TagKey<Item> CARDINAL_FOOD = create("cardinal_food");
     public static final TagKey<Item> CHICKADEE_FOOD = create("chickadee_food");
@@ -19,6 +20,7 @@ public final class FowlPlayItemTags {
     public static final TagKey<Item> RAVEN_FOOD = create("raven_food");
     public static final TagKey<Item> ROBIN_FOOD = create("robin_food");
     public static final TagKey<Item> SPARROW_FOOD = create("sparrow_food");
+    public static final TagKey<Item> VULTURE_FOOD = create("vulture_food");
 
     private static TagKey<Item> create(String id) {
         return TagKey.create(Registries.ITEM, FowlPlay.id(id));

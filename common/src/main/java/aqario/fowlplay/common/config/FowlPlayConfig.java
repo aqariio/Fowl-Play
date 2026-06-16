@@ -24,81 +24,52 @@ public class FowlPlayConfig {
     // Audio
 
     // Blue Jay
-
-    @SerialEntry
-    public int blueJayCallVolume = 5;
+    public static final int blueJayCallRange = 80;
 
     // Cardinal
-
-    @SerialEntry
-    public int cardinalCallVolume = 1;
-    @SerialEntry
-    public int cardinalSongVolume = 4;
+    public static final int cardinalCallRange = 16;
+    public static final int cardinalSongRange = 64;
 
     // Chickadee
-
-    @SerialEntry
-    public int chickadeeCallVolume = 2;
-    @SerialEntry
-    public int chickadeeSongVolume = 2;
+    public static final int chickadeeCallRange = 32;
+    public static final int chickadeeSongRange = 32;
 
     // Crow
-
-    @SerialEntry
-    public int crowCallVolume = 6;
+    public static final int crowCallRange = 96;
 
     // Duck
-
-    @SerialEntry
-    public int duckCallVolume = 1;
+    public static final int duckCallRange = 16;
 
     // Goose
-
-    @SerialEntry
-    public int gooseCallVolume = 1;
+    public static final int gooseCallRange = 32;
 
     // Gull
-
-    @SerialEntry
-    public int gullCallVolume = 2;
-    @SerialEntry
-    public int gullSongVolume = 3;
+    public static final int gullCallRange = 32;
+    public static final int gullSongRange = 48;
 
     // Hawk
-
-    @SerialEntry
-    public int hawkCallVolume = 6;
+    public static final int hawkCallRange = 96;
 
     // Penguin
-
-    @SerialEntry
-    public int penguinCallVolume = 2;
+    public static final int penguinCallRange = 32;
 
     // Pigeon
-
-    @SerialEntry
-    public int pigeonCallVolume = 1;
-    @SerialEntry
-    public int pigeonSongVolume = 3;
+    public static final int pigeonCallRange = 16;
+    public static final int pigeonSongRange = 48;
 
     // Raven
-
-    @SerialEntry
-    public int ravenCallVolume = 6;
+    public static final int ravenCallRange = 96;
 
     // Robin
-
-    @SerialEntry
-    public int robinCallVolume = 2;
-    @SerialEntry
-    public int robinSongVolume = 2;
+    public static final int robinCallRange = 32;
+    public static final int robinSongRange = 32;
 
     // Sparrow
+    public static final int sparrowCallRange = 32;
+    public static final int sparrowSongRange = 32;
 
-    @SerialEntry
-    public int sparrowCallVolume = 2;
-    @SerialEntry
-    public int sparrowSongVolume = 2;
+    // Vulture
+    public static final int vultureCallRange = 32;
 
     // Spawning
 
@@ -132,7 +103,7 @@ public class FowlPlayConfig {
     // Crow
 
     @SerialEntry
-    public int crowSpawnWeight = 5;
+    public int crowSpawnWeight = 3;
     @SerialEntry
     public int crowMinGroupSize = 1;
     @SerialEntry

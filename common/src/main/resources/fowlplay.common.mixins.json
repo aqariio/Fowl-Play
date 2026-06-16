@@ -11,9 +11,12 @@
     "MobCategoryMixin",
     "NaturalSpawnerMixin",
     "PowderSnowBlockMixin",
+    "SoundSourceMixin",
     "WallBlockMixin"
   ],
   "client": [
+    "client.DebugRendererMixin",
+    "client.LevelRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

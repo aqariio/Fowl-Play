@@ -1,8 +1,8 @@
 package aqario.fowlplay.core.fabric;
 
-import aqario.fowlplay.common.entity.ChickenVariant;
+import aqario.fowlplay.common.entity.variant.ChickenVariant;
+import aqario.fowlplay.core.FPBuiltInRegistries;
 import aqario.fowlplay.core.FowlPlay;
-import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
@@ -15,8 +15,8 @@ public class FowlPlayDataAttachments {
     public static final AttachmentType<Holder<ChickenVariant>> CHICKEN_VARIANT = register(
         "chicken_variant",
         builder -> builder
-            .initializer(() -> FowlPlayBuiltInRegistries.CHICKEN_VARIANT.getHolderOrThrow(ChickenVariant.WHITE))
-            .persistent(FowlPlayBuiltInRegistries.CHICKEN_VARIANT.holderByNameCodec())
+            .initializer(() -> FPBuiltInRegistries.CHICKEN_VARIANT.getHolderOrThrow(ChickenVariant.WHITE))
+            .persistent(FPBuiltInRegistries.CHICKEN_VARIANT.holderByNameCodec())
             .syncWith(
                 ChickenVariant.PACKET_CODEC,
                 AttachmentSyncPredicate.all()

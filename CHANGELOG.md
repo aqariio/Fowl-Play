@@ -1,6 +1,18 @@
-## 1.1.3
+## 1.2.0
 
-- Resolve incompatibility with All Bark All Bite and TerraFirmaCraft
+- Bird hunting behaviour rework
+  - Birds that hunt now only do so during certain times of day
+  - There is now a cooldown after a bird kills its prey or eats food, during which it will not hunt again
+- Add sleep cycles for all birds
+  - Birds will now find a safe place to sleep at night (ie. trees, lakes, rivers)
+  - They can still be disturbed by a nearby player
+- Birds now drop the item they're holding when hurt
+- Change bird calls from being played randomly to being determined by behaviours
+- Fix bird calls sometimes being too loud
+- Fix crash caused by duplicate activity names
+- Tweak bird flapping animations
+- Add French localization
+- Update Chinese localization
 
 ## 1.1.2
 

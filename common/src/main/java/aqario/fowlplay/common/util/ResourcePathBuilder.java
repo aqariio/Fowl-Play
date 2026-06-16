@@ -1,14 +1,14 @@
 package aqario.fowlplay.common.util;
 
-public class PathBuilder {
+public class ResourcePathBuilder {
     private final StringBuilder path = new StringBuilder();
 
-    public PathBuilder add(String segment) {
+    public ResourcePathBuilder add(String segment) {
         this.path.append(segment);
         return this;
     }
 
-    public PathBuilder addIf(String segment, boolean condition) {
+    public ResourcePathBuilder addIf(String segment, boolean condition) {
         if(condition) {
             this.path.append(segment);
         }

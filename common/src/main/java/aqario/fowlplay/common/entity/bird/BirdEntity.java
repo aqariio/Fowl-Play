@@ -60,6 +60,7 @@ public abstract class BirdEntity extends Animal {
     private static final String AMBIENT_KEY = "ambient";
     private static final String SLEEPING_KEY = "sleeping";
     private static final String HUNTING_COOLDOWN_KEY = "hunting_cooldown";
+    private static final long HUNTING_COOLDOWN_TICKS = 18000L; // 15 mins
     private boolean ambient;
     private int eatingTime;
     protected int idleAnimationChance;
@@ -218,7 +219,7 @@ public abstract class BirdEntity extends Animal {
             item.discard();
             this.eatingTime = 0;
             this.clearMemory(FPMemoryTypes.SEES_FOOD.get());
-            this.setMemoryWithExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, 18000L);
+            this.setMemoryWithExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, HUNTING_COOLDOWN_TICKS);
         }
     }
 
@@ -318,7 +319,7 @@ public abstract class BirdEntity extends Animal {
         boolean bl = super.killedEntity(level, entity);
         if(bl) {
             if(this.canHunt(entity)) {
-                this.setMemoryWithExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, 18000L);
+                this.setMemoryWithExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, HUNTING_COOLDOWN_TICKS);
             }
             return true;
         }

@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.variant;
 
 import aqario.fowlplay.common.registry.CommonRegister;
-import aqario.fowlplay.common.util.PathBuilder;
+import aqario.fowlplay.common.util.ResourcePathBuilder;
 import aqario.fowlplay.core.FPRegistries;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.core.Holder;
@@ -23,7 +23,7 @@ public record ChickenVariant(String id) {
     public static final ResourceKey<ChickenVariant> RED_JUNGLEFOWL = register("red_junglefowl");
 
     public ResourceLocation texture(boolean isBaby) {
-        return FowlPlay.id(new PathBuilder()
+        return FowlPlay.id(new ResourcePathBuilder()
             .add("textures/entity/chicken/")
             .addIf("baby_", isBaby)
             .add(this.id)

@@ -2,7 +2,7 @@ package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
 import aqario.fowlplay.common.entity.variant.*;
-import aqario.fowlplay.common.util.PathBuilder;
+import aqario.fowlplay.common.util.ResourcePathBuilder;
 import aqario.fowlplay.common.worldgen.BiomeModifier;
 import aqario.fowlplay.common.worldgen.PigeonSpawner;
 import aqario.fowlplay.common.worldgen.SparrowSpawner;
@@ -17,7 +17,7 @@ public class FowlPlay {
     public static final Logger LOGGER = LoggerFactory.getLogger("Fowl Play");
     public static final String ID = "fowlplay";
 
-    public static ResourceLocation id(PathBuilder path) {
+    public static ResourceLocation id(ResourcePathBuilder path) {
         return ResourceLocation.fromNamespaceAndPath(ID, path.build());
     }
 

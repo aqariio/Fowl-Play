@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.variant;
 
 import aqario.fowlplay.common.registry.CommonRegister;
-import aqario.fowlplay.common.util.PathBuilder;
+import aqario.fowlplay.common.util.ResourcePathBuilder;
 import aqario.fowlplay.core.FPRegistries;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.core.Holder;
@@ -28,7 +28,7 @@ public record GooseVariant(
     public static final ResourceKey<GooseVariant> SWAN = register("swan", true);
 
     public ResourceLocation texture(boolean isBaby, boolean isDomestic) {
-        return FowlPlay.id(new PathBuilder()
+        return FowlPlay.id(new ResourcePathBuilder()
             .add("textures/entity/goose/")
             .addIf("baby_", isBaby)
             .addIf("domestic_", this.domesticatable && isDomestic)

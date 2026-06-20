@@ -73,6 +73,10 @@ dependencies {
     // Kotlin For Forge
 //    modRuntimeOnly("maven.modrinth:kotlin-for-forge:${project.kotlin_for_forge_version}")
 
+    // MixinExtras
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.4"))
+    implementation(include("io.github.llamalad7:mixinextras-forge:0.5.4"))
+
     // NBT Autocomplete
     modRuntimeOnly("maven.modrinth:nbt-autocomplete:${project.nbt_autocomplete_version}-forge,1.20.1")
 

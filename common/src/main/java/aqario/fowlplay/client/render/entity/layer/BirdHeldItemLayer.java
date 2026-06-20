@@ -1,7 +1,7 @@
 package aqario.fowlplay.client.render.entity.layer;
 
 import aqario.fowlplay.client.render.entity.model.BirdModel;
-import aqario.fowlplay.common.entity.BirdEntity;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.ItemInHandRenderer;

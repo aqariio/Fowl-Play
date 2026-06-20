@@ -1,6 +1,6 @@
 package aqario.fowlplay.mixin.fabric;
 
-import aqario.fowlplay.core.platform.CommonRegistry;
+import aqario.fowlplay.common.registry.CommonRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;

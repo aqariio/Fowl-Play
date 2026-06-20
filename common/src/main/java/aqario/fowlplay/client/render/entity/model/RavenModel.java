@@ -1,7 +1,7 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.RavenAnimations;
-import aqario.fowlplay.common.entity.RavenEntity;
+import aqario.fowlplay.common.entity.bird.passerine.RavenEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -80,6 +80,7 @@ public class RavenModel extends FlyingBirdModel<RavenEntity> {
         this.animate(entity.standingState, RavenAnimations.STANDING, ageInTicks);
         this.animate(entity.swimmingState, RavenAnimations.SWIMMING, ageInTicks);
         this.animate(entity.glidingState, RavenAnimations.GLIDING, ageInTicks);
+        this.animate(entity.sleepingState, RavenAnimations.SLEEPING, ageInTicks);
     }
 
     @Override

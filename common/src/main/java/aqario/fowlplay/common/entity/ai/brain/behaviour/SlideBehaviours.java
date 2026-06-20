@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
-import aqario.fowlplay.common.entity.PenguinEntity;
+import aqario.fowlplay.common.entity.bird.penguin.PenguinEntity;
 import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
 
 /**

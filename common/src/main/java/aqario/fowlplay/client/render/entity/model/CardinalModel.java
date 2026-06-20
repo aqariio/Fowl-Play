@@ -1,7 +1,7 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.CardinalAnimations;
-import aqario.fowlplay.common.entity.CardinalEntity;
+import aqario.fowlplay.common.entity.bird.passerine.CardinalEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -69,5 +69,6 @@ public class CardinalModel extends FlyingBirdModel<CardinalEntity> {
         this.animate(entity.swimmingState, CardinalAnimations.SWIMMING, ageInTicks);
         this.animate(entity.glidingState, CardinalAnimations.GLIDING, ageInTicks);
         this.animate(entity.flappingState, CardinalAnimations.FLAPPING, ageInTicks);
+        this.animate(entity.sleepingState, CardinalAnimations.SLEEPING, ageInTicks);
     }
 }

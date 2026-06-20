@@ -1,13 +1,18 @@
 package aqario.fowlplay.mixin;
 
-import aqario.fowlplay.common.entity.ChickenVariant;
+import aqario.fowlplay.common.entity.bird.VariantHolder;
+import aqario.fowlplay.common.entity.variant.ChickenVariant;
+import aqario.fowlplay.common.registry.CommonRegistry;
 import aqario.fowlplay.common.util.ChickenAnimationHolder;
-import aqario.fowlplay.core.FowlPlayBuiltInRegistries;
-import aqario.fowlplay.core.FowlPlayEntityDataSerializers;
+import aqario.fowlplay.core.FPBuiltInRegistries;
+import aqario.fowlplay.core.FPEntityDataSerializers;
+import aqario.fowlplay.core.FPRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Animal;
@@ -20,13 +25,14 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = Chicken.class, priority = 999)
 public abstract class ChickenMixin extends Animal implements VariantHolder<ChickenVariant>, ChickenAnimationHolder {
     @Unique
     private static final EntityDataAccessor<ChickenVariant> fowlplay$VARIANT = SynchedEntityData.defineId(
         Chicken.class,
-        FowlPlayEntityDataSerializers.CHICKEN_VARIANT
+        FPEntityDataSerializers.CHICKEN_VARIANT
     );
     @Unique
     private final AnimationState fowlplay$standingState = new AnimationState();
@@ -40,15 +46,49 @@ public abstract class ChickenMixin extends Animal implements VariantHolder<Chick
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt) {
-        switch(spawnReason) {
-            case BREEDING -> this.setVariant(ChickenVariant.WHITE.get());
-            case CHUNK_GENERATION -> this.setVariant(ChickenVariant.RED_JUNGLEFOWL.get());
-            default -> FowlPlayBuiltInRegistries.CHICKEN_VARIANT.get()
-                .fowlplay$getRandom(world.getRandom())
-                .ifPresent(this::setVariant);
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt) {
+        this.setVariant(ChickenVariant.RED_JUNGLEFOWL.get());
+
+        return super.finalizeSpawn(level, difficulty, spawnReason, entityData, entityNbt);
+    }
+
+//    @Inject(
+//        method = "registerGoals",
+//        at = @At("HEAD"),
+//        cancellable = true
+//    )
+//    private void fowlplay$removeGoals(CallbackInfo ci) {
+//        this.goalSelector.removeAllGoals(goal -> true);
+//        this.targetSelector.removeAllGoals(goal -> true);
+//        ci.cancel();
+//    }
+
+    @Inject(
+        method = "getBreedOffspring(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/AgeableMob;)Lnet/minecraft/world/entity/animal/Chicken;",
+        at = @At("HEAD"),
+        cancellable = true
+    )
+    private void fowlplay$createChild(ServerLevel level, AgeableMob otherParent, CallbackInfoReturnable<Chicken> cir) {
+        Chicken child = EntityType.CHICKEN.create(level);
+        if(child != null) {
+            ((ChickenMixin) (Object) child).setVariant(ChickenVariant.WHITE.get());
         }
-        return super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityNbt);
+        cir.setReturnValue(child);
+    }
+
+    @Override
+    public CommonRegistry<ChickenVariant> variantRegistry() {
+        return FPBuiltInRegistries.CHICKEN_VARIANT.get();
+    }
+
+    @Override
+    public ResourceKey<Registry<ChickenVariant>> variantRegistryKey() {
+        return FPRegistries.CHICKEN_VARIANT;
+    }
+
+    @Override
+    public ChickenVariant defaultVariant() {
+        return ChickenVariant.WHITE.get();
     }
 
     @Override
@@ -69,15 +109,12 @@ public abstract class ChickenMixin extends Animal implements VariantHolder<Chick
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void fowlplay$readCustomVariant(CompoundTag nbt, CallbackInfo ci) {
-        ChickenVariant variant = FowlPlayBuiltInRegistries.CHICKEN_VARIANT.get().fowlplay$get(ResourceLocation.tryParse(nbt.getString("variant")));
-        if(variant != null) {
-            this.setVariant(variant);
-        }
+        this.readVariant(nbt);
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
     private void fowlplay$writeCustomVariant(CompoundTag nbt, CallbackInfo ci) {
-        nbt.putString("variant", FowlPlayBuiltInRegistries.CHICKEN_VARIANT.get().fowlplay$getKey(this.getVariant()).toString());
+        this.writeVariant(nbt);
     }
 
     @Override

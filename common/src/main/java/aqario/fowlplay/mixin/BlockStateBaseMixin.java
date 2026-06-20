@@ -1,7 +1,7 @@
 package aqario.fowlplay.mixin;
 
-import aqario.fowlplay.common.entity.FlyingBirdEntity;
-import aqario.fowlplay.common.util.Birds;
+import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
+import aqario.fowlplay.common.util.BirdUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
@@ -34,12 +34,17 @@ public class BlockStateBaseMixin {
         if(self.getBlock() instanceof LeavesBlock && context instanceof EntityCollisionContext entityContext) {
             Entity entity = entityContext.getEntity();
             if(entity != null
-                && Birds.isNotFlightless(entity)
+                && BirdUtils.isNotFlightless(entity)
             ) {
                 if(entityContext.isAbove(LEAVES_SHAPE, pos, true)
                     && (!(entity instanceof FlyingBirdEntity bird) || !bird.isFlying())
                 ) {
-                    cir.setReturnValue(LEAVES_SHAPE);
+                    if(BirdUtils.isPerchingBird(entity)) {
+                        cir.setReturnValue(LEAVES_SHAPE);
+                    }
+                    else {
+                        cir.setReturnValue(Shapes.block());
+                    }
                 }
                 else {
                     cir.setReturnValue(Shapes.empty());

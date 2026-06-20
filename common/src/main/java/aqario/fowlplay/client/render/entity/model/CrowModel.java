@@ -1,7 +1,7 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.CrowAnimations;
-import aqario.fowlplay.common.entity.CrowEntity;
+import aqario.fowlplay.common.entity.bird.passerine.CrowEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -69,6 +69,7 @@ public class CrowModel extends FlyingBirdModel<CrowEntity> {
         this.animate(entity.swimmingState, CrowAnimations.SWIMMING, ageInTicks);
         this.animate(entity.glidingState, CrowAnimations.GLIDING, ageInTicks);
         this.animate(entity.flappingState, CrowAnimations.FLAPPING, ageInTicks);
+        this.animate(entity.sleepingState, CrowAnimations.SLEEPING, ageInTicks);
     }
 
     @Override

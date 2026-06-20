@@ -3,13 +3,13 @@ package aqario.fowlplay.client.render.entity;
 import aqario.fowlplay.client.render.entity.model.AdultBabyModelPair;
 import aqario.fowlplay.client.render.entity.model.CustomBabyChickenModel;
 import aqario.fowlplay.client.render.entity.model.CustomChickenModel;
-import aqario.fowlplay.common.entity.ChickenVariant;
+import aqario.fowlplay.common.entity.bird.VariantHolder;
+import aqario.fowlplay.common.entity.variant.ChickenVariant;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.VariantHolder;
 import net.minecraft.world.entity.animal.Chicken;
 
 public class CustomChickenRenderer extends MobRenderer<Chicken, CustomChickenModel> {

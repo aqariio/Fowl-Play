@@ -67,16 +67,16 @@ public class SmallBubbleParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
-    public static class Factory implements ParticleProvider<SimpleParticleType> {
-        private final SpriteSet spriteProvider;
+    public static class Provider implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet sprites;
 
-        public Factory(SpriteSet spriteProvider) {
-            this.spriteProvider = spriteProvider;
+        public Provider(SpriteSet sprites) {
+            this.sprites = sprites;
         }
 
         @Override
-        public Particle createParticle(SimpleParticleType particleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
-            return new SmallBubbleParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
+        public Particle createParticle(SimpleParticleType type, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
+            return new SmallBubbleParticle(clientWorld, d, e, f, g, h, i, this.sprites);
         }
     }
 }

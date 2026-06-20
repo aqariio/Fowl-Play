@@ -1,9 +1,9 @@
 package aqario.fowlplay.mixin;
 
-import aqario.fowlplay.common.entity.DuckEntity;
-import aqario.fowlplay.common.entity.GooseEntity;
-import aqario.fowlplay.common.entity.GullEntity;
-import aqario.fowlplay.common.entity.PenguinEntity;
+import aqario.fowlplay.common.entity.bird.penguin.PenguinEntity;
+import aqario.fowlplay.common.entity.bird.shorebird.GullEntity;
+import aqario.fowlplay.common.entity.bird.waterfowl.DuckEntity;
+import aqario.fowlplay.common.entity.bird.waterfowl.GooseEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import org.spongepowered.asm.mixin.Mixin;

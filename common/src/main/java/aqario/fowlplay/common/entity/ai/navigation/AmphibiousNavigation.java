@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.ai.navigation;
 
-import aqario.fowlplay.common.entity.FlyingBirdEntity;
-import aqario.fowlplay.common.util.Birds;
+import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
+import aqario.fowlplay.common.util.BirdUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
@@ -54,7 +54,7 @@ public class AmphibiousNavigation extends AmphibiousPathNavigation {
     @Override
     public boolean moveTo(@Nullable Path path, double speed) {
         if(path != null && this.mob instanceof FlyingBirdEntity flyingBird) {
-            Birds.tryFlyingAlongPath(flyingBird, path);
+            BirdUtils.tryFlyingAlongPath(flyingBird, path);
         }
         return super.moveTo(path, speed);
     }

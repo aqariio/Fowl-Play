@@ -1,21 +1,20 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
+import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.util.MemoryList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.valueproviders.ConstantFloat;
 import net.minecraft.util.valueproviders.FloatProvider;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
 import net.tslat.smartbrainlib.object.FreePositionTracker;
-import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 
-public class SetRandomLookTarget<E extends Mob> extends ExtendedBehaviour<E> {
+public class SetRandomLookTarget<E extends BirdEntity> extends ExtendedBehaviour<E> {
     private static final MemoryList MEMORIES = MemoryList.create(1)
         .absent(
             MemoryModuleType.LOOK_TARGET,
@@ -26,7 +25,7 @@ public class SetRandomLookTarget<E extends Mob> extends ExtendedBehaviour<E> {
     private long timeUntilNextLook = 0L;
 
     public SetRandomLookTarget() {
-        this.runtimeProvider = entity -> entity.getRandom().nextIntBetweenInclusive(20, 60);
+        this.runFor(entity -> entity.getRandom().nextIntBetweenInclusive(20, 60));
     }
 
     public SetRandomLookTarget<E> lookChance(float chance) {
@@ -35,7 +34,6 @@ public class SetRandomLookTarget<E extends Mob> extends ExtendedBehaviour<E> {
 
     public SetRandomLookTarget<E> lookChance(FloatProvider chance) {
         this.runChance = chance;
-
         return this;
     }
 
@@ -51,7 +49,7 @@ public class SetRandomLookTarget<E extends Mob> extends ExtendedBehaviour<E> {
 
     @Override
     protected boolean shouldKeepRunning(E entity) {
-        return !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET);
+        return !entity.isMemoryPresent(MemoryModuleType.WALK_TARGET);
     }
 
     @Override
@@ -63,9 +61,12 @@ public class SetRandomLookTarget<E extends Mob> extends ExtendedBehaviour<E> {
 
     private void lookAround(E entity) {
         double angle = Mth.TWO_PI * entity.getRandom().nextDouble();
-
         int lookTime = entity.getRandom().nextIntBetweenInclusive(15, 60);
         this.timeUntilNextLook = entity.level().getGameTime() + lookTime;
-        BrainUtils.setForgettableMemory(entity, MemoryModuleType.LOOK_TARGET, new FreePositionTracker(entity.getEyePosition().add(Math.cos(angle), 0, Math.sin(angle))), lookTime);
+        entity.setMemoryWithExpiry(
+            MemoryModuleType.LOOK_TARGET,
+            new FreePositionTracker(entity.getEyePosition().add(Math.cos(angle), 0, Math.sin(angle))),
+            lookTime
+        );
     }
 }

@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.entity;
 
-import aqario.fowlplay.core.FowlPlayItems;
+import aqario.fowlplay.core.FPItems;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.Rotations;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -431,7 +431,7 @@ public class ScarecrowEntity extends LivingEntity implements ContainerListener, 
     }
 
     public ItemStack getItem() {
-        return FowlPlayItems.SCARECROW.get().getDefaultInstance();
+        return FPItems.SCARECROW.get().getDefaultInstance();
     }
 
     public ParticleOptions getParticle() {

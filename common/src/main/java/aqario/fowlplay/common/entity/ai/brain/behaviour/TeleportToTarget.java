@@ -1,8 +1,8 @@
 package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
-import aqario.fowlplay.common.entity.BirdEntity;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.util.MemoryList;
-import aqario.fowlplay.core.FowlPlayMemoryTypes;
+import aqario.fowlplay.core.FPMemoryTypes;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class TeleportToTarget extends ExtendedBehaviour<BirdEntity> {
     private static final MemoryList MEMORIES = MemoryList.create(1)
-        .present(FowlPlayMemoryTypes.TELEPORT_TARGET.get());
+        .present(FPMemoryTypes.TELEPORT_TARGET.get());
 
     @Override
     protected List<Pair<MemoryModuleType<?>, MemoryStatus>> getMemoryRequirements() {
@@ -25,18 +25,18 @@ public class TeleportToTarget extends ExtendedBehaviour<BirdEntity> {
 
     @Override
     protected boolean shouldKeepRunning(BirdEntity entity) {
-        return entity.isMemoryPresent(FowlPlayMemoryTypes.TELEPORT_TARGET.get());
+        return entity.isMemoryPresent(FPMemoryTypes.TELEPORT_TARGET.get());
     }
 
     @Override
     protected void tick(BirdEntity entity) {
         if(this.tryTeleport(entity)) {
-            entity.clearMemory(FowlPlayMemoryTypes.TELEPORT_TARGET.get());
+            entity.clearMemory(FPMemoryTypes.TELEPORT_TARGET.get());
         }
     }
 
     private boolean tryTeleport(BirdEntity entity) {
-        Entity target = entity.getPresentMemory(FowlPlayMemoryTypes.TELEPORT_TARGET.get()).entity();
+        Entity target = entity.getPresentMemory(FPMemoryTypes.TELEPORT_TARGET.get()).entity();
         BlockPos pos = target.blockPosition();
 
         for(int i = 0; i < 10; i++) {

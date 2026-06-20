@@ -1,6 +1,6 @@
 package aqario.fowlplay.datagen;
 
-import aqario.fowlplay.core.FowlPlayItems;
+import aqario.fowlplay.core.FPItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -17,7 +17,7 @@ public class FowlPlayRecipeGen extends FabricRecipeProvider {
 
     @Override
     public void buildRecipes(Consumer<FinishedRecipe> exporter) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, FowlPlayItems.SCARECROW.get(), 1)
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, FPItems.SCARECROW.get(), 1)
             .define('#', Items.HAY_BLOCK)
             .define('/', Items.STICK)
             .pattern(" # ")

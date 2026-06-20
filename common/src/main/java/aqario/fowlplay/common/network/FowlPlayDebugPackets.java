@@ -2,12 +2,14 @@ package aqario.fowlplay.common.network;
 
 import aqario.fowlplay.client.FowlPlayClient;
 import aqario.fowlplay.client.render.debug.BirdDebugRenderer;
-import aqario.fowlplay.common.entity.BirdEntity;
-import aqario.fowlplay.common.entity.FlyingBirdEntity;
-import aqario.fowlplay.common.entity.TrustingBirdEntity;
-import aqario.fowlplay.common.util.Birds;
+import aqario.fowlplay.client.render.debug.GenericDebugRenderer;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
+import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
+import aqario.fowlplay.common.entity.bird.TrustingBirdEntity;
+import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FowlPlay;
 import com.google.common.collect.Lists;
+import com.mojang.datafixers.util.Pair;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -40,6 +42,33 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class FowlPlayDebugPackets {
+    @SafeVarargs
+    public static <T> void sendGenericData(LivingEntity entity, Pair<String, T>... data) {
+        if(!FowlPlay.isDebugUtilsLoaded()
+            || entity.level().isClientSide()
+            || !FowlPlayClient.DEBUG_GENERIC
+        ) {
+            return;
+        }
+
+        HashMap<String, String> map = new HashMap<>();
+        for(Pair<String, T> pair : data) {
+            map.put(pair.getFirst(), pair.getSecond().toString());
+        }
+
+        GenericDebugRenderer.Data payloadData = new GenericDebugRenderer.Data(
+            entity.getUUID(),
+            entity.getId(),
+            entity.position(),
+            map
+        );
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        payloadData.write(buf);
+
+        ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(FowlPlayClient.DEBUG_BIRD_ID, buf);
+        sendToAll((ServerLevel) entity.level(), packet);
+    }
+
     @SuppressWarnings("deprecation")
     public static void sendBirdData(BirdEntity bird) {
         if(!FowlPlay.isDebugUtilsLoaded()
@@ -94,7 +123,7 @@ public class FowlPlayDebugPackets {
             trusting,
             flying,
             bird.isAmbient(),
-            Birds.isPerched(bird),
+            BirdUtils.isPerched(bird),
             activities,
             behaviors,
             memories,

@@ -465,4 +465,100 @@ public class GullAnimations {
             )
         )
         .build();
+
+    public static final AnimationDefinition SLEEPING_WATER = AnimationDefinition.Builder.withLength(1.0F).looping()
+        .addAnimation("neck", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(-121.0F, 0.0F, 180.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("neck", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 0.25F, -1.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("left_wing", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(2.7891F, -3.2224F, -4.9225F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("left_wing", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(-0.2F, -0.2F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("right_wing", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(2.7891F, 3.2224F, 4.9225F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("right_wing", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.2F, -0.2F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("tail", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(-2.5F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("left_leg", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(21.5708F, -8.1239F, -9.9474F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("left_leg", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 1.0F, -1.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("right_leg", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(21.5708F, 8.1239F, 9.9474F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("right_leg", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 1.0F, -1.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("body", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(22.5F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("head", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(-25.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("head", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, -0.75F, -1.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .build();
+
+    public static final AnimationDefinition SLEEPING_LAND = AnimationDefinition.Builder.withLength(1.0F).looping()
+        .addAnimation("neck", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(-121.0F, 0.0F, 180.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("neck", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 0.25F, -1.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("left_wing", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(7.7835F, -3.2077F, -4.8363F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("left_wing", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(-0.2F, -0.2F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("right_wing", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(7.7835F, 3.2077F, 4.8363F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("right_wing", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.2F, -0.2F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("tail", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(12.5F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("tail", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 0.0F, -0.5F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("left_leg", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(-63.5156F, -5.7272F, -9.231F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("left_leg", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(-0.25F, 1.0F, 0.25F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("right_leg", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(-63.5156F, 5.7272F, 9.231F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("right_leg", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.25F, 1.0F, 0.25F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("body", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(20.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("root", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, -4.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("head", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(-25.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("head", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, -0.75F, -1.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .build();
 }

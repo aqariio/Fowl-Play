@@ -1,7 +1,7 @@
 package aqario.fowlplay.mixin.fabric;
 
-import aqario.fowlplay.core.platform.CustomMobCategory;
-import aqario.fowlplay.core.platform.fabric.CustomMobCategoryImpl;
+import aqario.fowlplay.common.entity.CustomMobCategory;
+import aqario.fowlplay.common.entity.fabric.CustomMobCategoryImpl;
 import net.minecraft.world.entity.MobCategory;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;

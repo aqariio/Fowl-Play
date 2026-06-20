@@ -1,10 +1,11 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.config.FowlPlayConfig;
-import aqario.fowlplay.common.entity.*;
-import aqario.fowlplay.common.util.PathBuilder;
-import aqario.fowlplay.common.world.gen.PigeonSpawner;
-import aqario.fowlplay.common.world.gen.SparrowSpawner;
+import aqario.fowlplay.common.entity.variant.*;
+import aqario.fowlplay.common.util.ResourcePathBuilder;
+import aqario.fowlplay.common.worldgen.BiomeModifier;
+import aqario.fowlplay.common.worldgen.PigeonSpawner;
+import aqario.fowlplay.common.worldgen.SparrowSpawner;
 import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.platform.Mod;
 import dev.architectury.platform.Platform;
@@ -16,45 +17,45 @@ public class FowlPlay {
     public static final Logger LOGGER = LoggerFactory.getLogger("Fowl Play");
     public static final String ID = "fowlplay";
 
-    public static ResourceLocation id(PathBuilder path) {
+    public static ResourceLocation id(ResourcePathBuilder path) {
         return new ResourceLocation(ID, path.build());
     }
 
     public static ResourceLocation id(String id) {
-        return ResourceLocation.tryBuild(ID, id);
+        return new ResourceLocation(ID, id);
     }
 
     public static boolean isDebugUtilsLoaded() {
         return Platform.isModLoaded("debugutils");
     }
 
-    public static void earlyInit() {
+    public static void init() {
         Mod mod = Platform.getMod(ID);
         LOGGER.info("Loading {} {}", mod.getName(), mod.getVersion());
         FowlPlayConfig.load();
 
-        FowlPlayRegistries.init();
-        FowlPlayBuiltInRegistries.init();
-    }
+        FPRegistries.init();
+        FPBuiltInRegistries.init();
 
-    public static void init() {
-        ChickenVariant.init();
-        DuckVariant.init();
-        GooseVariant.init();
-        GullVariant.init();
-        PigeonVariant.init();
-        SparrowVariant.init();
+        ChickenVariant.REGISTRAR.register();
+        DuckVariant.REGISTRAR.register();
+        GooseVariant.REGISTRAR.register();
+        GullVariant.REGISTRAR.register();
+        PigeonVariant.REGISTRAR.register();
+        SparrowVariant.REGISTRAR.register();
 
-        FowlPlayActivities.init();
-        FowlPlayEntityTypes.init();
-        FowlPlayItems.init();
-        FowlPlayMemoryTypes.init();
-        FowlPlayParticleTypes.init();
-        FowlPlaySchedules.init();
-        FowlPlaySensorTypes.init();
-        FowlPlaySoundEvents.init();
-        FowlPlayEntityDataSerializers.init();
+        FPActivities.REGISTRAR.register();
+        FPBlocks.REGISTRAR.register();
+        FPEntityTypes.REGISTRAR.register();
+        FPItems.REGISTRAR.register();
+        FPMemoryTypes.REGISTRAR.register();
+        FPParticleTypes.REGISTRAR.register();
+        FPSchedules.REGISTRAR.register();
+        FPSensorTypes.REGISTRAR.register();
+        FPSoundEvents.REGISTRAR.register();
+        FPEntityDataSerializers.REGISTRAR.register();
 
+        BiomeModifier.register();
         initSpawners();
     }
 

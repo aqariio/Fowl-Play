@@ -1,6 +1,6 @@
 package aqario.fowlplay.mixin.forge;
 
-import aqario.fowlplay.core.platform.CommonRegistry;
+import aqario.fowlplay.common.registry.CommonRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;

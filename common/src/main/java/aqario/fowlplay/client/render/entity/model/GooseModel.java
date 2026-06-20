@@ -1,7 +1,7 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.GooseAnimations;
-import aqario.fowlplay.common.entity.GooseEntity;
+import aqario.fowlplay.common.entity.bird.waterfowl.GooseEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -77,5 +77,6 @@ public class GooseModel extends FlyingBirdModel<GooseEntity> {
         this.animate(entity.swimmingState, GooseAnimations.SWIMMING, ageInTicks);
         this.animate(entity.glidingState, GooseAnimations.GLIDING, ageInTicks);
         this.animate(entity.flappingState, GooseAnimations.FLAPPING, ageInTicks);
+        this.animate(entity.sleepingState, entity.isInWaterOrBubble() ? GooseAnimations.SLEEPING_WATER : GooseAnimations.SLEEPING_LAND, ageInTicks);
     }
 }

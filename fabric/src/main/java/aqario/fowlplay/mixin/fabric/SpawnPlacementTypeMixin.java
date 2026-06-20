@@ -1,7 +1,7 @@
 package aqario.fowlplay.mixin.fabric;
 
-import aqario.fowlplay.core.platform.CustomSpawnPlacementType;
-import aqario.fowlplay.core.platform.fabric.CustomSpawnPlacementTypeImpl;
+import aqario.fowlplay.common.worldgen.CustomSpawnPlacementType;
+import aqario.fowlplay.common.worldgen.fabric.CustomSpawnPlacementTypeImpl;
 import net.minecraft.world.entity.SpawnPlacements;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;

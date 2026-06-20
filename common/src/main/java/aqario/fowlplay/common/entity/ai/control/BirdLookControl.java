@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.entity.ai.control;
 
-import aqario.fowlplay.common.entity.FlyingBirdEntity;
+import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.control.LookControl;
@@ -49,6 +49,9 @@ public class BirdLookControl extends LookControl {
     }
 
     private void tickOnGround() {
+        if (this.resetXRotOnTick()) {
+            this.mob.setXRot(0.0F);
+        }
         if(this.lookAtCooldown > 0) {
             this.lookAtCooldown--;
             this.getYRotD().ifPresent(yaw -> this.mob.yHeadRot = this.rotateTowards(this.mob.yHeadRot, this.calculateYaw(this.mob.yHeadRot, yaw), this.yMaxRotSpeed));

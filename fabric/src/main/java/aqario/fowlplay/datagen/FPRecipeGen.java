@@ -11,8 +11,8 @@ import net.minecraft.world.item.Items;
 
 import java.util.concurrent.CompletableFuture;
 
-public class FowlPlayRecipeGen extends FabricRecipeProvider {
-    public FowlPlayRecipeGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+public class FPRecipeGen extends FabricRecipeProvider {
+    public FPRecipeGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 

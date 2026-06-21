@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.worldgen;
 
 import aqario.fowlplay.common.entity.bird.BirdEntity;
-import aqario.fowlplay.core.tags.FowlPlayBlockTags;
+import aqario.fowlplay.core.tags.FPBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
@@ -24,7 +24,7 @@ public final class SpawnPredicates {
     @SuppressWarnings("unused")
     public static boolean canSpawnShorebirds(EntityType<? extends BirdEntity> type, LevelAccessor world, MobSpawnType spawnReason, BlockPos pos, RandomSource random) {
         return hasSkyAccess(world, pos)
-            && (world.getBlockState(pos.below()).is(FowlPlayBlockTags.SHOREBIRDS_SPAWNABLE_ON)
+            && (world.getBlockState(pos.below()).is(FPBlockTags.SHOREBIRDS_SPAWNABLE_ON)
             || world.getFluidState(pos.below()).is(FluidTags.WATER)
             || isMidairSpawn(world, pos));
     }

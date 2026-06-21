@@ -2,11 +2,11 @@ package aqario.fowlplay.client;
 
 import aqario.fowlplay.client.particle.SmallBubbleParticle;
 import aqario.fowlplay.client.render.debug.BirdDebugRenderer;
-import aqario.fowlplay.client.render.debug.FowlPlayDebugRenderers;
+import aqario.fowlplay.client.render.debug.FPDebugRenderers;
 import aqario.fowlplay.client.render.debug.GenericDebugRenderer;
 import aqario.fowlplay.client.render.entity.*;
 import aqario.fowlplay.client.render.entity.model.*;
-import aqario.fowlplay.common.config.FowlPlayConfig;
+import aqario.fowlplay.common.config.FPConfig;
 import aqario.fowlplay.common.network.clientbound.BirdDebugPayload;
 import aqario.fowlplay.common.network.clientbound.GenericDebugPayload;
 import aqario.fowlplay.core.FPEntityTypes;
@@ -29,11 +29,11 @@ public class FowlPlayClient {
     public static void init() {
         if(FowlPlay.isDebugUtilsLoaded()) {
             ResourceLocation debugBirdId = BirdDebugPayload.TYPE.id();
-            FowlPlayDebugRenderers.register(BirdDebugRenderer.INSTANCE);
+            FPDebugRenderers.register(BirdDebugRenderer.INSTANCE);
             RegisterDebugRenderers.registerServerToggle(debugBirdId);
             RegisterDebugRenderers.registerClientHandler(debugBirdId, b -> FowlPlayClient.DEBUG_BIRD = b);
             ResourceLocation debugGenericId = GenericDebugPayload.TYPE.id();
-            FowlPlayDebugRenderers.register(GenericDebugRenderer.INSTANCE);
+            FPDebugRenderers.register(GenericDebugRenderer.INSTANCE);
             RegisterDebugRenderers.registerServerToggle(debugGenericId);
             RegisterDebugRenderers.registerClientHandler(debugGenericId, b -> FowlPlayClient.DEBUG_GENERIC = b);
 
@@ -92,7 +92,7 @@ public class FowlPlayClient {
         RenderRegistry.modelLayer(ScarecrowModel.INNER_ARMOR, () -> ScarecrowArmorModel.createBodyLayer(HAT_DILATION));
         RenderRegistry.modelLayer(ScarecrowModel.OUTER_ARMOR, () -> ScarecrowArmorModel.createBodyLayer(ARMOR_DILATION));
 
-        if(FowlPlayConfig.getInstance().customChickenModel) {
+        if(FPConfig.getInstance().customChickenModel) {
             RenderRegistry.modelLayer(CustomChickenModel.MODEL_LAYER, CustomChickenModel::createBodyLayer);
             RenderRegistry.modelLayer(CustomBabyChickenModel.MODEL_LAYER, CustomBabyChickenModel::createBodyLayer);
         }
@@ -114,7 +114,7 @@ public class FowlPlayClient {
         RenderRegistry.entityRenderer(FPEntityTypes.SPARROW, SparrowRenderer::new);
         RenderRegistry.entityRenderer(FPEntityTypes.SCARECROW, ScarecrowRenderer::new);
 
-        if(FowlPlayConfig.getInstance().customChickenModel) {
+        if(FPConfig.getInstance().customChickenModel) {
             RenderRegistry.entityRenderer(Suppliers.ofInstance(EntityType.CHICKEN), CustomChickenRenderer::new);
         }
     }

@@ -1,7 +1,7 @@
 package aqario.fowlplay.datagen;
 
 import aqario.fowlplay.core.FowlPlay;
-import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
+import aqario.fowlplay.core.tags.FPEntityTypeTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.*;
@@ -17,8 +17,8 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class FowlPlayAdvancementGen extends FabricAdvancementProvider {
-    protected FowlPlayAdvancementGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
+public class FPAdvancementGen extends FabricAdvancementProvider {
+    protected FPAdvancementGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(output, registryLookup);
     }
 
@@ -44,7 +44,7 @@ public class FowlPlayAdvancementGen extends FabricAdvancementProvider {
                 "hit_flying_bird",
                 PlayerHurtEntityTrigger.TriggerInstance.playerHurtEntity(
                     DamagePredicate.Builder.damageInstance().type(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(DamageTypeTags.IS_PROJECTILE))),
-                    Optional.of(EntityPredicate.Builder.entity().of(FowlPlayEntityTypeTags.BIRDS).nbt(new NbtPredicate(flying)).build())
+                    Optional.of(EntityPredicate.Builder.entity().of(FPEntityTypeTags.BIRDS).nbt(new NbtPredicate(flying)).build())
                 )
             )
             .save(exporter, FowlPlay.id("adventure/damage_flying_bird").toString());

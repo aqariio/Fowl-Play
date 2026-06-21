@@ -14,7 +14,7 @@ public final class FowlPlayNeoForge {
         FowlPlay.init();
 
         modBus.addListener(FowlPlayNeoForge::onNewRegistry);
-        FowlPlayDataAttachments.ATTACHMENT_TYPES.register(modBus);
+        FPDataAttachments.ATTACHMENT_TYPES.register(modBus);
     }
 
     private static void onNewRegistry(NewRegistryEvent event) {

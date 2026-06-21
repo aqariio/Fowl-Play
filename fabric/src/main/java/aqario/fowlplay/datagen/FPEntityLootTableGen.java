@@ -19,10 +19,10 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
-public class FowlPlayEntityLootTableGen extends SimpleFabricLootTableProvider {
+public class FPEntityLootTableGen extends SimpleFabricLootTableProvider {
     private final CompletableFuture<HolderLookup.Provider> registryLookupFuture;
 
-    public FowlPlayEntityLootTableGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
+    public FPEntityLootTableGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(output, registryLookup, LootContextParamSets.ENTITY);
         this.registryLookupFuture = registryLookup;
     }

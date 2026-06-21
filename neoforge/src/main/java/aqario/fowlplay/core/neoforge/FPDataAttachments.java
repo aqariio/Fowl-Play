@@ -10,7 +10,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.function.Supplier;
 
-public class FowlPlayDataAttachments {
+public class FPDataAttachments {
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(
         NeoForgeRegistries.ATTACHMENT_TYPES,
         FowlPlay.ID

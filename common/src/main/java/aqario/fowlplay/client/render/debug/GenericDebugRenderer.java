@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-public class GenericDebugRenderer implements FowlPlayDebugRenderers.LerpedDebugRenderer {
+public class GenericDebugRenderer implements FPDebugRenderers.LerpedDebugRenderer {
     public static final GenericDebugRenderer INSTANCE = new GenericDebugRenderer();
     private final Minecraft client;
     private final Map<UUID, GenericDebugPayload.Data> mobs = Maps.newHashMap();

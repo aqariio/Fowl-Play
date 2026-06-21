@@ -15,8 +15,8 @@ import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.common.util.CylindricalRadius;
 import aqario.fowlplay.common.util.Utils;
 import aqario.fowlplay.core.*;
-import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
-import aqario.fowlplay.core.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.tags.FPEntityTypeTags;
+import aqario.fowlplay.core.tags.FPItemTags;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.Holder;
@@ -215,12 +215,12 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     }
 
     public Ingredient getFood() {
-        return Ingredient.of(FowlPlayItemTags.DUCK_FOOD);
+        return Ingredient.of(FPItemTags.DUCK_FOOD);
     }
 
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
-        return entity.getType().is(FowlPlayEntityTypeTags.DUCK_AVOIDS);
+        return entity.getType().is(FPEntityTypeTags.DUCK_AVOIDS);
     }
 
     @Override

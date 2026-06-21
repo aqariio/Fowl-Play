@@ -1,6 +1,6 @@
 package aqario.fowlplay.mixin.client;
 
-import aqario.fowlplay.client.render.debug.FowlPlayDebugRenderers;
+import aqario.fowlplay.client.render.debug.FPDebugRenderers;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
@@ -38,6 +38,6 @@ public class LevelRendererMixin {
         @Local MultiBufferSource.BufferSource bufferSource,
         @Local Vec3 camPos
     ) {
-        FowlPlayDebugRenderers.render(poseStack, bufferSource, camPos.x, camPos.y, camPos.z, deltaTracker.getGameTimeDeltaPartialTick(true));
+        FPDebugRenderers.render(poseStack, bufferSource, camPos.x, camPos.y, camPos.z, deltaTracker.getGameTimeDeltaPartialTick(true));
     }
 }

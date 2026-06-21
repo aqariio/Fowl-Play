@@ -5,7 +5,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 
-public final class FowlPlayEntityTypeTags {
+public final class FPEntityTypeTags {
     public static final TagKey<EntityType<?>> BIRDS = create("birds");
     public static final TagKey<EntityType<?>> BLUE_JAY_AVOIDS = create("blue_jay_avoids");
     public static final TagKey<EntityType<?>> CARDINAL_AVOIDS = create("cardinal_avoids");

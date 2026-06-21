@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.worldgen;
 
-import aqario.fowlplay.common.config.FowlPlayConfig;
+import aqario.fowlplay.common.config.FPConfig;
 import aqario.fowlplay.common.entity.bird.dove.PigeonEntity;
 import aqario.fowlplay.core.FPEntityTypes;
 import net.minecraft.core.BlockPos;
@@ -26,7 +26,7 @@ public class PigeonSpawner implements CustomSpawner {
     public int tick(ServerLevel world, boolean spawnMonsters, boolean spawnAnimals) {
         if (!spawnAnimals
             || !world.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)
-            || FowlPlayConfig.getInstance().pigeonSpawnWeight <= 0
+            || FPConfig.getInstance().pigeonSpawnWeight <= 0
         ) {
             return 0;
         }

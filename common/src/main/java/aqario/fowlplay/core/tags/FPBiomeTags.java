@@ -5,7 +5,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 
-public final class FowlPlayBiomeTags {
+public final class FPBiomeTags {
     public static final TagKey<Biome> SPAWNS_BLUE_JAYS = create("spawns_blue_jays");
     public static final TagKey<Biome> SPAWNS_CARDINALS = create("spawns_cardinals");
     public static final TagKey<Biome> SPAWNS_CHICKADEES = create("spawns_chickadees");

@@ -8,8 +8,8 @@ import net.minecraft.data.models.ItemModelGenerators;
 import net.minecraft.data.models.model.ModelLocationUtils;
 import net.minecraft.world.item.Item;
 
-public class FowlPlayModelGen extends FabricModelProvider {
-    public FowlPlayModelGen(FabricDataOutput output) {
+public class FPModelGen extends FabricModelProvider {
+    public FPModelGen(FabricDataOutput output) {
         super(output);
     }
 

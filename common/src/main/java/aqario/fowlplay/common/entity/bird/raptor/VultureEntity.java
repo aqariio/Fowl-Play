@@ -9,8 +9,8 @@ import aqario.fowlplay.common.entity.bird.TrustingBirdEntity;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FPSchedules;
 import aqario.fowlplay.core.FPSoundEvents;
-import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
-import aqario.fowlplay.core.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.tags.FPEntityTypeTags;
+import aqario.fowlplay.core.tags.FPItemTags;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.CompoundTag;
@@ -94,18 +94,18 @@ public class VultureEntity extends TrustingBirdEntity implements BirdBrain<Vultu
     }
 
     public Ingredient getFood() {
-        return Ingredient.of(FowlPlayItemTags.VULTURE_FOOD);
+        return Ingredient.of(FPItemTags.VULTURE_FOOD);
     }
 
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
-        return entity.getType().is(FowlPlayEntityTypeTags.VULTURE_AVOIDS);
+        return entity.getType().is(FPEntityTypeTags.VULTURE_AVOIDS);
     }
 
     @Override
     public boolean canHunt(LivingEntity target) {
-        return target.getType().is(FowlPlayEntityTypeTags.VULTURE_HUNT_TARGETS) ||
-            (target.getType().is(FowlPlayEntityTypeTags.VULTURE_BABY_HUNT_TARGETS) && target.isBaby());
+        return target.getType().is(FPEntityTypeTags.VULTURE_HUNT_TARGETS) ||
+            (target.getType().is(FPEntityTypeTags.VULTURE_BABY_HUNT_TARGETS) && target.isBaby());
     }
 
     @Override

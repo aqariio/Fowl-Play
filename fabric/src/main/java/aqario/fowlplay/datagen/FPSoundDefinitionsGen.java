@@ -12,8 +12,8 @@ import net.minecraft.sounds.SoundEvent;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
-public class FowlPlaySoundDefinitionsGen extends SoundDefinitionsProvider {
-    protected FowlPlaySoundDefinitionsGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
+public class FPSoundDefinitionsGen extends SoundDefinitionsProvider {
+    protected FPSoundDefinitionsGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(output, FowlPlay.ID, registryLookup);
     }
 

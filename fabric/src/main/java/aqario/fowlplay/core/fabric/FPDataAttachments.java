@@ -11,7 +11,7 @@ import net.minecraft.core.Holder;
 import java.util.function.Consumer;
 
 @SuppressWarnings("UnstableApiUsage")
-public class FowlPlayDataAttachments {
+public class FPDataAttachments {
     public static final AttachmentType<Holder<ChickenVariant>> CHICKEN_VARIANT = register(
         "chicken_variant",
         builder -> builder

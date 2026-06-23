@@ -1,9 +1,12 @@
 package aqario.fowlplay.core.forge;
 
+import aqario.fowlplay.client.forge.FowlPlayForgeClient;
 import aqario.fowlplay.core.FowlPlay;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.util.Objects;
 
@@ -11,6 +14,10 @@ import java.util.Objects;
 public final class FowlPlayForge {
     public FowlPlayForge() {
         FowlPlay.init();
+
+        if(FMLEnvironment.dist == Dist.CLIENT) {
+            new FowlPlayForgeClient();
+        }
     }
 
     @SuppressWarnings("removal")

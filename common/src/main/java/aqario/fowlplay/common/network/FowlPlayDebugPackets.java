@@ -10,13 +10,12 @@ import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FowlPlay;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
+import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.game.DebugEntityNameGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -65,8 +64,8 @@ public class FowlPlayDebugPackets {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         payloadData.write(buf);
 
-        ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(FowlPlayClient.DEBUG_BIRD_ID, buf);
-        sendToAll((ServerLevel) entity.level(), packet);
+//        ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(FowlPlayClient.DEBUG_GENERIC_ID, buf);
+        sendToAll((ServerLevel) entity.level(), FowlPlayClient.DEBUG_GENERIC_ID, buf);
     }
 
     @SuppressWarnings("deprecation")
@@ -134,49 +133,50 @@ public class FowlPlayDebugPackets {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         data.write(buf);
 
-        ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(FowlPlayClient.DEBUG_BIRD_ID, buf);
-        sendToAll((ServerLevel) bird.level(), packet);
+//        ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(FowlPlayClient.DEBUG_BIRD_ID, buf);
+        sendToAll((ServerLevel) bird.level(), FowlPlayClient.DEBUG_BIRD_ID, buf);
     }
 
     @SuppressWarnings("deprecation")
     private static List<String> getMemoryDescriptions(LivingEntity entity, long gameTime) {
         Map<MemoryModuleType<?>, Optional<? extends ExpirableValue<?>>> map = entity.getBrain().getMemories();
         List<String> list = Lists.newArrayList();
+
         for(Map.Entry<MemoryModuleType<?>, Optional<? extends ExpirableValue<?>>> entry : map.entrySet()) {
             MemoryModuleType<?> memoryModuleType = entry.getKey();
             Optional<? extends ExpirableValue<?>> optional = entry.getValue();
-            String value;
+            String string;
             if(optional.isPresent()) {
                 ExpirableValue<?> expirableValue = optional.get();
                 Object object = expirableValue.getValue();
                 if(memoryModuleType == MemoryModuleType.HEARD_BELL_TIME) {
                     long l = gameTime - (Long) object;
-                    value = l + " ticks ago";
+                    string = l + " ticks ago";
                 }
                 else if(expirableValue.canExpire()) {
-                    String desc = getMemoryValueDescription((ServerLevel) entity.level(), object);
-                    value = desc + " (ttl: " + expirableValue.getTimeToLive() + ")";
+                    string = getShortDescription((ServerLevel) entity.level(), object) + " (ttl: " + expirableValue.getTimeToLive() + ")";
                 }
                 else {
-                    value = getMemoryValueDescription((ServerLevel) entity.level(), object);
+                    string = getShortDescription((ServerLevel) entity.level(), object);
                 }
             }
             else {
-                value = "-";
+                string = "-";
             }
-            String memory = BuiltInRegistries.MEMORY_MODULE_TYPE.getKey(memoryModuleType).getPath();
-            list.add(memory + ": " + value);
+
+            list.add(BuiltInRegistries.MEMORY_MODULE_TYPE.getKey(memoryModuleType).getPath() + ": " + string);
         }
+
         list.sort(String::compareTo);
         return list;
     }
 
-    private static String getMemoryValueDescription(ServerLevel world, @Nullable Object object) {
+    private static String getShortDescription(ServerLevel level, @Nullable Object object) {
         if(object == null) {
             return "-";
         }
         if(object instanceof UUID uuid) {
-            return getMemoryValueDescription(world, world.getEntity(uuid));
+            return getShortDescription(level, level.getEntity(uuid));
         }
         if(object instanceof LivingEntity entity) {
             return DebugEntityNameGenerator.getEntityName(entity);
@@ -185,39 +185,48 @@ public class FowlPlayDebugPackets {
             return nameable.getName().getString();
         }
         if(object instanceof WalkTarget walkTarget) {
-            return getMemoryValueDescription(world, walkTarget.getTarget());
+            return getShortDescription(level, walkTarget.getTarget());
         }
         if(object instanceof EntityTracker entityLookTarget) {
-            return getMemoryValueDescription(world, entityLookTarget.getEntity());
+            return getShortDescription(level, entityLookTarget.getEntity());
         }
-        if(object instanceof GlobalPos globalPos) {
-            return getMemoryValueDescription(world, globalPos.pos());
+        if(object instanceof GlobalPos pos) {
+            return getShortDescription(level, pos.pos());
         }
         if(object instanceof BlockPosTracker blockPosLookTarget) {
-            return getMemoryValueDescription(world, blockPosLookTarget.currentBlockPosition());
+            return getShortDescription(level, blockPosLookTarget.currentBlockPosition());
         }
         if(object instanceof DamageSource damageSource) {
             Entity entity = damageSource.getEntity();
-            return entity == null ? object.toString() : getMemoryValueDescription(world, entity);
-        }
-        if(object instanceof Collection<?> iterable) {
-            List<String> list = Lists.newArrayList();
-            iterable.forEach(o -> list.add(getMemoryValueDescription(world, o)));
-            return list.toString();
+            return entity == null ? object.toString() : getShortDescription(level, entity);
         }
         if(object instanceof NearestVisibleLivingEntities cache) {
             List<String> list = Lists.newArrayList();
-            cache.find(entity -> true).forEach(o -> list.add(getMemoryValueDescription(world, o)));
+
+            for(Object o : cache.nearbyEntities) {
+                list.add(getShortDescription(level, o));
+            }
+
             return list.toString();
         }
-        return object.toString();
+        if(!(object instanceof Collection<?> iterable)) {
+            return object.toString();
+        }
+        List<String> list = Lists.newArrayList();
+
+        for(Object object2 : iterable) {
+            list.add(getShortDescription(level, object2));
+        }
+
+        return list.toString();
     }
 
-    private static void sendToAll(ServerLevel world, Packet<?> packet) {
-        world.players().forEach(player -> {
-            if(FowlPlayClient.DEBUG_BIRD) {
-                player.connection.send(packet);
-            }
-        });
+    private static void sendToAll(ServerLevel world, ResourceLocation id, FriendlyByteBuf packet) {
+        NetworkManager.sendToPlayers(world.players(), id, packet);
+//        world.players().forEach(player -> {
+//            if(FowlPlayClient.DEBUG_BIRD) {
+//                player.connection.send(packet);
+//            }
+//        });
     }
 }

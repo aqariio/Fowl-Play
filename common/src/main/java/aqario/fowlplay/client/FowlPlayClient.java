@@ -23,12 +23,13 @@ public class FowlPlayClient {
     private static final CubeDeformation HAT_DILATION = new CubeDeformation(0.5F);
     public static final ResourceLocation DEBUG_BIRD_ID = FowlPlay.id("debug/bird");
     public static final ResourceLocation DEBUG_GENERIC_ID = FowlPlay.id("debug/generic");
+    public static final BirdDebugRenderer BIRD_DEBUG_RENDERER = new BirdDebugRenderer();
     public static boolean DEBUG_BIRD = false;
     public static boolean DEBUG_GENERIC = false;
 
     public static void init() {
         if(FowlPlay.isDebugUtilsLoaded()) {
-            FowlPlayDebugRenderers.register(BirdDebugRenderer.INSTANCE);
+            FowlPlayDebugRenderers.register(BIRD_DEBUG_RENDERER);
             RegisterDebugRenderers.registerServerToggle(DEBUG_BIRD_ID);
             RegisterDebugRenderers.registerClientHandler(DEBUG_BIRD_ID, b -> FowlPlayClient.DEBUG_BIRD = b);
             FowlPlayDebugRenderers.register(GenericDebugRenderer.INSTANCE);
@@ -39,7 +40,7 @@ public class FowlPlayClient {
                 NetworkManager.s2c(),
                 DEBUG_BIRD_ID,
                 (payload, context) ->
-                    BirdDebugRenderer.INSTANCE.addBird(new BirdDebugRenderer.BirdData(payload))
+                    BIRD_DEBUG_RENDERER.addBird(new BirdDebugRenderer.BirdData(payload))
             );
             NetworkManager.registerReceiver(
                 NetworkManager.s2c(),

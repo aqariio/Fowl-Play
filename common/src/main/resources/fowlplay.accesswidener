@@ -10,6 +10,9 @@ accessible method net/minecraft/core/particles/SimpleParticleType <init> (Z)V
 accessible method net/minecraft/world/level/pathfinder/Path setDebug ([Lnet/minecraft/world/level/pathfinder/Node;[Lnet/minecraft/world/level/pathfinder/Node;Ljava/util/Set;)V
 accessible method net/minecraft/world/entity/Entity getBlockPosBelowThatAffectsMyMovement ()Lnet/minecraft/core/BlockPos;
 accessible method net/minecraft/world/level/NaturalSpawner getTopNonCollidingPos (Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/world/entity/EntityType;II)Lnet/minecraft/core/BlockPos;
+accessible field net/minecraft/world/entity/ai/memory/NearestVisibleLivingEntities nearbyEntities Ljava/util/List;
+accessible method net/minecraft/network/protocol/game/DebugPackets writeBrain (Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/network/FriendlyByteBuf;)V
+accessible method net/minecraft/network/protocol/game/DebugPackets getMemoryDescriptions (Lnet/minecraft/world/entity/LivingEntity;J)Ljava/util/List;
 
 # all my sbl shenanigans
 extendable class net/minecraft/world/entity/ai/Brain$Provider

@@ -17,6 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
+import net.minecraft.util.StringUtil;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.pathfinder.Node;
@@ -24,23 +25,24 @@ import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 import java.util.*;
 
 public class BirdDebugRenderer implements FowlPlayDebugRenderers.LerpedDebugRenderer {
-    public static final BirdDebugRenderer INSTANCE = new BirdDebugRenderer();
     private final Minecraft client;
     private final Map<UUID, BirdData> birds = Maps.newHashMap();
     @Nullable
     private UUID targetedEntity;
 
-    private BirdDebugRenderer() {
+    public BirdDebugRenderer() {
         this.client = Minecraft.getInstance();
     }
 
     @Override
     public void clear() {
         this.targetedEntity = null;
+        this.birds.clear();
     }
 
     public void addBird(BirdData birdData) {
@@ -83,7 +85,8 @@ public class BirdDebugRenderer implements FowlPlayDebugRenderers.LerpedDebugRend
     }
 
     private void draw(PoseStack matrices, MultiBufferSource vertexConsumers, double x, double y, double z, double partialTick) {
-        this.birds.values().forEach(birdData -> {
+        var values = new ArrayList<>(this.birds.values());
+        values.forEach(birdData -> {
             if(this.isClose(birdData)) {
                 drawBirdData(matrices, vertexConsumers, birdData, this.isTargeted(birdData), x, y, z, partialTick);
             }
@@ -337,9 +340,8 @@ public class BirdDebugRenderer implements FowlPlayDebugRenderers.LerpedDebugRend
             double cz = camera.getPosition().z;
             poseStack.pushPose();
             poseStack.translate((float) (x - cx), (float) (y - cy) + 0.07F, (float) (z - cz));
-//            poseStack.mulPose(Axis.YP.rotationDegrees((float) Math.toDegrees(Math.atan2(cx - x, cz - z))));
-            poseStack.mulPose(camera.rotation());
-            poseStack.scale(scale, -scale, scale);
+            poseStack.mulPoseMatrix(new Matrix4f().rotation(camera.rotation()));
+            poseStack.scale(-scale, -scale, scale);
             float h = bl ? -font.width(text) / 2.0F : 0.0F;
             h -= f / scale;
             font.drawInBatch(
@@ -419,7 +421,10 @@ public class BirdDebugRenderer implements FowlPlayDebugRenderers.LerpedDebugRend
             buf.writeBoolean(this.perched);
             buf.writeCollection(this.activities, FriendlyByteBuf::writeUtf);
             buf.writeCollection(this.behaviours, FriendlyByteBuf::writeUtf);
-            buf.writeCollection(this.memories, FriendlyByteBuf::writeUtf);
+            buf.writeCollection(this.memories, (friendlyByteBuf, string) -> {
+                String string2 = StringUtil.truncateStringIfNecessary(string, 255, true);
+                friendlyByteBuf.writeUtf(string2);
+            });
             buf.writeNullable(this.schedule, FriendlyByteBuf::writeUtf);
             buf.writeCollection(this.pois, FriendlyByteBuf::writeBlockPos);
             buf.writeCollection(this.potentialPois, FriendlyByteBuf::writeBlockPos);

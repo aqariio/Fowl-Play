@@ -50,18 +50,18 @@ jobs:
                     cache-read-only: false
                     gradle-version: wrapper
 
-#            -   name: "Run build"
-#                run: ./gradlew build
-#
-#            -   name: "Upload built jars"
-#                uses: actions/upload-artifact@v4
-#                with:
-#                    name: built-jars-${{ inputs.branch }}
-#                    if-no-files-found: error
-#                    path: |
-#                        ./**/build/libs/*-fabric.jar
-#                        ./**/build/libs/*-forge.jar
-#                        ./**/build/libs/*-neoforge.jar
+            -   name: "Run build"
+                run: ./gradlew build
+
+            -   name: "Upload built jars"
+                uses: actions/upload-artifact@v4
+                with:
+                    name: built-jars-${{ inputs.branch }}
+                    if-no-files-found: error
+                    path: |
+                        ./**/build/libs/*-fabric.jar
+                        ./**/build/libs/*-forge.jar
+                        ./**/build/libs/*-neoforge.jar
 #
             -   name: "Generate matrix for publishing"
                 id: gen-matrix

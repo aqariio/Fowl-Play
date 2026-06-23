@@ -2,7 +2,6 @@ package aqario.fowlplay.common.entity.ai.brain;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,10 +13,8 @@ import net.minecraft.world.entity.ai.behavior.GateBehavior;
 import net.minecraft.world.entity.ai.memory.ExpirableValue;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
-import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
-import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrain;
 import net.tslat.smartbrainlib.api.core.behaviour.GroupBehaviour;
@@ -26,14 +23,13 @@ import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.object.BrainBehaviourConsumer;
 import net.tslat.smartbrainlib.object.BrainBehaviourPredicate;
 import net.tslat.smartbrainlib.util.BrainUtils;
-import org.apache.commons.lang3.mutable.MutableObject;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class ExtendedBrain<E extends LivingEntity & SmartBrainOwner<E>> extends SmartBrain<E> {
+public class ExtendedBrain<E extends LivingEntity & ExtendedBrainOwner<E>> extends SmartBrain<E> {
     private final List<MemoryModuleType<?>> expirableMemories = new ObjectArrayList<>();
     private final List<ActivityBehaviours<E>> behaviours = new ObjectArrayList<>();
     private final List<Pair<SensorType<ExtendedSensor<? super E>>, ExtendedSensor<? super E>>> sensors = new ObjectArrayList<>();
@@ -44,13 +40,13 @@ public class ExtendedBrain<E extends LivingEntity & SmartBrainOwner<E>> extends 
     public ExtendedBrain(List<MemoryModuleType<?>> memories, List<? extends ExtendedSensor<E>> sensors, @Nullable List<BrainActivityGroup<E>> taskList) {
         super(memories, sensors, taskList, false);
 
-        for (ExtendedSensor<E> sensor : sensors) {
-            this.sensors.add(Pair.of((SensorType)sensor.type(), sensor));
+        for(ExtendedSensor<E> sensor : sensors) {
+            this.sensors.add(Pair.of((SensorType) sensor.type(), sensor));
         }
 
-        if (taskList != null) {
-            for (BrainActivityGroup<E> group : taskList) {
-                addActivity(group);
+        if(taskList != null) {
+            for(BrainActivityGroup<E> group : taskList) {
+                this.addActivity(group);
             }
         }
     }
@@ -94,17 +90,37 @@ public class ExtendedBrain<E extends LivingEntity & SmartBrainOwner<E>> extends 
     }
 
     private void findAndSetActiveActivity(E entity) {
+        Activity nextActivity = this.getFirstValidActivity(entity.getActivityPriorities());
+
+        if(nextActivity != null && entity.getScheduleIgnoringActivities().contains(nextActivity)) {
+            this.setActiveActivity(nextActivity);
+            return;
+        }
+
         if(this.schedule != null) {
             Activity scheduledActivity = this.schedule.tick(entity);
 
-            if(scheduledActivity != null && !this.getActiveActivities().contains(scheduledActivity) && this.activityRequirementsAreMet(scheduledActivity)) {
-                this.setActiveActivity(scheduledActivity);
-
+            if(scheduledActivity != null && this.activityRequirementsAreMet(scheduledActivity)) {
+                if(!this.isActive(scheduledActivity)) {
+                    this.setActiveActivity(scheduledActivity);
+                }
                 return;
             }
         }
 
-        setActiveActivityToFirstValid(entity.getActivityPriorities());
+        if(nextActivity != null) {
+            this.setActiveActivity(nextActivity);
+        }
+    }
+
+    @Nullable
+    protected Activity getFirstValidActivity(List<Activity> activities) {
+        for(Activity activity : activities) {
+            if(this.activityRequirementsAreMet(activity)) {
+                return activity;
+            }
+        }
+        return null;
     }
 
     private void tickSensors(ServerLevel level, E entity) {
@@ -186,12 +202,6 @@ public class ExtendedBrain<E extends LivingEntity & SmartBrainOwner<E>> extends 
         }
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <U> Optional<U> getMemory(MemoryModuleType<U> type) {
-        return (Optional<U>) this.memories.computeIfAbsent(type, key -> Optional.empty()).map(ExpirableValue::getValue);
-    }
-
     @Override
     public <U> void setMemoryInternal(MemoryModuleType<U> memoryType, Optional<? extends ExpirableValue<?>> memory) {
         if(memory.isPresent() && memory.get().getValue() instanceof Collection<?> collection && collection.isEmpty()) {
@@ -203,31 +213,6 @@ public class ExtendedBrain<E extends LivingEntity & SmartBrainOwner<E>> extends 
         if(memory.isPresent() && memory.get().canExpire() && !this.expirableMemories.contains(memoryType)) {
             this.expirableMemories.add(memoryType);
         }
-    }
-
-    @Override
-    public <U> boolean isMemoryValue(MemoryModuleType<U> memoryType, U memory) {
-        Optional<U> value = getMemory(memoryType);
-
-        return value.isPresent() && value.get().equals(memory);
-    }
-
-    private static <E extends LivingEntity & SmartBrainOwner<E>> Codec<Brain<E>> emptyBrainCodec() {
-        MutableObject<Codec<Brain<E>>> brainCodec = new MutableObject<>();
-
-        brainCodec.setValue(Codec.unit(() -> new Brain<>(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(), brainCodec::getValue)));
-
-        return brainCodec.getValue();
-    }
-
-    private static <E extends LivingEntity & SmartBrainOwner<E>> List<? extends SensorType<? extends Sensor<? super E>>> convertSensorsToTypes(List<? extends ExtendedSensor<E>> sensors) {
-        List<SensorType<? extends Sensor<? super E>>> types = new ObjectArrayList<>(sensors.size());
-
-        for(ExtendedSensor<?> sensor : sensors) {
-            types.add((SensorType) sensor.type());
-        }
-
-        return types;
     }
 
     @Override
@@ -452,7 +437,7 @@ public class ExtendedBrain<E extends LivingEntity & SmartBrainOwner<E>> extends 
         this.sensors.add(Pair.of(sensorType, sensor));
     }
 
-    private record ActivityBehaviours<E extends LivingEntity & SmartBrainOwner<E>>(
+    private record ActivityBehaviours<E extends LivingEntity & ExtendedBrainOwner<E>>(
         int priority,
         List<Pair<Activity, List<BehaviorControl<? super E>>>> behaviours
     ) {

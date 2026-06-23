@@ -12,7 +12,6 @@ import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.behavior.BehaviorControl;
 import net.minecraft.world.entity.ai.behavior.GateBehavior;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrain;
 import net.tslat.smartbrainlib.api.core.behaviour.GroupBehaviour;
@@ -26,7 +25,7 @@ import java.util.Set;
  * Extension of {@link net.tslat.smartbrainlib.api.core.SmartBrainProvider} that uses the
  * {@link ExtendedBrain} class for its activity-bound behaviour stopping
  */
-public class ExtendedBrainProvider<E extends LivingEntity & SmartBrainOwner<E>> extends Brain.Provider<E> {
+public class ExtendedBrainProvider<E extends LivingEntity & ExtendedBrainOwner<E>> extends Brain.Provider<E> {
     private static final Map<EntityType<? extends LivingEntity>, ImmutableList<MemoryModuleType<?>>> BRAIN_MEMORY_CACHE = new Object2ObjectOpenHashMap<>();
     private final E owner;
     private final boolean nonStaticMemories;

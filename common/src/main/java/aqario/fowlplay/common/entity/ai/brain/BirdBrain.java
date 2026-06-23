@@ -5,16 +5,17 @@ import aqario.fowlplay.common.util.ActivityListBuilder;
 import aqario.fowlplay.core.FPActivities;
 import aqario.fowlplay.core.FPMemoryTypes;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.schedule.Activity;
-import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBrainOwner<E> {
+public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends ExtendedBrainOwner<E> {
     default void addActivities(final ActivityListBuilder<E> builder) {
         builder.add(this.avoidActivity());
         builder.add(this.deliverActivity());
@@ -173,17 +174,16 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
         );
     }
 
-    // TODO: implement
-//    @Override
-//    default Set<Activity> getScheduleIgnoringActivities() {
-//        return ObjectArraySet.of(
-//            FPActivities.DELIVER.get(),
-//            Activity.AVOID,
-//            Activity.FIGHT,
-//            FPActivities.FOLLOW.get(),
-//            FPActivities.PICK_UP.get()
-//        );
-//    }
+    @Override
+    default Set<Activity> getScheduleIgnoringActivities() {
+        return ObjectArraySet.of(
+            FPActivities.DELIVER.get(),
+            Activity.AVOID,
+            Activity.FIGHT,
+            FPActivities.FOLLOW.get(),
+            FPActivities.PICK_UP.get()
+        );
+    }
 
     @Override
     default Activity getDefaultActivity() {

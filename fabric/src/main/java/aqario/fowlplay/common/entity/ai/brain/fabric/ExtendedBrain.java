@@ -1,5 +1,6 @@
-package aqario.fowlplay.common.entity.ai.brain;
+package aqario.fowlplay.common.entity.ai.brain.fabric;
 
+import aqario.fowlplay.common.entity.ai.brain.ExtendedBrainOwner;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -30,15 +31,17 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class ExtendedBrain<E extends LivingEntity & ExtendedBrainOwner<E>> extends SmartBrain<E> {
-    private final List<MemoryModuleType<?>> expirableMemories = new ObjectArrayList<>();
-    private final List<ActivityBehaviours<E>> behaviours = new ObjectArrayList<>();
-    private final List<Pair<SensorType<ExtendedSensor<? super E>>, ExtendedSensor<? super E>>> sensors = new ObjectArrayList<>();
-    private SmartBrainSchedule schedule = null;
+    protected final List<MemoryModuleType<?>> expirableMemories;
+    protected final List<ActivityBehaviours<E>> behaviours;
+    protected final List<Pair<SensorType<ExtendedSensor<? super E>>, ExtendedSensor<? super E>>> sensors = new ObjectArrayList<>();
+    protected SmartBrainSchedule schedule = null;
 
-    private boolean sortBehaviours = false;
+    protected boolean sortBehaviours = false;
 
     public ExtendedBrain(List<MemoryModuleType<?>> memories, List<? extends ExtendedSensor<E>> sensors, @Nullable List<BrainActivityGroup<E>> taskList) {
-        super(memories, sensors, taskList, false);
+        super(memories, sensors, null, false);
+        this.expirableMemories = new ObjectArrayList<>();
+        this.behaviours = new ObjectArrayList<>();
 
         for(ExtendedSensor<E> sensor : sensors) {
             this.sensors.add(Pair.of((SensorType) sensor.type(), sensor));
@@ -217,7 +220,7 @@ public class ExtendedBrain<E extends LivingEntity & ExtendedBrainOwner<E>> exten
 
     @Override
     public Brain<E> copyWithoutBehaviors() {
-        SmartBrain<E> brain = new SmartBrain<>(this.memories.keySet().stream().toList(), this.sensors.stream().map(pair -> (ExtendedSensor<E>) pair.getSecond()).toList(), null, false);
+        ExtendedBrain<E> brain = new ExtendedBrain<>(this.memories.keySet().stream().toList(), this.sensors.stream().map(pair -> (ExtendedSensor<E>) pair.getSecond()).toList(), null);
 
         for(Map.Entry<MemoryModuleType<?>, Optional<? extends ExpirableValue<?>>> entry : this.memories.entrySet()) {
             MemoryModuleType<?> memoryType = entry.getKey();
@@ -437,7 +440,7 @@ public class ExtendedBrain<E extends LivingEntity & ExtendedBrainOwner<E>> exten
         this.sensors.add(Pair.of(sensorType, sensor));
     }
 
-    private record ActivityBehaviours<E extends LivingEntity & ExtendedBrainOwner<E>>(
+    protected record ActivityBehaviours<E extends LivingEntity & ExtendedBrainOwner<E>>(
         int priority,
         List<Pair<Activity, List<BehaviorControl<? super E>>>> behaviours
     ) {

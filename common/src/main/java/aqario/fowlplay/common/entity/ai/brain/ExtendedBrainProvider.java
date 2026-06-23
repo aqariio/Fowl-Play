@@ -2,6 +2,7 @@ package aqario.fowlplay.common.entity.ai.brain;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Dynamic;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -23,7 +24,7 @@ import java.util.Set;
 
 /**
  * Extension of {@link net.tslat.smartbrainlib.api.core.SmartBrainProvider} that uses the
- * {@link ExtendedBrain} class for its activity-bound behaviour stopping
+ * ExtendedBrain class for its activity-bound behaviour stopping
  */
 public class ExtendedBrainProvider<E extends LivingEntity & ExtendedBrainOwner<E>> extends Brain.Provider<E> {
     private static final Map<EntityType<? extends LivingEntity>, ImmutableList<MemoryModuleType<?>>> BRAIN_MEMORY_CACHE = new Object2ObjectOpenHashMap<>();
@@ -59,11 +60,21 @@ public class ExtendedBrainProvider<E extends LivingEntity & ExtendedBrainOwner<E
             }
         }
 
-        ExtendedBrain<E> brain = new ExtendedBrain<E>(memories, (List<ExtendedSensor<E>>) sensors, (List) taskList);
+        SmartBrain<E> brain = constructBrain(this.owner, memories, (List<ExtendedSensor<E>>) sensors, (List) taskList);
 
         this.finaliseBrain(brain);
 
         return brain;
+    }
+
+    @ExpectPlatform
+    protected static <E extends LivingEntity & ExtendedBrainOwner<E>> SmartBrain<E> constructBrain(
+        E owner,
+        List<MemoryModuleType<?>> memories,
+        List<? extends ExtendedSensor<E>> sensors,
+        List<BrainActivityGroup<E>> taskList
+    ) {
+        throw new AssertionError();
     }
 
     private ImmutableList<MemoryModuleType<?>> createMemoryList(List<BrainActivityGroup<? extends E>> taskList, List<? extends ExtendedSensor<?>> sensors) {

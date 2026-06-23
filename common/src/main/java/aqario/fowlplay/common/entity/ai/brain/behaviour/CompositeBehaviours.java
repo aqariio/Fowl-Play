@@ -11,7 +11,6 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.tslat.smartbrainlib.api.core.behaviour.AllApplicableBehaviours;
 import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.RepeatingBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomSwimTarget;
 
@@ -106,7 +105,7 @@ public class CompositeBehaviours {
     }
 
     public static <E extends BirdEntity> ExtendedBehaviour<E> call() {
-        return new RepeatingBehaviour<E>(
+        return new FixedRepeatingBehaviour<E>(
             new Call<>()
         )
             .repeatNTimes(entity -> entity.getRandom().nextIntBetweenInclusive(3, 6))
@@ -117,7 +116,7 @@ public class CompositeBehaviours {
     }
 
     public static <E extends BirdEntity> ExtendedBehaviour<E> sing() {
-        return new RepeatingBehaviour<E>(
+        return new FixedRepeatingBehaviour<E>(
             new Sing<>()
         )
             .repeatNTimes(entity -> entity.getRandom().nextIntBetweenInclusive(1, 3))

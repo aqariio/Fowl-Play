@@ -32,7 +32,8 @@ public class NaturalSpawnerMixin {
         cancellable = true
     )
     private static void fowlplay$reduceSpawningFrequency(MobCategory group, ServerLevel world, LevelChunk chunk, NaturalSpawner.SpawnPredicate checker, NaturalSpawner.AfterSpawnCallback runner, CallbackInfo ci) {
-        if(group == CustomMobCategory.BIRDS.mobCategory && world.getLevelData().getGameTime() % 20L != 0L) {
+        final long spawningDelayTicks = 200L; // 10 seconds per spawning attempt
+        if(group == CustomMobCategory.BIRDS.mobCategory && world.getLevelData().getGameTime() % spawningDelayTicks != 0L) {
             ci.cancel();
         }
     }

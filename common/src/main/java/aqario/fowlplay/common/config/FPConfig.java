@@ -116,16 +116,16 @@ public class FPConfig {
     @SerialEntry
     public int duckMinGroupSize = 2;
     @SerialEntry
-    public int duckMaxGroupSize = 10;
+    public int duckMaxGroupSize = 6;
 
     // Goose
 
     @SerialEntry
     public int gooseSpawnWeight = 4;
     @SerialEntry
-    public int gooseMinGroupSize = 2;
+    public int gooseMinGroupSize = 1;
     @SerialEntry
-    public int gooseMaxGroupSize = 10;
+    public int gooseMaxGroupSize = 4;
 
     // Gull
 

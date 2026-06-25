@@ -1,5 +1,5 @@
 //? if neoforge {
-package aqario.fowlplay.neoforge.core;
+/*package aqario.fowlplay.neoforge.core;
 
 import aqario.fowlplay.core.FowlPlay;
 import net.neoforged.bus.api.IEventBus;
@@ -26,4 +26,4 @@ public final class FowlPlayNeoForge {
         return Objects.requireNonNull(ModLoadingContext.get().getActiveContainer().getEventBus());
     }
 }
-//?}
+*///?}

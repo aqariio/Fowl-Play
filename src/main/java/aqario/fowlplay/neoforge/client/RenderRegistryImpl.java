@@ -1,5 +1,5 @@
 //? if neoforge {
-package aqario.fowlplay.neoforge.client;
+/*package aqario.fowlplay.neoforge.client;
 
 import aqario.fowlplay.client.RenderRegistry;
 import aqario.fowlplay.neoforge.core.FowlPlayNeoForge;
@@ -35,4 +35,4 @@ public class RenderRegistryImpl {
         );
     }
 }
-//?}
+*///?}

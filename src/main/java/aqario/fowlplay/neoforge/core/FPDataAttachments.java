@@ -1,5 +1,5 @@
 //? if neoforge {
-package aqario.fowlplay.neoforge.core;
+/*package aqario.fowlplay.neoforge.core;
 
 import aqario.fowlplay.common.entity.variant.ChickenVariant;
 import aqario.fowlplay.core.FPBuiltInRegistries;
@@ -33,4 +33,4 @@ public class FPDataAttachments {
         );
     }
 }
-//?}
+*///?}

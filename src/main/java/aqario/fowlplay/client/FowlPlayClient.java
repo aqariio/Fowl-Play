@@ -37,7 +37,7 @@ public class FowlPlayClient {
             RegisterDebugRenderers.registerClientHandler(debugGenericId, b -> FowlPlayClient.DEBUG_GENERIC = b);
 
             //? if fabric {
-            /*ClientPlayNetworking.registerGlobalReceiver(
+            ClientPlayNetworking.registerGlobalReceiver(
                 BirdDebugPayload.TYPE,
                 (payload, context) ->
                     BirdDebugPayload.onReceive(payload)
@@ -47,7 +47,7 @@ public class FowlPlayClient {
                 (payload, context) ->
                     GenericDebugPayload.onReceive(payload)
             );
-            *///?}
+            //?}
             //? if neoforge {
 
             //?}

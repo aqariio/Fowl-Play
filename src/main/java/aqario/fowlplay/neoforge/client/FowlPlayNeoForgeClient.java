@@ -1,5 +1,5 @@
 //? if neoforge {
-package aqario.fowlplay.neoforge.client;
+/*package aqario.fowlplay.neoforge.client;
 
 import aqario.fowlplay.client.FowlPlayClient;
 import aqario.fowlplay.common.integration.YACLIntegration;
@@ -20,4 +20,4 @@ public class FowlPlayNeoForgeClient {
         );
     }
 }
-//?}
+*///?}

@@ -1,0 +1,48 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+issueTrackerURL = "https://github.com/aqariio/Fowl-Play/issues"
+license = "MIT"
+
+[[mods]]
+modId = "${id}"
+version = "${version}"
+displayName = "${name}"
+description = "Just smile and wave, boys. Smile and wave."
+authors = "aqario"
+credits = "Penguin60, Disketaa, owen233666, sanduicheirainox, Gnom1112, xz123456xz, sunbatheproductions"
+logoFile = "../../resources/assets/fowlplay/icon.png"
+displayURL = "https://modrinth.com/mod/fowlplay"
+
+[[dependencies.${id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "[${minecraft},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${id}]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1.210,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${id}]]
+modId = "smartbrainlib"
+type = "required"
+versionRange = "[1.16.11,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${id}]]
+modId = "yet_another_config_lib_v3"
+type = "required"
+versionRange = "[3.6.5+1.21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[mc-publish]
+dependencies = [
+    "architectury-api(required)",
+    "yacl(required)",
+]

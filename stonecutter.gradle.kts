@@ -1,31 +1,35 @@
 plugins {
     id("dev.kikugie.stonecutter")
 }
-stonecutter active "1.21.1-fabric"
 
-stonecutter registerChiseled tasks.register("chiseledBuild", stonecutter.chiseled) {
-    group = "project"
-    ofTask("build")
-}
+stonecutter active "1.21.1-neoforge"
 
-allprojects {
-    repositories {
-        mavenCentral()
-        mavenLocal()
-        maven("https://maven.neoforged.net/releases")
-        maven("https://maven.fabricmc.net/")
-        maven("https://thedarkcolour.github.io/KotlinForForge/")
-        maven("https://maven.quiltmc.org/repository/release/")
-        maven("https://api.modrinth.com/maven")
-        maven("https://maven.terraformersmc.com/releases/")
-        maven("https://gitlab.com/api/v4/projects/21830712/packages/maven")
-        maven("https://maven.isxander.dev/releases")
-        maven("https://dl.cloudsmith.io/public/tslat/sbl/maven/")
-        maven("https://maven.parchmentmc.org")
-        maven("https://maven.shedaniel.me/")
-        maven("https://repo.lucko.me/")
-//            content {
-//                includeModule 'me.lucko', 'spark-api'
-//            }
+// See https://stonecutter.kikugie.dev/wiki/config/params
+stonecutter parameters {
+    val (version, loader) = current.project.split('-', limit = 2)
+
+    // Makes version- and loader-specific properties apply from `stoncutter.properties.toml`
+    properties {
+        tags(version, loader)
+    }
+
+    // Adds constants to Stonecutter comments (i.e. for `//? if fabric {...`)
+    constants {
+        match(loader, "fabric", "neoforge")
+    }
+
+    swaps["mod_version"] = "\"${properties.get<String>("mod.version")}\";"
+    swaps["minecraft"] = "\"${node.metadata.version}\";"
+    constants["release"] = properties.get<String>("mod.id") != "template"
+    dependencies["fapi"] = properties.getOrNull<String>("deps.fabric_api") ?: "0"
+
+    replacements {
+        string(current.parsed >= "1.21.11") {
+            replace("ResourceLocation", "Identifier")
+        }
+
+        string(current.parsed >= "26.1") {
+            replace("classTweaker v2 named", "classTweaker v2 official")
+        }
     }
 }

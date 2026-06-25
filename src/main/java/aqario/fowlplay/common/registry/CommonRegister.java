@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.registry;
 
-import aqario.fowlplay.loaders.neoforge.common.registry.CommonRegisterImpl;
+import aqario.fowlplay.neoforge.common.registry.CommonRegisterImpl;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 

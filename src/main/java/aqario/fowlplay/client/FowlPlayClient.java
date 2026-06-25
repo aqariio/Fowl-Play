@@ -14,7 +14,6 @@ import aqario.fowlplay.core.FPParticleTypes;
 import aqario.fowlplay.core.FowlPlay;
 import com.google.common.base.Suppliers;
 import io.github.flemmli97.debugutils.api.RegisterDebugRenderers;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -38,7 +37,7 @@ public class FowlPlayClient {
             RegisterDebugRenderers.registerClientHandler(debugGenericId, b -> FowlPlayClient.DEBUG_GENERIC = b);
 
             //? if fabric {
-            ClientPlayNetworking.registerGlobalReceiver(
+            /*ClientPlayNetworking.registerGlobalReceiver(
                 BirdDebugPayload.TYPE,
                 (payload, context) ->
                     BirdDebugPayload.onReceive(payload)
@@ -48,7 +47,7 @@ public class FowlPlayClient {
                 (payload, context) ->
                     GenericDebugPayload.onReceive(payload)
             );
-            //?}
+            *///?}
             //? if neoforge {
 
             //?}

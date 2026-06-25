@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "id": "${id}",
+  "version": "${version}",
+  "name": "${name}",
+  "description": "Just smile and wave, boys. Smile and wave.",
+  "authors": [
+    "aqario"
+  ],
+  "contributors": [
+    "Penguin60",
+    "Disketaa",
+    "owen233666",
+    "sanduicheirainox",
+    "Gnom1112",
+    "xz123456xz",
+    "sunbatheproductions"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/fowlplay",
+    "sources": "https://github.com/aqariio/Fowl-Play",
+    "issues": "https://github.com/aqariio/Fowl-Play/issues"
+  },
+  "license": "MIT",
+  "icon": "assets/fowlplay/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "aqario.fowlplay.loaders.fabric.core.fabric.FowlPlayFabric"
+    ],
+    "client": [
+      "aqario.fowlplay.loaders.fabric.client.FowlPlayFabricClient"
+    ],
+    "fabric-datagen": [
+      "aqario.fowlplay.fabric.datagen.FPDataGen"
+    ],
+    "modmenu": [
+      "aqario.fowlplay.loaders.fabric.common.integration.fabric.ModMenuIntegration"
+    ]
+  },
+  "depends": {
+    "minecraft": ">=${minecraft}",
+    "fabricloader": ">=1.16.5",
+    "fabric-api": ">=0.116.7+1.21.1",
+    "smartbrainlib": ">=1.16.11",
+    "yet_another_config_lib_v3": ">=3.6.5+1.21.1"
+  },
+  "custom": {
+    "mc-publish": {
+      "dependencies": [
+        "architectury-api(required)",
+        "yacl(required)"
+      ]
+    }
+  }
+}

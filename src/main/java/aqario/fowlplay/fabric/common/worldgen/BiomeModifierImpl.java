@@ -1,4 +1,5 @@
-package aqario.fowlplay.fabric.common.worldgen.fabric;
+//? if fabric {
+package aqario.fowlplay.fabric.common.worldgen;
 
 import aqario.fowlplay.common.worldgen.BiomeModifier;
 import aqario.fowlplay.core.FowlPlay;
@@ -71,3 +72,4 @@ public class BiomeModifierImpl extends BiomeModifier {
         }
     }
 }
+//?}

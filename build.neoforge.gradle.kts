@@ -25,10 +25,46 @@ repositories {
     }
     strictMaven("https://www.cursemaven.com", "CurseForge", "curse.maven")
     strictMaven("https://api.modrinth.com/maven", "Modrinth", "maven.modrinth")
+    maven("https://thedarkcolour.github.io/KotlinForForge/")
+    maven("https://maven.quiltmc.org/repository/release/")
+    maven("https://api.modrinth.com/maven")
+    maven("https://maven.terraformersmc.com/releases/")
+    maven("https://gitlab.com/api/v4/projects/21830712/packages/maven")
+    maven("https://maven.isxander.dev/releases")
+    maven("https://dl.cloudsmith.io/public/tslat/sbl/maven/")
+    maven("https://maven.parchmentmc.org")
+    maven("https://maven.shedaniel.me/")
+    maven("https://repo.lucko.me/")
 }
 
 dependencies {
+    // Cloth Config
+    runtimeOnly("me.shedaniel.cloth:cloth-config-neoforge:${property("deps.cloth_config")}")
 
+    // Debug Utils
+    implementation("io.github.flemmli97:debugutils:${property("deps.debugutils")}-neoforge")
+
+    // Kotlin For Forge
+//    runtimeOnly("maven.modrinth:kotlin-for-forge:${property("deps.kotlin_for_forge")}")
+
+    // NBT Autocomplete
+    runtimeOnly("maven.modrinth:nbt-autocomplete:${property("deps.nbt_autocomplete")}-neoforge,1.21.1")
+
+    // Observable
+//    runtimeOnly("maven.modrinth:observable:${property("deps.observable")}+neoforge")
+
+    // Smart Brain Lib
+    implementation("net.tslat.smartbrainlib:SmartBrainLib-neoforge-${sc.current.version}:${property("deps.sbl")}")
+
+    // Spark
+    runtimeOnly("me.lucko:fabric-permissions-api:${property("deps.fabric_permissions_api")}")
+    runtimeOnly("maven.modrinth:spark:${property("deps.spark")}-neoforge")
+
+    // Suggestion Tweaker
+    runtimeOnly("maven.modrinth:suggestion-tweaker:${property("deps.suggestion_tweaker")}+neoforge")
+
+    // Yet Another Config Lib
+    implementation("dev.isxander:yet-another-config-lib:${property("deps.yacl")}-neoforge")
 }
 
 neoForge {

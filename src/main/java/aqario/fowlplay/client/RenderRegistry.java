@@ -1,6 +1,8 @@
+//~ expect_platform
+
 package aqario.fowlplay.client;
 
-import aqario.fowlplay.neoforge.client.RenderRegistryImpl;
+import aqario.fowlplay.fabric.client.RenderRegistryImpl;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.particle.ParticleProvider;

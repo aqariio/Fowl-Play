@@ -1,3 +1,4 @@
+//? if fabric {
 package aqario.fowlplay.fabric.datagen;
 
 import aqario.fowlplay.core.FowlPlay;
@@ -76,3 +77,4 @@ public class FPAdvancementGen extends FabricAdvancementProvider {
         return Advancement.Builder.advancement().build(id);
     }
 }
+//?}

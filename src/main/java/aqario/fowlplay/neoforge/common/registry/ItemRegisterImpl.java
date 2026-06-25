@@ -1,4 +1,5 @@
-package aqario.fowlplay.neoforge.common.registry;
+//? if neoforge {
+/*package aqario.fowlplay.neoforge.common.registry;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -17,3 +18,4 @@ public class ItemRegisterImpl {
         return new DeferredSpawnEggItem(entity, primaryColor, secondaryColor, properties);
     }
 }
+*///?}

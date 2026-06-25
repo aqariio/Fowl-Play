@@ -1,5 +1,5 @@
 //? if fabric {
-/*package aqario.fowlplay.loaders.fabric.core.fabric;
+package aqario.fowlplay.fabric.core;
 
 import aqario.fowlplay.common.entity.variant.ChickenVariant;
 import aqario.fowlplay.core.FPBuiltInRegistries;
@@ -34,4 +34,4 @@ public class FPDataAttachments {
     public static void init() {
     }
 }
-*///?}
+//?}

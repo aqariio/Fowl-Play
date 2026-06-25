@@ -1,4 +1,5 @@
-package aqario.fowlplay.fabric.common.registry.fabric;
+//? if fabric {
+package aqario.fowlplay.fabric.common.registry;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -17,3 +18,4 @@ public class ItemRegisterImpl {
         return new SpawnEggItem(entity.get(), primaryColor, secondaryColor, properties);
     }
 }
+//?}

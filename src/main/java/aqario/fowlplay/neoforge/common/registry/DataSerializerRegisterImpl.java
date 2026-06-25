@@ -1,4 +1,5 @@
-package aqario.fowlplay.neoforge.common.registry;
+//? if neoforge {
+/*package aqario.fowlplay.neoforge.common.registry;
 
 import aqario.fowlplay.common.registry.DataSerializerRegister;
 import aqario.fowlplay.neoforge.core.FowlPlayNeoForge;
@@ -29,3 +30,4 @@ public class DataSerializerRegisterImpl extends DataSerializerRegister {
         this.registry.register(FowlPlayNeoForge.eventBus());
     }
 }
+*///?}

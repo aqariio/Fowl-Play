@@ -1,4 +1,5 @@
-package aqario.fowlplay.neoforge.common.registry;
+//? if neoforge {
+/*package aqario.fowlplay.neoforge.common.registry;
 
 import aqario.fowlplay.common.registry.CommonRegister;
 import aqario.fowlplay.neoforge.core.FowlPlayNeoForge;
@@ -45,3 +46,4 @@ public class CommonRegisterImpl<T> extends CommonRegister<T> {
         this.registry.register(FowlPlayNeoForge.eventBus());
     }
 }
+*///?}

@@ -26,7 +26,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "aqario.fowlplay.loaders.fabric.core.fabric.FowlPlayFabric"
+      "aqario.fowlplay.fabric.core.FowlPlayFabric"
     ],
     "client": [
       "aqario.fowlplay.loaders.fabric.client.FowlPlayFabricClient"
@@ -35,7 +35,7 @@
       "aqario.fowlplay.fabric.datagen.FPDataGen"
     ],
     "modmenu": [
-      "aqario.fowlplay.loaders.fabric.common.integration.fabric.ModMenuIntegration"
+      "aqario.fowlplay.fabric.common.integration.ModMenuIntegration"
     ]
   },
   "depends": {

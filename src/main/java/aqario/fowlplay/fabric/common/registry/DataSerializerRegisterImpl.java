@@ -1,4 +1,5 @@
-package aqario.fowlplay.fabric.common.registry.fabric;
+//? if fabric {
+package aqario.fowlplay.fabric.common.registry;
 
 import aqario.fowlplay.common.registry.DataSerializerRegister;
 import net.minecraft.network.syncher.EntityDataSerializer;
@@ -17,3 +18,4 @@ public class DataSerializerRegisterImpl extends DataSerializerRegister {
         EntityDataSerializers.registerSerializer(serializer);
     }
 }
+//?}

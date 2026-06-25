@@ -1,3 +1,4 @@
+//? if fabric {
 package aqario.fowlplay.fabric.datagen;
 
 import aqario.fowlplay.core.tags.FPItemTags;
@@ -134,3 +135,4 @@ public class FPItemTagGen extends FabricTagProvider.ItemTagProvider {
             .add(Items.WHEAT_SEEDS);
     }
 }
+//?}

@@ -1,4 +1,5 @@
-package aqario.fowlplay.neoforge.common.worldgen;
+//? if neoforge {
+/*package aqario.fowlplay.neoforge.common.worldgen;
 
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.neoforge.core.FowlPlayNeoForge;
@@ -16,7 +17,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-public class BiomeModifierImpl extends aqario.fowlplay.common.worldgen.BiomeModifier /* >:( */ {
+public class BiomeModifierImpl extends aqario.fowlplay.common.worldgen.BiomeModifier /^ >:( ^/ {
     public static DeferredRegister<MapCodec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS = DeferredRegister.create(
         NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS,
         FowlPlay.ID
@@ -92,3 +93,4 @@ public class BiomeModifierImpl extends aqario.fowlplay.common.worldgen.BiomeModi
         }
     }
 }
+*///?}

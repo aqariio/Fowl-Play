@@ -30,6 +30,16 @@ repositories {
     }
     strictMaven("https://www.cursemaven.com", "CurseForge", "curse.maven")
     strictMaven("https://api.modrinth.com/maven", "Modrinth", "maven.modrinth")
+    maven("https://thedarkcolour.github.io/KotlinForForge/")
+    maven("https://maven.quiltmc.org/repository/release/")
+    maven("https://api.modrinth.com/maven")
+    maven("https://maven.terraformersmc.com/releases/")
+    maven("https://gitlab.com/api/v4/projects/21830712/packages/maven")
+    maven("https://maven.isxander.dev/releases")
+    maven("https://dl.cloudsmith.io/public/tslat/sbl/maven/")
+    maven("https://maven.parchmentmc.org")
+    maven("https://maven.shedaniel.me/")
+    maven("https://repo.lucko.me/")
 }
 
 dependencies {
@@ -46,8 +56,43 @@ dependencies {
     loomx.applyMojangMappings()
 
     // Use `mod{dependency type}` even on 26.1+ - loom-back-compat converts them
+
+    // Fabric Loader
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
-    fapi("fabric-lifecycle-events-v1", "fabric-resource-loader-v0", "fabric-content-registries-v0", "fabric-registry-sync-v0")
+
+    // Fabric API
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
+
+    // Cloth Config
+    modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${property("deps.cloth_config")}")
+
+    // Debug Utils
+    modImplementation("io.github.flemmli97:debugutils:${property("deps.debugutils")}-fabric")
+
+    // Fabric Language Kotlin
+    modRuntimeOnly("net.fabricmc:fabric-language-kotlin:${property("deps.fabric_language_kotlin")}")
+
+    // Mod Menu
+    modImplementation("com.terraformersmc:modmenu:${property("deps.modmenu")}")
+
+    // NBT Autocomplete
+    modRuntimeOnly("maven.modrinth:nbt-autocomplete:${property("deps.nbt_autocomplete")}-fabric,1.21.1")
+
+    // Observable
+    modRuntimeOnly("maven.modrinth:observable:${property("deps.observable")}+fabric")
+
+    // Smart Brain Lib
+    modImplementation("net.tslat.smartbrainlib:SmartBrainLib-fabric-${sc.current.version}:${property("deps.sbl")}")
+
+    // Spark
+    modRuntimeOnly("me.lucko:fabric-permissions-api:${property("deps.fabric_permissions_api")}")
+    modRuntimeOnly("maven.modrinth:spark:${property("deps.spark")}-fabric")
+
+    // Suggestion Tweaker
+    modRuntimeOnly("maven.modrinth:suggestion-tweaker:${property("deps.suggestion_tweaker")}+fabric")
+
+    // Yet Another Config Lib
+    modImplementation("dev.isxander:yet-another-config-lib:${property("deps.yacl")}-fabric")
 }
 
 loom {

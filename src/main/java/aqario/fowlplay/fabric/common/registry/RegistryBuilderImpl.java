@@ -1,4 +1,5 @@
-package aqario.fowlplay.fabric.common.registry.fabric;
+//? if fabric {
+package aqario.fowlplay.fabric.common.registry;
 
 import aqario.fowlplay.common.registry.RegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
@@ -25,3 +26,4 @@ public class RegistryBuilderImpl<T> extends RegistryBuilder<T> {
         return builder.buildAndRegister();
     }
 }
+//?}

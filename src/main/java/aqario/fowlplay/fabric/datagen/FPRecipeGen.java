@@ -1,3 +1,4 @@
+//? if fabric {
 package aqario.fowlplay.fabric.datagen;
 
 import aqario.fowlplay.core.FPItems;
@@ -28,3 +29,4 @@ public class FPRecipeGen extends FabricRecipeProvider {
             .save(exporter);
     }
 }
+//?}

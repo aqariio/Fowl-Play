@@ -2,7 +2,7 @@ plugins {
     id("dev.kikugie.stonecutter")
 }
 
-stonecutter active "1.21.1-neoforge"
+stonecutter active "1.21.1-fabric"
 
 // See https://stonecutter.kikugie.dev/wiki/config/params
 stonecutter parameters {
@@ -24,6 +24,10 @@ stonecutter parameters {
     dependencies["fapi"] = properties.getOrNull<String>("deps.fabric_api") ?: "0"
 
     replacements {
+        string(loader == "fabric", "expect_platform") {
+            replace("aqario.fowlplay.neoforge", "aqario.fowlplay.fabric")
+        }
+
         string(current.parsed >= "1.21.11") {
             replace("ResourceLocation", "Identifier")
         }

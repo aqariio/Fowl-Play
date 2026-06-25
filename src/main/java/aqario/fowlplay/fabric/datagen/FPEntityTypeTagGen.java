@@ -1,3 +1,4 @@
+//? if fabric {
 package aqario.fowlplay.fabric.datagen;
 
 import aqario.fowlplay.core.FPEntityTypes;
@@ -229,3 +230,4 @@ public class FPEntityTypeTagGen extends FabricTagProvider.EntityTypeTagProvider 
             .add(FPEntityTypes.PENGUIN.get());
     }
 }
+//?}

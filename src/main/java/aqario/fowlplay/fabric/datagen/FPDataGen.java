@@ -1,3 +1,4 @@
+//? if fabric {
 package aqario.fowlplay.fabric.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -18,3 +19,4 @@ public class FPDataGen implements DataGeneratorEntrypoint {
         pack.addProvider(FPSoundDefinitionsGen::new);
     }
 }
+//?}

@@ -1,3 +1,4 @@
+//? if fabric {
 package aqario.fowlplay.fabric.datagen.provider;
 
 import com.google.gson.JsonObject;
@@ -91,3 +92,4 @@ public abstract class SoundDefinitionsProvider implements DataProvider {
         return json;
     }
 }
+//?}

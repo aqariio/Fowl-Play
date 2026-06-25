@@ -1,3 +1,4 @@
+//? if fabric {
 package aqario.fowlplay.fabric.datagen;
 
 import aqario.fowlplay.core.FPSoundEvents;
@@ -133,3 +134,4 @@ public class FPSoundDefinitionsGen extends SoundDefinitionsProvider {
         this.add(soundEvent, definition);
     }
 }
+//?}

@@ -1,3 +1,4 @@
+//? if fabric {
 package aqario.fowlplay.fabric.datagen;
 
 import aqario.fowlplay.core.tags.FPBiomeTags;
@@ -207,3 +208,4 @@ public class FPBiomeTagGen extends FabricTagProvider<Biome> {
             .addOptionalTag(ConventionalBiomeTags.IS_DECIDUOUS_TREE);
     }
 }
+//?}

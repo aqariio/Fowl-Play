@@ -1,4 +1,5 @@
-package aqario.fowlplay.neoforge.common.registry;
+//? if neoforge {
+/*package aqario.fowlplay.neoforge.common.registry;
 
 import aqario.fowlplay.common.registry.RegistryBuilder;
 import aqario.fowlplay.neoforge.core.FowlPlayNeoForge;
@@ -26,3 +27,4 @@ public class RegistryBuilderImpl<T> extends RegistryBuilder<T> {
         return registry;
     }
 }
+*///?}

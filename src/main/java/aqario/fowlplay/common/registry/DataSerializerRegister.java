@@ -1,6 +1,8 @@
+//~ expect_platform
+
 package aqario.fowlplay.common.registry;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import aqario.fowlplay.fabric.common.registry.DataSerializerRegisterImpl;
 import net.minecraft.network.syncher.EntityDataSerializer;
 
 public abstract class DataSerializerRegister {
@@ -11,9 +13,8 @@ public abstract class DataSerializerRegister {
         this.namespace = namespace;
     }
 
-    @ExpectPlatform
     public static DataSerializerRegister create(String namespace) {
-        throw new AssertionError();
+        return DataSerializerRegisterImpl.create(namespace);
     }
 
     public abstract <T> void register(String name, EntityDataSerializer<T> serializer);

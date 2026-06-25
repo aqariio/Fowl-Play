@@ -1,18 +1,18 @@
+//~ expect_platform
+
 package aqario.fowlplay.core.platform;
 
 import aqario.fowlplay.common.entity.variant.ChickenVariant;
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import aqario.fowlplay.fabric.core.platform.DataAttachmentHelperImpl;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.animal.Chicken;
 
 public class DataAttachmentHelper {
-    @ExpectPlatform
     public static Holder<ChickenVariant> getChickenVariant(Chicken entity) {
-        throw new AssertionError();
+        return DataAttachmentHelperImpl.getChickenVariant(entity);
     }
 
-    @ExpectPlatform
     public static void setChickenVariant(Chicken entity, Holder<ChickenVariant> variant) {
-        throw new AssertionError();
+        DataAttachmentHelperImpl.setChickenVariant(entity, variant);
     }
 }

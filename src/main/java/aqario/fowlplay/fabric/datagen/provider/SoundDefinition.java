@@ -1,3 +1,4 @@
+//? if fabric {
 package aqario.fowlplay.fabric.datagen.provider;
 
 import com.google.gson.JsonArray;
@@ -215,3 +216,4 @@ public final class SoundDefinition {
         }
     }
 }
+//?}

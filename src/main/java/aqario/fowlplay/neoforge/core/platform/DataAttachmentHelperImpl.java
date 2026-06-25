@@ -1,4 +1,5 @@
-package aqario.fowlplay.neoforge.core.platform;
+//? if neoforge {
+/*package aqario.fowlplay.neoforge.core.platform;
 
 import aqario.fowlplay.common.entity.variant.ChickenVariant;
 import aqario.fowlplay.neoforge.core.FPDataAttachments;
@@ -14,3 +15,4 @@ public class DataAttachmentHelperImpl {
         entity.setData(FPDataAttachments.CHICKEN_VARIANT, variant);
     }
 }
+*///?}

@@ -1,3 +1,4 @@
+//? if fabric {
 package aqario.fowlplay.fabric.datagen;
 
 import aqario.fowlplay.core.tags.FPBlockTags;
@@ -44,3 +45,4 @@ public class FPBlockTagGen extends FabricTagProvider.BlockTagProvider {
             .add(Blocks.GRAVEL);
     }
 }
+//?}

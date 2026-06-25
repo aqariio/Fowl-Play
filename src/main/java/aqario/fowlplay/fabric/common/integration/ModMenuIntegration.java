@@ -1,5 +1,5 @@
 //? if fabric {
-/*package aqario.fowlplay.loaders.fabric.common.integration.fabric;
+package aqario.fowlplay.fabric.common.integration;
 
 import aqario.fowlplay.common.integration.YACLIntegration;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
@@ -11,4 +11,4 @@ public class ModMenuIntegration implements ModMenuApi {
         return YACLIntegration::createScreen;
     }
 }
-*///?}
+//?}

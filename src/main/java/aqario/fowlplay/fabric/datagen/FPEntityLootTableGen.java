@@ -1,3 +1,4 @@
+//? if fabric {
 package aqario.fowlplay.fabric.datagen;
 
 import aqario.fowlplay.core.FPEntityTypes;
@@ -66,3 +67,4 @@ public class FPEntityLootTableGen extends SimpleFabricLootTableProvider {
         exporter.accept(type.getDefaultLootTable(), builder);
     }
 }
+//?}

@@ -1,4 +1,5 @@
-package aqario.fowlplay.fabric.common.registry.fabric;
+//? if fabric {
+package aqario.fowlplay.fabric.common.registry;
 
 import aqario.fowlplay.common.registry.CommonRegister;
 import net.minecraft.core.Registry;
@@ -46,3 +47,4 @@ public class CommonRegisterImpl<T> extends CommonRegister<T> {
         return this.registry;
     }
 }
+//?}

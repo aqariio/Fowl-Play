@@ -1,4 +1,5 @@
-package aqario.fowlplay.fabric.common.registry.fabric;
+//? if fabric {
+package aqario.fowlplay.fabric.common.registry;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.resources.ResourceKey;
@@ -19,3 +20,4 @@ public class CreativeTabsImpl {
         }
     }
 }
+//?}

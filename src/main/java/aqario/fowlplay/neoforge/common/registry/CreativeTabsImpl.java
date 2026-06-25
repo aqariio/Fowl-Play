@@ -1,4 +1,5 @@
-package aqario.fowlplay.neoforge.common.registry;
+//? if neoforge {
+/*package aqario.fowlplay.neoforge.common.registry;
 
 import aqario.fowlplay.neoforge.core.FowlPlayNeoForge;
 import net.minecraft.resources.ResourceKey;
@@ -21,3 +22,4 @@ public class CreativeTabsImpl {
         }
     }
 }
+*///?}

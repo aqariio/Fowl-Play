@@ -6,9 +6,8 @@ import aqario.fowlplay.common.util.ResourcePathBuilder;
 import aqario.fowlplay.common.worldgen.BiomeModifier;
 import aqario.fowlplay.common.worldgen.PigeonSpawner;
 import aqario.fowlplay.common.worldgen.SparrowSpawner;
-import dev.architectury.event.events.common.TickEvent;
-import dev.architectury.platform.Mod;
-import dev.architectury.platform.Platform;
+import aqario.fowlplay.core.platform.Events;
+import aqario.fowlplay.core.platform.Platform;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +29,7 @@ public class FowlPlay {
     }
 
     public static void earlyInit() {
-        Mod mod = Platform.getMod(ID);
-        LOGGER.info("Loading {} {}", mod.getName(), mod.getVersion());
+        LOGGER.info("Loading {} {}", Platform.getName(), Platform.getVersion());
         FPConfig.load();
 
         FPRegistries.init();
@@ -65,16 +63,16 @@ public class FowlPlay {
         PigeonSpawner pigeonSpawner = new PigeonSpawner();
         SparrowSpawner sparrowSpawner = new SparrowSpawner();
 
-        TickEvent.SERVER_LEVEL_POST.register(world -> {
+        Events.serverLevelTickPost(level -> {
             pigeonSpawner.tick(
-                world,
-                world.getServer().isSpawningMonsters(),
-                world.getServer().isSpawningAnimals()
+                level,
+                level.getServer().isSpawningMonsters(),
+                level.getServer().isSpawningAnimals()
             );
             sparrowSpawner.tick(
-                world,
-                world.getServer().isSpawningMonsters(),
-                world.getServer().isSpawningAnimals()
+                level,
+                level.getServer().isSpawningMonsters(),
+                level.getServer().isSpawningAnimals()
             );
         });
     }

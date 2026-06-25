@@ -1,8 +1,9 @@
-package aqario.fowlplay.fabric.core.platform.fabric;
+//? if fabric {
+package aqario.fowlplay.fabric.core.platform;
 
 import aqario.fowlplay.common.entity.variant.ChickenVariant;
 import aqario.fowlplay.core.FPBuiltInRegistries;
-import aqario.fowlplay.loaders.fabric.core.fabric.FPDataAttachments;
+import aqario.fowlplay.fabric.core.FPDataAttachments;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.animal.Chicken;
 
@@ -19,3 +20,4 @@ public class DataAttachmentHelperImpl {
         entity.setAttached(FPDataAttachments.CHICKEN_VARIANT, variant);
     }
 }
+//?}

@@ -7,6 +7,7 @@ import aqario.fowlplay.client.render.debug.GenericDebugRenderer;
 import aqario.fowlplay.client.render.entity.*;
 import aqario.fowlplay.client.render.entity.model.*;
 import aqario.fowlplay.common.config.FPConfig;
+import aqario.fowlplay.common.network.NetworkManager;
 import aqario.fowlplay.common.network.clientbound.BirdDebugPayload;
 import aqario.fowlplay.common.network.clientbound.GenericDebugPayload;
 import aqario.fowlplay.core.FPEntityTypes;
@@ -36,21 +37,18 @@ public class FowlPlayClient {
             RegisterDebugRenderers.registerServerToggle(debugGenericId);
             RegisterDebugRenderers.registerClientHandler(debugGenericId, b -> FowlPlayClient.DEBUG_GENERIC = b);
 
-            //? if fabric {
-            ClientPlayNetworking.registerGlobalReceiver(
+            NetworkManager.registerClientReceiver(
                 BirdDebugPayload.TYPE,
+                BirdDebugPayload.STREAM_CODEC,
                 (payload, context) ->
                     BirdDebugPayload.onReceive(payload)
             );
-            ClientPlayNetworking.registerGlobalReceiver(
+            NetworkManager.registerClientReceiver(
                 GenericDebugPayload.TYPE,
+                GenericDebugPayload.STREAM_CODEC,
                 (payload, context) ->
                     GenericDebugPayload.onReceive(payload)
             );
-            //?}
-            //? if neoforge {
-
-            //?}
         }
 
         registerModelLayers();

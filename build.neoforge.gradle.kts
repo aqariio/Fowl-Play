@@ -38,6 +38,9 @@ repositories {
 }
 
 dependencies {
+    // Architectury
+//    runtimeOnly("dev.architectury:architectury-neoforge:${property("deps.architectury")}")
+
     // Cloth Config
     runtimeOnly("me.shedaniel.cloth:cloth-config-neoforge:${property("deps.cloth_config")}")
 

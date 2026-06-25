@@ -1,0 +1,32 @@
+//? if neoforge {
+/*package aqario.fowlplay.neoforge.common.network;
+
+import aqario.fowlplay.common.network.NetworkManager;
+import aqario.fowlplay.neoforge.core.FowlPlayNeoForge;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+
+public class NetworkManagerImpl {
+    public static <T extends CustomPacketPayload> void registerClientReceiver(CustomPacketPayload.Type<T> type, StreamCodec<FriendlyByteBuf, T> codec, NetworkManager.PayloadHandler<T> handler) {
+        FowlPlayNeoForge.eventBus().<RegisterPayloadHandlersEvent>addListener(event -> event.registrar("").playToClient(
+            type,
+            codec,
+            (payload, context) -> handler.receive(payload, new NetworkManager.Context() {
+                @Override
+                public Minecraft client() {
+                    return null;
+                }
+
+                @Override
+                public LocalPlayer player() {
+                    return (LocalPlayer) context.player();
+                }
+            })
+        ));
+    }
+}
+*///?}

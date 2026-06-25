@@ -1,9 +1,9 @@
 package aqario.fowlplay.common.util;
 
+import aqario.fowlplay.common.registry.AttributeRegistry;
+import aqario.fowlplay.common.registry.SpawnPlacementsRegistry;
 import aqario.fowlplay.common.worldgen.BiomeModifier;
 import com.google.common.collect.ImmutableSet;
-import dev.architectury.registry.level.entity.EntityAttributeRegistry;
-import dev.architectury.registry.level.entity.SpawnPlacementsRegistry;
 import net.minecraft.Util;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.datafix.fixes.References;
@@ -236,13 +236,21 @@ public class EntityTypeBuilder<T extends Entity> {
 
         if(type.getBaseClass().isAssignableFrom(LivingEntity.class)) {
             if(this.attributeBuilder != null) {
-                EntityAttributeRegistry.register(() -> (EntityType<? extends LivingEntity>) type, this.attributeBuilder);
+                AttributeRegistry.register(
+                    () -> (EntityType<? extends LivingEntity>) type,
+                    this.attributeBuilder.get()
+                );
             }
         }
 
         if(type.getBaseClass().isAssignableFrom(Mob.class)) {
             if(this.spawnPredicate != null) {
-                SpawnPlacementsRegistry.register(() -> (EntityType<Mob>) type, this.spawnPlacement, this.heightmap, (SpawnPlacements.SpawnPredicate<Mob>) this.spawnPredicate);
+                SpawnPlacementsRegistry.register(
+                    () -> (EntityType<Mob>) type,
+                    this.spawnPlacement,
+                    this.heightmap,
+                    (SpawnPlacements.SpawnPredicate<Mob>) this.spawnPredicate
+                );
             }
         }
 

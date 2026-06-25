@@ -63,6 +63,9 @@ dependencies {
     // Fabric API
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
 
+    // Architectury
+    modRuntimeOnly("dev.architectury:architectury-fabric:${property("deps.architectury")}")
+
     // Cloth Config
     modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${property("deps.cloth_config")}")
 

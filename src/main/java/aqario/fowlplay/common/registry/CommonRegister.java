@@ -21,7 +21,7 @@ public abstract class CommonRegister<T> {
     }
 
     public static <T> CommonRegister<T> create(Registry<T> registry, String namespace) {
-        throw new AssertionError();
+        return CommonRegisterImpl.create(registry, namespace);
     }
 
     public abstract <E extends T> Supplier<E> register(String name, Supplier<E> entry);

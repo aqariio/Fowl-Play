@@ -2,7 +2,7 @@ package aqario.fowlplay.common.integration;
 
 import aqario.fowlplay.common.config.FPConfig;
 import aqario.fowlplay.core.FowlPlay;
-import dev.architectury.platform.Platform;
+import aqario.fowlplay.core.platform.Platform;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
@@ -18,7 +18,7 @@ public class YACLIntegration {
     public static final ConfigClassHandler<FPConfig> HANDLED_CONFIG = ConfigClassHandler.createBuilder(FPConfig.class)
         .id(FowlPlay.id("config"))
         .serializer(config -> GsonConfigSerializerBuilder.create(config)
-            .setPath(Platform.getConfigFolder().resolve(FowlPlay.ID + ".json5"))
+            .setPath(Platform.getConfigDirectory().resolve(FowlPlay.ID + ".json5"))
             .setJson5(true)
             .build())
         .build();

@@ -10,14 +10,16 @@ import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FowlPlay;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
-import dev.architectury.networking.NetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.protocol.game.DebugEntityNameGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -209,7 +211,10 @@ public class FowlPlayDebugPackets {
         }
     }
 
-    private static void sendToAll(ServerLevel world, CustomPacketPayload payload) {
-        NetworkManager.sendToPlayers(world.players(), payload);
+    private static void sendToAll(ServerLevel level, CustomPacketPayload payload) {
+        Packet<?> packet = new ClientboundCustomPayloadPacket(payload);
+        for(ServerPlayer serverplayer : level.players()) {
+            serverplayer.connection.send(packet);
+        }
     }
 }

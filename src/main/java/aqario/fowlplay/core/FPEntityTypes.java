@@ -1,7 +1,7 @@
 package aqario.fowlplay.core;
 
 import aqario.fowlplay.common.config.FPConfig;
-import aqario.fowlplay.common.entity.CustomMobCategory;
+import aqario.fowlplay.common.entity.FPMobCategory;
 import aqario.fowlplay.common.entity.ScarecrowEntity;
 import aqario.fowlplay.common.entity.bird.dove.PigeonEntity;
 import aqario.fowlplay.common.entity.bird.passerine.*;
@@ -33,7 +33,7 @@ public final class FPEntityTypes {
     public static final Supplier<EntityType<BlueJayEntity>> BLUE_JAY = register("blue_jay",
         EntityTypeBuilder.of(
                 BlueJayEntity::new,
-                CustomMobCategory.AMBIENT_BIRDS.mobCategory
+                FPMobCategory.AMBIENT_BIRDS
             )
             .sized(0.4f, 0.55f)
             .eyeHeight(0.475f)
@@ -54,7 +54,7 @@ public final class FPEntityTypes {
     public static final Supplier<EntityType<CardinalEntity>> CARDINAL = register("cardinal",
         EntityTypeBuilder.of(
                 CardinalEntity::new,
-                CustomMobCategory.AMBIENT_BIRDS.mobCategory
+                FPMobCategory.AMBIENT_BIRDS
             )
             .sized(0.4f, 0.55f)
             .eyeHeight(0.475f)
@@ -75,7 +75,7 @@ public final class FPEntityTypes {
     public static final Supplier<EntityType<ChickadeeEntity>> CHICKADEE = register("chickadee",
         EntityTypeBuilder.of(
                 ChickadeeEntity::new,
-                CustomMobCategory.AMBIENT_BIRDS.mobCategory
+                FPMobCategory.AMBIENT_BIRDS
             )
             .sized(0.3f, 0.45f)
             .eyeHeight(0.4f)
@@ -96,7 +96,7 @@ public final class FPEntityTypes {
     public static final Supplier<EntityType<CrowEntity>> CROW = register("crow",
         EntityTypeBuilder.of(
                 CrowEntity::new,
-                CustomMobCategory.AMBIENT_BIRDS.mobCategory
+                FPMobCategory.AMBIENT_BIRDS
             )
             .sized(0.5f, 0.6f)
             .eyeHeight(0.55f)
@@ -117,7 +117,7 @@ public final class FPEntityTypes {
     public static final Supplier<EntityType<DuckEntity>> DUCK = register("duck",
         EntityTypeBuilder.of(
                 DuckEntity::new,
-                CustomMobCategory.BIRDS.mobCategory
+                FPMobCategory.BIRDS
             )
             .sized(0.6f, 0.8f)
             .eyeHeight(0.7f)
@@ -143,7 +143,7 @@ public final class FPEntityTypes {
     public static final Supplier<EntityType<GooseEntity>> GOOSE = register("goose",
         EntityTypeBuilder.of(
                 GooseEntity::new,
-                CustomMobCategory.BIRDS.mobCategory
+                FPMobCategory.BIRDS
             )
             .sized(0.7f, 1.1f)
             .eyeHeight(1.0f)
@@ -169,7 +169,7 @@ public final class FPEntityTypes {
     public static final Supplier<EntityType<GullEntity>> GULL = register("gull",
         EntityTypeBuilder.of(
                 GullEntity::new,
-                CustomMobCategory.BIRDS.mobCategory
+                FPMobCategory.BIRDS
             )
             .sized(0.6f, 0.8f)
             .eyeHeight(0.7f)
@@ -195,7 +195,7 @@ public final class FPEntityTypes {
     public static final Supplier<EntityType<HawkEntity>> HAWK = register("hawk",
         EntityTypeBuilder.of(
                 HawkEntity::new,
-                CustomMobCategory.BIRDS.mobCategory
+                FPMobCategory.BIRDS
             )
             .sized(0.6f, 0.8f)
             .eyeHeight(0.7f)
@@ -238,7 +238,7 @@ public final class FPEntityTypes {
     public static final Supplier<EntityType<PigeonEntity>> PIGEON = register("pigeon",
         EntityTypeBuilder.of(
                 PigeonEntity::new,
-                CustomMobCategory.BIRDS.mobCategory
+                FPMobCategory.BIRDS
             )
             .sized(0.5f, 0.6f)
             .eyeHeight(0.5f)
@@ -259,7 +259,7 @@ public final class FPEntityTypes {
     public static final Supplier<EntityType<RavenEntity>> RAVEN = register("raven",
         EntityTypeBuilder.of(
                 RavenEntity::new,
-                CustomMobCategory.AMBIENT_BIRDS.mobCategory
+                FPMobCategory.AMBIENT_BIRDS
             )
             .sized(0.6f, 0.8f)
             .eyeHeight(0.7f)
@@ -280,7 +280,7 @@ public final class FPEntityTypes {
     public static final Supplier<EntityType<RobinEntity>> ROBIN = register("robin",
         EntityTypeBuilder.of(
                 RobinEntity::new,
-                CustomMobCategory.AMBIENT_BIRDS.mobCategory
+                FPMobCategory.AMBIENT_BIRDS
             )
             .sized(0.4f, 0.55f)
             .eyeHeight(0.475f)
@@ -301,7 +301,7 @@ public final class FPEntityTypes {
     public static final Supplier<EntityType<SparrowEntity>> SPARROW = register("sparrow",
         EntityTypeBuilder.of(
                 SparrowEntity::new,
-                CustomMobCategory.AMBIENT_BIRDS.mobCategory
+                FPMobCategory.AMBIENT_BIRDS
             )
             .sized(0.3f, 0.45f)
             .eyeHeight(0.4f)

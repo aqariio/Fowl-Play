@@ -315,7 +315,10 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     @Override
+    //? if fabric
     protected void playMuffledStepSound(BlockState state) {
+    //? if neoforge
+    //protected void playMuffledStepSound(BlockState state, BlockPos pos) {
     }
 
     @Override
@@ -323,7 +326,10 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     @Override
+    //? if fabric
     protected void playCombinationStepSounds(BlockState primaryState, BlockState secondaryState) {
+    //? if neoforge
+    //protected void playCombinationStepSounds(BlockState primaryState, BlockState secondaryState, BlockPos primaryPos, BlockPos secondaryPos) {
     }
 
     @Override

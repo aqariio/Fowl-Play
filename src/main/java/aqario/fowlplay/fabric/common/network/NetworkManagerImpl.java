@@ -1,3 +1,4 @@
+//? if fabric {
 package aqario.fowlplay.fabric.common.network;
 
 import aqario.fowlplay.common.network.NetworkManager;
@@ -26,3 +27,4 @@ public class NetworkManagerImpl {
         }));
     }
 }
+//?}

@@ -1,6 +1,7 @@
 plugins {
     id("net.neoforged.moddev") version "2.0.140"
     id("neoforge-mutex")
+    id("dev.kikugie.fletching-table.neoforge") version "0.1.0-alpha.22"
 }
 
 version = "${property("mod.version")}+${sc.current.version}"
@@ -12,6 +13,12 @@ val requiredJava = when {
     sc.current.parsed >= "1.18" -> JavaVersion.VERSION_17
     sc.current.parsed >= "1.17" -> JavaVersion.VERSION_16
     else -> JavaVersion.VERSION_1_8
+}
+
+fletchingTable {
+    accessConverter.register(sourceSets.main) {
+        add("fowlplay.ct", "META-INF/accesstransformer.cfg")
+    }
 }
 
 repositories {
@@ -60,8 +67,8 @@ dependencies {
     implementation("net.tslat.smartbrainlib:SmartBrainLib-neoforge-${sc.current.version}:${property("deps.sbl")}")
 
     // Spark
-    runtimeOnly("me.lucko:fabric-permissions-api:${property("deps.fabric_permissions_api")}")
-    runtimeOnly("maven.modrinth:spark:${property("deps.spark")}-neoforge")
+//    runtimeOnly("me.lucko:fabric-permissions-api:${property("deps.fabric_permissions_api")}")
+//    runtimeOnly("maven.modrinth:spark:${property("deps.spark")}-neoforge")
 
     // Suggestion Tweaker
     runtimeOnly("maven.modrinth:suggestion-tweaker:${property("deps.suggestion_tweaker")}+neoforge")

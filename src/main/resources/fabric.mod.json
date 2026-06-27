@@ -38,9 +38,13 @@
       "aqario.fowlplay.fabric.common.integration.ModMenuIntegration"
     ]
   },
+  "mixins": [
+    "fowlplay.mixins.json"
+  ],
+  "accessWidener": "fowlplay.ct",
   "depends": {
     "minecraft": ">=1.21",
-    "fabricloader": ">=0.16.5",
+    "fabricloader": ">=0.19.3",
     "fabric-api": ">=0.116.7+1.21.1",
     "smartbrainlib": ">=1.16.11",
     "yet_another_config_lib_v3": ">=3.6.5+1.21.1"

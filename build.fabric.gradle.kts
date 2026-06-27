@@ -1,6 +1,7 @@
 plugins {
     // This plugin applies the correct loom variant based on the Minecraft version
     id("dev.kikugie.loom-back-compat")
+    id("dev.kikugie.fletching-table.fabric") version "0.1.0-alpha.22"
 }
 
 // DO NOT set group = ...!

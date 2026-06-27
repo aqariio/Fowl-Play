@@ -41,6 +41,10 @@ versionRange = "[3.6.5+1.21.1,)"
 ordering = "NONE"
 side = "BOTH"
 
+[[mixins]]
+config = "fowlplay.mixins.json"
+
+
 [mc-publish]
 dependencies = [
     "architectury-api(required)",

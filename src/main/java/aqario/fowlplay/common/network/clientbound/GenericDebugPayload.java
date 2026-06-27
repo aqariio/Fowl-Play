@@ -46,7 +46,7 @@ public record GenericDebugPayload(Data data) implements CustomPacketPayload {
                 buf.readUUID(),
                 buf.readInt(),
                 buf.readVec3(),
-                buf.readMap(FriendlyByteBuf::readUtf, FriendlyByteBuf::readUtf)
+                buf.readMap(FriendlyByteBuf::readUtf, b -> b.readUtf())
             );
         }
 
@@ -54,7 +54,7 @@ public record GenericDebugPayload(Data data) implements CustomPacketPayload {
             buf.writeUUID(this.uuid);
             buf.writeInt(this.entityId);
             buf.writeVec3(this.pos);
-            buf.writeMap(this.data, FriendlyByteBuf::writeUtf, FriendlyByteBuf::writeUtf);
+            buf.writeMap(this.data, FriendlyByteBuf::writeUtf, (b, v) -> b.writeUtf(v));
         }
     }
 }

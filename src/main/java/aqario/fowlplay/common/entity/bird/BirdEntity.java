@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.entity.bird;
 
-import aqario.fowlplay.common.entity.CustomMobCategory;
-import aqario.fowlplay.common.entity.CustomSoundSource;
+import aqario.fowlplay.common.entity.FPMobCategory;
+import aqario.fowlplay.common.entity.FPSoundSource;
 import aqario.fowlplay.common.entity.ai.control.BirdBodyRotationControl;
 import aqario.fowlplay.common.entity.ai.control.BirdLookControl;
 import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;
@@ -108,7 +108,7 @@ public abstract class BirdEntity extends Animal {
     }
 
     protected boolean shouldBeAmbient() {
-        return this.getType().getCategory() == CustomMobCategory.AMBIENT_BIRDS.mobCategory;
+        return this.getType().getCategory() == FPMobCategory.AMBIENT_BIRDS;
     }
 
     @Override
@@ -483,7 +483,7 @@ public abstract class BirdEntity extends Animal {
 
     @Override
     public SoundSource getSoundSource() {
-        return CustomSoundSource.BIRDS.soundSource;
+        return FPSoundSource.BIRDS;
     }
 
     public int getCallDelay() {

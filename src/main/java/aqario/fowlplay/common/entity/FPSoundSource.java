@@ -2,6 +2,19 @@ package aqario.fowlplay.common.entity;
 
 import net.minecraft.sounds.SoundSource;
 
-public final class FPSoundSource {
-    public static final SoundSource BIRDS = SoundSource.valueOf("FOWLPLAY_BIRDS");
+public enum FPSoundSource {
+    FOWLPLAY_BIRDS("fowlplay_birds");
+
+    public static final FPSoundSource BIRDS = FOWLPLAY_BIRDS;
+
+    public SoundSource soundSource;
+    public final String name;
+
+    FPSoundSource(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
 }

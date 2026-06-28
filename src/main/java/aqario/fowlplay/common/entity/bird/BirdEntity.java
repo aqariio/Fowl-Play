@@ -108,7 +108,7 @@ public abstract class BirdEntity extends Animal {
     }
 
     protected boolean shouldBeAmbient() {
-        return this.getType().getCategory() == FPMobCategory.AMBIENT_BIRDS;
+        return this.getType().getCategory() == FPMobCategory.AMBIENT_BIRDS.mobCategory;
     }
 
     @Override
@@ -483,7 +483,7 @@ public abstract class BirdEntity extends Animal {
 
     @Override
     public SoundSource getSoundSource() {
-        return FPSoundSource.BIRDS;
+        return FPSoundSource.BIRDS.soundSource;
     }
 
     public int getCallDelay() {

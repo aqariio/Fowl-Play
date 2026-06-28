@@ -12,7 +12,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
 public class NetworkManagerImpl {
     public static <T extends CustomPacketPayload> void registerClientReceiver(CustomPacketPayload.Type<T> type, StreamCodec<FriendlyByteBuf, T> codec, NetworkManager.PayloadHandler<T> handler) {
-        FowlPlayNeoForge.eventBus().<RegisterPayloadHandlersEvent>addListener(event -> event.registrar("").playToClient(
+        FowlPlayNeoForge.eventBus().<RegisterPayloadHandlersEvent>addListener(event -> event.registrar("1").playToClient(
             type,
             codec,
             (payload, context) -> handler.receive(payload, new NetworkManager.Context() {

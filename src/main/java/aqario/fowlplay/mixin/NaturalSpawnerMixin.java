@@ -33,7 +33,7 @@ public class NaturalSpawnerMixin {
     )
     private static void fowlplay$reduceSpawningFrequency(MobCategory group, ServerLevel world, LevelChunk chunk, NaturalSpawner.SpawnPredicate checker, NaturalSpawner.AfterSpawnCallback runner, CallbackInfo ci) {
         final long spawningDelayTicks = 200L; // 10 seconds per spawning attempt
-        if(group == FPMobCategory.BIRDS && world.getLevelData().getGameTime() % spawningDelayTicks != 0L) {
+        if(group == FPMobCategory.BIRDS.mobCategory && world.getLevelData().getGameTime() % spawningDelayTicks != 0L) {
             ci.cancel();
         }
     }
@@ -46,7 +46,7 @@ public class NaturalSpawnerMixin {
         )
     )
     private static int fowlplay$midairSpawning(BlockPos pos, MobCategory group, ServerLevel world) {
-        if((group == FPMobCategory.BIRDS || group == FPMobCategory.AMBIENT_BIRDS) && world.getRandom().nextFloat() < 0.01F && world.getLevelData().getGameTime() % 100L != 0L) {
+        if((group == FPMobCategory.BIRDS.mobCategory || group == FPMobCategory.AMBIENT_BIRDS.mobCategory) && world.getRandom().nextFloat() < 0.01F && world.getLevelData().getGameTime() % 100L != 0L) {
             return pos.getY() + world.getRandom().nextIntBetweenInclusive(32, 64);
         }
         return pos.getY();
@@ -68,8 +68,8 @@ public class NaturalSpawnerMixin {
         at = @At("HEAD")
     )
     private static void fowlplay$spawnBirdsOnChunkGeneration(ServerLevelAccessor levelAccessor, Holder<Biome> biome, ChunkPos chunkPos, RandomSource random, CallbackInfo ci) {
-        fowlplay$spawnMobsForChunkGeneration(FPMobCategory.BIRDS, levelAccessor, biome, chunkPos, random);
-        fowlplay$spawnMobsForChunkGeneration(FPMobCategory.AMBIENT_BIRDS, levelAccessor, biome, chunkPos, random);
+        fowlplay$spawnMobsForChunkGeneration(FPMobCategory.BIRDS.mobCategory, levelAccessor, biome, chunkPos, random);
+        fowlplay$spawnMobsForChunkGeneration(FPMobCategory.AMBIENT_BIRDS.mobCategory, levelAccessor, biome, chunkPos, random);
     }
 
     // basically the same thing as vanilla but edited so that I can choose the mob category

@@ -96,7 +96,7 @@
   "tag.item.fowlplay.raven_food": "Raven food",
   "tag.item.fowlplay.robin_food": "Robin food",
   "tag.item.fowlplay.sparrow_food": "Sparrow food",
-  "text.betterf3.line.ambient_birds": "Ambient Birds",
-  "text.betterf3.line.birds": "Birds",
-  "soundCategory.birds": "Birds"
+  "text.betterf3.line.fowlplay_ambient_birds": "Ambient Birds",
+  "text.betterf3.line.fowlplay_birds": "Birds",
+  "soundCategory.fowlplay_birds": "Birds"
 }

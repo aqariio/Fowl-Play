@@ -49,12 +49,16 @@ dependencies {
      * @see <a href="https://github.com/FabricMC/fabric">List of Fabric API modules</a>
      */
     fun fapi(vararg modules: String) {
-        for (it in modules) modImplementation(fabricApi.module(it, sc.properties["deps.fabric_api"]))
+        for(it in modules) modImplementation(fabricApi.module(it, sc.properties["deps.fabric_api"]))
     }
 
     minecraft("com.mojang:minecraft:${sc.current.version}")
-    // Applies Mojang Mappings on obfuscated versions
-    loomx.applyMojangMappings()
+    mappings(
+        loom.layered {
+            officialMojangMappings()
+            parchment("org.parchmentmc.data:parchment-${sc.current.version}:${property("deps.parchment")}@zip")
+        }
+    )
 
     // Use `mod{dependency type}` even on 26.1+ - loom-back-compat converts them
 
@@ -102,8 +106,8 @@ dependencies {
 loom {
     fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json") // Useful for interface injection
     accessWidenerPath = sc.process(
-        rootProject.file("src/main/resources/fowlplay.ct"),
-        "build/processed.ct"
+        rootProject.file("src/main/resources/fowlplay.accesswidener"),
+        "build/processed.accesswidener"
     )
 
     decompilerOptions.named("vineflower") {
@@ -131,6 +135,8 @@ java {
 
 tasks {
     processResources {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
         fun MutableMap<String, String>.register(key: String, property: String) {
             val value: String = sc.properties[property]
             inputs.property(key, value)

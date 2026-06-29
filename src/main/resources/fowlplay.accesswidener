@@ -1,4 +1,4 @@
-classTweaker v2 named
+accessWidener v2 named
 
 accessible field net/minecraft/world/level/pathfinder/Path nodes Ljava/util/List;
 

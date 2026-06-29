@@ -1,7 +1,7 @@
 plugins {
     id("net.neoforged.moddev") version "2.0.140"
     id("neoforge-mutex")
-    id("dev.kikugie.fletching-table.neoforge") version "0.1.0-alpha.22"
+    id("dev.kikugie.fletching-table") version "0.1.0-alpha.22"
 }
 
 version = "${property("mod.version")}+${sc.current.version}"
@@ -17,7 +17,7 @@ val requiredJava = when {
 
 fletchingTable {
     accessConverter.register(sourceSets.main) {
-        add("fowlplay.ct", "META-INF/accesstransformer.cfg")
+        add("fowlplay.accesswidener", "META-INF/accesstransformer.cfg")
     }
 }
 
@@ -80,6 +80,11 @@ dependencies {
 neoForge {
     version = property("deps.neo_loader") as String
 
+    parchment {
+        minecraftVersion = sc.current.version
+        mappingsVersion = property("deps.parchment") as String
+    }
+
     mods {
         register("fowlplay") {
             sourceSet(sourceSets.main.get())
@@ -107,6 +112,8 @@ java {
 
 tasks {
     processResources {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
         fun MutableMap<String, String>.register(key: String, property: String) {
             val value: String = sc.properties[property]
             inputs.property(key, value)

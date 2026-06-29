@@ -1,6 +1,7 @@
 # See https://stonecutter.kikugie.dev/wiki/config/properties#centralized-properties
 mod.id = "fowlplay"
 mod.name = "Fowl Play"
+mod.desc = "Just smile and wave, boys. Smile and wave."
 mod.group = "aqario.fowlplay"
 mod.version = "1.2.1"
 

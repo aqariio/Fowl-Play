@@ -1,7 +1,7 @@
 plugins {
     id("net.neoforged.moddev") version "2.0.140"
     id("neoforge-mutex")
-    id("dev.kikugie.fletching-table") version "0.1.0-alpha.22"
+    id("dev.kikugie.fletching-table.neoforge") version "0.1.0-alpha.23"
 }
 
 version = "${property("mod.version")}+${sc.current.version}-neoforge"
@@ -17,7 +17,7 @@ val requiredJava = when {
 
 fletchingTable {
     accessConverter.register(sourceSets.main) {
-        add("fowlplay.accesswidener", "META-INF/accesstransformer.cfg")
+        add("fowlplay.accesswidener")
     }
 }
 
@@ -123,8 +123,12 @@ tasks {
         val props = buildMap {
             register("id", "mod.id")
             register("name", "mod.name")
+            register("desc", "mod.desc")
             register("version", "mod.version")
             register("minecraft", "mod.mc_compat")
+            register("neoforge", "deps.neo_loader")
+            register("sbl", "deps.sbl")
+            register("yacl", "deps.yacl")
         }
 
         filesMatching("META-INF/neoforge.mods.toml") { expand(props) }

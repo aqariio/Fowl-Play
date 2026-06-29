@@ -7,7 +7,7 @@ license = "MIT"
 modId = "${id}"
 version = "${version}"
 displayName = "${name}"
-description = "Just smile and wave, boys. Smile and wave."
+description = "${desc}"
 authors = "aqario"
 credits = "Penguin60, Disketaa, owen233666, sanduicheirainox, Gnom1112, xz123456xz, sunbatheproductions"
 logoFile = "../../resources/assets/fowlplay/icon.png"
@@ -23,29 +23,26 @@ side = "BOTH"
 [[dependencies.${id}]]
 modId = "neoforge"
 type = "required"
-versionRange = "[21.1.210,)"
+versionRange = "[${neoforge},)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${id}]]
 modId = "smartbrainlib"
 type = "required"
-versionRange = "[1.16.11,)"
+versionRange = "[${sbl},)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${id}]]
 modId = "yet_another_config_lib_v3"
 type = "required"
-versionRange = "[3.6.5+1.21.1,)"
+versionRange = "[${yacl},)"
 ordering = "NONE"
 side = "BOTH"
 
 [[mixins]]
 config = "fowlplay.mixins.json"
-
-[[accessTransformers]]
-file = "accesstransformer.cfg"
 
 [mc-publish]
 dependencies = [

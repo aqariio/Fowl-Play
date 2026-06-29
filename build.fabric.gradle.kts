@@ -1,7 +1,6 @@
 plugins {
     // This plugin applies the correct loom variant based on the Minecraft version
     id("dev.kikugie.loom-back-compat")
-    id("dev.kikugie.fletching-table.fabric") version "0.1.0-alpha.22"
 }
 
 // DO NOT set group = ...!
@@ -104,11 +103,8 @@ dependencies {
 }
 
 loom {
-    fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json") // Useful for interface injection
-    accessWidenerPath = sc.process(
-        rootProject.file("src/main/resources/fowlplay.accesswidener"),
-        "build/processed.accesswidener"
-    )
+    fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json")
+    accessWidenerPath = rootProject.file("src/main/resources/fowlplay.accesswidener")
 
     decompilerOptions.named("vineflower") {
         options.put("mark-corresponding-synthetics", "1") // Adds names to lambdas - useful for mixins
@@ -146,8 +142,13 @@ tasks {
         val props = buildMap {
             register("id", "mod.id")
             register("name", "mod.name")
+            register("desc", "mod.desc")
             register("version", "mod.version")
             register("minecraft", "mod.mc_compat")
+            register("loader", "deps.fabric_loader")
+            register("fapi", "deps.fabric_api")
+            register("sbl", "deps.sbl")
+            register("yacl", "deps.yacl")
         }
 
         filesMatching("fabric.mod.json") { expand(props) }

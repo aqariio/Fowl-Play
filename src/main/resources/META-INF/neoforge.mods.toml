@@ -44,6 +44,8 @@ side = "BOTH"
 [[mixins]]
 config = "fowlplay.mixins.json"
 
+[[accessTransformers]]
+file = "accesstransformer.cfg"
 
 [mc-publish]
 dependencies = [

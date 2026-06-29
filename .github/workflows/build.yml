@@ -40,5 +40,8 @@ jobs:
                 with:
                     gradle-version: wrapper
 
+            -   name: "Run wrapper"
+                run: ./gradlew
+
             -   name: "Run build"
                 run: ./gradlew build

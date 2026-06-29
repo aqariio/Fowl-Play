@@ -4,8 +4,8 @@ plugins {
     id("dev.kikugie.fletching-table") version "0.1.0-alpha.22"
 }
 
-version = "${property("mod.version")}+${sc.current.version}"
-base.archivesName = "${property("mod.id") as String}-neoforge"
+version = "${property("mod.version")}+${sc.current.version}-neoforge"
+base.archivesName = property("mod.id") as String
 
 val requiredJava = when {
     sc.current.parsed >= "26.1" -> JavaVersion.VERSION_25

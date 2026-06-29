@@ -25,10 +25,19 @@ jobs:
                     java-version: 21
                     distribution: temurin
 
+            -   name: "Cache gradle"
+                uses: actions/cache@v4
+                with:
+                    path: |
+                        ~/.gradle/caches
+                        ~/.gradle/wrapper/
+                    key: ${{ runner.os }}-gradle
+                    restore-keys: |
+                        ${{ runner.os }}-gradle
+
             -   name: "Setup gradle"
                 uses: gradle/actions/setup-gradle@v4
                 with:
-                    cache-read-only: false
                     gradle-version: wrapper
 
             -   name: "Run build"

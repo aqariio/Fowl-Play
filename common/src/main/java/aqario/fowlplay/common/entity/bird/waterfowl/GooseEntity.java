@@ -12,8 +12,8 @@ import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.common.util.CylindricalRadius;
 import aqario.fowlplay.common.util.Utils;
 import aqario.fowlplay.core.*;
-import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
-import aqario.fowlplay.core.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.tags.FPEntityTypeTags;
+import aqario.fowlplay.core.tags.FPItemTags;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.Holder;
@@ -261,7 +261,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     public Ingredient getFood() {
-        return Ingredient.of(FowlPlayItemTags.GOOSE_FOOD);
+        return Ingredient.of(FPItemTags.GOOSE_FOOD);
     }
 
     @Override
@@ -280,7 +280,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
 
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
-        return entity.getType().is(FowlPlayEntityTypeTags.GOOSE_AVOIDS) && !this.isAggressive();
+        return entity.getType().is(FPEntityTypeTags.GOOSE_AVOIDS) && !this.isAggressive();
     }
 
     @Override

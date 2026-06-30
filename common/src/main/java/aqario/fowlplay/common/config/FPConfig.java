@@ -3,8 +3,8 @@ package aqario.fowlplay.common.config;
 import aqario.fowlplay.common.integration.YACLIntegration;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 
-public class FowlPlayConfig {
-    public static FowlPlayConfig getInstance() {
+public class FPConfig {
+    public static FPConfig getInstance() {
         return YACLIntegration.HANDLED_CONFIG.instance();
     }
 
@@ -116,16 +116,16 @@ public class FowlPlayConfig {
     @SerialEntry
     public int duckMinGroupSize = 2;
     @SerialEntry
-    public int duckMaxGroupSize = 10;
+    public int duckMaxGroupSize = 6;
 
     // Goose
 
     @SerialEntry
     public int gooseSpawnWeight = 4;
     @SerialEntry
-    public int gooseMinGroupSize = 2;
+    public int gooseMinGroupSize = 1;
     @SerialEntry
-    public int gooseMaxGroupSize = 10;
+    public int gooseMaxGroupSize = 4;
 
     // Gull
 
@@ -134,7 +134,7 @@ public class FowlPlayConfig {
     @SerialEntry
     public int gullMinGroupSize = 3;
     @SerialEntry
-    public int gullMaxGroupSize = 12;
+    public int gullMaxGroupSize = 8;
 
     // Hawk
 

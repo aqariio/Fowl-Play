@@ -5,7 +5,7 @@ import aqario.fowlplay.common.entity.bird.Domesticatable;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
 import aqario.fowlplay.common.entity.bird.TrustingBirdEntity;
 import aqario.fowlplay.core.FPMemoryTypes;
-import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
+import aqario.fowlplay.core.tags.FPEntityTypeTags;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Unit;
@@ -102,12 +102,12 @@ public final class BirdUtils {
     }
 
     public static boolean isNotFlightless(Entity entity) {
-        return entity.getType().is(FowlPlayEntityTypeTags.BIRDS)
-            && !entity.getType().is(FowlPlayEntityTypeTags.FLIGHTLESS);
+        return entity.getType().is(FPEntityTypeTags.BIRDS)
+            && !entity.getType().is(FPEntityTypeTags.FLIGHTLESS);
     }
 
     public static boolean isPerchingBird(Entity entity) {
-        return entity.getType().is(FowlPlayEntityTypeTags.PERCHING_BIRDS);
+        return entity.getType().is(FPEntityTypeTags.PERCHING_BIRDS);
     }
 
     public static <T extends BirdEntity> void alertOthers(T bird, LivingEntity attacker) {

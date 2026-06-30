@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class BirdDebugRenderer implements FowlPlayDebugRenderers.LerpedDebugRenderer {
+public class BirdDebugRenderer implements FPDebugRenderers.LerpedDebugRenderer {
     public static final BirdDebugRenderer INSTANCE = new BirdDebugRenderer();
     private final Minecraft client;
     private final Map<UUID, BirdDebugPayload.BirdData> birds = Maps.newHashMap();

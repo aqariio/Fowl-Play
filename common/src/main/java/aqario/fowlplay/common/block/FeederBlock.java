@@ -1,6 +1,6 @@
 package aqario.fowlplay.common.block;
 
-import aqario.fowlplay.core.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.tags.FPItemTags;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -59,7 +59,7 @@ public class FeederBlock extends FaceAttachedHorizontalDirectionalBlock implemen
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         ItemStack itemStack = player.getItemInHand(hand);
-        if(itemStack.is(FowlPlayItemTags.BIRD_FEED) && state.getValue(FILL_LEVEL) < 8) {
+        if(itemStack.is(FPItemTags.BIRD_FEED) && state.getValue(FILL_LEVEL) < 8) {
             stack.consume(1, player);
             level.setBlock(pos, state.cycle(FILL_LEVEL), Block.UPDATE_ALL);
             level.playLocalSound(pos, SoundEvents.COMPOSTER_FILL, SoundSource.BLOCKS, 1.0F, 1.0F, false);

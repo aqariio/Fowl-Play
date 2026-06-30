@@ -1,6 +1,6 @@
 package aqario.fowlplay.datagen;
 
-import aqario.fowlplay.core.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.tags.FPItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
@@ -11,30 +11,22 @@ import net.minecraft.world.item.Items;
 import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings("deprecation")
-public class FowlPlayItemTagGen extends FabricTagProvider.ItemTagProvider {
+public class FPItemTagGen extends FabricTagProvider.ItemTagProvider {
     private static final ResourceLocation WORM = ResourceLocation.fromNamespaceAndPath("angling", "worm");
 
-    public FowlPlayItemTagGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
+    public FPItemTagGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
         super(output, completableFuture);
     }
 
     @Override
     protected void addTags(HolderLookup.Provider lookup) {
-        this.getOrCreateTagBuilder(FowlPlayItemTags.BIRD_FEED)
+        this.getOrCreateTagBuilder(FPItemTags.BIRD_FEED)
             .add(Items.BEETROOT_SEEDS)
             .add(Items.MELON_SEEDS)
             .add(Items.PUMPKIN_SEEDS)
             .add(Items.TORCHFLOWER_SEEDS)
             .add(Items.WHEAT_SEEDS);
-        this.getOrCreateTagBuilder(FowlPlayItemTags.BLUE_JAY_FOOD)
-            .add(Items.BEETROOT_SEEDS)
-            .add(Items.GLOW_BERRIES)
-            .add(Items.MELON_SEEDS)
-            .add(Items.PUMPKIN_SEEDS)
-            .add(Items.SWEET_BERRIES)
-            .add(Items.TORCHFLOWER_SEEDS)
-            .add(Items.WHEAT_SEEDS);
-        this.getOrCreateTagBuilder(FowlPlayItemTags.CARDINAL_FOOD)
+        this.getOrCreateTagBuilder(FPItemTags.BLUE_JAY_FOOD)
             .add(Items.BEETROOT_SEEDS)
             .add(Items.GLOW_BERRIES)
             .add(Items.MELON_SEEDS)
@@ -42,7 +34,7 @@ public class FowlPlayItemTagGen extends FabricTagProvider.ItemTagProvider {
             .add(Items.SWEET_BERRIES)
             .add(Items.TORCHFLOWER_SEEDS)
             .add(Items.WHEAT_SEEDS);
-        this.getOrCreateTagBuilder(FowlPlayItemTags.CHICKADEE_FOOD)
+        this.getOrCreateTagBuilder(FPItemTags.CARDINAL_FOOD)
             .add(Items.BEETROOT_SEEDS)
             .add(Items.GLOW_BERRIES)
             .add(Items.MELON_SEEDS)
@@ -50,7 +42,15 @@ public class FowlPlayItemTagGen extends FabricTagProvider.ItemTagProvider {
             .add(Items.SWEET_BERRIES)
             .add(Items.TORCHFLOWER_SEEDS)
             .add(Items.WHEAT_SEEDS);
-        this.getOrCreateTagBuilder(FowlPlayItemTags.CROW_FOOD)
+        this.getOrCreateTagBuilder(FPItemTags.CHICKADEE_FOOD)
+            .add(Items.BEETROOT_SEEDS)
+            .add(Items.GLOW_BERRIES)
+            .add(Items.MELON_SEEDS)
+            .add(Items.PUMPKIN_SEEDS)
+            .add(Items.SWEET_BERRIES)
+            .add(Items.TORCHFLOWER_SEEDS)
+            .add(Items.WHEAT_SEEDS);
+        this.getOrCreateTagBuilder(FPItemTags.CROW_FOOD)
             .addOptionalTag(ConventionalItemTags.FOODS)
             .add(Items.BEETROOT_SEEDS)
             .add(Items.EGG)
@@ -59,7 +59,7 @@ public class FowlPlayItemTagGen extends FabricTagProvider.ItemTagProvider {
             .add(Items.TORCHFLOWER_SEEDS)
             .add(Items.TURTLE_EGG)
             .add(Items.WHEAT_SEEDS);
-        this.getOrCreateTagBuilder(FowlPlayItemTags.DUCK_FOOD)
+        this.getOrCreateTagBuilder(FPItemTags.DUCK_FOOD)
             .add(Items.BEETROOT_SEEDS)
             .add(Items.BREAD)
             .add(Items.COD)
@@ -71,7 +71,7 @@ public class FowlPlayItemTagGen extends FabricTagProvider.ItemTagProvider {
             .add(Items.TROPICAL_FISH)
             .add(Items.WHEAT_SEEDS)
             .addOptional(WORM);
-        this.getOrCreateTagBuilder(FowlPlayItemTags.GOOSE_FOOD)
+        this.getOrCreateTagBuilder(FPItemTags.GOOSE_FOOD)
             .add(Items.BEETROOT_SEEDS)
             .add(Items.BREAD)
             .add(Items.COD)
@@ -83,7 +83,7 @@ public class FowlPlayItemTagGen extends FabricTagProvider.ItemTagProvider {
             .add(Items.TROPICAL_FISH)
             .add(Items.WHEAT_SEEDS)
             .addOptional(WORM);
-        this.getOrCreateTagBuilder(FowlPlayItemTags.GULL_FOOD)
+        this.getOrCreateTagBuilder(FPItemTags.GULL_FOOD)
             .addOptionalTag(ConventionalItemTags.FOODS)
             .add(Items.BEETROOT_SEEDS)
             .add(Items.EGG)
@@ -92,23 +92,23 @@ public class FowlPlayItemTagGen extends FabricTagProvider.ItemTagProvider {
             .add(Items.TORCHFLOWER_SEEDS)
             .add(Items.TURTLE_EGG)
             .add(Items.WHEAT_SEEDS);
-        this.getOrCreateTagBuilder(FowlPlayItemTags.HAWK_FOOD)
+        this.getOrCreateTagBuilder(FPItemTags.HAWK_FOOD)
             .add(Items.EGG)
             .add(Items.TURTLE_EGG)
             .addOptionalTag(ConventionalItemTags.RAW_MEAT_FOODS)
             .addOptionalTag(ConventionalItemTags.RAW_MEATS_FOODS);
-        this.getOrCreateTagBuilder(FowlPlayItemTags.PENGUIN_FOOD)
+        this.getOrCreateTagBuilder(FPItemTags.PENGUIN_FOOD)
             .add(Items.COD)
             .add(Items.SALMON)
             .add(Items.TROPICAL_FISH);
-        this.getOrCreateTagBuilder(FowlPlayItemTags.PIGEON_FOOD)
+        this.getOrCreateTagBuilder(FPItemTags.PIGEON_FOOD)
             .addOptionalTag(ConventionalItemTags.FOODS)
             .add(Items.BEETROOT_SEEDS)
             .add(Items.MELON_SEEDS)
             .add(Items.PUMPKIN_SEEDS)
             .add(Items.TORCHFLOWER_SEEDS)
             .add(Items.WHEAT_SEEDS);
-        this.getOrCreateTagBuilder(FowlPlayItemTags.RAVEN_FOOD)
+        this.getOrCreateTagBuilder(FPItemTags.RAVEN_FOOD)
             .addOptionalTag(ConventionalItemTags.FOODS)
             .add(Items.BEETROOT_SEEDS)
             .add(Items.EGG)
@@ -117,7 +117,7 @@ public class FowlPlayItemTagGen extends FabricTagProvider.ItemTagProvider {
             .add(Items.TORCHFLOWER_SEEDS)
             .add(Items.TURTLE_EGG)
             .add(Items.WHEAT_SEEDS);
-        this.getOrCreateTagBuilder(FowlPlayItemTags.ROBIN_FOOD)
+        this.getOrCreateTagBuilder(FPItemTags.ROBIN_FOOD)
             .add(Items.BEETROOT_SEEDS)
             .add(Items.GLOW_BERRIES)
             .add(Items.MELON_SEEDS)
@@ -126,7 +126,7 @@ public class FowlPlayItemTagGen extends FabricTagProvider.ItemTagProvider {
             .add(Items.TORCHFLOWER_SEEDS)
             .add(Items.WHEAT_SEEDS)
             .addOptional(WORM);
-        this.getOrCreateTagBuilder(FowlPlayItemTags.SPARROW_FOOD)
+        this.getOrCreateTagBuilder(FPItemTags.SPARROW_FOOD)
             .add(Items.BEETROOT_SEEDS)
             .add(Items.MELON_SEEDS)
             .add(Items.PUMPKIN_SEEDS)

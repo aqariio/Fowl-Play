@@ -32,7 +32,7 @@
       "aqario.fowlplay.client.fabric.FowlPlayFabricClient"
     ],
     "fabric-datagen": [
-      "aqario.fowlplay.datagen.FowlPlayDataGen"
+      "aqario.fowlplay.datagen.FPDataGen"
     ],
     "modmenu": [
       "aqario.fowlplay.common.integration.fabric.ModMenuIntegration"

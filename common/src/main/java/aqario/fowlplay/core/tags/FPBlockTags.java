@@ -5,7 +5,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
-public final class FowlPlayBlockTags {
+public final class FPBlockTags {
     public static final TagKey<Block> PENGUINS_SLIDE_ON = create("penguins_slide_on");
     public static final TagKey<Block> PENGUINS_SPAWNABLE_ON = create("penguins_spawnable_on");
     public static final TagKey<Block> PERCHES = create("perches");

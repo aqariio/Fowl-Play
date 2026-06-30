@@ -27,7 +27,7 @@ public abstract class LivingEntityMixin extends Entity {
         LivingEntity entity = (LivingEntity) (Object) this;
         BlockState state = this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement());
         if(entity instanceof PenguinEntity penguin && penguin.isSliding()) {
-            return state.is(FPBlockTags.PENGUINS_SLIDE_ON) || this.getFeetBlockState().is(FowlPlayBlockTags.PENGUINS_SLIDE_ON)
+            return state.is(FPBlockTags.PENGUINS_SLIDE_ON) || this.getFeetBlockState().is(FPBlockTags.PENGUINS_SLIDE_ON)
                 ? 1.025F
                 : slipperiness;
         }

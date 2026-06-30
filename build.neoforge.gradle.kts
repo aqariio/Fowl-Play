@@ -1,7 +1,6 @@
 plugins {
     id("net.neoforged.moddev") version "2.0.140"
     id("neoforge-mutex")
-    id("dev.kikugie.fletching-table.neoforge") version "0.1.0-alpha.23"
 }
 
 version = "${property("mod.version")}+${sc.current.version}-neoforge"
@@ -13,12 +12,6 @@ val requiredJava = when {
     sc.current.parsed >= "1.18" -> JavaVersion.VERSION_17
     sc.current.parsed >= "1.17" -> JavaVersion.VERSION_16
     else -> JavaVersion.VERSION_1_8
-}
-
-fletchingTable {
-    accessConverter.register(sourceSets.main) {
-        add("fowlplay.accesswidener")
-    }
 }
 
 repositories {

@@ -10,8 +10,8 @@ import aqario.fowlplay.common.util.BiPredicates;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FPSchedules;
 import aqario.fowlplay.core.FPSoundEvents;
-import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
-import aqario.fowlplay.core.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.tags.FPEntityTypeTags;
+import aqario.fowlplay.core.tags.FPItemTags;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.CompoundTag;
@@ -101,18 +101,18 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     }
 
     public Ingredient getFood() {
-        return Ingredient.of(FowlPlayItemTags.HAWK_FOOD);
+        return Ingredient.of(FPItemTags.HAWK_FOOD);
     }
 
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
-        return entity.getType().is(FowlPlayEntityTypeTags.HAWK_AVOIDS);
+        return entity.getType().is(FPEntityTypeTags.HAWK_AVOIDS);
     }
 
     @Override
     public boolean canHunt(LivingEntity target) {
-        return target.getType().is(FowlPlayEntityTypeTags.HAWK_HUNT_TARGETS) ||
-            (target.getType().is(FowlPlayEntityTypeTags.HAWK_BABY_HUNT_TARGETS) && target.isBaby());
+        return target.getType().is(FPEntityTypeTags.HAWK_HUNT_TARGETS) ||
+            (target.getType().is(FPEntityTypeTags.HAWK_BABY_HUNT_TARGETS) && target.isBaby());
     }
 
     @Override

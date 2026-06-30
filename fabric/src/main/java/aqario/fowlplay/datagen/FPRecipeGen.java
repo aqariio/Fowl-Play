@@ -10,8 +10,8 @@ import net.minecraft.world.item.Items;
 
 import java.util.function.Consumer;
 
-public class FowlPlayRecipeGen extends FabricRecipeProvider {
-    public FowlPlayRecipeGen(FabricDataOutput output) {
+public class FPRecipeGen extends FabricRecipeProvider {
+    public FPRecipeGen(FabricDataOutput output) {
         super(output);
     }
 

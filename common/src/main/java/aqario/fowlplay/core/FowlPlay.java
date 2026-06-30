@@ -1,6 +1,6 @@
 package aqario.fowlplay.core;
 
-import aqario.fowlplay.common.config.FowlPlayConfig;
+import aqario.fowlplay.common.config.FPConfig;
 import aqario.fowlplay.common.entity.variant.*;
 import aqario.fowlplay.common.util.ResourcePathBuilder;
 import aqario.fowlplay.common.worldgen.BiomeModifier;
@@ -32,7 +32,7 @@ public class FowlPlay {
     public static void init() {
         Mod mod = Platform.getMod(ID);
         LOGGER.info("Loading {} {}", mod.getName(), mod.getVersion());
-        FowlPlayConfig.load();
+        FPConfig.load();
 
         FPRegistries.init();
         FPBuiltInRegistries.init();

@@ -12,10 +12,10 @@ import aqario.fowlplay.core.FPEntityTypes;
 import aqario.fowlplay.core.FPParticleTypes;
 import aqario.fowlplay.core.FPSchedules;
 import aqario.fowlplay.core.FPSoundEvents;
-import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
-import aqario.fowlplay.core.tags.FowlPlayBlockTags;
-import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
-import aqario.fowlplay.core.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.tags.FPBiomeTags;
+import aqario.fowlplay.core.tags.FPBlockTags;
+import aqario.fowlplay.core.tags.FPEntityTypeTags;
+import aqario.fowlplay.core.tags.FPItemTags;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -162,17 +162,17 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @Override
     public Ingredient getFood() {
-        return Ingredient.of(FowlPlayItemTags.PENGUIN_FOOD);
+        return Ingredient.of(FPItemTags.PENGUIN_FOOD);
     }
 
     @Override
     public boolean canHunt(LivingEntity target) {
-        return target.getType().is(FowlPlayEntityTypeTags.PENGUIN_HUNT_TARGETS);
+        return target.getType().is(FPEntityTypeTags.PENGUIN_HUNT_TARGETS);
     }
 
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
-        return entity.getType().is(FowlPlayEntityTypeTags.PENGUIN_AVOIDS);
+        return entity.getType().is(FPEntityTypeTags.PENGUIN_AVOIDS);
     }
 
     public static AttributeSupplier.Builder createPenguinAttributes() {
@@ -317,8 +317,8 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
         return !this.isInWaterOrBubble()
             && !this.isVehicle()
             && this.onGround()
-            && (this.level().getBlockState(this.blockPosition().below()).is(FowlPlayBlockTags.PENGUINS_SLIDE_ON)
-            || this.level().getBlockState(this.blockPosition()).is(FowlPlayBlockTags.PENGUINS_SLIDE_ON));
+            && (this.level().getBlockState(this.blockPosition().below()).is(FPBlockTags.PENGUINS_SLIDE_ON)
+            || this.level().getBlockState(this.blockPosition()).is(FPBlockTags.PENGUINS_SLIDE_ON));
     }
 
     public boolean isSliding() {
@@ -516,7 +516,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @SuppressWarnings("unused")
     public static boolean canSpawnPenguins(EntityType<? extends BirdEntity> type, LevelAccessor world, MobSpawnType spawnReason, BlockPos pos, RandomSource random) {
-        return world.getBiome(pos).is(FowlPlayBiomeTags.SPAWNS_PENGUINS) && world.getBlockState(pos.below()).is(FowlPlayBlockTags.PENGUINS_SPAWNABLE_ON);
+        return world.getBiome(pos).is(FPBiomeTags.SPAWNS_PENGUINS) && world.getBlockState(pos.below()).is(FPBlockTags.PENGUINS_SPAWNABLE_ON);
     }
 
     @Override
@@ -536,7 +536,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     @Override
     protected Vec3 getRiddenInput(Player player, Vec3 input) {
         float forwardMovement = player.zza * 0.2F;
-        if(this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).is(FowlPlayBlockTags.PENGUINS_SLIDE_ON) || this.getFeetBlockState().is(FowlPlayBlockTags.PENGUINS_SLIDE_ON)) {
+        if(this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).is(FPBlockTags.PENGUINS_SLIDE_ON) || this.getFeetBlockState().is(FowlPlayBlockTags.PENGUINS_SLIDE_ON)) {
             forwardMovement *= 2.0F;
         }
 

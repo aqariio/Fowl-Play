@@ -17,8 +17,8 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.util.function.BiConsumer;
 
-public class FowlPlayEntityLootTableGen extends SimpleFabricLootTableProvider {
-    public FowlPlayEntityLootTableGen(FabricDataOutput output) {
+public class FPEntityLootTableGen extends SimpleFabricLootTableProvider {
+    public FPEntityLootTableGen(FabricDataOutput output) {
         super(output, LootContextParamSets.ENTITY);
     }
 

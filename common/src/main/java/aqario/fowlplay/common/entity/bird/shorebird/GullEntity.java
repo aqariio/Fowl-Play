@@ -14,8 +14,8 @@ import aqario.fowlplay.common.util.BiPredicates;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.common.util.CylindricalRadius;
 import aqario.fowlplay.core.*;
-import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
-import aqario.fowlplay.core.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.tags.FPEntityTypeTags;
+import aqario.fowlplay.core.tags.FPItemTags;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.Registry;
@@ -170,18 +170,18 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     }
 
     public Ingredient getFood() {
-        return Ingredient.of(FowlPlayItemTags.GULL_FOOD);
+        return Ingredient.of(FPItemTags.GULL_FOOD);
     }
 
     @Override
     public boolean canHunt(LivingEntity target) {
-        return target.getType().is(FowlPlayEntityTypeTags.GULL_HUNT_TARGETS) ||
-            (target.getType().is(FowlPlayEntityTypeTags.GULL_BABY_HUNT_TARGETS) && target.isBaby());
+        return target.getType().is(FPEntityTypeTags.GULL_HUNT_TARGETS) ||
+            (target.getType().is(FPEntityTypeTags.GULL_BABY_HUNT_TARGETS) && target.isBaby());
     }
 
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
-        return entity.getType().is(FowlPlayEntityTypeTags.GULL_AVOIDS);
+        return entity.getType().is(FPEntityTypeTags.GULL_AVOIDS);
     }
 
     @Override

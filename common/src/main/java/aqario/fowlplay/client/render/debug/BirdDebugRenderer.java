@@ -29,7 +29,7 @@ import org.joml.Matrix4f;
 
 import java.util.*;
 
-public class BirdDebugRenderer implements FowlPlayDebugRenderers.LerpedDebugRenderer {
+public class BirdDebugRenderer implements FPDebugRenderers.LerpedDebugRenderer {
     private final Minecraft client;
     private final Map<UUID, BirdData> birds = Maps.newHashMap();
     @Nullable

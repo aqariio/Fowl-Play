@@ -13,8 +13,8 @@ import aqario.fowlplay.common.util.AnimationStateList;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FPSchedules;
 import aqario.fowlplay.core.FPSoundEvents;
-import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
-import aqario.fowlplay.core.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.tags.FPEntityTypeTags;
+import aqario.fowlplay.core.tags.FPItemTags;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -59,12 +59,12 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
 
     @Override
     public Ingredient getFood() {
-        return Ingredient.of(FowlPlayItemTags.SPARROW_FOOD);
+        return Ingredient.of(FPItemTags.SPARROW_FOOD);
     }
 
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
-        return entity.getType().is(FowlPlayEntityTypeTags.SPARROW_AVOIDS);
+        return entity.getType().is(FPEntityTypeTags.SPARROW_AVOIDS);
     }
 
     @Override

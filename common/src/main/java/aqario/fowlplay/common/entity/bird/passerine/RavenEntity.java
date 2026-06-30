@@ -11,8 +11,8 @@ import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FPMemoryTypes;
 import aqario.fowlplay.core.FPSchedules;
 import aqario.fowlplay.core.FPSoundEvents;
-import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
-import aqario.fowlplay.core.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.tags.FPEntityTypeTags;
+import aqario.fowlplay.core.tags.FPItemTags;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.CompoundTag;
@@ -94,13 +94,13 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     }
 
     public Ingredient getFood() {
-        return Ingredient.of(FowlPlayItemTags.RAVEN_FOOD);
+        return Ingredient.of(FPItemTags.RAVEN_FOOD);
     }
 
     @Override
     public boolean canHunt(LivingEntity target) {
-        return target.getType().is(FowlPlayEntityTypeTags.RAVEN_HUNT_TARGETS) ||
-            (target.getType().is(FowlPlayEntityTypeTags.RAVEN_BABY_HUNT_TARGETS) && target.isBaby());
+        return target.getType().is(FPEntityTypeTags.RAVEN_HUNT_TARGETS) ||
+            (target.getType().is(FPEntityTypeTags.RAVEN_BABY_HUNT_TARGETS) && target.isBaby());
     }
 
     @Override
@@ -109,7 +109,7 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
             return false;
         }
         LivingEntity hurtBy = BrainUtils.getLastAttacker(this);
-        if(!target.getType().is(FowlPlayEntityTypeTags.RAVEN_ATTACK_TARGETS) && (hurtBy == null || !hurtBy.equals(target))) {
+        if(!target.getType().is(FPEntityTypeTags.RAVEN_ATTACK_TARGETS) && (hurtBy == null || !hurtBy.equals(target))) {
             return false;
         }
         Optional<List<? extends AgeableMob>> nearbyAdults = Optional.ofNullable(BrainUtils.getMemory(this, FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get()));
@@ -118,7 +118,7 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
 
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
-        return entity.getType().is(FowlPlayEntityTypeTags.RAVEN_AVOIDS);
+        return entity.getType().is(FPEntityTypeTags.RAVEN_AVOIDS);
     }
 
     @Override

@@ -13,8 +13,8 @@ import aqario.fowlplay.common.entity.variant.PigeonVariant;
 import aqario.fowlplay.common.registry.CommonRegistry;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.*;
-import aqario.fowlplay.core.tags.FowlPlayEntityTypeTags;
-import aqario.fowlplay.core.tags.FowlPlayItemTags;
+import aqario.fowlplay.core.tags.FPEntityTypeTags;
+import aqario.fowlplay.core.tags.FPItemTags;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.Registry;
@@ -255,12 +255,12 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
 
     @Override
     public Ingredient getFood() {
-        return Ingredient.of(FowlPlayItemTags.PIGEON_FOOD);
+        return Ingredient.of(FPItemTags.PIGEON_FOOD);
     }
 
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
-        return entity.getType().is(FowlPlayEntityTypeTags.PIGEON_AVOIDS);
+        return entity.getType().is(FPEntityTypeTags.PIGEON_AVOIDS);
     }
 
     @Override

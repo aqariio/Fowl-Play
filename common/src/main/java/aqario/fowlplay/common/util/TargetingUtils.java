@@ -1,7 +1,7 @@
 package aqario.fowlplay.common.util;
 
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
-import aqario.fowlplay.core.tags.FowlPlayBlockTags;
+import aqario.fowlplay.core.tags.FPBlockTags;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -172,7 +172,7 @@ public class TargetingUtils {
     }
 
     public static boolean isPerch(PathfinderMob entity, BlockPos pos) {
-        return entity.level().getBlockState(pos).is(FowlPlayBlockTags.PERCHES);
+        return entity.level().getBlockState(pos).is(FPBlockTags.PERCHES);
     }
 
     public static boolean isPositionNonAir(PathfinderMob entity, BlockPos pos) {

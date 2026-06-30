@@ -1,6 +1,6 @@
 package aqario.fowlplay.datagen;
 
-import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
+import aqario.fowlplay.core.tags.FPBiomeTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.biome.Biomes;
 
 import java.util.concurrent.CompletableFuture;
 
-public class FowlPlayBiomeTagGen extends FabricTagProvider<Biome> {
+public class FPBiomeTagGen extends FabricTagProvider<Biome> {
     private static final ResourceLocation WHITE_CLIFFS = ResourceLocation.tryBuild("natures_spirit", "white_cliffs");
     private static final ResourceLocation IS_ALPINE = ResourceLocation.tryBuild("natures_spirit", "is_alpine");
     private static final ResourceLocation IS_AUTUMN = ResourceLocation.tryBuild("natures_spirit", "is_autumn");
@@ -39,13 +39,13 @@ public class FowlPlayBiomeTagGen extends FabricTagProvider<Biome> {
     private static final ResourceLocation IS_DENSE_OVERWORLD = ResourceLocation.tryBuild("forge", "is_dense/overworld");
     private static final ResourceLocation IS_CONIFEROUS = ResourceLocation.tryBuild("forge", "is_coniferous");
 
-    public FowlPlayBiomeTagGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+    public FPBiomeTagGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, Registries.BIOME, registriesFuture);
     }
 
     @Override
     protected void addTags(HolderLookup.Provider wrapperLookup) {
-        this.getOrCreateTagBuilder(FowlPlayBiomeTags.SPAWNS_BLUE_JAYS)
+        this.getOrCreateTagBuilder(FPBiomeTags.SPAWNS_BLUE_JAYS)
             .addOptionalTag(IS_ALPINE)
             .addOptionalTag(IS_AUTUMN)
             .addOptionalTag(IS_COLD)
@@ -62,7 +62,7 @@ public class FowlPlayBiomeTagGen extends FabricTagProvider<Biome> {
             .addOptionalTag(IS_TREE_DECIDUOUS)
             .addOptionalTag(ConventionalBiomeTags.TREE_CONIFEROUS)
             .addOptionalTag(ConventionalBiomeTags.TREE_DECIDUOUS);
-        this.getOrCreateTagBuilder(FowlPlayBiomeTags.SPAWNS_CARDINALS)
+        this.getOrCreateTagBuilder(FPBiomeTags.SPAWNS_CARDINALS)
             .addOptionalTag(IS_ALPINE)
             .addOptionalTag(IS_AUTUMN)
             .addOptionalTag(IS_COLD)
@@ -79,7 +79,7 @@ public class FowlPlayBiomeTagGen extends FabricTagProvider<Biome> {
             .addOptionalTag(IS_TREE_DECIDUOUS)
             .addOptionalTag(ConventionalBiomeTags.TREE_CONIFEROUS)
             .addOptionalTag(ConventionalBiomeTags.TREE_DECIDUOUS);
-        this.getOrCreateTagBuilder(FowlPlayBiomeTags.SPAWNS_CHICKADEES)
+        this.getOrCreateTagBuilder(FPBiomeTags.SPAWNS_CHICKADEES)
             .addOptionalTag(IS_AUTUMN)
             .addOptionalTag(IS_COLD)
             .addOptionalTag(IS_COLD_OVERWORLD)
@@ -89,7 +89,7 @@ public class FowlPlayBiomeTagGen extends FabricTagProvider<Biome> {
             .addOptionalTag(IS_DECIDUOUS_TREE)
             .addOptionalTag(IS_TREE_DECIDUOUS)
             .addOptionalTag(ConventionalBiomeTags.TREE_DECIDUOUS);
-        this.getOrCreateTagBuilder(FowlPlayBiomeTags.SPAWNS_CROWS)
+        this.getOrCreateTagBuilder(FPBiomeTags.SPAWNS_CROWS)
             .addOptionalTag(IS_ALPINE)
             .addOptionalTag(IS_AUTUMN)
             .addOptionalTag(IS_COLD)
@@ -106,7 +106,7 @@ public class FowlPlayBiomeTagGen extends FabricTagProvider<Biome> {
             .addOptionalTag(IS_TREE_DECIDUOUS)
             .addOptionalTag(ConventionalBiomeTags.TREE_CONIFEROUS)
             .addOptionalTag(ConventionalBiomeTags.TREE_DECIDUOUS);
-        this.getOrCreateTagBuilder(FowlPlayBiomeTags.SPAWNS_DUCKS)
+        this.getOrCreateTagBuilder(FPBiomeTags.SPAWNS_DUCKS)
             .addOptionalTag(IS_WETLAND)
             .addOptionalTag(IS_RIVER)
             .addOptionalTag(IS_SWAMP)
@@ -126,7 +126,7 @@ public class FowlPlayBiomeTagGen extends FabricTagProvider<Biome> {
             .addOptionalTag(IS_TREE_DECIDUOUS)
             .addOptionalTag(ConventionalBiomeTags.TREE_CONIFEROUS)
             .addOptionalTag(ConventionalBiomeTags.TREE_DECIDUOUS);
-        this.getOrCreateTagBuilder(FowlPlayBiomeTags.SPAWNS_GEESE)
+        this.getOrCreateTagBuilder(FPBiomeTags.SPAWNS_GEESE)
             .addOptionalTag(IS_WETLAND)
             .addOptionalTag(IS_RIVER)
             .addOptionalTag(IS_SWAMP)
@@ -146,13 +146,13 @@ public class FowlPlayBiomeTagGen extends FabricTagProvider<Biome> {
             .addOptionalTag(IS_TREE_DECIDUOUS)
             .addOptionalTag(ConventionalBiomeTags.TREE_CONIFEROUS)
             .addOptionalTag(ConventionalBiomeTags.TREE_DECIDUOUS);
-        this.getOrCreateTagBuilder(FowlPlayBiomeTags.SPAWNS_GULLS)
+        this.getOrCreateTagBuilder(FPBiomeTags.SPAWNS_GULLS)
             .addOptionalTag(IS_COAST)
             .addOptionalTag(IS_BEACH)
             .addOptionalTag(IS_STONY_SHORES)
             .addOptionalTag(ConventionalBiomeTags.BEACH)
             .addOptionalTag(ConventionalBiomeTags.STONY_SHORES);
-        this.getOrCreateTagBuilder(FowlPlayBiomeTags.SPAWNS_HAWKS)
+        this.getOrCreateTagBuilder(FPBiomeTags.SPAWNS_HAWKS)
             .addOptionalTag(IS_ALPINE)
             .addOptionalTag(IS_AUTUMN)
             .addOptionalTag(IS_COLD)
@@ -172,13 +172,13 @@ public class FowlPlayBiomeTagGen extends FabricTagProvider<Biome> {
             .add(Biomes.SUNFLOWER_PLAINS)
             .add(Biomes.WINDSWEPT_FOREST)
             .add(Biomes.WINDSWEPT_HILLS);
-        this.getOrCreateTagBuilder(FowlPlayBiomeTags.SPAWNS_PENGUINS)
+        this.getOrCreateTagBuilder(FPBiomeTags.SPAWNS_PENGUINS)
             .add(Biomes.SNOWY_PLAINS)
             .add(Biomes.SNOWY_BEACH);
-        this.getOrCreateTagBuilder(FowlPlayBiomeTags.SPAWNS_PIGEONS)
+        this.getOrCreateTagBuilder(FPBiomeTags.SPAWNS_PIGEONS)
             .addOptionalTag(ConventionalBiomeTags.STONY_SHORES)
             .addOptional(WHITE_CLIFFS);
-        this.getOrCreateTagBuilder(FowlPlayBiomeTags.SPAWNS_RAVENS)
+        this.getOrCreateTagBuilder(FPBiomeTags.SPAWNS_RAVENS)
             .addOptionalTag(IS_ALPINE)
             .addOptionalTag(IS_AUTUMN)
             .addOptionalTag(IS_COLD)
@@ -195,7 +195,7 @@ public class FowlPlayBiomeTagGen extends FabricTagProvider<Biome> {
             .addOptionalTag(IS_TREE_DECIDUOUS)
             .addOptionalTag(ConventionalBiomeTags.TREE_CONIFEROUS)
             .addOptionalTag(ConventionalBiomeTags.TREE_DECIDUOUS);
-        this.getOrCreateTagBuilder(FowlPlayBiomeTags.SPAWNS_ROBINS)
+        this.getOrCreateTagBuilder(FPBiomeTags.SPAWNS_ROBINS)
             .addOptionalTag(IS_ALPINE)
             .addOptionalTag(IS_AUTUMN)
             .addOptionalTag(IS_COLD)
@@ -212,7 +212,7 @@ public class FowlPlayBiomeTagGen extends FabricTagProvider<Biome> {
             .addOptionalTag(IS_TREE_DECIDUOUS)
             .addOptionalTag(ConventionalBiomeTags.TREE_CONIFEROUS)
             .addOptionalTag(ConventionalBiomeTags.TREE_DECIDUOUS);
-        this.getOrCreateTagBuilder(FowlPlayBiomeTags.SPAWNS_SPARROWS)
+        this.getOrCreateTagBuilder(FPBiomeTags.SPAWNS_SPARROWS)
             .addOptionalTag(IS_ALPINE)
             .addOptionalTag(IS_AUTUMN)
             .addOptionalTag(IS_COLD)

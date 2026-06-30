@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FowlPlayDebugRenderers {
+public class FPDebugRenderers {
     private static final List<LerpedDebugRenderer> RENDERERS = new ArrayList<>();
 
     public static synchronized void register(LerpedDebugRenderer renderer) {

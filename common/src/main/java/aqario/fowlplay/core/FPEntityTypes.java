@@ -1,6 +1,6 @@
 package aqario.fowlplay.core;
 
-import aqario.fowlplay.common.config.FowlPlayConfig;
+import aqario.fowlplay.common.config.FPConfig;
 import aqario.fowlplay.common.entity.CustomMobCategory;
 import aqario.fowlplay.common.entity.ScarecrowEntity;
 import aqario.fowlplay.common.entity.bird.dove.PigeonEntity;
@@ -14,7 +14,7 @@ import aqario.fowlplay.common.registry.CommonRegister;
 import aqario.fowlplay.common.util.EntityTypeBuilder;
 import aqario.fowlplay.common.worldgen.CustomSpawnPlacementType;
 import aqario.fowlplay.common.worldgen.SpawnPredicates;
-import aqario.fowlplay.core.tags.FowlPlayBiomeTags;
+import aqario.fowlplay.core.tags.FPBiomeTags;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -42,10 +42,10 @@ public final class FPEntityTypes {
                 SpawnPredicates::canSpawnPasserines
             )
             .spawn(
-                FowlPlayBiomeTags.SPAWNS_BLUE_JAYS,
-                FowlPlayConfig.getInstance().blueJaySpawnWeight,
-                FowlPlayConfig.getInstance().blueJayMinGroupSize,
-                FowlPlayConfig.getInstance().blueJayMaxGroupSize
+                FPBiomeTags.SPAWNS_BLUE_JAYS,
+                FPConfig.getInstance().blueJaySpawnWeight,
+                FPConfig.getInstance().blueJayMinGroupSize,
+                FPConfig.getInstance().blueJayMaxGroupSize
             )
     );
 
@@ -62,10 +62,10 @@ public final class FPEntityTypes {
                 SpawnPredicates::canSpawnPasserines
             )
             .spawn(
-                FowlPlayBiomeTags.SPAWNS_CARDINALS,
-                FowlPlayConfig.getInstance().cardinalSpawnWeight,
-                FowlPlayConfig.getInstance().cardinalMinGroupSize,
-                FowlPlayConfig.getInstance().cardinalMaxGroupSize
+                FPBiomeTags.SPAWNS_CARDINALS,
+                FPConfig.getInstance().cardinalSpawnWeight,
+                FPConfig.getInstance().cardinalMinGroupSize,
+                FPConfig.getInstance().cardinalMaxGroupSize
             )
     );
 
@@ -82,10 +82,10 @@ public final class FPEntityTypes {
                 SpawnPredicates::canSpawnPasserines
             )
             .spawn(
-                FowlPlayBiomeTags.SPAWNS_CHICKADEES,
-                FowlPlayConfig.getInstance().chickadeeSpawnWeight,
-                FowlPlayConfig.getInstance().chickadeeMinGroupSize,
-                FowlPlayConfig.getInstance().chickadeeMaxGroupSize
+                FPBiomeTags.SPAWNS_CHICKADEES,
+                FPConfig.getInstance().chickadeeSpawnWeight,
+                FPConfig.getInstance().chickadeeMinGroupSize,
+                FPConfig.getInstance().chickadeeMaxGroupSize
             )
     );
 
@@ -102,10 +102,10 @@ public final class FPEntityTypes {
                 SpawnPredicates::canSpawnPasserines
             )
             .spawn(
-                FowlPlayBiomeTags.SPAWNS_CROWS,
-                FowlPlayConfig.getInstance().crowSpawnWeight,
-                FowlPlayConfig.getInstance().crowMinGroupSize,
-                FowlPlayConfig.getInstance().crowMaxGroupSize
+                FPBiomeTags.SPAWNS_CROWS,
+                FPConfig.getInstance().crowSpawnWeight,
+                FPConfig.getInstance().crowMinGroupSize,
+                FPConfig.getInstance().crowMaxGroupSize
             )
     );
 
@@ -122,13 +122,13 @@ public final class FPEntityTypes {
                 SpawnPredicates::canSpawnWaterfowl
             )
             .spawn(
-                FowlPlayBiomeTags.SPAWNS_DUCKS,
-                FowlPlayConfig.getInstance().duckSpawnWeight,
-                FowlPlayConfig.getInstance().duckMinGroupSize,
-                FowlPlayConfig.getInstance().duckMaxGroupSize
+                FPBiomeTags.SPAWNS_DUCKS,
+                FPConfig.getInstance().duckSpawnWeight,
+                FPConfig.getInstance().duckMinGroupSize,
+                FPConfig.getInstance().duckMaxGroupSize
             )
             .spawnCost(
-                FowlPlayBiomeTags.SPAWNS_DUCKS,
+                FPBiomeTags.SPAWNS_DUCKS,
                 0.7,
                 0.1
             )
@@ -147,13 +147,13 @@ public final class FPEntityTypes {
                 SpawnPredicates::canSpawnWaterfowl
             )
             .spawn(
-                FowlPlayBiomeTags.SPAWNS_GEESE,
-                FowlPlayConfig.getInstance().gooseSpawnWeight,
-                FowlPlayConfig.getInstance().gooseMinGroupSize,
-                FowlPlayConfig.getInstance().gooseMaxGroupSize
+                FPBiomeTags.SPAWNS_GEESE,
+                FPConfig.getInstance().gooseSpawnWeight,
+                FPConfig.getInstance().gooseMinGroupSize,
+                FPConfig.getInstance().gooseMaxGroupSize
             )
             .spawnCost(
-                FowlPlayBiomeTags.SPAWNS_GEESE,
+                FPBiomeTags.SPAWNS_GEESE,
                 0.9,
                 0.07
             )
@@ -172,13 +172,13 @@ public final class FPEntityTypes {
                 SpawnPredicates::canSpawnShorebirds
             )
             .spawn(
-                FowlPlayBiomeTags.SPAWNS_GULLS,
-                FowlPlayConfig.getInstance().gullSpawnWeight,
-                FowlPlayConfig.getInstance().gullMinGroupSize,
-                FowlPlayConfig.getInstance().gullMaxGroupSize
+                FPBiomeTags.SPAWNS_GULLS,
+                FPConfig.getInstance().gullSpawnWeight,
+                FPConfig.getInstance().gullMinGroupSize,
+                FPConfig.getInstance().gullMaxGroupSize
             )
             .spawnCost(
-                FowlPlayBiomeTags.SPAWNS_GULLS,
+                FPBiomeTags.SPAWNS_GULLS,
                 1,
                 0.1
             )
@@ -197,10 +197,10 @@ public final class FPEntityTypes {
                 SpawnPredicates::canSpawnPasserines
             )
             .spawn(
-                FowlPlayBiomeTags.SPAWNS_HAWKS,
-                FowlPlayConfig.getInstance().hawkSpawnWeight,
-                FowlPlayConfig.getInstance().hawkMinGroupSize,
-                FowlPlayConfig.getInstance().hawkMaxGroupSize
+                FPBiomeTags.SPAWNS_HAWKS,
+                FPConfig.getInstance().hawkSpawnWeight,
+                FPConfig.getInstance().hawkMinGroupSize,
+                FPConfig.getInstance().hawkMaxGroupSize
             )
     );
 
@@ -217,10 +217,10 @@ public final class FPEntityTypes {
                 PenguinEntity::canSpawnPenguins
             )
             .spawn(
-                FowlPlayBiomeTags.SPAWNS_PENGUINS,
-                FowlPlayConfig.getInstance().penguinSpawnWeight,
-                FowlPlayConfig.getInstance().penguinMinGroupSize,
-                FowlPlayConfig.getInstance().penguinMaxGroupSize
+                FPBiomeTags.SPAWNS_PENGUINS,
+                FPConfig.getInstance().penguinSpawnWeight,
+                FPConfig.getInstance().penguinMinGroupSize,
+                FPConfig.getInstance().penguinMaxGroupSize
             )
     );
 
@@ -237,10 +237,10 @@ public final class FPEntityTypes {
                 SpawnPredicates::canSpawnShorebirds
             )
             .spawn(
-                FowlPlayBiomeTags.SPAWNS_PIGEONS,
-                FowlPlayConfig.getInstance().pigeonSpawnWeight,
-                FowlPlayConfig.getInstance().pigeonMinGroupSize,
-                FowlPlayConfig.getInstance().pigeonMaxGroupSize
+                FPBiomeTags.SPAWNS_PIGEONS,
+                FPConfig.getInstance().pigeonSpawnWeight,
+                FPConfig.getInstance().pigeonMinGroupSize,
+                FPConfig.getInstance().pigeonMaxGroupSize
             )
     );
 
@@ -257,10 +257,10 @@ public final class FPEntityTypes {
                 SpawnPredicates::canSpawnPasserines
             )
             .spawn(
-                FowlPlayBiomeTags.SPAWNS_RAVENS,
-                FowlPlayConfig.getInstance().ravenSpawnWeight,
-                FowlPlayConfig.getInstance().ravenMinGroupSize,
-                FowlPlayConfig.getInstance().ravenMaxGroupSize
+                FPBiomeTags.SPAWNS_RAVENS,
+                FPConfig.getInstance().ravenSpawnWeight,
+                FPConfig.getInstance().ravenMinGroupSize,
+                FPConfig.getInstance().ravenMaxGroupSize
             )
     );
 
@@ -277,10 +277,10 @@ public final class FPEntityTypes {
                 SpawnPredicates::canSpawnPasserines
             )
             .spawn(
-                FowlPlayBiomeTags.SPAWNS_ROBINS,
-                FowlPlayConfig.getInstance().robinSpawnWeight,
-                FowlPlayConfig.getInstance().robinMinGroupSize,
-                FowlPlayConfig.getInstance().robinMaxGroupSize
+                FPBiomeTags.SPAWNS_ROBINS,
+                FPConfig.getInstance().robinSpawnWeight,
+                FPConfig.getInstance().robinMinGroupSize,
+                FPConfig.getInstance().robinMaxGroupSize
             )
     );
 
@@ -297,10 +297,10 @@ public final class FPEntityTypes {
                 SpawnPredicates::canSpawnPasserines
             )
             .spawn(
-                FowlPlayBiomeTags.SPAWNS_SPARROWS,
-                FowlPlayConfig.getInstance().sparrowSpawnWeight,
-                FowlPlayConfig.getInstance().sparrowMinGroupSize,
-                FowlPlayConfig.getInstance().sparrowMaxGroupSize
+                FPBiomeTags.SPAWNS_SPARROWS,
+                FPConfig.getInstance().sparrowSpawnWeight,
+                FPConfig.getInstance().sparrowMinGroupSize,
+                FPConfig.getInstance().sparrowMaxGroupSize
             )
     );
 

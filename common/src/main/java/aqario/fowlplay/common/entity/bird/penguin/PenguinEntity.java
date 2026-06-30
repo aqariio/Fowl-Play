@@ -536,7 +536,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     @Override
     protected Vec3 getRiddenInput(Player player, Vec3 input) {
         float forwardMovement = player.zza * 0.2F;
-        if(this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).is(FPBlockTags.PENGUINS_SLIDE_ON) || this.getFeetBlockState().is(FowlPlayBlockTags.PENGUINS_SLIDE_ON)) {
+        if(this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).is(FPBlockTags.PENGUINS_SLIDE_ON) || this.getFeetBlockState().is(FPBlockTags.PENGUINS_SLIDE_ON)) {
             forwardMovement *= 2.0F;
         }
 

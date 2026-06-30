@@ -73,6 +73,8 @@ dependencies {
 neoForge {
     version = property("deps.neo_loader") as String
 
+    accessTransformers.from("src/main/resources/META-INF/accesstransformer.cfg")
+
     parchment {
         minecraftVersion = sc.current.version
         mappingsVersion = property("deps.parchment") as String

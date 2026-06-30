@@ -73,7 +73,8 @@ dependencies {
 neoForge {
     version = property("deps.neo_loader") as String
 
-    accessTransformers.from("src/main/resources/META-INF/accesstransformer.cfg")
+    val atFile = rootProject.file("src/main/resources/META-INF/accesstransformer.cfg")
+    accessTransformers.from(sc.process(atFile, "build/processed.cfg"))
 
     parchment {
         minecraftVersion = sc.current.version

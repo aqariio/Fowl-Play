@@ -1,3 +1,7 @@
+## 1.2.1
+
+- Reduce frequency of non-ambient bird spawns
+
 ## 1.2.0
 
 - Bird hunting behaviour rework

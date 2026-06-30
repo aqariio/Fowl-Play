@@ -134,7 +134,7 @@ public class FPConfig {
     @SerialEntry
     public int gullMinGroupSize = 3;
     @SerialEntry
-    public int gullMaxGroupSize = 12;
+    public int gullMaxGroupSize = 8;
 
     // Hawk
 

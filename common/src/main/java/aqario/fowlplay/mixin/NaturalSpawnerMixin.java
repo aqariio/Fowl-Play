@@ -63,10 +63,10 @@ public class NaturalSpawnerMixin {
 //        return spawnSettings.getMobs(MobCategory.CREATURE);
 //    }
 
-    @Inject(
-        method = "spawnMobsForChunkGeneration",
-        at = @At("HEAD")
-    )
+//    @Inject(
+//        method = "spawnMobsForChunkGeneration",
+//        at = @At("HEAD")
+//    )
     private static void fowlplay$spawnBirdsOnChunkGeneration(ServerLevelAccessor levelAccessor, Holder<Biome> biome, ChunkPos chunkPos, RandomSource random, CallbackInfo ci) {
         fowlplay$spawnMobsForChunkGeneration(CustomMobCategory.BIRDS.mobCategory, levelAccessor, biome, chunkPos, random);
         fowlplay$spawnMobsForChunkGeneration(CustomMobCategory.AMBIENT_BIRDS.mobCategory, levelAccessor, biome, chunkPos, random);

@@ -1,10 +1,12 @@
 //? if neoforge {
 /*package aqario.fowlplay.neoforge.core;
 
+import aqario.fowlplay.common.integration.YACLIntegration;
 import aqario.fowlplay.core.FowlPlay;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import java.util.Objects;
@@ -16,10 +18,14 @@ public final class FowlPlayNeoForge {
 
         modBus.addListener(FowlPlayNeoForge::onNewRegistry);
         FPDataAttachments.ATTACHMENT_TYPES.register(modBus);
+
+        ModLoadingContext.get().getActiveContainer().registerExtensionPoint(
+            IConfigScreenFactory.class, (client, parent) -> YACLIntegration.createScreen(parent)
+        );
     }
 
     private static void onNewRegistry(NewRegistryEvent event) {
-        FowlPlay.earlyInit();
+        FowlPlay.initRegistries();
     }
 
     public static IEventBus eventBus() {

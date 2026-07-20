@@ -7,7 +7,7 @@ import net.fabricmc.api.ModInitializer;
 public final class FowlPlayFabric implements ModInitializer {
     @Override
     public void onInitialize() {
-        FowlPlay.earlyInit();
+        FowlPlay.initRegistries();
         FowlPlay.init();
         FPDataAttachments.init();
     }

@@ -1,5 +1,5 @@
 //? if fabric {
-package aqario.fowlplay.loaders.fabric.client;
+package aqario.fowlplay.fabric.client;
 
 import aqario.fowlplay.client.FowlPlayClient;
 import net.fabricmc.api.ClientModInitializer;

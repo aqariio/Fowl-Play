@@ -1,6 +1,7 @@
 //? if neoforge {
 /*package aqario.fowlplay.neoforge.core.platform;
 
+import aqario.fowlplay.core.FowlPlay;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLPaths;
 
@@ -12,11 +13,11 @@ public class PlatformImpl {
     }
 
     public static String getName() {
-        return ModList.get().getModContainerById("fowlplay").get().getModInfo().getDisplayName();
+        return ModList.get().getModContainerById(FowlPlay.ID).get().getModInfo().getDisplayName();
     }
 
     public static String getVersion() {
-        return ModList.get().getModContainerById("fowlplay").get().getModInfo().getVersion().getQualifier();
+        return ModList.get().getModContainerById(FowlPlay.ID).get().getModInfo().getVersion().toString();
     }
 
     public static Path getConfigDirectory() {

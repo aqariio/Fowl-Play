@@ -28,15 +28,15 @@ public class FowlPlay {
         return Platform.isModLoaded("debugutils");
     }
 
-    public static void earlyInit() {
-        LOGGER.info("Loading {} {}", Platform.getName(), Platform.getVersion());
-        FPConfig.load();
-
+    public static void initRegistries() {
         FPRegistries.init();
         FPBuiltInRegistries.init();
     }
 
     public static void init() {
+        LOGGER.info("Loading {} {}", Platform.getName(), Platform.getVersion());
+        FPConfig.load();
+
         ChickenVariant.REGISTRAR.register();
         DuckVariant.REGISTRAR.register();
         GooseVariant.REGISTRAR.register();

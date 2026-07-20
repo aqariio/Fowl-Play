@@ -29,7 +29,7 @@
       "aqario.fowlplay.fabric.core.FowlPlayFabric"
     ],
     "client": [
-      "aqario.fowlplay.loaders.fabric.client.FowlPlayFabricClient"
+      "aqario.fowlplay.fabric.client.FowlPlayFabricClient"
     ],
     "fabric-datagen": [
       "aqario.fowlplay.fabric.datagen.FPDataGen"

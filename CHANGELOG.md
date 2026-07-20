@@ -1,3 +1,7 @@
+## 1.2.2
+
+- Fix config not working on neoforge
+
 ## 1.2.1
 
 - Reduce frequency of non-ambient bird spawns

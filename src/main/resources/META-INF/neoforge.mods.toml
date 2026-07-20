@@ -1,0 +1,51 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+issueTrackerURL = "https://github.com/aqariio/Fowl-Play/issues"
+license = "MIT"
+
+[[mods]]
+modId = "${id}"
+version = "${version}"
+displayName = "${name}"
+description = "${desc}"
+authors = "aqario"
+credits = "Penguin60, Disketaa, owen233666, sanduicheirainox, Gnom1112, xz123456xz, sunbatheproductions"
+logoFile = "../../resources/assets/fowlplay/icon.png"
+displayURL = "https://modrinth.com/mod/fowlplay"
+
+[[dependencies.${id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${id}]]
+modId = "neoforge"
+type = "required"
+versionRange = "[${neoforge},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${id}]]
+modId = "smartbrainlib"
+type = "required"
+versionRange = "[${sbl},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${id}]]
+modId = "yet_another_config_lib_v3"
+type = "required"
+versionRange = "[${yacl},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[mixins]]
+config = "fowlplay.mixins.json"
+
+[mc-publish]
+dependencies = [
+    "architectury-api(required)",
+    "yacl(required)",
+]

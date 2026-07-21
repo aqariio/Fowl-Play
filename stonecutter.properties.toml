@@ -1,0 +1,39 @@
+# See https://stonecutter.kikugie.dev/wiki/config/properties#centralized-properties
+mod.id = "fowlplay"
+mod.name = "Fowl Play"
+mod.desc = "Just smile and wave, boys. Smile and wave."
+mod.group = "aqario.fowlplay"
+mod.version = "1.2.2"
+
+loomx.loom_version = "1.17-SNAPSHOT"
+deps.fabric_loader = "0.16.5"
+deps.parchment = "2023.09.03"
+
+deps.architectury = "9.2.14"
+deps.cloth_config = "11.1.136"
+deps.debugutils = "1.20.1-1.0.5"
+deps.fabric_language_kotlin = "1.13.2+kotlin.2.1.20"
+deps.fabric_permissions_api = "0.3.1"
+deps.kotlin_for_forge = "4.11.0"
+deps.modmenu = "7.2.2"
+deps.nbt_autocomplete = "1.3.10"
+deps.observable = "4.4.2"
+deps.sbl = "1.15"
+deps.spark = "1.10.53"
+deps.suggestion_tweaker = "1.20-1.5.2
+deps.yacl = "3.6.4+1.20.1"
+
+["1.20.1"]
+# List of releases to be marked compatible on Modrinth/Curseforge
+mod.mc_releases = ["1.20", "1.20.1"]
+
+
+[fabric."1.20.1"]
+# Mod compatibility range in fabric.mod.json/mods.toml
+mod.mc_compat = ">=1.20 <=1.20.1"
+deps.fabric_api = "0.92.2+1.20.1"
+
+
+[forge."1.20.1"]
+mod.mc_compat = "[1.20, 1.20.1]"
+deps.forge_loader = "47.4.0"

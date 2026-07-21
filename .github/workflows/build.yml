@@ -28,7 +28,6 @@ jobs:
             -   name: "Setup gradle"
                 uses: gradle/actions/setup-gradle@v4
                 with:
-                    cache-read-only: false
                     gradle-version: wrapper
 
             -   name: "Run build"

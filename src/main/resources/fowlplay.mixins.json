@@ -1,0 +1,24 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "aqario.fowlplay.mixin",
+  "compatibilityLevel": "${java}",
+  "mixins": [
+    "BlockStateBaseMixin",
+    "ChickenMixin",
+    "CrossCollisionBlockMixin",
+    "EnchantmentHelperMixin",
+    "FenceGateBlockMixin",
+    "NaturalSpawnerMixin",
+    "PowderSnowBlockMixin",
+    "SoundSourceMixin",
+    "WallBlockMixin"
+  ],
+  "client": [
+    "client.DebugRendererMixin",
+    "client.LevelRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

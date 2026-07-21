@@ -1,0 +1,46 @@
+pluginManagement {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        gradlePluginPortal()
+        maven("https://maven.fabricmc.net/") { name = "FabricMC" }
+        maven("https://maven.minecraftforge.net/") { name = "Forge" }
+        maven("https://maven.kikugie.dev/releases") { name = "KikuGie Releases" }
+        maven("https://maven.kikugie.dev/snapshots") { name = "KikuGie Snapshots" }
+    }
+}
+
+plugins {
+    // Check the latest version on https://stonecutter.kikugie.dev/blog/changes/0.9
+    id("dev.kikugie.stonecutter") version "0.9.6"
+
+    // Used for cross-compat for 26.1+ and older versions (https://codeberg.org/KikuGie/loom-back-compat)
+    id("dev.kikugie.loom-back-compat") version "0.3"
+
+    // Sometimes it is needed to make Gradle run at all, so it doesn't hurt to have
+    // (https://github.com/gradle/foojay-toolchains)
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+}
+
+stonecutter {
+    create(rootProject) {
+        /**
+         * Creates version nodes for multiple loaders.
+         *
+         * This function will create subprojects named `versions/{project}-{loader}`.
+         * Each project has a logical [version], which should match the Minecraft version,
+         * whereas [project] is the arbitrary name part of the folder.
+         *
+         * Each project will also have a separate build script assigned depending on the loader,
+         * named `build.{loader}.gradle.kts`.
+         */
+        fun match(project: String, vararg loaders: String, version: String = project) {
+            for (loader in loaders) version("$project-$loader", version).buildscript("build.$loader.gradle.kts")
+        }
+
+        match("1.20.1", "fabric", "forge")
+        vcsVersion = "1.20.1-fabric"
+    }
+}
+
+rootProject.name = "Fowl Play"

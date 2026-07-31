@@ -43,9 +43,3 @@ side = "BOTH"
 
 [[mixins]]
 config = "fowlplay.mixins.json"
-
-[mc-publish]
-dependencies = [
-    "architectury-api(required)",
-    "yacl(required)",
-]

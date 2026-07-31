@@ -48,13 +48,5 @@
     "fabric-api": ">=${fapi}",
     "smartbrainlib": ">=${sbl}",
     "yet_another_config_lib_v3": ">=${yacl}"
-  },
-  "custom": {
-    "mc-publish": {
-      "dependencies": [
-        "architectury-api(required)",
-        "yacl(required)"
-      ]
-    }
   }
 }

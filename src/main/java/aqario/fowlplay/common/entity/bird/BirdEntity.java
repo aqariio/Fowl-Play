@@ -5,7 +5,7 @@ import aqario.fowlplay.common.entity.FPSoundSource;
 import aqario.fowlplay.common.entity.ai.control.BirdBodyRotationControl;
 import aqario.fowlplay.common.entity.ai.control.BirdLookControl;
 import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;
-import aqario.fowlplay.common.network.FowlPlayDebugPackets;
+import aqario.fowlplay.common.network.FPDebugPackets;
 import aqario.fowlplay.common.util.AnimationStateList;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FPMemoryTypes;
@@ -559,7 +559,7 @@ public abstract class BirdEntity extends Animal {
     protected void sendDebugPackets() {
         super.sendDebugPackets();
         DebugPackets.sendEntityBrain(this);
-        FowlPlayDebugPackets.sendBirdData(this);
+        FPDebugPackets.sendBirdData(this);
 //        FowlPlayDebugPackets.sendGenericData(this,
 //            Pair.of("fluid height", String.format("%.3f", this.getFluidHeight(FluidTags.WATER))),
 //            Pair.of("is water above float height", this.isWaterAboveFloatHeight()),

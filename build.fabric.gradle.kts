@@ -1,6 +1,7 @@
 plugins {
     // This plugin applies the correct loom variant based on the Minecraft version
     id("dev.kikugie.loom-back-compat")
+    id("me.modmuss50.mod-publish-plugin") version "2.2.0"
 }
 
 // DO NOT set group = ...!
@@ -167,5 +168,42 @@ tasks {
         // loomx.mod(Sources)Jar returns the jar task for the applied loom variant
         from(loomx.modJar.flatMap { it.archiveFile }, loomx.modSourcesJar.flatMap { it.archiveFile })
         into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
+    }
+}
+
+publishMods {
+    maxRetries.set(5)
+    displayName = "${property("mod.name")} ${property("mod.version")}"
+    file = loomx.modJar.flatMap { it.archiveFile }
+    changelog = providers.fileContents(
+        rootProject.layout.projectDirectory.file(
+            "RELEASE_CHANGELOG.md"
+        )
+    ).asText
+    type = STABLE
+    modLoaders.add("fabric")
+
+    curseforge {
+        projectId = providers.environmentVariable("CURSEFORGE_ID")
+            .orElse("0")
+        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        minecraftVersions.add(sc.current.version)
+        client = true
+        server = true
+        requires(
+            "fabric-api",
+            "yacl"
+        )
+    }
+    modrinth {
+        projectId = providers.environmentVariable("MODRINTH_ID")
+            .orElse("0")
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        minecraftVersions.add(sc.current.version)
+        environment = CLIENT_AND_SERVER
+        requires(
+            "fabric-api",
+            "yacl"
+        )
     }
 }

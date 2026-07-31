@@ -1,5 +1,5 @@
 //? if forge {
-/*package aqario.fowlplay.forge.common.entity.forge;
+/*package aqario.fowlplay.forge.common.entity;
 
 import aqario.fowlplay.common.entity.FPMobCategory;
 import net.minecraft.world.entity.MobCategory;

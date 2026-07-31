@@ -2,7 +2,7 @@
 /*package aqario.fowlplay.forge.core;
 
 import aqario.fowlplay.core.FowlPlay;
-import aqario.fowlplay.forge.client.forge.FowlPlayForgeClient;
+import aqario.fowlplay.forge.client.FowlPlayForgeClient;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;

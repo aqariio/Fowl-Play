@@ -1,5 +1,5 @@
 //? if forge {
-/*package aqario.fowlplay.forge.common.entity.ai.brain.forge;
+/*package aqario.fowlplay.forge.common.entity.ai.brain;
 
 import aqario.fowlplay.common.entity.ai.brain.ExtendedBrainOwner;
 import com.google.common.collect.ImmutableList;

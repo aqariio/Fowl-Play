@@ -1,5 +1,5 @@
 //? if forge {
-/*package aqario.fowlplay.forge.client.forge;
+/*package aqario.fowlplay.forge.client;
 
 import aqario.fowlplay.client.RenderRegistry;
 import aqario.fowlplay.forge.core.FowlPlayForge;

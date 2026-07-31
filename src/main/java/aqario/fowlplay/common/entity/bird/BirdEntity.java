@@ -10,6 +10,7 @@ import aqario.fowlplay.common.util.AnimationStateList;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FPMemoryTypes;
 import aqario.fowlplay.core.FPSoundEvents;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -614,5 +615,10 @@ public abstract class BirdEntity extends Animal {
         if(this instanceof SmartBrainOwner<?> brainHaver) {
             this.setSchedule(brainHaver.getSchedule());
         }
+    }
+
+    @Override
+    public BlockPos getBlockPosBelowThatAffectsMyMovement() {
+        return super.getBlockPosBelowThatAffectsMyMovement();
     }
 }

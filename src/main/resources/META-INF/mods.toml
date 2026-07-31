@@ -50,11 +50,8 @@ versionRange = "[${yacl},)"
 ordering = "NONE"
 side = "BOTH"
 
-[[mixins]]
-config = "fowlplay.mixins.json"
-
-[[mixins]]
-config = "fowlplay.forge.mixins.json"
+[[accessTransformers]]
+file="META-INF/accesstransformer.cfg"
 
 [mc-publish]
 dependencies = [

@@ -39,35 +39,55 @@ repositories {
 
 dependencies {
     // Architectury
-    implementation("dev.architectury:architectury-forge:${property("deps.architectury")}")
+    modImplementation("dev.architectury:architectury-forge:${property("deps.architectury")}")
 
     // Cloth Config
-    runtimeOnly("me.shedaniel.cloth:cloth-config-forge:${property("deps.cloth_config")}")
+    modRuntimeOnly("me.shedaniel.cloth:cloth-config-forge:${property("deps.cloth_config")}")
 
     // Debug Utils
-    implementation("io.github.flemmli97:debugutils:${property("deps.debugutils")}-forge")
+    modImplementation("io.github.flemmli97:debugutils:${property("deps.debugutils")}-forge")
 
     // Kotlin For Forge
-//    runtimeOnly("maven.modrinth:kotlin-for-forge:${property("deps.kotlin_for_forge")}")
+//    modRuntimeOnly("maven.modrinth:kotlin-for-forge:${property("deps.kotlin_for_forge")}")
+
+    // MixinExtras
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.4")) {
+    }
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.4")) {
+    }
 
     // NBT Autocomplete
-    runtimeOnly("maven.modrinth:nbt-autocomplete:${property("deps.nbt_autocomplete")}-forge,1.20.1")
+    modRuntimeOnly("maven.modrinth:nbt-autocomplete:${property("deps.nbt_autocomplete")}-forge,1.20.1")
 
     // Observable
-//    runtimeOnly("maven.modrinth:observable:${property("deps.observable")}+forge")
+//    modRuntimeOnly("maven.modrinth:observable:${property("deps.observable")}+forge")
 
     // Smart Brain Lib
-    implementation("net.tslat.smartbrainlib:SmartBrainLib-forge-${sc.current.version}:${property("deps.sbl")}")
+    modImplementation("net.tslat.smartbrainlib:SmartBrainLib-forge-${sc.current.version}:${property("deps.sbl")}")
 
     // Spark
-//    runtimeOnly("me.lucko:fabric-permissions-api:${property("deps.fabric_permissions_api")}")
-//    runtimeOnly("maven.modrinth:spark:${property("deps.spark")}-forge")
+//    modRuntimeOnly("me.lucko:fabric-permissions-api:${property("deps.fabric_permissions_api")}")
+//    modRuntimeOnly("maven.modrinth:spark:${property("deps.spark")}-forge")
 
     // Suggestion Tweaker
-    runtimeOnly("maven.modrinth:suggestion-tweaker:${property("deps.suggestion_tweaker")}+forge")
+    modRuntimeOnly("maven.modrinth:suggestion-tweaker:${property("deps.suggestion_tweaker")}+forge")
 
     // Yet Another Config Lib
-    implementation("dev.isxander:yet-another-config-lib:${property("deps.yacl")}-forge")
+    modImplementation("dev.isxander:yet-another-config-lib:${property("deps.yacl")}-forge")
+}
+
+mixin {
+    add(sourceSets.main.get(), "fowlplay.refmap.json")
+    config("fowlplay.mixins.json")
+    config("fowlplay.forge.mixins.json")
+}
+
+tasks.jar {
+    manifest {
+        attributes(
+            "MixinConfigs" to "fowlplay.mixins.json,fowlplay.forge.mixins.json"
+        )
+    }
 }
 
 legacyForge {

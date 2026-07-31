@@ -28,14 +28,12 @@ public class FowlPlay {
         return Platform.isModLoaded("debugutils");
     }
 
-    public static void initRegistries() {
-        FPRegistries.init();
-        FPBuiltInRegistries.init();
-    }
-
     public static void init() {
         LOGGER.info("Loading {} {}", Platform.getName(), Platform.getVersion());
         FPConfig.load();
+
+        FPRegistries.init();
+        FPBuiltInRegistries.init();
 
         ChickenVariant.REGISTRAR.register();
         DuckVariant.REGISTRAR.register();

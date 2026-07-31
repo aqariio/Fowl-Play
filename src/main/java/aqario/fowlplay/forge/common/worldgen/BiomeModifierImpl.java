@@ -2,7 +2,7 @@
 /*package aqario.fowlplay.forge.common.worldgen;
 
 import aqario.fowlplay.core.FowlPlay;
-import aqario.fowlplay.core.forge.FowlPlayForge;
+import aqario.fowlplay.forge.core.FowlPlayForge;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
@@ -17,7 +17,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class BiomeModifierImpl extends aqario.fowlplay.common.worldgen.BiomeModifier {
+public class BiomeModifierImpl extends aqario.fowlplay.common.worldgen.BiomeModifier /^ >:( ^/ {
     public static DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS = DeferredRegister.create(
         ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS,
         FowlPlay.ID

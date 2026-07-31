@@ -1,11 +1,16 @@
 //? if forge {
 /*package aqario.fowlplay.forge.common.registry;
 
+import aqario.fowlplay.common.registry.CommonRegistry;
 import aqario.fowlplay.common.registry.RegistryBuilder;
-import aqario.fowlplay.forge.core.FowlPlayNeoForge;
+import aqario.fowlplay.forge.core.FowlPlayForge;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.NewRegistryEvent;
+
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 public class RegistryBuilderImpl<T> extends RegistryBuilder<T> {
     private RegistryBuilderImpl(ResourceKey<Registry<T>> registryKey) {
@@ -16,15 +21,18 @@ public class RegistryBuilderImpl<T> extends RegistryBuilder<T> {
         return new RegistryBuilderImpl<>(registryKey);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Registry<T> buildAndRegister() {
-        var builder = new net.neoforged.neoforge.registries.RegistryBuilder<>(registryKey);
-        if(sync) {
-            builder.sync(true);
+    public Supplier<CommonRegistry<T>> buildAndRegister() {
+        var builder = net.minecraftforge.registries.RegistryBuilder.of(this.registryKey.location());
+        if(!sync) {
+            builder.disableSync();
         }
-        Registry<T> registry = builder.create();
-        FowlPlayNeoForge.eventBus().<NewRegistryEvent>addListener(event -> event.register(registry));
-        return registry;
+        AtomicReference<Supplier<IForgeRegistry<T>>> registry = new AtomicReference<>();
+        FowlPlayForge.eventBus().<NewRegistryEvent>addListener(event ->
+            registry.set(event.create((net.minecraftforge.registries.RegistryBuilder<T>) builder))
+        );
+        return () -> ((Supplier<CommonRegistry<T>>) (Supplier<?>) registry.get()).get();
     }
 }
 *///?}

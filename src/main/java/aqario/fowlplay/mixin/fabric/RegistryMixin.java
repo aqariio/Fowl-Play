@@ -1,3 +1,4 @@
+//? if fabric {
 package aqario.fowlplay.mixin.fabric;
 
 import aqario.fowlplay.common.registry.CommonRegistry;
@@ -61,3 +62,4 @@ public interface RegistryMixin<T> extends CommonRegistry<T> {
         return this.getResourceKey(value).flatMap(this::getHolder);
     }
 }
+//?}

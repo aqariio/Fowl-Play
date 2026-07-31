@@ -12,7 +12,7 @@ import aqario.fowlplay.common.entity.bird.waterfowl.DuckEntity;
 import aqario.fowlplay.common.entity.bird.waterfowl.GooseEntity;
 import aqario.fowlplay.common.registry.CommonRegister;
 import aqario.fowlplay.common.util.EntityTypeBuilder;
-import aqario.fowlplay.common.worldgen.CustomSpawnPlacementType;
+import aqario.fowlplay.common.worldgen.FPSpawnPlacementType;
 import aqario.fowlplay.common.worldgen.SpawnPredicates;
 import aqario.fowlplay.core.tags.FPBiomeTags;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -37,7 +37,7 @@ public final class FPEntityTypes {
             .sized(0.4f, 0.55f)
             .attributes(BlueJayEntity::createFlyingBirdAttributes)
             .spawnPlacement(
-                CustomSpawnPlacementType.ground(),
+                FPSpawnPlacementType.ground(),
                 Heightmap.Types.MOTION_BLOCKING,
                 SpawnPredicates::canSpawnPasserines
             )
@@ -57,7 +57,7 @@ public final class FPEntityTypes {
             .sized(0.4f, 0.55f)
             .attributes(CardinalEntity::createFlyingBirdAttributes)
             .spawnPlacement(
-                CustomSpawnPlacementType.ground(),
+                FPSpawnPlacementType.ground(),
                 Heightmap.Types.MOTION_BLOCKING,
                 SpawnPredicates::canSpawnPasserines
             )
@@ -77,7 +77,7 @@ public final class FPEntityTypes {
             .sized(0.3f, 0.45f)
             .attributes(ChickadeeEntity::createFlyingBirdAttributes)
             .spawnPlacement(
-                CustomSpawnPlacementType.ground(),
+                FPSpawnPlacementType.ground(),
                 Heightmap.Types.MOTION_BLOCKING,
                 SpawnPredicates::canSpawnPasserines
             )
@@ -97,7 +97,7 @@ public final class FPEntityTypes {
             .sized(0.5f, 0.6f)
             .attributes(CrowEntity::createCrowAttributes)
             .spawnPlacement(
-                CustomSpawnPlacementType.ground(),
+                FPSpawnPlacementType.ground(),
                 Heightmap.Types.MOTION_BLOCKING,
                 SpawnPredicates::canSpawnPasserines
             )
@@ -117,7 +117,7 @@ public final class FPEntityTypes {
             .sized(0.6f, 0.8f)
             .attributes(DuckEntity::createDuckAttributes)
             .spawnPlacement(
-                CustomSpawnPlacementType.aquatic(),
+                FPSpawnPlacementType.aquatic(),
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 SpawnPredicates::canSpawnWaterfowl
             )
@@ -142,7 +142,7 @@ public final class FPEntityTypes {
             .sized(0.7f, 1.1f)
             .attributes(GooseEntity::createGooseAttributes)
             .spawnPlacement(
-                CustomSpawnPlacementType.aquatic(),
+                FPSpawnPlacementType.aquatic(),
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 SpawnPredicates::canSpawnWaterfowl
             )
@@ -167,7 +167,7 @@ public final class FPEntityTypes {
             .sized(0.6f, 0.8f)
             .attributes(GullEntity::createGullAttributes)
             .spawnPlacement(
-                CustomSpawnPlacementType.semiaquatic(),
+                FPSpawnPlacementType.semiaquatic(),
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 SpawnPredicates::canSpawnShorebirds
             )
@@ -192,7 +192,7 @@ public final class FPEntityTypes {
             .sized(0.6f, 0.8f)
             .attributes(HawkEntity::createHawkAttributes)
             .spawnPlacement(
-                CustomSpawnPlacementType.ground(),
+                FPSpawnPlacementType.ground(),
                 Heightmap.Types.MOTION_BLOCKING,
                 SpawnPredicates::canSpawnPasserines
             )
@@ -212,7 +212,7 @@ public final class FPEntityTypes {
             .sized(0.5f, 1.4f)
             .attributes(PenguinEntity::createPenguinAttributes)
             .spawnPlacement(
-                CustomSpawnPlacementType.semiaquatic(),
+                FPSpawnPlacementType.semiaquatic(),
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 PenguinEntity::canSpawnPenguins
             )
@@ -232,7 +232,7 @@ public final class FPEntityTypes {
             .sized(0.5f, 0.6f)
             .attributes(PigeonEntity::createPigeonAttributes)
             .spawnPlacement(
-                CustomSpawnPlacementType.ground(),
+                FPSpawnPlacementType.ground(),
                 Heightmap.Types.MOTION_BLOCKING,
                 SpawnPredicates::canSpawnShorebirds
             )
@@ -252,7 +252,7 @@ public final class FPEntityTypes {
             .sized(0.6f, 0.8f)
             .attributes(RavenEntity::createRavenAttributes)
             .spawnPlacement(
-                CustomSpawnPlacementType.ground(),
+                FPSpawnPlacementType.ground(),
                 Heightmap.Types.MOTION_BLOCKING,
                 SpawnPredicates::canSpawnPasserines
             )
@@ -272,7 +272,7 @@ public final class FPEntityTypes {
             .sized(0.4f, 0.55f)
             .attributes(RobinEntity::createFlyingBirdAttributes)
             .spawnPlacement(
-                CustomSpawnPlacementType.ground(),
+                FPSpawnPlacementType.ground(),
                 Heightmap.Types.MOTION_BLOCKING,
                 SpawnPredicates::canSpawnPasserines
             )
@@ -292,7 +292,7 @@ public final class FPEntityTypes {
             .sized(0.3f, 0.45f)
             .attributes(SparrowEntity::createFlyingBirdAttributes)
             .spawnPlacement(
-                CustomSpawnPlacementType.ground(),
+                FPSpawnPlacementType.ground(),
                 Heightmap.Types.MOTION_BLOCKING,
                 SpawnPredicates::canSpawnPasserines
             )

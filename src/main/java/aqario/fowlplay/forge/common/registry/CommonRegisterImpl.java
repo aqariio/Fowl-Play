@@ -1,10 +1,8 @@
-========
 //? if forge {
 /*package aqario.fowlplay.forge.common.registry;
 
 import aqario.fowlplay.common.registry.CommonRegister;
-import aqario.fowlplay.forge.core.FowlPlayNeoForge;
->>>>>>>> origin/dev/1.2:src/main/java/aqario/fowlplay/neoforge/common/registry/CommonRegisterImpl.java
+import aqario.fowlplay.forge.core.FowlPlayForge;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;

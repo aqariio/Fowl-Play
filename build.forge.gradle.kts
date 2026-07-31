@@ -71,7 +71,7 @@ dependencies {
 }
 
 legacyForge {
-    version = property("deps.forge_loader") as String
+    version = "${sc.current.version}-${property("deps.forge_loader")}"
 
     val atFile = rootProject.file("src/main/resources/META-INF/accesstransformer.cfg")
     accessTransformers.from(sc.process(atFile, "build/processed.cfg"))

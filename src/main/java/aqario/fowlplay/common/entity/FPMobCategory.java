@@ -1,6 +1,7 @@
+//~ expect_platform
 package aqario.fowlplay.common.entity;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import aqario.fowlplay.fabric.common.entity.FPMobCategoryImpl;
 import net.minecraft.world.entity.MobCategory;
 
 // credit to friendsandfoes for the platform agnostic enum extension implementation
@@ -19,14 +20,12 @@ public final class FPMobCategory {
     public static final boolean BIRDS_IS_PERSISTENT = false;
     public static final int BIRDS_DESPAWN_DISTANCE = 96;
 
-    @ExpectPlatform
     public static MobCategory ambientBirds() {
-        throw new AssertionError();
+        return FPMobCategoryImpl.ambientBirds();
     }
 
-    @ExpectPlatform
     public static MobCategory birds() {
-        throw new AssertionError();
+        return FPMobCategoryImpl.birds();
     }
 
     private FPMobCategory() {

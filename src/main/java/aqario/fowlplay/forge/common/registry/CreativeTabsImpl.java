@@ -1,9 +1,7 @@
-========
 //? if forge {
 /*package aqario.fowlplay.forge.common.registry;
 
-import aqario.fowlplay.forge.core.FowlPlayNeoForge;
->>>>>>>> origin/dev/1.2:src/main/java/aqario/fowlplay/neoforge/common/registry/CreativeTabsImpl.java
+import aqario.fowlplay.forge.core.FowlPlayForge;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;

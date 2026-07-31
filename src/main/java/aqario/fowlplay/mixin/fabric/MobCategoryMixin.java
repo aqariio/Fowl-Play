@@ -1,7 +1,8 @@
+//? if fabric {
 package aqario.fowlplay.mixin.fabric;
 
-import aqario.fowlplay.common.entity.CustomMobCategory;
-import aqario.fowlplay.common.entity.FPMobCategoryImpl;
+import aqario.fowlplay.common.entity.FPMobCategory;
+import aqario.fowlplay.fabric.common.entity.FPMobCategoryImpl;
 import net.minecraft.world.entity.MobCategory;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -52,25 +53,25 @@ public class MobCategoryMixin {
         int vanillaLength = category.get(category.size() - 1).ordinal();
 
         MobCategory ambientBirdsCategory = newMobCategory(
-            CustomMobCategory.AMBIENT_BIRDS_INTERNAL_NAME,
+            FPMobCategory.AMBIENT_BIRDS_INTERNAL_NAME,
             vanillaLength + 1,
-            CustomMobCategory.AMBIENT_BIRDS_NAME,
-            CustomMobCategory.AMBIENT_BIRDS_MAX,
-            CustomMobCategory.AMBIENT_BIRDS_IS_FRIENDLY,
-            CustomMobCategory.AMBIENT_BIRDS_IS_PERSISTENT,
-            CustomMobCategory.AMBIENT_BIRDS_DESPAWN_DISTANCE
+            FPMobCategory.AMBIENT_BIRDS_NAME,
+            FPMobCategory.AMBIENT_BIRDS_MAX,
+            FPMobCategory.AMBIENT_BIRDS_IS_FRIENDLY,
+            FPMobCategory.AMBIENT_BIRDS_IS_PERSISTENT,
+            FPMobCategory.AMBIENT_BIRDS_DESPAWN_DISTANCE
         );
         FPMobCategoryImpl.AMBIENT_BIRDS = ambientBirdsCategory;
         category.add(ambientBirdsCategory);
 
         MobCategory birdsCategory = newMobCategory(
-            CustomMobCategory.BIRDS_INTERNAL_NAME,
+            FPMobCategory.BIRDS_INTERNAL_NAME,
             vanillaLength + 2,
-            CustomMobCategory.BIRDS_NAME,
-            CustomMobCategory.BIRDS_MAX,
-            CustomMobCategory.BIRDS_IS_FRIENDLY,
-            CustomMobCategory.BIRDS_IS_PERSISTENT,
-            CustomMobCategory.BIRDS_DESPAWN_DISTANCE
+            FPMobCategory.BIRDS_NAME,
+            FPMobCategory.BIRDS_MAX,
+            FPMobCategory.BIRDS_IS_FRIENDLY,
+            FPMobCategory.BIRDS_IS_PERSISTENT,
+            FPMobCategory.BIRDS_DESPAWN_DISTANCE
         );
         FPMobCategoryImpl.BIRDS = birdsCategory;
         category.add(birdsCategory);
@@ -78,3 +79,4 @@ public class MobCategoryMixin {
         $VALUES = category.toArray(new MobCategory[0]);
     }
 }
+//?}

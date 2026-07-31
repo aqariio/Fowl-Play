@@ -2,8 +2,8 @@
 /*package aqario.fowlplay.forge.core.platform;
 
 import aqario.fowlplay.core.FowlPlay;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.loading.FMLPaths;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.nio.file.Path;
 

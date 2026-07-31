@@ -1,8 +1,9 @@
+//~ expect_platform
 package aqario.fowlplay.common.entity.ai.brain;
 
+import aqario.fowlplay.fabric.common.entity.ai.brain.ExtendedBrainProviderImpl;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Dynamic;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -67,14 +68,13 @@ public class ExtendedBrainProvider<E extends LivingEntity & ExtendedBrainOwner<E
         return brain;
     }
 
-    @ExpectPlatform
     protected static <E extends LivingEntity & ExtendedBrainOwner<E>> SmartBrain<E> constructBrain(
         E owner,
         List<MemoryModuleType<?>> memories,
         List<? extends ExtendedSensor<E>> sensors,
         List<BrainActivityGroup<E>> taskList
     ) {
-        throw new AssertionError();
+        return ExtendedBrainProviderImpl.constructBrain(owner, memories, sensors, taskList);
     }
 
     private ImmutableList<MemoryModuleType<?>> createMemoryList(List<BrainActivityGroup<? extends E>> taskList, List<? extends ExtendedSensor<?>> sensors) {

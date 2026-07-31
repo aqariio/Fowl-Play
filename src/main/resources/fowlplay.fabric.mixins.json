@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "aqario.fowlplay.mixin.fabric",
+  "compatibilityLevel": "${java}",
+  "mixins": [
+    "MobCategoryMixin",
+    "RegistryMixin",
+    "SpawnPlacementTypeMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,7 +1,7 @@
 package aqario.fowlplay.mixin;
 
 import aqario.fowlplay.common.entity.FPMobCategory;
-import aqario.fowlplay.common.worldgen.CustomSpawnPlacementType;
+import aqario.fowlplay.common.worldgen.FPSpawnPlacementType;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -69,13 +69,13 @@ public class NaturalSpawnerMixin {
         if(entityType == null || !world.getWorldBorder().isWithinBounds(pos)) {
             return;
         }
-        if(location == CustomSpawnPlacementType.ground()) {
+        if(location == FPSpawnPlacementType.ground()) {
             cir.setReturnValue(fowlplay$spawnsOnGround(world, pos, entityType));
         }
-        else if(location == CustomSpawnPlacementType.semiaquatic()) {
+        else if(location == FPSpawnPlacementType.semiaquatic()) {
             cir.setReturnValue(fowlplay$spawnsOnWater(world, pos, entityType) || fowlplay$spawnsOnGround(world, pos, entityType));
         }
-        else if(location == CustomSpawnPlacementType.aquatic()) {
+        else if(location == FPSpawnPlacementType.aquatic()) {
             cir.setReturnValue(fowlplay$spawnsOnWater(world, pos, entityType));
         }
     }

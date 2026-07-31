@@ -38,6 +38,8 @@ repositories {
 }
 
 dependencies {
+    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+
     // Architectury
     modImplementation("dev.architectury:architectury-forge:${property("deps.architectury")}")
 

@@ -192,6 +192,7 @@ publishMods {
         server = true
         requires(
             "fabric-api",
+            "smartbrainlib",
             "yacl"
         )
     }
@@ -203,6 +204,7 @@ publishMods {
         environment = CLIENT_AND_SERVER
         requires(
             "fabric-api",
+            "smartbrainlib",
             "yacl"
         )
     }

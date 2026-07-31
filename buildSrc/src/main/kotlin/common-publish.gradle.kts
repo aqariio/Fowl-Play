@@ -19,8 +19,8 @@ publishMods {
     type = STABLE
 
     curseforge {
-        projectId = providers.environmentVariable("CURSEFORGE_ID").orElse("0")
-        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        projectId = variable("CURSEFORGE_ID").orElse("0")
+        accessToken = variable("CURSEFORGE_TOKEN")
         minecraftVersions.addAll(publishing.minecraftVersions)
         client = true
         server = true
@@ -35,8 +35,8 @@ publishMods {
     }
 
     modrinth {
-        projectId = providers.environmentVariable("MODRINTH_ID").orElse("0")
-        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        projectId = variable("MODRINTH_ID").orElse("0")
+        accessToken = variable("MODRINTH_TOKEN")
         minecraftVersions.addAll(publishing.minecraftVersions)
         environment = CLIENT_AND_SERVER
         dependencies.addAll(publishing.requiredDependencies.map { slugs ->
@@ -48,4 +48,13 @@ publishMods {
             }
         })
     }
+
+    dryRun = shouldDryRun()
+}
+
+fun variable(name: String) = providers.environmentVariable(name)
+
+fun shouldDryRun(): Boolean {
+    return variable("CURSEFORGE_TOKEN").orNull == null
+        || variable("MODRINTH_TOKEN").orNull == null
 }

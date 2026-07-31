@@ -48,6 +48,6 @@ jobs:
                 run: ./gradlew publishMods
                 env:
                     CURSEFORGE_ID: ${{ vars.CURSEFORGE_ID }}
-                    CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_TOKEN }}
+                    CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
                     MODRINTH_ID: ${{ vars.MODRINTH_ID }}
                     MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}

@@ -68,7 +68,7 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
 
     // Architectury
-    modRuntimeOnly("dev.architectury:architectury-fabric:${property("deps.architectury")}")
+    modImplementation("dev.architectury:architectury-fabric:${property("deps.architectury")}")
 
     // Cloth Config
     modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${property("deps.cloth_config")}")
@@ -83,23 +83,35 @@ dependencies {
     modImplementation("com.terraformersmc:modmenu:${property("deps.modmenu")}")
 
     // NBT Autocomplete
-    modRuntimeOnly("maven.modrinth:nbt-autocomplete:${property("deps.nbt_autocomplete")}-fabric,1.21.1")
+    modRuntimeOnly("maven.modrinth:nbt-autocomplete:${property("deps.nbt_autocomplete")}-fabric,1.20.1")
 
     // Observable
-    modRuntimeOnly("maven.modrinth:observable:${property("deps.observable")}+fabric")
+    modRuntimeOnly("maven.modrinth:observable:${property("deps.observable")}+fabric") {
+        isTransitive = false
+    }
 
     // Smart Brain Lib
     modImplementation("net.tslat.smartbrainlib:SmartBrainLib-fabric-${sc.current.version}:${property("deps.sbl")}")
 
     // Spark
-    modRuntimeOnly("me.lucko:fabric-permissions-api:${property("deps.fabric_permissions_api")}")
-    modRuntimeOnly("maven.modrinth:spark:${property("deps.spark")}-fabric")
+    modRuntimeOnly("me.lucko:fabric-permissions-api:${property("deps.fabric_permissions_api")}") {
+        isTransitive = false
+    }
+    modRuntimeOnly("maven.modrinth:spark:${property("deps.spark")}-fabric") {
+        isTransitive = false
+    }
 
     // Suggestion Tweaker
     modRuntimeOnly("maven.modrinth:suggestion-tweaker:${property("deps.suggestion_tweaker")}+fabric")
 
     // Yet Another Config Lib
     modImplementation("dev.isxander:yet-another-config-lib:${property("deps.yacl")}-fabric")
+}
+
+fabricApi {
+    configureDataGeneration {
+        client = true
+    }
 }
 
 loom {
@@ -147,6 +159,7 @@ tasks {
             register("minecraft", "mod.mc_compat")
             register("loader", "deps.fabric_loader")
             register("fapi", "deps.fabric_api")
+            register("arch", "deps.architectury")
             register("sbl", "deps.sbl")
             register("yacl", "deps.yacl")
         }

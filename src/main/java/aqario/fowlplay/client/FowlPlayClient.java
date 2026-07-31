@@ -7,13 +7,11 @@ import aqario.fowlplay.client.render.debug.GenericDebugRenderer;
 import aqario.fowlplay.client.render.entity.*;
 import aqario.fowlplay.client.render.entity.model.*;
 import aqario.fowlplay.common.config.FPConfig;
-import aqario.fowlplay.common.network.NetworkManager;
-import aqario.fowlplay.common.network.clientbound.BirdDebugPayload;
-import aqario.fowlplay.common.network.clientbound.GenericDebugPayload;
 import aqario.fowlplay.core.FPEntityTypes;
 import aqario.fowlplay.core.FPParticleTypes;
 import aqario.fowlplay.core.FowlPlay;
 import com.google.common.base.Suppliers;
+import dev.architectury.networking.NetworkManager;
 import io.github.flemmli97.debugutils.api.RegisterDebugRenderers;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.resources.ResourceLocation;
@@ -38,15 +36,15 @@ public class FowlPlayClient {
             RegisterDebugRenderers.registerServerToggle(DEBUG_GENERIC_ID);
             RegisterDebugRenderers.registerClientHandler(DEBUG_GENERIC_ID, b -> FowlPlayClient.DEBUG_GENERIC = b);
 
-            NetworkManager.registerClientReceiver(
-                BirdDebugPayload.TYPE,
-                BirdDebugPayload.STREAM_CODEC,
+            NetworkManager.registerReceiver(
+                NetworkManager.s2c(),
+                DEBUG_BIRD_ID,
                 (payload, context) ->
                     BIRD_DEBUG_RENDERER.addBird(new BirdDebugRenderer.BirdData(payload))
             );
-            NetworkManager.registerClientReceiver(
-                GenericDebugPayload.TYPE,
-                GenericDebugPayload.STREAM_CODEC,
+            NetworkManager.registerReceiver(
+                NetworkManager.s2c(),
+                DEBUG_GENERIC_ID,
                 (payload, context) ->
                     GenericDebugRenderer.INSTANCE.addData(new GenericDebugRenderer.Data(payload))
             );

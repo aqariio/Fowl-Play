@@ -18,14 +18,12 @@ public abstract class DataSerializerRegister {
         return DataSerializerRegisterImpl.create(namespace);
     }
 
-    @ExpectPlatform
     public static <T> void writeRegistry(CommonRegistry<T> registry, T value, FriendlyByteBuf buf) {
-        throw new AssertionError();
+        DataSerializerRegisterImpl.writeRegistry(registry, value, buf);
     }
 
-    @ExpectPlatform
     public static <T> T readRegistry(CommonRegistry<T> registry, Class<T> clazz, FriendlyByteBuf buf) {
-        throw new AssertionError();
+        return DataSerializerRegisterImpl.readRegistry(registry, clazz, buf);
     }
 
     public abstract <T> void register(String name, EntityDataSerializer<T> serializer);

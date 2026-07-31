@@ -46,6 +46,7 @@
     "minecraft": "${minecraft}",
     "fabricloader": ">=${loader}",
     "fabric-api": ">=${fapi}",
+    "architectury": ">=${arch}",
     "smartbrainlib": ">=${sbl}",
     "yet_another_config_lib_v3": ">=${yacl}"
   },

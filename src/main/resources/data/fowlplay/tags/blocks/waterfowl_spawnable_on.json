@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "#minecraft:dirt",
+      "required": false
+    },
+    {
+      "id": "#minecraft:sand",
+      "required": false
+    },
+    {
+      "id": "#c:stones",
+      "required": false
+    },
+    "minecraft:gravel"
+  ]
+}

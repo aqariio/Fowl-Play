@@ -39,7 +39,7 @@ repositories {
 
 dependencies {
     // Architectury
-//    runtimeOnly("dev.architectury:architectury-forge:${property("deps.architectury")}")
+    implementation("dev.architectury:architectury-forge:${property("deps.architectury")}")
 
     // Cloth Config
     runtimeOnly("me.shedaniel.cloth:cloth-config-forge:${property("deps.cloth_config")}")
@@ -51,7 +51,7 @@ dependencies {
 //    runtimeOnly("maven.modrinth:kotlin-for-forge:${property("deps.kotlin_for_forge")}")
 
     // NBT Autocomplete
-    runtimeOnly("maven.modrinth:nbt-autocomplete:${property("deps.nbt_autocomplete")}-forge,1.21.1")
+    runtimeOnly("maven.modrinth:nbt-autocomplete:${property("deps.nbt_autocomplete")}-forge,1.20.1")
 
     // Observable
 //    runtimeOnly("maven.modrinth:observable:${property("deps.observable")}+forge")
@@ -123,6 +123,7 @@ tasks {
             register("version", "mod.version")
             register("minecraft", "mod.mc_compat")
             register("forge", "deps.forge_loader")
+            register("arch", "deps.architectury")
             register("sbl", "deps.sbl")
             register("yacl", "deps.yacl")
         }

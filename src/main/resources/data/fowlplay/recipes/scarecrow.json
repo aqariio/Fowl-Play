@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "minecraft:hay_block"
+    },
+    "/": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    " # ",
+    "/#/",
+    " / "
+  ],
+  "result": {
+    "item": "fowlplay:scarecrow"
+  },
+  "show_notification": true
+}

@@ -4,7 +4,7 @@ issueTrackerURL = "https://github.com/aqariio/fowl-play/issues"
 license = "MIT"
 
 [[mods]]
-modId = "fowlplay"
+modId = "${id}"
 version = "${version}"
 displayName = "Fowl Play"
 description = '''
@@ -15,40 +15,46 @@ credits = "Penguin60, Disketaa, owen233666, sanduicheirainox, Gnom1112, xz123456
 logoFile = "assets/fowlplay/icon.png"
 displayURL = "https://modrinth.com/mod/fowlplay"
 
-[[dependencies.fowlplay]]
+[[dependencies.${id}]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.20,1.21)"
+versionRange = "${minecraft}"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.fowlplay]]
+[[dependencies.${id}]]
 modId = "forge"
 mandatory = true
-versionRange = "[${forge_version},)"
+versionRange = "[${forge},)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.fowlplay]]
+[[dependencies.${id}]]
 modId = "architectury"
 mandatory = true
-versionRange = "[${architectury_version},)"
+versionRange = "[${arch},)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.fowlplay]]
+[[dependencies.${id}]]
 modId = "smartbrainlib"
 mandatory = true
-versionRange = "[${sbl_version},)"
+versionRange = "[${sbl},)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.fowlplay]]
+[[dependencies.${id}]]
 modId = "yet_another_config_lib_v3"
 mandatory = true
-versionRange = "[${yacl_version},)"
+versionRange = "[${yacl},)"
 ordering = "NONE"
 side = "BOTH"
+
+[[mixins]]
+config = "fowlplay.mixins.json"
+
+[[mixins]]
+config = "fowlplay.forge.mixins.json"
 
 [mc-publish]
 dependencies = [

@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:adventure/root",
+  "criteria": {
+    "fall_with_penguin": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.adventure.fly_penguin.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:feather"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.adventure.fly_penguin.title"
+    }
+  },
+  "requirements": [
+    [
+      "fall_with_penguin"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

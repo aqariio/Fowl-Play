@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "#minecraft:dirt",
+      "required": false
+    },
+    {
+      "id": "#minecraft:ice",
+      "required": false
+    },
+    {
+      "id": "#minecraft:sand",
+      "required": false
+    },
+    "minecraft:powder_snow",
+    "minecraft:snow_block"
+  ]
+}

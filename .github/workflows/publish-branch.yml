@@ -42,7 +42,7 @@ jobs:
                 run: ./.github/scripts/parse-mod-properties.sh
 
             -   name: "Parse changelog"
-                run: ./.github/scripts/parse-changelog.sh ${{ steps.gradle-properties.outputs.MOD_VERSION }}
+                run: ./.github/scripts/parse-changelog.sh ${{ steps.mod-properties.outputs.MOD_VERSION }}
 
             -   name: "Publish"
                 run: ./gradlew publishMods

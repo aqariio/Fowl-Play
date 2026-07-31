@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class FowlPlayDebugPackets {
+public class FPDebugPackets {
     @SafeVarargs
     public static <T> void sendGenericData(LivingEntity entity, Pair<String, T>... data) {
         if(!FowlPlay.isDebugUtilsLoaded()

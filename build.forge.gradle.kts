@@ -1,6 +1,7 @@
 plugins {
     id("net.neoforged.moddev.legacyforge") version "2.0.140"
     id("neoforge-mutex")
+    id("me.modmuss50.mod-publish-plugin") version "2.2.0"
 }
 
 version = "${property("mod.version")}+${sc.current.version}-forge"
@@ -172,5 +173,42 @@ tasks {
         inputs.property("version", project.property("mod.version"))
         from(jar.flatMap { it.archiveFile }, named<Jar>("sourcesJar").flatMap { it.archiveFile })
         into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
+    }
+}
+
+publishMods {
+    maxRetries.set(5)
+    displayName = "${property("mod.name")} ${property("mod.version")}"
+    file = tasks.jar.flatMap { it.archiveFile }
+    changelog = providers.fileContents(
+        rootProject.layout.projectDirectory.file(
+            "RELEASE_CHANGELOG.md"
+        )
+    ).asText
+    type = STABLE
+    modLoaders.add("forge")
+
+    curseforge {
+        projectId = providers.environmentVariable("CURSEFORGE_ID")
+            .orElse("0")
+        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        minecraftVersions.add(sc.current.version)
+        client = true
+        server = true
+        requires(
+            "architectury-api",
+            "yacl"
+        )
+    }
+    modrinth {
+        projectId = providers.environmentVariable("MODRINTH_ID")
+            .orElse("0")
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        minecraftVersions.add(sc.current.version)
+        environment = CLIENT_AND_SERVER
+        requires(
+            "architectury-api",
+            "yacl"
+        )
     }
 }

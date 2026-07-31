@@ -52,9 +52,3 @@ side = "BOTH"
 
 [[accessTransformers]]
 file="META-INF/accesstransformer.cfg"
-
-[mc-publish]
-dependencies = [
-    "architectury-api(required)",
-    "yacl(required)",
-]

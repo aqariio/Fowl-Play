@@ -93,7 +93,10 @@ tasks.jar {
 }
 
 legacyForge {
-    version = "${sc.current.version}-${property("deps.forge_loader")}"
+    enable {
+        forgeVersion = "${sc.current.version}-${property("deps.forge_loader")}"
+        isDisableRecompilation = false
+    }
 
     val atFile = rootProject.file("src/main/resources/META-INF/accesstransformer.cfg")
     accessTransformers.from(sc.process(atFile, "build/processed.cfg"))

@@ -221,7 +221,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
         }
 
         // Sitting
-        if(this.onGround() && this.isTamed() && this.isOwner(player)) {
+        if(this.onGround() && this.isTamed() && this.isOwnedBy(player)) {
             if(!this.level().isClientSide) {
                 this.setSitting(!this.isSitting());
                 this.jumping = false;
@@ -491,13 +491,16 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
 
         if(this.isTamed() && this.getServer() != null) {
             ItemStack stack = this.getItemBySlot(EquipmentSlot.OFFHAND);
-            ServerPlayer recipient = this.getServer().getPlayerList().getPlayerByName(stack.getHoverName().getString());
+            ServerPlayer recipient;
 
-            if(!(stack.getItem() instanceof BundleItem) || !stack.getComponents().has(DataComponents.CUSTOM_NAME) || recipient == null) {
-                this.setRecipientUuid(null);
+            if(stack.getItem() instanceof BundleItem
+                && stack.getComponents().has(DataComponents.CUSTOM_NAME)
+                && (recipient = this.getServer().getPlayerList().getPlayerByName(stack.getHoverName().getString())) != null
+            ) {
+                this.setRecipientUuid(recipient.getUUID());
             }
             else {
-                this.setRecipientUuid(recipient.getUUID());
+                this.setRecipientUuid(null);
             }
         }
     }

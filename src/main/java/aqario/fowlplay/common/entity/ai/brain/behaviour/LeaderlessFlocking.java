@@ -6,12 +6,10 @@ import aqario.fowlplay.core.FPMemoryTypes;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
-import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 
@@ -50,12 +48,10 @@ public class LeaderlessFlocking extends ExtendedBehaviour<FlyingBirdEntity> {
         if(!bird.isFlying()) {
             return false;
         }
-        Brain<?> brain = bird.getBrain();
-        if(!BrainUtils.hasMemory(brain, FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get())) {
+        if(!bird.isMemoryPresent(FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get())) {
             return false;
         }
-        this.nearbyBirds = BrainUtils.getMemory(brain, FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
-        // noinspection ConstantConditions
+        this.nearbyBirds = bird.getPresentMemory(FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
         this.nearbyBirds.removeIf(entity -> !entity.closerThan(bird, VIEW_RADIUS));
 
         return this.nearbyBirds.size() > this.minFlockSize;

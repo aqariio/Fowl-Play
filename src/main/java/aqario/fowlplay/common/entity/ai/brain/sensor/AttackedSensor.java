@@ -14,11 +14,10 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.player.Player;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
-import net.tslat.smartbrainlib.api.core.sensor.PredicateSensor;
 
 import java.util.List;
 
-public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<DamageSource, E> {
+public class AttackedSensor<E extends BirdEntity> extends ExtendedSensor<E> {
     private static final List<MemoryModuleType<?>> MEMORIES = ImmutableList.of(
         MemoryModuleType.HURT_BY,
         MemoryModuleType.HURT_BY_ENTITY,
@@ -28,7 +27,6 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
     );
 
     public AttackedSensor() {
-        super((damageSource, entity) -> true);
         this.setScanRate(bird -> 10);
     }
 
@@ -43,27 +41,26 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
     }
 
     @Override
-    protected void doTick(ServerLevel world, E bird) {
+    protected void doTick(ServerLevel level, E bird) {
         DamageSource damageSource = bird.getLastDamageSource();
         if(damageSource == null) {
             bird.clearMemory(MemoryModuleType.HURT_BY);
             bird.clearMemory(MemoryModuleType.HURT_BY_ENTITY);
             return;
         }
-        if(this.predicate().test(damageSource, bird)) {
-            bird.setMemory(MemoryModuleType.HURT_BY, damageSource);
+        bird.setMemory(MemoryModuleType.HURT_BY, damageSource);
 
-            if(damageSource.getEntity() instanceof LivingEntity attacker && attacker.isAlive() && attacker.level() == bird.level()) {
-                bird.setMemory(MemoryModuleType.HURT_BY_ENTITY, attacker);
-                onAttacked(bird, attacker);
-            }
-            return;
+        if(damageSource.getEntity() instanceof LivingEntity attacker && attacker.isAlive() && attacker.level() == bird.level()) {
+            bird.setMemory(MemoryModuleType.HURT_BY_ENTITY, attacker);
+            onAttacked(bird, attacker);
         }
-        bird.getMemory(MemoryModuleType.HURT_BY_ENTITY).ifPresent(attacker -> {
-            if(!attacker.isAlive() || attacker.level() != bird.level()) {
-                bird.clearMemory(MemoryModuleType.HURT_BY_ENTITY);
-            }
-        });
+        else {
+            bird.getMemory(MemoryModuleType.HURT_BY_ENTITY).ifPresent(attacker -> {
+                if(!attacker.isAlive() || attacker.level() != bird.level()) {
+                    bird.clearMemory(MemoryModuleType.HURT_BY_ENTITY);
+                }
+            });
+        }
     }
 
     public static <T extends BirdEntity> void onAttacked(T bird, LivingEntity attacker) {

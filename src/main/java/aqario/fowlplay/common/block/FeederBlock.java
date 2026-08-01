@@ -62,7 +62,7 @@ public class FeederBlock extends FaceAttachedHorizontalDirectionalBlock implemen
         if(itemStack.is(FPItemTags.BIRD_FEED) && state.getValue(FILL_LEVEL) < 8) {
             stack.consume(1, player);
             level.setBlock(pos, state.cycle(FILL_LEVEL), Block.UPDATE_ALL);
-            level.playLocalSound(pos, SoundEvents.COMPOSTER_FILL, SoundSource.BLOCKS, 1.0F, 1.0F, false);
+            level.playSound(null, pos, SoundEvents.COMPOSTER_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
             return ItemInteractionResult.SUCCESS;
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);

@@ -167,6 +167,7 @@ public class FlightNavigation extends GroundPathNavigation implements ExtendedNa
         final Vec3 nextNodePos = this.getEntityPosAtNode(this.getPath().getNextNodeIndex());
 
         if(this.path.getNextNodeIndex() + 1 >= this.path.getNodeCount()
+            && this.getTargetPos() != null
             && BirdUtils.shouldLandAtDestination(this.bird, this.getTargetPos())
         ) {
             return this.getTempMobPos().closerThan(nextNodePos, 0.5);

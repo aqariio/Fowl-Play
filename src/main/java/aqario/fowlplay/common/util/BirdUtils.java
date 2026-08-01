@@ -138,6 +138,9 @@ public final class BirdUtils {
             return false;
         }
         List<ItemEntity> foodItems = bird.getPresentMemory(SBLMemoryTypes.NEARBY_ITEMS.get());
+        if(foodItems.isEmpty()) {
+            return false;
+        }
         if(bird.getFood().test(bird.getMainHandItem())) {
             return false;
         }

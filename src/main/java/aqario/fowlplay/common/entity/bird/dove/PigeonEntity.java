@@ -491,13 +491,12 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
 
         if(this.isTamed() && this.getServer() != null) {
             ItemStack stack = this.getItemBySlot(EquipmentSlot.OFFHAND);
-            ServerPlayer recipient = this.getServer().getPlayerList().getPlayerByName(stack.getHoverName().getString());
-
-            if(!(stack.getItem() instanceof BundleItem) || !stack.getComponents().has(DataComponents.CUSTOM_NAME) || recipient == null) {
-                this.setRecipientUuid(null);
+            if(stack.getItem() instanceof BundleItem && stack.has(DataComponents.CUSTOM_NAME)) {
+                ServerPlayer recipient = this.getServer().getPlayerList().getPlayerByName(stack.getHoverName().getString());
+                this.setRecipientUuid(recipient != null ? recipient.getUUID() : null);
             }
             else {
-                this.setRecipientUuid(recipient.getUUID());
+                this.setRecipientUuid(null);
             }
         }
     }

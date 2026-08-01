@@ -54,8 +54,11 @@ public class LeaderlessFlocking extends ExtendedBehaviour<FlyingBirdEntity> {
         if(!BrainUtils.hasMemory(brain, FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get())) {
             return false;
         }
-        this.nearbyBirds = BrainUtils.getMemory(brain, FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
-        // noinspection ConstantConditions
+        List<? extends AgeableMob> adults = BrainUtils.getMemory(brain, FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
+        if(adults == null) {
+            return false;
+        }
+        this.nearbyBirds = new java.util.ArrayList<>(adults);
         this.nearbyBirds.removeIf(entity -> !entity.closerThan(bird, VIEW_RADIUS));
 
         return this.nearbyBirds.size() > this.minFlockSize;

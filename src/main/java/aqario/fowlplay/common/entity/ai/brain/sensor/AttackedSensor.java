@@ -50,7 +50,7 @@ public class AttackedSensor<E extends BirdEntity> extends PredicateSensor<Damage
             bird.clearMemory(MemoryModuleType.HURT_BY_ENTITY);
             return;
         }
-        if(this.predicate().test(damageSource, bird)) {
+        if(!bird.isMemoryPresent(MemoryModuleType.HURT_BY) && this.predicate().test(damageSource, bird)) {
             bird.setMemory(MemoryModuleType.HURT_BY, damageSource);
 
             if(damageSource.getEntity() instanceof LivingEntity attacker && attacker.isAlive() && attacker.level() == bird.level()) {

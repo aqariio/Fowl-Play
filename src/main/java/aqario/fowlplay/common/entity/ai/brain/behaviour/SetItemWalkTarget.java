@@ -46,7 +46,9 @@ public class SetItemWalkTarget<E extends BirdEntity> extends SpeedModifiableBeha
     protected void start(E entity) {
         Brain<?> brain = entity.getBrain();
         List<ItemEntity> wantedItems = BrainUtils.getMemory(brain, SBLMemoryTypes.NEARBY_ITEMS.get());
-        // noinspection ConstantConditions
+        if(wantedItems == null || wantedItems.isEmpty()) {
+            return;
+        }
         ItemEntity targetItem = wantedItems.getFirst();
         if(targetItem.closerThan(entity, this.radius.apply(entity))
             && entity.level().getWorldBorder().isWithinBounds(targetItem.blockPosition())

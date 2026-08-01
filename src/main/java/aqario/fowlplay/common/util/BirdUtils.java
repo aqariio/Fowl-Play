@@ -39,6 +39,9 @@ public final class BirdUtils {
     public static final UniformInt STAY_NEAR_ENTITY_RANGE = UniformInt.of(16, 32);
 
     public static boolean shouldLandAtDestination(FlyingBirdEntity bird, BlockPos destination) {
+        if(destination == null) {
+            return false;
+        }
         Level world = bird.level();
         return !world.getBlockState(destination).isAir()
             || !world.getBlockState(destination.below()).isAir()

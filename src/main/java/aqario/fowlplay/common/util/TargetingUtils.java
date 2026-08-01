@@ -23,6 +23,9 @@ public class TargetingUtils {
         BlockPos adjustedPos = RandomPos.generateRandomPosTowardDirection(
             entity, range.horizontal(), entity.getRandom(), pos
         );
+        if(adjustedPos == null) {
+            return null;
+        }
         adjustedPos = shiftPosTowardsFlyHeightRange(entity, adjustedPos);
         int surfaceY = entity.level().getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, adjustedPos.getX(), adjustedPos.getZ());
         if(adjustedPos.getY() < surfaceY && entity.getY() >= surfaceY) {
@@ -50,7 +53,7 @@ public class TargetingUtils {
             GoalUtils.isSolid(entity, currentPos)
                 || GoalUtils.isWater(entity, currentPos)
         );
-        if(!GoalUtils.isWater(entity, adjustedPos)) {
+        if(adjustedPos == null || !GoalUtils.isWater(entity, adjustedPos)) {
             return null;
         }
         return adjustedPos;
@@ -62,7 +65,8 @@ public class TargetingUtils {
             GoalUtils.isSolid(entity, currentPos)
                 || GoalUtils.isWater(entity, currentPos)
         );
-        if(GoalUtils.hasMalus(entity, adjustedPos)
+        if(adjustedPos == null
+            || GoalUtils.hasMalus(entity, adjustedPos)
             || !TargetingUtils.isPositionNonAir(entity, adjustedPos)
         ) {
             return null;
@@ -75,7 +79,8 @@ public class TargetingUtils {
         BlockPos adjustedPos = findSurfacePosition(entity, pos, range, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, 1, currentPos ->
             GoalUtils.isSolid(entity, currentPos)
         );
-        if(GoalUtils.isWater(entity, adjustedPos)
+        if(adjustedPos == null
+            || GoalUtils.isWater(entity, adjustedPos)
             || GoalUtils.hasMalus(entity, adjustedPos)
             || !TargetingUtils.isPositionGrounded(entity, adjustedPos.below())
         ) {
@@ -100,7 +105,8 @@ public class TargetingUtils {
             }
             return !isValidPerch;
         });
-        if(!TargetingUtils.isPerch(entity, adjustedPos)
+        if(adjustedPos == null
+            || !TargetingUtils.isPerch(entity, adjustedPos)
             || GoalUtils.isWater(entity, adjustedPos)
             || GoalUtils.hasMalus(entity, adjustedPos)
         ) {
@@ -122,6 +128,9 @@ public class TargetingUtils {
         BlockPos adjustedPos = RandomPos.generateRandomPosTowardDirection(
             entity, range.horizontal(), entity.getRandom(), initialPos
         );
+        if(adjustedPos == null) {
+            return null;
+        }
         int surfaceY = entity.level().getHeight(heightmap, adjustedPos.getX(), adjustedPos.getZ());
         // if position is above the surface, set to surface level, and vertically offset final position by blocksAbove
         if(adjustedPos.getY() >= surfaceY) {
@@ -172,7 +181,7 @@ public class TargetingUtils {
     }
 
     public static boolean isPerch(PathfinderMob entity, BlockPos pos) {
-        return entity.level().getBlockState(pos).is(FPBlockTags.PERCHES);
+        return pos != null && entity.level().getBlockState(pos).is(FPBlockTags.PERCHES);
     }
 
     public static boolean isPositionNonAir(PathfinderMob entity, BlockPos pos) {

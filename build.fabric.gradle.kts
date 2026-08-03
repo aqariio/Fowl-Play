@@ -37,8 +37,7 @@ repositories {
     maven("https://maven.terraformersmc.com/releases/")
     maven("https://gitlab.com/api/v4/projects/21830712/packages/maven")
     maven("https://maven.isxander.dev/releases")
-    maven("https://dl.cloudsmith.io/public/tslat/sbl/maven/")
-    maven("https://maven.parchmentmc.org")
+    strictMaven("https://dl.cloudsmith.io/public/tslat/sbl/maven/", "SmartBrainLib", "net.tslat.smartbrainlib")
     maven("https://maven.shedaniel.me/")
     maven("https://repo.lucko.me/")
 }
@@ -53,12 +52,6 @@ dependencies {
     }
 
     minecraft("com.mojang:minecraft:${sc.current.version}")
-    mappings(
-        loom.layered {
-            officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-${sc.current.version}:${property("deps.parchment")}@zip")
-        }
-    )
 
     // Use `mod{dependency type}` even on 26.1+ - loom-back-compat converts them
 
@@ -84,10 +77,7 @@ dependencies {
     modImplementation("com.terraformersmc:modmenu:${property("deps.modmenu")}")
 
     // NBT Autocomplete
-    modRuntimeOnly("maven.modrinth:nbt-autocomplete:${property("deps.nbt_autocomplete")}-fabric,1.21.1")
-
-    // Observable
-    modRuntimeOnly("maven.modrinth:observable:${property("deps.observable")}+fabric")
+    modRuntimeOnly("maven.modrinth:nbt-autocomplete:${property("deps.nbt_autocomplete")}-fabric-26.1")
 
     // Smart Brain Lib
     modImplementation("net.tslat.smartbrainlib:SmartBrainLib-fabric-${sc.current.version}:${property("deps.sbl")}")

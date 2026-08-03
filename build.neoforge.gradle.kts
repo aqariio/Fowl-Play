@@ -32,8 +32,7 @@ repositories {
     maven("https://maven.terraformersmc.com/releases/")
     maven("https://gitlab.com/api/v4/projects/21830712/packages/maven")
     maven("https://maven.isxander.dev/releases")
-    maven("https://dl.cloudsmith.io/public/tslat/sbl/maven/")
-    maven("https://maven.parchmentmc.org")
+    strictMaven("https://dl.cloudsmith.io/public/tslat/sbl/maven/", "SmartBrainLib", "net.tslat.smartbrainlib")
     maven("https://maven.shedaniel.me/")
     maven("https://repo.lucko.me/")
 }
@@ -52,10 +51,7 @@ dependencies {
 //    runtimeOnly("maven.modrinth:kotlin-for-forge:${property("deps.kotlin_for_forge")}")
 
     // NBT Autocomplete
-    runtimeOnly("maven.modrinth:nbt-autocomplete:${property("deps.nbt_autocomplete")}-neoforge,1.21.1")
-
-    // Observable
-//    runtimeOnly("maven.modrinth:observable:${property("deps.observable")}+neoforge")
+    runtimeOnly("maven.modrinth:nbt-autocomplete:${property("deps.nbt_autocomplete")}-neoforge-26.1")
 
     // Smart Brain Lib
     implementation("net.tslat.smartbrainlib:SmartBrainLib-neoforge-${sc.current.version}:${property("deps.sbl")}")
@@ -76,11 +72,6 @@ neoForge {
 
     val atFile = rootProject.file("src/main/resources/META-INF/accesstransformer.cfg")
     accessTransformers.from(sc.process(atFile, "build/processed.cfg"))
-
-    parchment {
-        minecraftVersion = sc.current.version
-        mappingsVersion = property("deps.parchment") as String
-    }
 
     mods {
         register("fowlplay") {

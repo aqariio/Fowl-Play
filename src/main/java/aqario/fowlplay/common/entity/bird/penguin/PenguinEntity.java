@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -50,6 +51,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
@@ -459,13 +461,23 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
             && penguin.isReadyToBreed();
     }
 
+    @SuppressWarnings("deprecation")
     public boolean shouldStepDown() {
-        BlockPos pos = this.blockPosition();
         return !this.onGround()
             && this.fallDistance > 0f
             && this.fallDistance < 0.1f
-            && !this.level().getBlockState(pos.below()).getCollisionShape(this.level(), pos.below()).isEmpty()
-            /*|| !this.getWorld().getBlockState(pos.down(2)).getCollisionShape(this.getWorld(), pos.down(2)).isEmpty()*/;
+            && this.level().getBlockStates(this.getBoundingBox().move(0, -1.1, 0))
+            .anyMatch(BlockBehaviour.BlockStateBase::isSolid);
+    }
+
+    public void onDownStep() {
+        float downhillAccelAmount = 0.26f;
+        this.addDeltaMovement(
+            this.getLookAngle()
+                .with(Direction.Axis.Y, 0)
+                .normalize()
+                .scale(downhillAccelAmount)
+        );
     }
 
     @Nullable
@@ -498,6 +510,9 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     @Override
     protected void tickRidden(Player player, Vec3 input) {
         super.tickRidden(player, input);
+        if(!this.isSliding()) {
+            this.setSliding();
+        }
         float sidewaysMovement = player.xxa;
 
         double rotation = 3;
@@ -538,10 +553,10 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         boolean bl = this.isFood(player.getItemInHand(hand));
         if(!bl && !this.isVehicle() && !player.isSecondaryUseActive() && !this.isBaby() && this.isSliding()) {
-            if(!this.level().isClientSide) {
+            if(!this.level().isClientSide()) {
                 player.startRiding(this);
             }
-            return InteractionResult.sidedSuccess(this.level().isClientSide);
+            return InteractionResult.sidedSuccess(this.level().isClientSide());
         }
         return super.mobInteract(player, hand);
     }

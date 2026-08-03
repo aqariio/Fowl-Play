@@ -188,25 +188,25 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
 
         // Equip bundle
         if(bundleStack.isEmpty() && playerStack.getItem() instanceof BundleItem && playerStack.getComponents().has(DataComponents.CUSTOM_NAME) && this.isTamed()) {
-            if(!this.level().isClientSide) {
+            if(!this.level().isClientSide()) {
                 this.setItemInHand(InteractionHand.OFF_HAND, playerStack);
                 player.setItemInHand(hand, ItemStack.EMPTY);
             }
-            return InteractionResult.sidedSuccess(this.level().isClientSide);
+            return InteractionResult.sidedSuccess(this.level().isClientSide());
         }
 
         // Unequip bundle
         if(playerStack.isEmpty() && bundleStack.getItem() instanceof BundleItem) {
-            if(!this.level().isClientSide) {
+            if(!this.level().isClientSide()) {
                 player.setItemInHand(hand, bundleStack);
                 this.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
             }
-            return InteractionResult.sidedSuccess(this.level().isClientSide);
+            return InteractionResult.sidedSuccess(this.level().isClientSide());
         }
 
         // Taming
         if(this.isFood(playerStack) && !this.isTamed()) {
-            if(!this.level().isClientSide) {
+            if(!this.level().isClientSide()) {
                 this.usePlayerItem(player, hand, playerStack);
                 if(this.random.nextInt(4) == 0) {
                     this.setOwner(player);
@@ -217,19 +217,19 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
                     this.level().broadcastEntityEvent(this, EntityEvent.TAMING_FAILED);
                 }
             }
-            return InteractionResult.sidedSuccess(this.level().isClientSide);
+            return InteractionResult.sidedSuccess(this.level().isClientSide());
         }
 
         // Sitting
         if(this.onGround() && this.isTamed() && this.isOwnedBy(player)) {
-            if(!this.level().isClientSide) {
+            if(!this.level().isClientSide()) {
                 this.setSitting(!this.isSitting());
                 this.jumping = false;
                 this.navigation.stop();
                 this.setTarget(null);
             }
 
-            return InteractionResult.sidedSuccess(this.level().isClientSide);
+            return InteractionResult.sidedSuccess(this.level().isClientSide());
         }
 
         return super.mobInteract(player, hand);

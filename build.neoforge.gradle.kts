@@ -170,6 +170,7 @@ publishMods {
         client = true
         server = true
         requires(
+            "smartbrainlib",
             "yacl"
         )
     }
@@ -180,6 +181,7 @@ publishMods {
         minecraftVersions.add(sc.current.version)
         environment = CLIENT_AND_SERVER
         requires(
+            "smartbrainlib",
             "yacl"
         )
     }

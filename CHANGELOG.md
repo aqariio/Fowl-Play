@@ -1,7 +1,12 @@
+## 1.2.4
+
+- Fix dedicated server crash on neoforge
+- Fix crash on forge
+
 ## 1.2.3
 
-- Add config option for changing the spawn caps of Fowl Play's custom mob categories
-- Make pigeon deliverable items data driven
+- Fix dedicated server crash on neoforge
+- Fix crash on forge
 
 ## 1.2.2
 

@@ -1,3 +1,8 @@
+## 1.2.3
+
+- Fix dedicated server crash on neoforge
+- Fix crash on forge
+
 ## 1.2.2
 
 - Fix config not working on neoforge

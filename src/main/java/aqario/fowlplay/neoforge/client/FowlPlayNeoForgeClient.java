@@ -14,6 +14,10 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 public class FowlPlayNeoForgeClient {
     public FowlPlayNeoForgeClient(IEventBus modBus) {
         FowlPlayClient.init();
+
+        ModLoadingContext.get().getActiveContainer().registerExtensionPoint(
+            IConfigScreenFactory.class, (client, parent) -> YACLIntegration.createScreen(parent)
+        );
     }
 }
 *///?}

@@ -206,6 +206,7 @@ publishMods {
         requires(
             "architectury-api",
             "fabric-api",
+            "smartbrainlib",
             "yacl"
         )
     }
@@ -218,6 +219,7 @@ publishMods {
         requires(
             "architectury-api",
             "fabric-api",
+            "smartbrainlib",
             "yacl"
         )
     }

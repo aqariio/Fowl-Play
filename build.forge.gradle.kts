@@ -81,11 +81,13 @@ dependencies {
 
 mixin {
     add(sourceSets.main.get(), "fowlplay.refmap.json")
+
     config("fowlplay.mixins.json")
     config("fowlplay.forge.mixins.json")
 }
 
 tasks.jar {
+    finalizedBy("reobfJar")
     manifest {
         attributes(
             "MixinConfigs" to "fowlplay.mixins.json,fowlplay.forge.mixins.json"
@@ -98,6 +100,8 @@ legacyForge {
         forgeVersion = "${sc.current.version}-${property("deps.forge_loader")}"
         isDisableRecompilation = false
     }
+
+    validateAccessTransformers = true
 
     val atFile = rootProject.file("src/main/resources/META-INF/accesstransformer.cfg")
     accessTransformers.from(sc.process(atFile, "build/processed.cfg"))
@@ -197,6 +201,7 @@ publishMods {
         server = true
         requires(
             "architectury-api",
+            "smartbrainlib",
             "yacl"
         )
     }
@@ -208,6 +213,7 @@ publishMods {
         environment = CLIENT_AND_SERVER
         requires(
             "architectury-api",
+            "smartbrainlib",
             "yacl"
         )
     }

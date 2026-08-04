@@ -87,7 +87,6 @@ mixin {
 }
 
 tasks.jar {
-    finalizedBy("reobfJar")
     manifest {
         attributes(
             "MixinConfigs" to "fowlplay.mixins.json,fowlplay.forge.mixins.json"
@@ -129,6 +128,8 @@ legacyForge {
         }
     }
 }
+
+val reobfJar = tasks.named<net.neoforged.moddevgradle.legacyforge.tasks.RemapJar>("reobfJar")
 
 java {
     withSourcesJar()
@@ -175,7 +176,7 @@ tasks {
         description = "Builds mod jars and copies results to `build/libs/{mod version}/`"
 
         inputs.property("version", project.property("mod.version"))
-        from(jar.flatMap { it.archiveFile }, named<Jar>("sourcesJar").flatMap { it.archiveFile })
+        from(reobfJar.flatMap { it.archiveFile }, named<Jar>("sourcesJar").flatMap { it.archiveFile })
         into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
     }
 }
@@ -183,7 +184,7 @@ tasks {
 publishMods {
     maxRetries.set(5)
     displayName = "${property("mod.name")} ${property("mod.version")}"
-    file = tasks.jar.flatMap { it.archiveFile }
+    file = reobfJar.flatMap { it.archiveFile }
     changelog = providers.fileContents(
         rootProject.layout.projectDirectory.file(
             "RELEASE_CHANGELOG.md"

@@ -167,8 +167,10 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     @Override
     public List<? extends ExtendedSensor<? extends CrowEntity>> getSensors() {
         return ObjectArrayList.of(
-            new NearbyLivingEntitySensor<>(),
-            new NearbyPlayersSensor<>(),
+            new NearbyLivingEntitySensor<CrowEntity>()
+                .setRadius(24),
+            new NearbyPlayersSensor<CrowEntity>()
+                .setRadius(24),
             new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new InWaterSensor<>(),

@@ -244,8 +244,10 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     @Override
     public List<? extends ExtendedSensor<? extends GullEntity>> getSensors() {
         return ObjectArrayList.of(
-            new NearbyLivingEntitySensor<>(),
-            new NearbyPlayersSensor<>(),
+            new NearbyLivingEntitySensor<GullEntity>()
+                .setRadius(32),
+            new NearbyPlayersSensor<GullEntity>()
+                .setRadius(24),
             new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new InWaterSensor<>(),

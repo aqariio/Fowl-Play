@@ -21,6 +21,10 @@ public class SetWaterWalkTarget<E extends BirdEntity> extends SpeedModifiableBeh
     protected CylindricalRadius radius = new CylindricalRadius(32, 16);
     protected BiPredicate<E, Vec3> positionPredicate = (entity, pos) -> true;
 
+    public SetWaterWalkTarget() {
+        this.cooldownProvider = entity -> 25 + entity.getRandom().nextInt(26);
+    }
+
     public SetWaterWalkTarget<E> radius(int radius) {
         return this.radius(radius, radius);
     }
@@ -46,7 +50,7 @@ public class SetWaterWalkTarget<E extends BirdEntity> extends SpeedModifiableBeh
     protected void start(E entity) {
         Vec3 targetPos = this.getTargetPos(entity);
 
-        if(!this.positionPredicate.test(entity, targetPos)) {
+        if(targetPos != null && !this.positionPredicate.test(entity, targetPos)) {
             targetPos = null;
         }
 

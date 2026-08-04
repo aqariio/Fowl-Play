@@ -101,8 +101,10 @@ public class BlueJayEntity extends FlyingBirdEntity implements BirdBrain<BlueJay
     @Override
     public List<? extends ExtendedSensor<? extends BlueJayEntity>> getSensors() {
         return ObjectArrayList.of(
-            new NearbyLivingEntitySensor<>(),
-            new NearbyPlayersSensor<>(),
+            new NearbyLivingEntitySensor<BlueJayEntity>()
+                .setRadius(24),
+            new NearbyPlayersSensor<BlueJayEntity>()
+                .setRadius(24),
             new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new InWaterSensor<>(),

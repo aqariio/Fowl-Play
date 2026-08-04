@@ -124,7 +124,7 @@ public interface BirdBrain<E extends BirdEntity & BirdBrain<E>> extends SmartBra
     @SafeVarargs
     static <T extends BirdEntity & BirdBrain<T>> BrainActivityGroup<T> pickUp(Behavior<? super T>... behaviours) {
         return new BrainActivityGroup<T>(FPActivities.PICK_UP.get()).priority(10).behaviours(behaviours)
-            .requireAndWipeMemoriesOnUse(FPMemoryTypes.SEES_FOOD.get());
+            .requireAndWipeMemoriesOnUse(FPMemoryTypes.NEAREST_FOOD_ITEM.get());
     }
 
     @SafeVarargs

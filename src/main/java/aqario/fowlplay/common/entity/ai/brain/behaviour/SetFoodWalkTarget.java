@@ -2,18 +2,17 @@ package aqario.fowlplay.common.entity.ai.brain.behaviour;
 
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.util.MemoryList;
+import aqario.fowlplay.core.FPMemoryTypes;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.entity.ai.behavior.EntityTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.tslat.smartbrainlib.registry.SBLMemoryTypes;
 
 import java.util.List;
-import java.util.function.Function;
 
-public class SetItemWalkTarget<E extends BirdEntity> extends SpeedModifiableBehaviour<E> {
+public class SetFoodWalkTarget<E extends BirdEntity> extends SpeedModifiableBehaviour<E> {
     private static final MemoryList MEMORY_REQUIREMENTS = MemoryList.create(4)
         .registered(
             MemoryModuleType.WALK_TARGET,
@@ -21,18 +20,8 @@ public class SetItemWalkTarget<E extends BirdEntity> extends SpeedModifiableBeha
             MemoryModuleType.ITEM_PICKUP_COOLDOWN_TICKS
         )
         .present(
-            SBLMemoryTypes.NEARBY_ITEMS.get()
+            FPMemoryTypes.NEAREST_FOOD_ITEM.get()
         );
-    protected Function<E, Integer> radius = entity -> 32;
-
-    public SetItemWalkTarget<E> radius(int radius) {
-        return this.radius(entity -> radius);
-    }
-
-    public SetItemWalkTarget<E> radius(Function<E, Integer> function) {
-        this.radius = function;
-        return this;
-    }
 
     @Override
     protected List<Pair<MemoryModuleType<?>, MemoryStatus>> getMemoryRequirements() {
@@ -41,11 +30,8 @@ public class SetItemWalkTarget<E extends BirdEntity> extends SpeedModifiableBeha
 
     @Override
     protected void start(E entity) {
-        List<ItemEntity> wantedItems = entity.getPresentMemory(SBLMemoryTypes.NEARBY_ITEMS.get());
-        ItemEntity targetItem = wantedItems.getFirst();
-        if(targetItem.closerThan(entity, this.radius.apply(entity))
-            && entity.level().getWorldBorder().isWithinBounds(targetItem.blockPosition())
-        ) {
+        ItemEntity targetItem = entity.getPresentMemory(FPMemoryTypes.NEAREST_FOOD_ITEM.get());
+        if(entity.level().getWorldBorder().isWithinBounds(targetItem.blockPosition())) {
             WalkTarget newWalkTarget = new WalkTarget(
                 new EntityTracker(targetItem, false),
                 this.speedModifier.apply(entity, targetItem.position()),

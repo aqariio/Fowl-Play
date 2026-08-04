@@ -598,8 +598,10 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     @Override
     public List<? extends ExtendedSensor<? extends PenguinEntity>> getSensors() {
         return ObjectArrayList.of(
-            new NearbyLivingEntitySensor<>(),
-            new NearbyPlayersSensor<>(),
+            new NearbyLivingEntitySensor<PenguinEntity>()
+                .setRadius(24),
+            new NearbyPlayersSensor<PenguinEntity>()
+                .setRadius(24),
             new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new ItemTemptingSensor<PenguinEntity>()

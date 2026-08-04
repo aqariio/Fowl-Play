@@ -7,6 +7,7 @@
     "BlockStateBaseMixin",
     "ChickenMixin",
     "CrossCollisionBlockMixin",
+    "ExtendedSensorAccessor",
     "FenceGateBlockMixin",
     "LivingEntityMixin",
     "MobCategoryMixin",

@@ -164,8 +164,10 @@ public class VultureEntity extends TrustingBirdEntity implements BirdBrain<Vultu
     @Override
     public List<? extends ExtendedSensor<? extends VultureEntity>> getSensors() {
         return ObjectArrayList.of(
-            new NearbyLivingEntitySensor<>(),
-            new NearbyPlayersSensor<>(),
+            new NearbyLivingEntitySensor<VultureEntity>()
+                .setRadius(32),
+            new NearbyPlayersSensor<VultureEntity>()
+                .setRadius(24),
             new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new InWaterSensor<>(),

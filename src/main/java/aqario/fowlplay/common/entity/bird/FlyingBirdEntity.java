@@ -34,6 +34,8 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     public final AnimationState glidingState = new AnimationState();
     public final AnimationState flappingState = new AnimationState();
     private boolean isFlightNavigation;
+    private PathNavigation landNavigation;
+    private FlightNavigation flightNavigation;
     private float prevRoll;
     private float roll;
     private double prevHorizontalVelocity;
@@ -195,15 +197,20 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     protected PathNavigation getLandNavigation() {
-        return new GroundNavigation(this, this.level());
+        if(this.landNavigation == null) {
+            this.landNavigation = new GroundNavigation(this, this.level());
+        }
+        return this.landNavigation;
     }
 
     protected FlightNavigation getFlightNavigation() {
-        FlightNavigation navigation = new FlightNavigation(this, this.level());
-        navigation.setCanOpenDoors(false);
-        navigation.setCanPassDoors(true);
-        navigation.setCanFloat(this.canSwim());
-        return navigation;
+        if(this.flightNavigation == null) {
+            this.flightNavigation = new FlightNavigation(this, this.level());
+            this.flightNavigation.setCanOpenDoors(false);
+            this.flightNavigation.setCanPassDoors(true);
+            this.flightNavigation.setCanFloat(this.canSwim());
+        }
+        return this.flightNavigation;
     }
 
     // TODO: instead of affecting the pitch and yaw change directly, it should affect the steepness of its path
@@ -225,12 +232,22 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     public void setNavigation(boolean isFlying) {
+        // noinspection ConstantConditions
+        if(this.navigation != null) {
+            this.navigation.stop();
+        }
         if(isFlying) {
-            this.navigation = this.getFlightNavigation();
+            if(this.flightNavigation == null) {
+                this.flightNavigation = this.getFlightNavigation();
+            }
+            this.navigation = this.flightNavigation;
             this.isFlightNavigation = true;
         }
         else {
-            this.navigation = this.getLandNavigation();
+            if(this.landNavigation == null) {
+                this.landNavigation = this.getLandNavigation();
+            }
+            this.navigation = this.landNavigation;
             this.isFlightNavigation = false;
         }
     }
@@ -275,7 +292,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         }
         return this.onGround()
             || this.isWaterAboveFloatHeight()
-            || this.getDeltaMovement().length() < MIN_FLIGHT_VELOCITY
+            || this.getDeltaMovement().lengthSqr() < MIN_FLIGHT_VELOCITY * MIN_FLIGHT_VELOCITY
             /*|| this.getHealth() < MIN_HEALTH_TO_FLY*/;
     }
 

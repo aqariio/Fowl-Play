@@ -218,7 +218,7 @@ public abstract class BirdEntity extends Animal {
             this.take(item, stack.getCount());
             item.discard();
             this.eatingTime = 0;
-            this.clearMemory(FPMemoryTypes.SEES_FOOD.get());
+            this.clearMemory(FPMemoryTypes.NEAREST_FOOD_ITEM.get());
             this.setMemoryWithExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN, true, HUNTING_COOLDOWN_TICKS);
         }
     }
@@ -580,6 +580,11 @@ public abstract class BirdEntity extends Animal {
 
     public <U> Optional<U> getMemory(MemoryModuleType<U> memoryType) {
         return this.brain.getMemory(memoryType);
+    }
+
+    @Nullable
+    public <U> U getMemoryOrNull(MemoryModuleType<U> memoryType) {
+        return this.brain.getMemory(memoryType).orElse(null);
     }
 
     public <U> U getMemoryOrDefault(MemoryModuleType<U> memory, Supplier<U> fallback) {

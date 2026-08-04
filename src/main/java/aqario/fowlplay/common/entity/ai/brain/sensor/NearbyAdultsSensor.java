@@ -15,6 +15,10 @@ import java.util.List;
 import java.util.function.BiPredicate;
 
 public class NearbyAdultsSensor<E extends AgeableMob> extends EntityFilteringSensor<List<? extends AgeableMob>, E> {
+    public NearbyAdultsSensor() {
+        this.setScanRate(entity -> 25);
+    }
+
     @Override
     public SensorType<? extends ExtendedSensor<?>> type() {
         return FPSensorTypes.NEARBY_ADULTS.get();
@@ -27,7 +31,7 @@ public class NearbyAdultsSensor<E extends AgeableMob> extends EntityFilteringSen
 
     @Override
     protected BiPredicate<LivingEntity, E> predicate() {
-        return (target, self) -> target.getType() == self.getType() && !self.isBaby();
+        return (target, self) -> target.getType() == self.getType() && target instanceof AgeableMob ageable && !ageable.isBaby();
     }
 
     @Override

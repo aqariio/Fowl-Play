@@ -210,8 +210,10 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     @Override
     public List<? extends ExtendedSensor<? extends SparrowEntity>> getSensors() {
         return ObjectArrayList.of(
-            new NearbyLivingEntitySensor<>(),
-            new NearbyPlayersSensor<>(),
+            new NearbyLivingEntitySensor<SparrowEntity>()
+                .setRadius(24),
+            new NearbyPlayersSensor<SparrowEntity>()
+                .setRadius(24),
             new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new InWaterSensor<>(),

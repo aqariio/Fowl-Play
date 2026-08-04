@@ -23,6 +23,10 @@ public class SetNonAirWalkTarget<E extends BirdEntity> extends SpeedModifiableBe
     protected CylindricalRadius radius = new CylindricalRadius(32, 16);
     protected BiPredicate<E, Vec3> positionPredicate = (entity, pos) -> true;
 
+    public SetNonAirWalkTarget() {
+        this.cooldownProvider = entity -> 20 + entity.getRandom().nextInt(21);
+    }
+
     public SetNonAirWalkTarget<E> radius(int radius) {
         return this.radius(radius, radius);
     }
@@ -58,7 +62,7 @@ public class SetNonAirWalkTarget<E extends BirdEntity> extends SpeedModifiableBe
     protected void start(E entity) {
         Vec3 targetPos = this.getTargetPos(entity);
 
-        if(!this.positionPredicate.test(entity, targetPos)) {
+        if(targetPos != null && !this.positionPredicate.test(entity, targetPos)) {
             targetPos = null;
         }
 

@@ -122,8 +122,10 @@ public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEnti
     @Override
     public List<? extends ExtendedSensor<? extends RobinEntity>> getSensors() {
         return ObjectArrayList.of(
-            new NearbyLivingEntitySensor<>(),
-            new NearbyPlayersSensor<>(),
+            new NearbyLivingEntitySensor<RobinEntity>()
+                .setRadius(24),
+            new NearbyPlayersSensor<RobinEntity>()
+                .setRadius(24),
             new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new InWaterSensor<>(),

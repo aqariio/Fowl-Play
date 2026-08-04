@@ -18,7 +18,11 @@ import java.util.List;
 public class SetRandomFlightTarget<E extends FlyingBirdEntity> extends ExtendedBehaviour<E> {
     private static final MemoryList MEMORIES = MemoryList.create(1)
         .absent(MemoryModuleType.WALK_TARGET);
-    private static final CylindricalRadius RANGE = new CylindricalRadius(64, 16);
+    private static final CylindricalRadius RANGE = new CylindricalRadius(32, 16);
+
+    public SetRandomFlightTarget() {
+        this.cooldownProvider = entity -> 12 + entity.getRandom().nextInt(13);
+    }
 
     @Override
     protected List<Pair<MemoryModuleType<?>, MemoryStatus>> getMemoryRequirements() {

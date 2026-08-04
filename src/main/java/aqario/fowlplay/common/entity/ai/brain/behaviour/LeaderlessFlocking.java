@@ -20,15 +20,18 @@ public class LeaderlessFlocking extends ExtendedBehaviour<FlyingBirdEntity> {
         )
         .absent(
             FPMemoryTypes.IS_AVOIDING.get(),
-            FPMemoryTypes.SEES_FOOD.get()
+            FPMemoryTypes.NEAREST_FOOD_ITEM.get()
         );
     private static final int VIEW_RADIUS = 24;
+    private static final int MAX_NEIGHBOURS = 10;
+    private static final int STEERING_INTERVAL = 4;
     public final int minFlockSize;
     public final float coherence;
     public final float alignment;
     public final float separation;
     public final float separationRange;
     private List<? extends AgeableMob> nearbyBirds;
+    private int nextSteeringTick;
 
     public LeaderlessFlocking(int minFlockSize, float coherence, float alignment, float separation, float separationRange) {
         this.minFlockSize = minFlockSize;
@@ -52,9 +55,13 @@ public class LeaderlessFlocking extends ExtendedBehaviour<FlyingBirdEntity> {
             return false;
         }
         this.nearbyBirds = bird.getPresentMemory(FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
-        this.nearbyBirds.removeIf(entity -> !entity.closerThan(bird, VIEW_RADIUS));
-
-        return this.nearbyBirds.size() > this.minFlockSize;
+        int nearbyCount = 0;
+        for(AgeableMob entity : this.nearbyBirds) {
+            if(entity.distanceToSqr(bird) <= VIEW_RADIUS * VIEW_RADIUS && ++nearbyCount > this.minFlockSize) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -64,30 +71,63 @@ public class LeaderlessFlocking extends ExtendedBehaviour<FlyingBirdEntity> {
 
     @Override
     protected void tick(FlyingBirdEntity bird) {
+        if(bird.tickCount < this.nextSteeringTick) {
+            return;
+        }
+        this.nextSteeringTick = bird.tickCount + STEERING_INTERVAL;
         Vec3 heading = this.getHeading(bird).add(bird.position());
         bird.getMoveControl().setWantedPosition(heading.x, heading.y, heading.z, (bird.getRandom().nextFloat() - bird.getRandom().nextFloat()) * 1.5 + 2);
     }
 
     private Vec3 getHeading(FlyingBirdEntity bird) {
-        Vec3 separation = Vec3.ZERO;
-        Vec3 alignment = Vec3.ZERO;
-        Vec3 cohesion = Vec3.ZERO;
-
+        Vec3 birdPos = bird.position();
+        double separationX = 0;
+        double separationY = 0;
+        double separationZ = 0;
+        double alignmentX = 0;
+        double alignmentY = 0;
+        double alignmentZ = 0;
+        double cohesionX = 0;
+        double cohesionY = 0;
+        double cohesionZ = 0;
+        int count = 0;
+        double separationRangeSqr = this.separationRange * this.separationRange;
         for(AgeableMob entity : this.nearbyBirds) {
-            if(entity.position().subtract(bird.position()).length() < this.separationRange) {
-                separation = separation.subtract(entity.position().subtract(bird.position()));
+            double distanceSqr = entity.distanceToSqr(bird);
+            if(distanceSqr > VIEW_RADIUS * VIEW_RADIUS) {
+                continue;
             }
-            alignment = alignment.add(entity.getDeltaMovement());
-            cohesion = cohesion.add(entity.position());
+            Vec3 entityPos = entity.position();
+            double dx = entityPos.x - birdPos.x;
+            double dy = entityPos.y - birdPos.y;
+            double dz = entityPos.z - birdPos.z;
+            if(distanceSqr < separationRangeSqr) {
+                separationX -= dx;
+                separationY -= dy;
+                separationZ -= dz;
+            }
+            Vec3 movement = entity.getDeltaMovement();
+            alignmentX += movement.x;
+            alignmentY += movement.y;
+            alignmentZ += movement.z;
+            cohesionX += entityPos.x;
+            cohesionY += entityPos.y;
+            cohesionZ += entityPos.z;
+            if(++count >= MAX_NEIGHBOURS) {
+                break;
+            }
         }
-
-        alignment = alignment.scale(1f / this.nearbyBirds.size());
-        cohesion = cohesion.scale(1f / this.nearbyBirds.size());
-        cohesion = cohesion.subtract(bird.position());
-
-        cohesion = cohesion.scale(this.coherence);
-        alignment = alignment.scale(this.alignment);
-        separation = separation.scale(this.separation);
+        if(count == 0) {
+            return Vec3.ZERO;
+        }
+        double inverseCount = 1.0 / count;
+        Vec3 alignment = new Vec3(alignmentX, alignmentY, alignmentZ).scale(inverseCount * this.alignment);
+        Vec3 cohesion = new Vec3(
+            cohesionX * inverseCount - birdPos.x,
+            cohesionY * inverseCount - birdPos.y,
+            cohesionZ * inverseCount - birdPos.z
+        ).scale(this.coherence);
+        Vec3 separation = new Vec3(separationX, separationY, separationZ).scale(this.separation);
         Vec3 randomness = new Vec3(
             bird.getRandom().nextFloat() - bird.getRandom().nextFloat(),
             bird.getRandom().nextFloat() - bird.getRandom().nextFloat(),

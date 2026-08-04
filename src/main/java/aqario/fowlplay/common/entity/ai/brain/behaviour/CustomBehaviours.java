@@ -17,8 +17,7 @@ import java.util.function.Predicate;
  */
 public class CustomBehaviours {
     public static <E extends BirdEntity> ExtendedBehaviour<E> setNearestFoodWalkTarget() {
-        return new SetItemWalkTarget<E>()
-            .radius(BirdUtils.ITEM_PICK_UP_RANGE)
+        return new SetFoodWalkTarget<E>()
             .speed(BirdUtils.FAST_SPEED);
     }
 

@@ -122,8 +122,10 @@ public class ChickadeeEntity extends FlyingBirdEntity implements BirdBrain<Chick
     @Override
     public List<? extends ExtendedSensor<? extends ChickadeeEntity>> getSensors() {
         return ObjectArrayList.of(
-            new NearbyLivingEntitySensor<>(),
-            new NearbyPlayersSensor<>(),
+            new NearbyLivingEntitySensor<ChickadeeEntity>()
+                .setRadius(24),
+            new NearbyPlayersSensor<ChickadeeEntity>()
+                .setRadius(24),
             new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new InWaterSensor<>(),

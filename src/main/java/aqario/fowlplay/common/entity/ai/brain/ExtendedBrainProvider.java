@@ -60,7 +60,7 @@ public class ExtendedBrainProvider<E extends LivingEntity & SmartBrainOwner<E>> 
             }
         }
 
-        ExtendedBrain<E> brain = new ExtendedBrain<E>(memories, (List<ExtendedSensor<E>>) sensors, (List) taskList);
+        ExtendedBrain<E> brain = new ExtendedBrain<E>(this.owner, memories, (List<ExtendedSensor<E>>) sensors, (List) taskList);
 
         this.finaliseBrain(brain);
 

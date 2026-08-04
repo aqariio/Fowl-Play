@@ -1,5 +1,6 @@
 package aqario.fowlplay.common.entity.ai.brain;
 
+import aqario.fowlplay.mixin.ExtendedSensorAccessor;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,8 +20,13 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ExtendedBrain<E extends LivingEntity & SmartBrainOwner<E>> extends SmartBrain<E> {
-    public ExtendedBrain(List<MemoryModuleType<?>> memories, List<? extends ExtendedSensor<E>> extendedSensors, @Nullable List<BrainActivityGroup<E>> taskList) {
+    public ExtendedBrain(E owner, List<MemoryModuleType<?>> memories, List<? extends ExtendedSensor<E>> extendedSensors, @Nullable List<BrainActivityGroup<E>> taskList) {
         super(memories, extendedSensors, taskList);
+
+        // apply a random offset to each sensor
+        extendedSensors.forEach(sensor ->
+            ((ExtendedSensorAccessor) sensor).fowlplay$setNextTickTime(owner.getRandom().nextInt(20))
+        );
     }
 
     @Override
@@ -29,6 +35,7 @@ public class ExtendedBrain<E extends LivingEntity & SmartBrainOwner<E>> extends 
 
         if(this.sortBehaviours) {
             this.behaviours.sort(Comparator.comparingInt(ActivityBehaviours::priority));
+            this.sortBehaviours = false;
         }
 
         this.forgetOutdatedMemories();

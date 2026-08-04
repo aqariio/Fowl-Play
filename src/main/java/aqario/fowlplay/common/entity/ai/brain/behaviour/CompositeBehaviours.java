@@ -70,9 +70,9 @@ public class CompositeBehaviours {
     public static <E extends FlyingBirdEntity> ExtendedBehaviour<E> trySetWaterRestTarget() {
         return new AllApplicableBehaviours<>(
             new SetWaterWalkTarget<E>()
-                .radius(64, 32),
+                .radius(40, 24),
             new SetNonAirWalkTarget<>()
-                .radius(64, 32),
+                .radius(40, 24),
             new SetRandomFlightTarget<>()
                 .startCondition(FlyingBirdEntity::isFlying)
                 .stopIf(Predicate.not(FlyingBirdEntity::isFlying))
@@ -93,7 +93,7 @@ public class CompositeBehaviours {
         return new AllApplicableBehaviours<>(
             SlideBehaviours.startSliding(),
             new SetRandomSwimTarget<>()
-                .setRadius(64, 24)
+                .setRadius(40, 20)
         )
             .startCondition(entity -> !entity.isMemoryPresent(MemoryModuleType.HAS_HUNTING_COOLDOWN));
     }

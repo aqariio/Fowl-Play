@@ -107,8 +107,10 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
     @Override
     public List<? extends ExtendedSensor<? extends CardinalEntity>> getSensors() {
         return ObjectArrayList.of(
-            new NearbyLivingEntitySensor<>(),
-            new NearbyPlayersSensor<>(),
+            new NearbyLivingEntitySensor<CardinalEntity>()
+                .setRadius(24),
+            new NearbyPlayersSensor<CardinalEntity>()
+                .setRadius(24),
             new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new InWaterSensor<>(),

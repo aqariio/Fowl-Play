@@ -68,6 +68,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
         FPEntityDataSerializers.PIGEON_VARIANT
     );
     public final AnimationState sittingState = new AnimationState();
+    private ItemStack cachedRecipientStack = ItemStack.EMPTY;
     private static final String RECIPIENT_KEY = "recipient";
 
     public PigeonEntity(EntityType<? extends PigeonEntity> entityType, Level world) {
@@ -300,7 +301,10 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     public void setRecipientUuid(@Nullable UUID uuid) {
-        this.entityData.set(RECIPIENT, Optional.ofNullable(uuid));
+        Optional<UUID> recipient = Optional.ofNullable(uuid);
+        if(!this.entityData.get(RECIPIENT).equals(recipient)) {
+            this.entityData.set(RECIPIENT, recipient);
+        }
     }
 
     @Override
@@ -361,8 +365,10 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     @Override
     public List<? extends ExtendedSensor<? extends PigeonEntity>> getSensors() {
         return ObjectArrayList.of(
-            new NearbyLivingEntitySensor<>(),
-            new NearbyPlayersSensor<>(),
+            new NearbyLivingEntitySensor<PigeonEntity>()
+                .setRadius(24),
+            new NearbyPlayersSensor<PigeonEntity>()
+                .setRadius(24),
             new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new InWaterSensor<>(),
@@ -491,6 +497,13 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
 
         if(this.isTamed() && this.getServer() != null) {
             ItemStack stack = this.getItemBySlot(EquipmentSlot.OFFHAND);
+            boolean stackChanged = !ItemStack.isSameItemSameComponents(stack, this.cachedRecipientStack);
+            if(!stackChanged && this.tickCount % 20 != 0) {
+                return;
+            }
+            if(stackChanged) {
+                this.cachedRecipientStack = stack.copy();
+            }
             ServerPlayer recipient;
 
             if(stack.getItem() instanceof BundleItem

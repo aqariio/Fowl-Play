@@ -8,6 +8,7 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.item.ItemEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +22,6 @@ public final class FPMemoryTypes {
     );
 
     public static final Supplier<MemoryModuleType<List<? extends AgeableMob>>> NEAREST_VISIBLE_ADULTS = register("nearest_visible_adults");
-    public static final Supplier<MemoryModuleType<Unit>> SEES_FOOD = register("sees_food");
     public static final Supplier<MemoryModuleType<Unit>> CANNOT_PICKUP_FOOD = register("cannot_pickup_food");
     public static final Supplier<MemoryModuleType<Unit>> IS_AVOIDING = register("is_avoiding");
     public static final Supplier<MemoryModuleType<TeleportTarget>> TELEPORT_TARGET = register("teleport_target");
@@ -29,6 +29,7 @@ public final class FPMemoryTypes {
     public static final Supplier<MemoryModuleType<UUID>> RECIPIENT = register("recipient");
     public static final Supplier<MemoryModuleType<RememberedPositions>> REMEMBERED_POSITIONS = register("remembered_positions");
     public static final Supplier<MemoryModuleType<LivingEntity>> NEAREST_HUNTABLE = register("nearest_huntable");
+    public static final Supplier<MemoryModuleType<ItemEntity>> NEAREST_FOOD_ITEM = register("nearest_food_item");
 
     private static <U> Supplier<MemoryModuleType<U>> register(String id) {
         return REGISTRAR.register(id, () -> new MemoryModuleType<>(Optional.empty()));

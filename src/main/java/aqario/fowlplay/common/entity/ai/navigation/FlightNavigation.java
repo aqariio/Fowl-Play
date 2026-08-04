@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.FlyNodeEvaluator;
@@ -95,7 +96,13 @@ public class FlightNavigation extends GroundPathNavigation implements ExtendedNa
     @Nullable
     @Override
     public Path createPath(BlockPos target, int distance) {
-        return this.createPath(ImmutableSet.of(target), 16, false, distance, 64);
+        return this.createPath(
+            ImmutableSet.of(target),
+            8,
+            false,
+            distance,
+            (float) this.bird.getAttributeValue(Attributes.FOLLOW_RANGE)
+        );
     }
 
     @Override

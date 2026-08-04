@@ -29,6 +29,9 @@ public final class FPSensorTypes {
     public static final Supplier<SensorType<HuntTargetSensor<?>>> HUNT_TARGETS = register("hunt_targets",
         HuntTargetSensor::new
     );
+    public static final Supplier<SensorType<NearbyFoodSensor<?>>> NEARBY_FOOD = register("nearby_food",
+        NearbyFoodSensor::new
+    );
     public static final Supplier<SensorType<PigeonSpecificSensor>> PIGEON_SPECIFIC_SENSOR = register("pigeon_specific_sensor",
         PigeonSpecificSensor::new
     );

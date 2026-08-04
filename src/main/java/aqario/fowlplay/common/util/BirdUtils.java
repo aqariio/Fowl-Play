@@ -15,13 +15,10 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.registry.SBLMemoryTypes;
 
 import java.util.List;
 
@@ -32,7 +29,6 @@ public final class BirdUtils {
     public static final float FAST_SPEED = 1.4F;
     public static final float FLY_SPEED = 2.0F;
     public static final float SWIM_SPEED = 4.0F;
-    public static final int ITEM_PICK_UP_RANGE = 32;
     public static final CylindricalRadius FLY_AVOID_RANGE = new CylindricalRadius(8, 6);
     public static final int AVOID_TICKS = 160;
     public static final int CANNOT_PICKUP_FOOD_TICKS = 1200;
@@ -126,29 +122,6 @@ public final class BirdUtils {
 
     public static boolean isPlayerHoldingFood(BirdEntity bird, LivingEntity target) {
         return target.getType() == EntityType.PLAYER && target.isHolding(bird.getFood());
-    }
-
-    public static boolean shouldPickupFood(BirdEntity bird) {
-        if(bird.isMemoryPresent(FPMemoryTypes.CANNOT_PICKUP_FOOD.get())) {
-            return false;
-        }
-        if(!bird.isMemoryPresent(SBLMemoryTypes.NEARBY_ITEMS.get())) {
-            return false;
-        }
-        List<ItemEntity> foodItems = bird.getPresentMemory(SBLMemoryTypes.NEARBY_ITEMS.get());
-        if(bird.getFood().test(bird.getMainHandItem())) {
-            return false;
-        }
-        if(!bird.isMemoryPresent(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES)) {
-            return true;
-        }
-        NearestVisibleLivingEntities visibleMobs = bird.getPresentMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES);
-        List<LivingEntity> avoidTargets = visibleMobs.find(entity -> true)
-            .filter(entity -> shouldAvoid(bird, entity))
-            .filter(entity -> entity.closerThan(foodItems.getFirst(), bird.getFleeRange(entity)))
-            .toList();
-
-        return avoidTargets.isEmpty();
     }
 
     public static boolean shouldAvoid(BirdEntity bird, LivingEntity target) {

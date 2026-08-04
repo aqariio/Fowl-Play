@@ -20,6 +20,10 @@ public class SetPerchWalkTarget<E extends FlyingBirdEntity> extends ExtendedBeha
         .absent(MemoryModuleType.WALK_TARGET);
     public static final CylindricalRadius RANGE = new CylindricalRadius(32, 32);
 
+    public SetPerchWalkTarget() {
+        this.cooldownProvider = entity -> 30 + entity.getRandom().nextInt(31);
+    }
+
     @Override
     protected List<Pair<MemoryModuleType<?>, MemoryStatus>> getMemoryRequirements() {
         return MEMORIES;

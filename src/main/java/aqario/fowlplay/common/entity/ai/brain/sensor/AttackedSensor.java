@@ -22,7 +22,7 @@ public class AttackedSensor<E extends BirdEntity> extends ExtendedSensor<E> {
         MemoryModuleType.HURT_BY,
         MemoryModuleType.HURT_BY_ENTITY,
         MemoryModuleType.AVOID_TARGET,
-        FPMemoryTypes.SEES_FOOD.get(),
+        FPMemoryTypes.NEAREST_FOOD_ITEM.get(),
         FPMemoryTypes.CANNOT_PICKUP_FOOD.get()
     );
 
@@ -64,7 +64,7 @@ public class AttackedSensor<E extends BirdEntity> extends ExtendedSensor<E> {
     }
 
     public static <T extends BirdEntity> void onAttacked(T bird, LivingEntity attacker) {
-        bird.clearMemory(FPMemoryTypes.SEES_FOOD.get());
+        bird.clearMemory(FPMemoryTypes.NEAREST_FOOD_ITEM.get());
         if(attacker instanceof Player player) {
             bird.setMemoryWithExpiry(FPMemoryTypes.CANNOT_PICKUP_FOOD.get(), Unit.INSTANCE, BirdUtils.CANNOT_PICKUP_FOOD_TICKS);
             if(bird instanceof TrustingBirdEntity trustingBird && trustingBird.trusts(player)) {

@@ -21,6 +21,15 @@ public class FPConfig {
     @SerialEntry
     public boolean customChickenModel = true;
 
+    @SerialEntry
+    public boolean customChickenBehavior = true;
+
+    @SerialEntry
+    public boolean customParrotModel = true;
+
+    @SerialEntry
+    public boolean customParrotBehavior = true;
+
     // Audio
 
     // Blue Jay

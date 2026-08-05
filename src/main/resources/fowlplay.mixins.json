@@ -12,6 +12,7 @@
     "LivingEntityMixin",
     "MobCategoryMixin",
     "NaturalSpawnerMixin",
+    "ParrotMixin",
     "PowderSnowBlockMixin",
     "SoundSourceMixin",
     "WallBlockMixin"

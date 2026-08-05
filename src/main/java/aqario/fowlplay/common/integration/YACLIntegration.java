@@ -27,14 +27,21 @@ public class YACLIntegration {
         return YetAnotherConfigLib.create(HANDLED_CONFIG, (defaults, config, builder) -> builder
                 .title(Component.translatable("config.title"))
                 .category(ConfigCategory.createBuilder()
-                    .name(Component.translatable("config.visual"))
-                    .option(Option.<Boolean>createBuilder()
-                        .name(Component.translatable("config.visual.customChickenModel"))
-                        .description(OptionDescription.of(Component.translatable("config.info.restart").append("\n\n").append(Component.translatable("config.visual.customChickenModel.desc"))))
-                        .binding(true, () -> config.customChickenModel, val -> config.customChickenModel = val)
-                        .controller(BooleanControllerBuilder::create)
-                        .build()
-                    )
+                    .name(Component.translatable("config.common"))
+                    .group(createImprovementGroup(
+                        "entity.minecraft.chicken",
+                        () -> config.customChickenModel,
+                        val -> config.customChickenModel = val,
+                        () -> config.customChickenBehavior,
+                        val -> config.customChickenBehavior = val
+                    ))
+                    .group(createImprovementGroup(
+                        "entity.minecraft.parrot",
+                        () -> config.customParrotModel,
+                        val -> config.customParrotModel = val,
+                        () -> config.customParrotBehavior,
+                        val -> config.customParrotBehavior = val
+                    ))
                     .build()
                 )
                 .category(ConfigCategory.createBuilder()
@@ -202,6 +209,57 @@ public class YACLIntegration {
             .generateScreen(parent);
     }
 
+    private static OptionGroup createImprovementGroup(
+        String entity,
+        Supplier<Boolean> getModel,
+        Consumer<Boolean> setModel,
+        Supplier<Boolean> getBehavior,
+        Consumer<Boolean> setBehavior
+    ) {
+        Component entityName = Component.translatable(entity);
+
+        Option<Boolean> behaviorOption = Option.<Boolean>createBuilder()
+            .name(Component.translatable("config.common.customBehavior"))
+            .description(OptionDescription.of(
+                Component.translatable("config.info.restart")
+                    .append("\n\n")
+                    .append(Component.translatable("config.common.customBehavior.desc"))
+            ))
+            .binding(true, getBehavior, setBehavior)
+            .controller(BooleanControllerBuilder::create)
+            .build();
+
+        Option<Boolean> modelOption = Option.<Boolean>createBuilder()
+            .name(Component.translatable("config.common.customModel"))
+            .description(OptionDescription.of(
+                Component.translatable("config.info.restart")
+                    .append("\n\n")
+                    .append(Component.translatable("config.common.customModel.desc"))
+            ))
+            .binding(true, getModel, setModel)
+            .controller(BooleanControllerBuilder::create)
+            .addListener((option, event) -> {
+                if(event == OptionEventListener.Event.INITIAL
+                    || event == OptionEventListener.Event.STATE_CHANGE
+                ) {
+                    boolean modelEnabled = option.pendingValue();
+
+                    behaviorOption.setAvailable(modelEnabled);
+
+                    if(!modelEnabled) {
+                        behaviorOption.requestSet(false);
+                    }
+                }
+            })
+            .build();
+
+        return OptionGroup.createBuilder()
+            .name(entityName)
+            .option(modelOption)
+            .option(behaviorOption)
+            .build();
+    }
+
     private static OptionGroup createSpawningGroup(
         String entity,
         int spawnWeight,
@@ -218,24 +276,24 @@ public class YACLIntegration {
             .name(Component.translatable(entity))
             .option(createSpawningOption(
                 entity,
-                "config.spawning.generic.spawnWeight",
-                "config.spawning.generic.spawnWeight.desc",
+                "config.spawning.spawnWeight",
+                "config.spawning.spawnWeight.desc",
                 spawnWeight,
                 getSpawnWeight,
                 setSpawnWeight
             ))
             .option(createSpawningOption(
                 entity,
-                "config.spawning.generic.minGroupSize",
-                "config.spawning.generic.minGroupSize.desc",
+                "config.spawning.minGroupSize",
+                "config.spawning.minGroupSize.desc",
                 minGroupSize,
                 getMinGroupSize,
                 setMinGroupSize
             ))
             .option(createSpawningOption(
                 entity,
-                "config.spawning.generic.maxGroupSize",
-                "config.spawning.generic.maxGroupSize.desc",
+                "config.spawning.maxGroupSize",
+                "config.spawning.maxGroupSize.desc",
                 maxGroupSize,
                 getMaxGroupSize,
                 setMaxGroupSize
@@ -246,7 +304,11 @@ public class YACLIntegration {
     private static Option<Integer> createSpawningOption(String entity, String name, String description, int defaultValue, Supplier<Integer> get, Consumer<Integer> set) {
         return Option.<Integer>createBuilder()
             .name(Component.translatable(name))
-            .description(OptionDescription.of(Component.translatable("config.info.restart").append("\n\n").append(Component.translatable(description, Component.translatable(entity)))))
+            .description(OptionDescription.of(
+                Component.translatable("config.info.restart")
+                    .append("\n\n")
+                    .append(Component.translatable(description, Component.translatable(entity)))
+            ))
             .binding(defaultValue, get, set)
             .controller(option -> IntegerSliderControllerBuilder.create(option)
                 .range(0, 100)

@@ -103,7 +103,7 @@ public class CustomChickenModel extends HierarchicalModel<Chicken> {
         }
         this.animate(((ChickenAnimationHolder) chicken).fowlplay$getStandingState(), ChickenAnimations.STANDING, ageInTicks);
         this.animate(((ChickenAnimationHolder) chicken).fowlplay$getFlappingState(), ChickenAnimations.FLAPPING, ageInTicks);
-        this.animate(((ChickenAnimationHolder) chicken).fowlplay$getFloatingState(), ChickenAnimations.SWIMMING, ageInTicks);
+        this.animate(((ChickenAnimationHolder) chicken).fowlplay$getSwimmingState(), ChickenAnimations.SWIMMING, ageInTicks);
     }
 
     protected void updateHeadRotation(float headYaw, float headPitch) {

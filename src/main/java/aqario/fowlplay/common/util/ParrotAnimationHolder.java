@@ -2,7 +2,7 @@ package aqario.fowlplay.common.util;
 
 import net.minecraft.world.entity.AnimationState;
 
-public interface ChickenAnimationHolder {
+public interface ParrotAnimationHolder {
     AnimationState fowlplay$getStandingState();
 
     AnimationState fowlplay$getFlappingState();

@@ -117,7 +117,7 @@ public abstract class ChickenMixin extends Animal implements VariantHolder<Chick
     }
 
     @Override
-    public AnimationState fowlplay$getFloatingState() {
+    public AnimationState fowlplay$getSwimmingState() {
         return this.fowlplay$swimmingState;
     }
 }

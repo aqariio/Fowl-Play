@@ -42,16 +42,10 @@ public final class BirdUtils {
             || !world.getFluidState(destination.below()).isEmpty();
     }
 
-    // TODO: birds like ducks and geese should prefer to walk, only flying when absolutely necessary
-    public static void tryFlyingAlongPath(FlyingBirdEntity bird, Path path) {
-        if(bird.canStartFlying()
-            && (shouldFlyToDestination(bird, path, path.getTarget().getCenter())
-//            && !(bird.getType().is(FowlPlayEntityTypeTags.WATERBIRDS)
-//            && bird.isInWaterOrBubble())
-            || shouldFlyFromAvoidTarget(bird))
-        ) {
-            bird.startFlying();
-        }
+    public static boolean shouldFlyAlongPath(FlyingBirdEntity bird, Path groundPath, Vec3 destination) {
+        return bird.canStartFlying()
+            && (shouldFlyToDestination(bird, groundPath, destination)
+            || shouldFlyFromAvoidTarget(bird));
     }
 
     public static boolean shouldFlyToDestination(FlyingBirdEntity bird, Path path, Vec3 target) {

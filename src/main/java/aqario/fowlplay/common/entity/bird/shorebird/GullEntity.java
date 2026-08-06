@@ -280,7 +280,6 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     public BrainActivityGroup<? extends GullEntity> fightActivity() {
         return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
-            FlightBehaviours.startFlying(),
             new SetWalkTargetToAttackTarget<>(),
             new AnimatableMeleeAttack<>(0),
             CustomBehaviours.forgetUnderwaterAttackTarget()

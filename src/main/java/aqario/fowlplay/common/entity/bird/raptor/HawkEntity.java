@@ -203,7 +203,6 @@ public class HawkEntity extends TrustingBirdEntity implements BirdBrain<HawkEnti
     public BrainActivityGroup<? extends HawkEntity> fightActivity() {
         return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
-            FlightBehaviours.startFlying(),
             new SetWalkTargetToAttackTarget<>(),
             new AnimatableMeleeAttack<>(0)
         );

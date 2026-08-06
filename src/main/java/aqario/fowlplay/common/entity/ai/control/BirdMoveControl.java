@@ -30,11 +30,13 @@ public class BirdMoveControl extends MoveControl {
 
     protected void tickFlying(FlyingBirdEntity bird) {
         this.operation = Operation.MOVE_TO;
+        bird.setXxa(0.0F);
 
         // vector pointing to target
         Vec3 distance = new Vec3(this.wantedX - bird.getX(), this.wantedY - bird.getY(), this.wantedZ - bird.getZ());
         if(distance.lengthSqr() < 2.5000003E-7F) {
             bird.setZza(0.0F);
+            bird.setYya(0.0F);
             return;
         }
 
@@ -78,6 +80,7 @@ public class BirdMoveControl extends MoveControl {
     }
 
     protected void tickWalking() {
+        this.bird.setYya(0.0F);
         super.tick();
 //        if(this.operation == Operation.MOVE_TO) {
 //            this.operation = Operation.WAIT;
@@ -122,5 +125,12 @@ public class BirdMoveControl extends MoveControl {
 //        else {
 //            this.bird.setZza(0.0F);
 //        }
+    }
+
+    public void resetAfterFlight() {
+        this.operation = Operation.WAIT;
+        this.bird.setXxa(0.0F);
+        this.bird.setYya(0.0F);
+        this.bird.setZza(0.0F);
     }
 }

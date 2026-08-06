@@ -206,7 +206,6 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     public BrainActivityGroup<? extends CrowEntity> fightActivity() {
         return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
-            FlightBehaviours.startFlying(),
             new SetWalkTargetToAttackTarget<>(),
             new AnimatableMeleeAttack<>(0)
         );

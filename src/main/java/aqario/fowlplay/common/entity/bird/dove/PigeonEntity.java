@@ -407,8 +407,6 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
         return BirdBrain.deliver(
             FlightBehaviours.<PigeonEntity>stopFlying()
                 .startCondition(PigeonEntity::shouldStopFlyingToRecipient),
-            FlightBehaviours.<PigeonEntity>startFlying()
-                .startCondition(PigeonEntity::shouldFlyToRecipient),
             DeliverBundle.run()
         );
     }
@@ -464,18 +462,6 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     @Override
     public SmartBrainSchedule getSchedule() {
         return FPSchedules.FORAGER.get();
-    }
-
-    private static boolean shouldFlyToRecipient(PigeonEntity pigeon) {
-        if(!pigeon.isMemoryPresent(FPMemoryTypes.RECIPIENT.get())) {
-            return false;
-        }
-        UUID recipientUuid = pigeon.getPresentMemory(FPMemoryTypes.RECIPIENT.get());
-        Player recipient = pigeon.level().getPlayerByUUID(recipientUuid);
-        if(recipient == null) {
-            return false;
-        }
-        return pigeon.distanceToSqr(recipient) > 64;
     }
 
     private static boolean shouldStopFlyingToRecipient(PigeonEntity pigeon) {

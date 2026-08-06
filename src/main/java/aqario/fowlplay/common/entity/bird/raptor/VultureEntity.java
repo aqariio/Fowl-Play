@@ -203,7 +203,6 @@ public class VultureEntity extends TrustingBirdEntity implements BirdBrain<Vultu
     public BrainActivityGroup<? extends VultureEntity> fightActivity() {
         return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
-            FlightBehaviours.startFlying(),
             new SetWalkTargetToAttackTarget<>(),
             new AnimatableMeleeAttack<>(0)
         );

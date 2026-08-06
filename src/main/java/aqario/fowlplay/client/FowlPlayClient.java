@@ -94,6 +94,10 @@ public class FowlPlayClient {
             RenderRegistry.modelLayer(CustomChickenModel.MODEL_LAYER, CustomChickenModel::createBodyLayer);
             RenderRegistry.modelLayer(CustomBabyChickenModel.MODEL_LAYER, CustomBabyChickenModel::createBodyLayer);
         }
+
+        if(FPConfig.getInstance().customParrotModel) {
+            RenderRegistry.modelLayer(CustomParrotModel.MODEL_LAYER, CustomParrotModel::createBodyLayer);
+        }
     }
 
     public static void registerEntityRenderers() {
@@ -114,6 +118,10 @@ public class FowlPlayClient {
 
         if(FPConfig.getInstance().customChickenModel) {
             RenderRegistry.entityRenderer(Suppliers.ofInstance(EntityType.CHICKEN), CustomChickenRenderer::new);
+        }
+
+        if(FPConfig.getInstance().customParrotModel) {
+            RenderRegistry.entityRenderer(Suppliers.ofInstance(EntityType.PARROT), CustomParrotRenderer::new);
         }
     }
 

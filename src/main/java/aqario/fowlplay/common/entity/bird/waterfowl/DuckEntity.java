@@ -323,7 +323,6 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     public BrainActivityGroup<? extends DuckEntity> fightActivity() {
         return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
-            FlightBehaviours.startFlying(),
             new SetWalkTargetToAttackTarget<>(),
             new AnimatableMeleeAttack<>(0)
         );

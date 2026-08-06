@@ -199,7 +199,6 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     public BrainActivityGroup<? extends RavenEntity> fightActivity() {
         return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
-            FlightBehaviours.startFlying(),
             new SetWalkTargetToAttackTarget<>(),
             new AnimatableMeleeAttack<>(0)
         );

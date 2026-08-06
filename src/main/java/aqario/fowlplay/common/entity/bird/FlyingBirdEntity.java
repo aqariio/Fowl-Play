@@ -1,5 +1,6 @@
 package aqario.fowlplay.common.entity.bird;
 
+import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;
 import aqario.fowlplay.common.entity.ai.navigation.FlightNavigation;
 import aqario.fowlplay.common.entity.ai.navigation.GroundNavigation;
 import aqario.fowlplay.common.util.BirdUtils;
@@ -23,8 +24,10 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class FlyingBirdEntity extends BirdEntity {
     private static final EntityDataAccessor<Boolean> FLYING = SynchedEntityData.defineId(
@@ -292,17 +295,40 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         }
         return this.onGround()
             || this.isWaterAboveFloatHeight()
-            || this.getDeltaMovement().lengthSqr() < MIN_FLIGHT_VELOCITY * MIN_FLIGHT_VELOCITY
-            /*|| this.getHealth() < MIN_HEALTH_TO_FLY*/;
+            || this.getNavigation().isDone()
+            && this.getDeltaMovement().lengthSqr() < MIN_FLIGHT_VELOCITY * MIN_FLIGHT_VELOCITY;
     }
 
-    public void startFlying() {
+    @Nullable
+    public Path createFlightPath(BlockPos target, int accuracy) {
+        return this.getFlightNavigation().createPath(target, accuracy);
+    }
+
+    public boolean startFlyingAlongPath(@Nullable Path path, double speed) {
+        if(path == null || !path.canReach()) {
+            return false;
+        }
+        FlightNavigation flightNav = this.getFlightNavigation();
+        if(this.isFlying()) {
+            return flightNav.moveTo(path, speed);
+        }
+        if(!this.canStartFlying() || !flightNav.moveTo(path, speed)) {
+            return false;
+        }
+        this.startFlying();
+        return true;
+    }
+
+    private void startFlying() {
         this.setFlying(true);
         this.setNavigation(true);
     }
 
     public void stopFlying() {
         this.setFlying(false);
+        if(this.getMoveControl() instanceof BirdMoveControl control) {
+            control.resetAfterFlight();
+        }
         this.setNavigation(false);
         this.getNavigation().stop();
         this.clearMemory(MemoryModuleType.WALK_TARGET);
@@ -332,10 +358,10 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     @Override
-    //? if fabric
+        //? if fabric
     protected void playMuffledStepSound(BlockState state) {
-    //? if neoforge
-    //protected void playMuffledStepSound(BlockState state, BlockPos pos) {
+        //? if neoforge
+        //protected void playMuffledStepSound(BlockState state, BlockPos pos) {
     }
 
     @Override
@@ -343,10 +369,10 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     @Override
-    //? if fabric
+        //? if fabric
     protected void playCombinationStepSounds(BlockState primaryState, BlockState secondaryState) {
-    //? if neoforge
-    //protected void playCombinationStepSounds(BlockState primaryState, BlockState secondaryState, BlockPos primaryPos, BlockPos secondaryPos) {
+        //? if neoforge
+        //protected void playCombinationStepSounds(BlockState primaryState, BlockState secondaryState, BlockPos primaryPos, BlockPos secondaryPos) {
     }
 
     @Override

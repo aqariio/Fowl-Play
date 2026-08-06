@@ -128,7 +128,7 @@ public class FPSoundDefinitionsGen extends SoundDefinitionsProvider {
         SoundDefinition definition = SoundDefinition.builder();
         for(int i = rangeStart; i <= rangeEnd; i++) {
             definition.with(sound(FowlPlay.id(location + i))
-                .attenuationDistance((int) soundEvent.get().getRange(1)));
+                .attenuationDistance((int) soundEvent.get().getRange(1) - 16));
         }
         definition.subtitle("subtitles." + sound.getPath());
         this.add(soundEvent, definition);

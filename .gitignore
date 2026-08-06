@@ -8,7 +8,7 @@ logs/
 # Fabric Loom
 remappedSrc/
 run/
-common/src/main/generated/
+src/main/generated/
 
 # Eclipse
 *.launch

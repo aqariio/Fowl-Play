@@ -169,35 +169,35 @@
   "entity.cardinal.song": {
     "sounds": [
       {
-        "attenuation_distance": 64,
+        "attenuation_distance": 70,
         "name": "fowlplay:mob/cardinal/song1"
       },
       {
-        "attenuation_distance": 64,
+        "attenuation_distance": 70,
         "name": "fowlplay:mob/cardinal/song2"
       },
       {
-        "attenuation_distance": 64,
+        "attenuation_distance": 70,
         "name": "fowlplay:mob/cardinal/song3"
       },
       {
-        "attenuation_distance": 64,
+        "attenuation_distance": 70,
         "name": "fowlplay:mob/cardinal/song4"
       },
       {
-        "attenuation_distance": 64,
+        "attenuation_distance": 70,
         "name": "fowlplay:mob/cardinal/song5"
       },
       {
-        "attenuation_distance": 64,
+        "attenuation_distance": 70,
         "name": "fowlplay:mob/cardinal/song6"
       },
       {
-        "attenuation_distance": 64,
+        "attenuation_distance": 70,
         "name": "fowlplay:mob/cardinal/song7"
       },
       {
-        "attenuation_distance": 64,
+        "attenuation_distance": 70,
         "name": "fowlplay:mob/cardinal/song8"
       }
     ],
@@ -289,19 +289,19 @@
   "entity.crow.call": {
     "sounds": [
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 100,
         "name": "fowlplay:mob/crow/call1"
       },
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 100,
         "name": "fowlplay:mob/crow/call2"
       },
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 100,
         "name": "fowlplay:mob/crow/call3"
       },
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 100,
         "name": "fowlplay:mob/crow/call4"
       }
     ],
@@ -310,11 +310,11 @@
   "entity.crow.hurt": {
     "sounds": [
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 100,
         "name": "fowlplay:mob/crow/hurt1"
       },
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 100,
         "name": "fowlplay:mob/crow/hurt2"
       }
     ],
@@ -430,23 +430,23 @@
   "entity.hawk.call": {
     "sounds": [
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 90,
         "name": "fowlplay:mob/hawk/call1"
       },
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 90,
         "name": "fowlplay:mob/hawk/call2"
       },
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 90,
         "name": "fowlplay:mob/hawk/call3"
       },
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 90,
         "name": "fowlplay:mob/hawk/call4"
       },
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 90,
         "name": "fowlplay:mob/hawk/call5"
       }
     ],
@@ -455,11 +455,11 @@
   "entity.hawk.hurt": {
     "sounds": [
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 90,
         "name": "fowlplay:mob/hawk/call1"
       },
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 90,
         "name": "fowlplay:mob/hawk/call2"
       }
     ],
@@ -494,7 +494,7 @@
   "entity.penguin.hurt": {
     "sounds": [
       {
-        "attenuation_distance": 32,
+        "attenuation_distance": 20,
         "name": "fowlplay:mob/penguin/hurt1"
       }
     ],
@@ -538,19 +538,19 @@
   "entity.raven.call": {
     "sounds": [
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 120,
         "name": "fowlplay:mob/raven/call1"
       },
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 120,
         "name": "fowlplay:mob/raven/call2"
       },
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 120,
         "name": "fowlplay:mob/raven/call3"
       },
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 120,
         "name": "fowlplay:mob/raven/call4"
       }
     ],
@@ -559,11 +559,11 @@
   "entity.raven.hurt": {
     "sounds": [
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 120,
         "name": "fowlplay:mob/raven/hurt1"
       },
       {
-        "attenuation_distance": 96,
+        "attenuation_distance": 120,
         "name": "fowlplay:mob/raven/hurt2"
       }
     ],
@@ -601,11 +601,11 @@
   "entity.robin.hurt": {
     "sounds": [
       {
-        "attenuation_distance": 32,
+        "attenuation_distance": 20,
         "name": "fowlplay:mob/robin/hurt1"
       },
       {
-        "attenuation_distance": 32,
+        "attenuation_distance": 20,
         "name": "fowlplay:mob/robin/hurt2"
       }
     ],
@@ -660,15 +660,15 @@
   "entity.sparrow.hurt": {
     "sounds": [
       {
-        "attenuation_distance": 32,
+        "attenuation_distance": 20,
         "name": "fowlplay:mob/sparrow/call3"
       },
       {
-        "attenuation_distance": 32,
+        "attenuation_distance": 20,
         "name": "fowlplay:mob/sparrow/call4"
       },
       {
-        "attenuation_distance": 32,
+        "attenuation_distance": 20,
         "name": "fowlplay:mob/sparrow/call5"
       }
     ],

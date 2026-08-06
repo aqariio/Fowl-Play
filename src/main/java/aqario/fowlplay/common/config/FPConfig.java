@@ -16,69 +16,17 @@ public class FPConfig {
         YACLIntegration.HANDLED_CONFIG.save();
     }
 
-    // Visual
+    // Common
 
     @SerialEntry
     public boolean customChickenModel = true;
-
     @SerialEntry
     public boolean customChickenBehavior = true;
 
     @SerialEntry
     public boolean customParrotModel = true;
-
     @SerialEntry
     public boolean customParrotBehavior = true;
-
-    // Audio
-
-    // Blue Jay
-    public static final int blueJayCallRange = 80;
-
-    // Cardinal
-    public static final int cardinalCallRange = 16;
-    public static final int cardinalSongRange = 64;
-
-    // Chickadee
-    public static final int chickadeeCallRange = 32;
-    public static final int chickadeeSongRange = 32;
-
-    // Crow
-    public static final int crowCallRange = 96;
-
-    // Duck
-    public static final int duckCallRange = 16;
-
-    // Goose
-    public static final int gooseCallRange = 32;
-
-    // Gull
-    public static final int gullCallRange = 32;
-    public static final int gullSongRange = 48;
-
-    // Hawk
-    public static final int hawkCallRange = 96;
-
-    // Penguin
-    public static final int penguinCallRange = 32;
-
-    // Pigeon
-    public static final int pigeonCallRange = 16;
-    public static final int pigeonSongRange = 48;
-
-    // Raven
-    public static final int ravenCallRange = 96;
-
-    // Robin
-    public static final int robinCallRange = 32;
-    public static final int robinSongRange = 32;
-
-    // Sparrow
-    public static final int sparrowCallRange = 32;
-    public static final int sparrowSongRange = 32;
-
-    // Vulture
-    public static final int vultureCallRange = 32;
 
     // Spawning
 

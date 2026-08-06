@@ -103,6 +103,12 @@ dependencies {
     modImplementation("dev.isxander:yet-another-config-lib:${property("deps.yacl")}-fabric")
 }
 
+fabricApi {
+    configureDataGeneration {
+        client = true
+    }
+}
+
 loom {
     fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json")
     accessWidenerPath = rootProject.file("src/main/resources/fowlplay.accesswidener")

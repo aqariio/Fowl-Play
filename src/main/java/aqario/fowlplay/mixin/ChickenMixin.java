@@ -1,5 +1,6 @@
 package aqario.fowlplay.mixin;
 
+import aqario.fowlplay.common.config.FPConfig;
 import aqario.fowlplay.common.entity.bird.VariantHolder;
 import aqario.fowlplay.common.entity.variant.ChickenVariant;
 import aqario.fowlplay.common.util.ChickenAnimationHolder;
@@ -21,6 +22,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = Chicken.class, priority = 999)
@@ -45,16 +47,18 @@ public abstract class ChickenMixin extends Animal implements VariantHolder<Chick
         return super.finalizeSpawn(level, difficulty, spawnReason, entityData);
     }
 
-//    @Inject(
-//        method = "registerGoals",
-//        at = @At("HEAD"),
-//        cancellable = true
-//    )
-//    private void fowlplay$removeGoals(CallbackInfo ci) {
-//        this.goalSelector.removeAllGoals(goal -> true);
-//        this.targetSelector.removeAllGoals(goal -> true);
-//        ci.cancel();
-//    }
+    @Inject(
+        method = "registerGoals",
+        at = @At("HEAD"),
+        cancellable = true
+    )
+    private void fowlplay$removeGoals(CallbackInfo ci) {
+        if(FPConfig.getInstance().customChickenBehavior) {
+            this.goalSelector.removeAllGoals(goal -> true);
+            this.targetSelector.removeAllGoals(goal -> true);
+            ci.cancel();
+        }
+    }
 
     @Inject(
         method = "getBreedOffspring(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/AgeableMob;)Lnet/minecraft/world/entity/animal/Chicken;",

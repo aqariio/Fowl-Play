@@ -90,11 +90,13 @@ neoForge {
 
     runs {
         register("client") {
+            ideName = "NeoForge Client (${project.path})"
             gameDirectory = file("../../run/")
             client()
         }
 
         register("server") {
+            ideName = "NeoForge Server (${project.path})"
             gameDirectory = file("../../run/")
             server()
         }

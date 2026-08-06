@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Parrot.class)
+@Mixin(value = Parrot.class, priority = 999)
 public abstract class ParrotMixin extends ShoulderRidingEntity implements VariantHolder<Parrot.Variant>, FlyingAnimal, ParrotAnimationHolder {
     @Unique
     private final AnimationState fowlplay$standingState = new AnimationState();
@@ -34,7 +34,7 @@ public abstract class ParrotMixin extends ShoulderRidingEntity implements Varian
         cancellable = true
     )
     private void fowlplay$removeGoals(CallbackInfo ci) {
-        if(FPConfig.getInstance().customParrotModel) {
+        if(FPConfig.getInstance().customParrotBehavior) {
             this.goalSelector.removeAllGoals(goal -> true);
             this.targetSelector.removeAllGoals(goal -> true);
             ci.cancel();

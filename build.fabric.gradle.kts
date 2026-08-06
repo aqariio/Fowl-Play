@@ -118,7 +118,12 @@ loom {
     }
 
     runConfigs.all {
-        preferGradleTask = true
+        when(name) {
+            "client" -> displayName = "Fabric Client"
+            "server" -> displayName = "Fabric Server"
+            "datagen" -> displayName = "Fabric Datagen"
+        }
+        preferGradleTask = false
         generateRunConfig = true
         runDirectory = rootProject.file("run") // Shares the run directory between versions
         jvmArguments.add("-Dmixin.debug.export=true") // Exports transformed classes for debugging

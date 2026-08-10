@@ -326,6 +326,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
 
     public void stopFlying() {
         this.setFlying(false);
+        this.setNoGravity(false);
         if(this.getMoveControl() instanceof BirdMoveControl control) {
             control.resetAfterFlight();
         }

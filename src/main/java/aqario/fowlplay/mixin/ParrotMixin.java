@@ -20,7 +20,7 @@ public abstract class ParrotMixin extends ShoulderRidingEntity implements Varian
     @Unique
     private final AnimationState fowlplay$standingState = new AnimationState();
     @Unique
-    private final AnimationState fowlplay$flappingState = new AnimationState();
+    private final AnimationState fowlplay$glidingState = new AnimationState();
     @Unique
     private final AnimationState fowlplay$swimmingState = new AnimationState();
 
@@ -45,7 +45,7 @@ public abstract class ParrotMixin extends ShoulderRidingEntity implements Varian
     public void tick() {
         if(this.level().isClientSide()) {
             this.fowlplay$standingState.animateWhen(this.onGround() && !this.isInWaterOrBubble(), this.tickCount);
-            this.fowlplay$flappingState.animateWhen(this.isFlapping() && !this.isInWaterOrBubble(), this.tickCount);
+            this.fowlplay$glidingState.animateWhen(this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
             this.fowlplay$swimmingState.animateWhen(this.isInWaterOrBubble(), this.tickCount);
         }
         super.tick();
@@ -57,8 +57,8 @@ public abstract class ParrotMixin extends ShoulderRidingEntity implements Varian
     }
 
     @Override
-    public AnimationState fowlplay$getFlappingState() {
-        return this.fowlplay$flappingState;
+    public AnimationState fowlplay$getGlidingState() {
+        return this.fowlplay$glidingState;
     }
 
     @Override

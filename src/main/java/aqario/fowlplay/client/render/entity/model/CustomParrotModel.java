@@ -8,6 +8,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.Parrot;
 
@@ -74,15 +75,15 @@ public class CustomParrotModel extends HierarchicalModel<Parrot> {
         PartDefinition right_wing_outer = right_wing_open.addOrReplaceChild("right_wing_outer", CubeListBuilder.create().texOffs(16, 9).mirror().addBox(-10.0F, 0.0F, 0.0F, 10.0F, 0.0F, 8.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-8.0F, -0.1F, -1.0F));
 
         PartDefinition tail = body.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(16, 0).addBox(-1.5F, -1.0F, 1.0F, 3.0F, 1.0F, 3.0F, new CubeDeformation(0.0F))
-            .texOffs(6, -15).addBox(-1.0F, -1.003F, 3.5F, 2.0F, 0.0F, 22.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -1.25F, 1.0F, -0.2618F, 0.0F, 0.0F));
+            .texOffs(18, 19).addBox(-1.0F, -1.003F, 3.5F, 2.0F, 0.0F, 22.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -1.25F, 1.0F, -0.2618F, 0.0F, 0.0F));
 
-        PartDefinition cube_r2 = tail.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(14, -8).addBox(-1.0F, -0.001F, 0.0F, 2.0F, 0.0F, 14.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, -1.0F, 2.0F, 0.0F, -0.0873F, 0.0F));
+        PartDefinition cube_r2 = tail.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(26, 26).addBox(-1.0F, -0.001F, 0.0F, 2.0F, 0.0F, 14.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, -1.0F, 2.0F, 0.0F, -0.0873F, 0.0F));
 
-        PartDefinition cube_r3 = tail.addOrReplaceChild("cube_r3", CubeListBuilder.create().texOffs(8, -13).addBox(-1.0F, -0.002F, 0.0F, 2.0F, 0.0F, 20.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, -1.0F, 2.5F, 0.0F, -0.0436F, 0.0F));
+        PartDefinition cube_r3 = tail.addOrReplaceChild("cube_r3", CubeListBuilder.create().texOffs(20, 21).addBox(-1.0F, -0.002F, 0.0F, 2.0F, 0.0F, 20.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, -1.0F, 2.5F, 0.0F, -0.0436F, 0.0F));
 
-        PartDefinition cube_r4 = tail.addOrReplaceChild("cube_r4", CubeListBuilder.create().texOffs(8, -13).mirror().addBox(-1.0F, -0.002F, 0.0F, 2.0F, 0.0F, 20.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.5F, -1.0F, 2.5F, 0.0F, 0.0436F, 0.0F));
+        PartDefinition cube_r4 = tail.addOrReplaceChild("cube_r4", CubeListBuilder.create().texOffs(20, 21).mirror().addBox(-1.0F, -0.002F, 0.0F, 2.0F, 0.0F, 20.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.5F, -1.0F, 2.5F, 0.0F, 0.0436F, 0.0F));
 
-        PartDefinition cube_r5 = tail.addOrReplaceChild("cube_r5", CubeListBuilder.create().texOffs(14, -8).mirror().addBox(-1.0F, -0.001F, 0.0F, 2.0F, 0.0F, 14.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.5F, -1.0F, 2.0F, 0.0F, 0.0873F, 0.0F));
+        PartDefinition cube_r5 = tail.addOrReplaceChild("cube_r5", CubeListBuilder.create().texOffs(26, 26).mirror().addBox(-1.0F, -0.001F, 0.0F, 2.0F, 0.0F, 14.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.5F, -1.0F, 2.0F, 0.0F, 0.0873F, 0.0F));
 
         PartDefinition left_leg = root.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(16, 4).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 4.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.25F, 1.0F, 2.5F, -0.1745F, 0.0F, 0.0F));
 
@@ -96,35 +97,62 @@ public class CustomParrotModel extends HierarchicalModel<Parrot> {
     }
 
     @Override
-    public void setupAnim(Parrot parrot, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void prepareMobModel(Parrot entity, float limbSwing, float limbSwingAmount, float partialTick) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
-        this.updateHeadRotation(netHeadYaw, headPitch);
-        if(parrot.onGround() || parrot.isInWaterOrBubble()) {
-            this.leftWingOpen.visible = false;
-            this.rightWingOpen.visible = false;
-            this.leftWing.visible = true;
-            this.rightWing.visible = true;
+        float ageInTicks = entity.tickCount + partialTick;
+        float bodyYaw = Mth.rotLerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
+        float headYaw = Mth.rotLerp(partialTick, entity.yHeadRotO, entity.yHeadRot);
+        float relativeHeadYaw = Mth.wrapDegrees(headYaw - bodyYaw);
+
+        float headPitch = Mth.lerp(partialTick, entity.xRotO, entity.getXRot());
+        if(LivingEntityRenderer.isEntityUpsideDown(entity)) {
+            headPitch *= -1.0F;
+            relativeHeadYaw *= -1.0F;
         }
-        else {
+        if(!entity.isFlying()) {
+            this.updateHeadRotation(relativeHeadYaw, headPitch);
+        }
+        if(entity.isFlying()) {
+            this.root.xRot = entity.getViewXRot(partialTick) * (float) (Math.PI / 180.0);
+//            this.root.zRot = entity.getRoll(partialTick) * (float) (Math.PI / 180.0);
+        }
+        if(entity.isFlying()) {
             this.leftWingOpen.visible = true;
             this.rightWingOpen.visible = true;
             this.leftWing.visible = false;
             this.rightWing.visible = false;
         }
+        else {
+            this.leftWingOpen.visible = false;
+            this.rightWingOpen.visible = false;
+            this.leftWing.visible = true;
+            this.rightWing.visible = true;
+        }
 
-        if(parrot.onGround() && !parrot.isInWaterOrBubble()) {
+        this.setAnimations(entity, limbSwing, limbSwingAmount, ageInTicks, relativeHeadYaw, headPitch, partialTick);
+    }
+
+    @Override
+    public void setupAnim(Parrot parrot, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    }
+
+    protected void setAnimations(Parrot parrot, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+        if(parrot.isFlying()) {
+            this.animateWalk(ParrotAnimations.FLAPPING, limbSwing, limbSwingAmount, 1.5F, 1.5F);
+        }
+        else if(!parrot.isInWaterOrBubble()) {
             this.animateWalk(ParrotAnimations.WALKING, limbSwing, limbSwingAmount, 3F, 3F);
         }
         this.animate(((ParrotAnimationHolder) parrot).fowlplay$getStandingState(), ParrotAnimations.PERCHING, ageInTicks);
-        this.animate(((ParrotAnimationHolder) parrot).fowlplay$getFlappingState(), ParrotAnimations.FLAPPING, ageInTicks);
+        this.animate(((ParrotAnimationHolder) parrot).fowlplay$getGlidingState(), ParrotAnimations.GLIDING, ageInTicks);
         this.animate(((ParrotAnimationHolder) parrot).fowlplay$getSwimmingState(), ParrotAnimations.SWIMMING, ageInTicks);
     }
 
     protected void updateHeadRotation(float headYaw, float headPitch) {
         headYaw = Mth.clamp(headYaw, -135.0F, 135.0F);
         headPitch = Mth.clamp(headPitch, -25.0F, 45.0F);
-        this.head.yRot = headYaw * (float) (Math.PI / 180.0);
-        this.head.xRot = headPitch * (float) (Math.PI / 180.0);
+        this.neck.yRot = headYaw * (float) (Math.PI / 180.0);
+        this.neck.xRot = headPitch * (float) (Math.PI / 180.0);
     }
 
     @Override

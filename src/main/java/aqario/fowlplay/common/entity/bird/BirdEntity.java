@@ -243,8 +243,12 @@ public abstract class BirdEntity extends Animal {
         return bl;
     }
 
+    protected double getFluidFloatThreshold() {
+        return this.getBoundingBox().getYsize() * 0.35;
+    }
+
     public boolean isWaterAboveFloatHeight() {
-        return this.isUnderWater() || this.getFluidHeight(FluidTags.WATER) > this.getBoundingBox().getYsize() * 0.35;
+        return this.isInWaterOrBubble() && this.getFluidHeight(FluidTags.WATER) > this.getFluidFloatThreshold();
     }
 
     protected boolean canFloat() {
@@ -560,10 +564,8 @@ public abstract class BirdEntity extends Animal {
         super.sendDebugPackets();
         DebugPackets.sendEntityBrain(this);
         FPDebugPackets.sendBirdData(this);
-//        FowlPlayDebugPackets.sendGenericData(this,
-//            Pair.of("fluid height", String.format("%.3f", this.getFluidHeight(FluidTags.WATER))),
-//            Pair.of("is water above float height", this.isWaterAboveFloatHeight()),
-//            Pair.of("y velocity", String.format("%.3f", this.getDeltaMovement().y))
+//        FPDebugPackets.sendGenericData(this,
+//            Pair.of("is in water", this.isInWaterOrBubble())
 //        );
     }
 

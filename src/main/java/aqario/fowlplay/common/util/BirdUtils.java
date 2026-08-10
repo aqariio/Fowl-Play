@@ -86,7 +86,7 @@ public final class BirdUtils {
     }
 
     public static <E extends BirdEntity> boolean isSelfAndTargetInWater(E self, LivingEntity target) {
-        return self.isInWaterOrBubble() && target.isUnderWater() && target.position().y < self.position().y;
+        return self.isInWaterOrBubble() && target.isInWaterOrBubble() && target.position().y < self.position().y;
     }
 
     public static boolean isNotFlightless(Entity entity) {

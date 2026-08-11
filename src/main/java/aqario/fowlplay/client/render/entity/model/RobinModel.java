@@ -57,7 +57,7 @@ public class RobinModel extends FlyingBirdModel<RobinEntity> {
     }
 
     @Override
-    protected void setAnimations(RobinEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+    protected void setAnimations(RobinEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float relativeHeadYaw, float headPitch, float partialTick) {
         if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
             this.animateWalk(RobinAnimations.WALKING, limbSwing, limbSwingAmount, 6F, 6F);
         }

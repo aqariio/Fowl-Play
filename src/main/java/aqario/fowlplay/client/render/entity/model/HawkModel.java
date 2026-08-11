@@ -71,7 +71,7 @@ public class HawkModel extends FlyingBirdModel<HawkEntity> {
     }
 
     @Override
-    protected void setAnimations(HawkEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+    protected void setAnimations(HawkEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float relativeHeadYaw, float headPitch, float partialTick) {
         if(entity.isFlying()) {
             this.animateWalk(HawkAnimations.FLAPPING, limbSwing, limbSwingAmount, 1.5F, 1.5F);
         }

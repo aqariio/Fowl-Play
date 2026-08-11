@@ -61,7 +61,7 @@ public class GullModel extends FlyingBirdModel<GullEntity> {
     }
 
     @Override
-    protected void setAnimations(GullEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+    protected void setAnimations(GullEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float relativeHeadYaw, float headPitch, float partialTick) {
         if(entity.isFlying()) {
             this.animateWalk(GullAnimations.FLAPPING, limbSwing, limbSwingAmount, 2F, 2F);
         }

@@ -6,10 +6,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.AnimationState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class AnimationStateList implements Iterable<AnimationState> {
@@ -21,6 +18,7 @@ public class AnimationStateList implements Iterable<AnimationState> {
     }
 
     public AnimationStateList with(AnimationState entry, int weight) {
+        Objects.requireNonNull(entry);
         this.entries.add(new Entry(entry, weight));
         return this;
     }
@@ -48,7 +46,7 @@ public class AnimationStateList implements Iterable<AnimationState> {
 
     public boolean containsStarted() {
         for(AnimationState state : this) {
-            if(state != null && state.isStarted()) {
+            if(state.isStarted()) {
                 return true;
             }
         }

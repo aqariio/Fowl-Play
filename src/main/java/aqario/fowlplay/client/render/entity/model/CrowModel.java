@@ -61,7 +61,7 @@ public class CrowModel extends FlyingBirdModel<CrowEntity> {
     }
 
     @Override
-    protected void setAnimations(CrowEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+    protected void setAnimations(CrowEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float relativeHeadYaw, float headPitch, float partialTick) {
         if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
             this.animateWalk(CrowAnimations.WALKING, limbSwing, limbSwingAmount, 5F, 5F);
         }

@@ -28,9 +28,6 @@ public abstract class FlyingBirdModel<E extends FlyingBirdEntity> extends BirdMo
             headPitch *= -1.0F;
             relativeHeadYaw *= -1.0F;
         }
-        if(!entity.isFlying()) {
-            this.updateHeadRotation(relativeHeadYaw, headPitch);
-        }
         if(entity.isFlying()) {
             this.root.xRot = entity.getViewXRot(partialTick) * (float) (Math.PI / 180.0);
             this.root.zRot = entity.getRoll(partialTick) * (float) (Math.PI / 180.0);
@@ -48,6 +45,14 @@ public abstract class FlyingBirdModel<E extends FlyingBirdEntity> extends BirdMo
             this.rightWing.visible = true;
         }
         this.setAnimations(entity, limbSwing, limbSwingAmount, ageInTicks, relativeHeadYaw, headPitch, partialTick);
+        if(this.shouldApplyHeadRotation(entity)) {
+            this.updateHeadRotation(relativeHeadYaw, headPitch);
+        }
+    }
+
+    @Override
+    protected boolean shouldApplyHeadRotation(E entity) {
+        return !entity.isFlying() && !entity.isSleeping() && !entity.idleAnimStates.containsStarted();
     }
 
     protected boolean shouldRenderWings(E entity) {

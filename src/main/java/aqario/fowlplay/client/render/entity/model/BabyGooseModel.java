@@ -57,7 +57,7 @@ public class BabyGooseModel extends GooseModel {
     }
 
     @Override
-    protected void setAnimations(GooseEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+    protected void setAnimations(GooseEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float relativeHeadYaw, float headPitch, float partialTick) {
         if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
             this.animateWalk(ChickenAnimations.WALKING, limbSwing, limbSwingAmount, 3F, 3F);
         }

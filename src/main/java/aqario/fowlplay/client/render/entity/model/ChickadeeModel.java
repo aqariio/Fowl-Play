@@ -58,7 +58,7 @@ public class ChickadeeModel extends FlyingBirdModel<ChickadeeEntity> {
     }
 
     @Override
-    protected void setAnimations(ChickadeeEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+    protected void setAnimations(ChickadeeEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float relativeHeadYaw, float headPitch, float partialTick) {
         if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
             this.animateWalk(ChickadeeAnimations.WALKING, limbSwing, limbSwingAmount, 6F, 6F);
         }

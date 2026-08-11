@@ -56,7 +56,7 @@ public abstract class BirdEntity extends Animal {
     public final AnimationState standingState = new AnimationState();
     public final AnimationState swimmingState = new AnimationState();
     public final AnimationState sleepingState = new AnimationState();
-    public final AnimationStateList idleAnimStates = this.createIdleAnimations();
+    public final AnimationStateList idleAnimStates = new AnimationStateList();
     private static final String AMBIENT_KEY = "ambient";
     private static final String SLEEPING_KEY = "sleeping";
     private static final String HUNTING_COOLDOWN_KEY = "hunting_cooldown";
@@ -71,6 +71,7 @@ public abstract class BirdEntity extends Animal {
         this.moveControl = this.createMoveControl();
         this.lookControl = new BirdLookControl(this, 85);
         this.idleAnimationChance = this.random.nextInt(this.getIdleAnimationDelay()) - this.getIdleAnimationDelay();
+        this.standingState.start(this.tickCount);
         this.setPathfindingMalus(PathType.DANGER_FIRE, -1.0f);
         this.setPathfindingMalus(PathType.DANGER_POWDER_SNOW, -1.0f);
         this.setPathfindingMalus(PathType.COCOA, -1.0f);
@@ -392,10 +393,6 @@ public abstract class BirdEntity extends Animal {
         else {
             super.handleEntityEvent(status);
         }
-    }
-
-    protected AnimationStateList createIdleAnimations() {
-        return new AnimationStateList();
     }
 
     @Override

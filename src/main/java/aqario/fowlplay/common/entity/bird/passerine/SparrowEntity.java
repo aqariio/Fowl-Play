@@ -9,7 +9,6 @@ import aqario.fowlplay.common.entity.ai.brain.sensor.NearbyAdultsSensor;
 import aqario.fowlplay.common.entity.ai.brain.sensor.NearbyFoodSensor;
 import aqario.fowlplay.common.entity.bird.Flocking;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
-import aqario.fowlplay.common.util.AnimationStateList;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FPSchedules;
 import aqario.fowlplay.core.FPSoundEvents;
@@ -47,6 +46,9 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
 
     public SparrowEntity(EntityType<? extends SparrowEntity> entityType, Level world) {
         super(entityType, world);
+        this.idleAnimStates
+            .with(this.scratchingState, 1)
+            .with(this.preeningState, 3);
     }
 
     @Override
@@ -70,13 +72,6 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
     }
 
     @Override
-    protected AnimationStateList createIdleAnimations() {
-        return new AnimationStateList()
-            .with(this.scratchingState, 1)
-            .with(this.preeningState, 3);
-    }
-
-    @Override
     protected void updateAnimationStates() {
         if(this.isSleeping()) {
             this.sleepingState.start(this.tickCount);
@@ -92,20 +87,13 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
             if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {
                 this.resetIdleAnimationDelay();
                 this.standingState.stop();
-                this.preeningState.stop();
-                this.scratchingState.stop();
-                if(this.getRandom().nextFloat() < 0.75f) {
-                    this.preeningState.start(this.tickCount);
-                }
-                else {
-                    this.scratchingState.start(this.tickCount);
-                }
+                this.idleAnimStates.stopAll();
+                this.idleAnimStates.startRandom(this.tickCount);
             }
             else if(this.isMoving()) {
-                this.preeningState.stop();
-                this.scratchingState.stop();
+                this.idleAnimStates.stopAll();
             }
-            if(!(this.preeningState.isStarted() || this.scratchingState.isStarted())) {
+            if(!this.idleAnimStates.containsStarted()) {
                 this.standingState.startIfStopped(this.tickCount);
             }
             else {
@@ -114,8 +102,7 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
         }
         else {
             this.standingState.stop();
-            this.preeningState.stop();
-            this.scratchingState.stop();
+            this.idleAnimStates.stopAll();
         }
         // flying
         if(this.isFlying()) {

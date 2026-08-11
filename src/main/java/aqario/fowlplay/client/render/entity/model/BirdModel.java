@@ -5,6 +5,8 @@ import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.util.Mth;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public abstract class BirdModel<E extends BirdEntity> extends HierarchicalModel<E> {
     public final ModelPart root;
@@ -17,6 +19,8 @@ public abstract class BirdModel<E extends BirdEntity> extends HierarchicalModel<
     public final ModelPart leftLeg;
     public final ModelPart rightLeg;
     public final ModelPart tail;
+    private final Quaternionf parentTransforms = new Quaternionf();
+    private final Vector3f localViewVector = new Vector3f();
 
     public BirdModel(ModelPart root) {
         this.root = root.getChild("root");
@@ -55,15 +59,67 @@ public abstract class BirdModel<E extends BirdEntity> extends HierarchicalModel<
         }
 
         this.setAnimations(entity, limbSwing, limbSwingAmount, ageInTicks, relativeHeadYaw, headPitch, partialTick);
+        if(this.shouldApplyHeadRotation(entity)) {
+            this.updateHeadRotation(relativeHeadYaw, headPitch);
+        }
     }
 
-    protected void setAnimations(E entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+    protected void setAnimations(E entity, float limbSwing, float limbSwingAmount, float ageInTicks, float relativeHeadYaw, float headPitch, float partialTick) {
+    }
+
+    protected boolean shouldApplyHeadRotation(E entity) {
+        return true;
     }
 
     protected void updateHeadRotation(float headYaw, float headPitch) {
-        headYaw = Mth.clamp(headYaw, -135.0F, 135.0F);
-        headPitch = Mth.clamp(headPitch, -45.0F, 45.0F);
-        this.neck.yRot = headYaw * (float) (Math.PI / 180.0);
-        this.neck.xRot = headPitch * (float) (Math.PI / 180.0);
+        this.applyHeadRotation(
+            headYaw,
+            -135.0F,
+            135.0F,
+            headPitch,
+            -45.0F,
+            45.0F
+        );
+    }
+
+    protected void applyHeadRotation(
+        float headYaw,
+        float minHeadYaw,
+        float maxHeadYaw,
+        float headPitch,
+        float minHeadPitch,
+        float maxHeadPitch
+    ) {
+        float yaw = Mth.clamp(headYaw, minHeadYaw, maxHeadYaw) * Mth.DEG_TO_RAD;
+        float pitch = Mth.clamp(headPitch, minHeadPitch, maxHeadPitch) * Mth.DEG_TO_RAD;
+        float cosPitch = Mth.cos(pitch);
+
+        this.parentTransforms
+            .rotationZYX(this.root.zRot, this.root.yRot, this.root.xRot)
+            .rotateZYX(this.body.zRot, this.body.yRot, this.body.xRot)
+            .conjugate();
+
+        this.localViewVector.set(
+            -Mth.sin(yaw) * cosPitch,
+            Mth.sin(pitch),
+            -Mth.cos(yaw) * cosPitch
+        );
+        this.parentTransforms.transform(this.localViewVector);
+
+        float roll = (float) Mth.atan2(
+            this.parentTransforms.x * this.parentTransforms.y + this.parentTransforms.w * this.parentTransforms.z,
+            0.5F - this.parentTransforms.y * this.parentTransforms.y - this.parentTransforms.z * this.parentTransforms.z
+        );
+        float sinRoll = Mth.sin(roll);
+        float cosRoll = Mth.cos(roll);
+        float unrolledX = cosRoll * this.localViewVector.x + sinRoll * this.localViewVector.y;
+        float unrolledY = -sinRoll * this.localViewVector.x + cosRoll * this.localViewVector.y;
+        float horizontalLength = Mth.sqrt(
+            unrolledX * unrolledX + this.localViewVector.z * this.localViewVector.z
+        );
+
+        this.neck.yRot = (float) Mth.atan2(-unrolledX, -this.localViewVector.z);
+        this.neck.xRot = (float) Mth.atan2(unrolledY, horizontalLength);
+        this.neck.zRot = roll;
     }
 }

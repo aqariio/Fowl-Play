@@ -57,7 +57,7 @@ public class SparrowModel extends FlyingBirdModel<SparrowEntity> {
     }
 
     @Override
-    protected void setAnimations(SparrowEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+    protected void setAnimations(SparrowEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float relativeHeadYaw, float headPitch, float partialTick) {
         if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
             this.animateWalk(SparrowAnimations.WALKING, limbSwing, limbSwingAmount, 6F, 6F);
         }

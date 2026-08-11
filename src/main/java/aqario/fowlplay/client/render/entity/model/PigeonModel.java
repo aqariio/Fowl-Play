@@ -60,7 +60,7 @@ public class PigeonModel extends FlyingBirdModel<PigeonEntity> {
     }
 
     @Override
-    protected void setAnimations(PigeonEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+    protected void setAnimations(PigeonEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float relativeHeadYaw, float headPitch, float partialTick) {
         if(!entity.isFlying() && !entity.isInWaterOrBubble() && !entity.isInSittingPose()) {
             this.animateWalk(PigeonAnimations.WALKING, limbSwing, limbSwingAmount, 5F, 5F);
         }

@@ -26,7 +26,7 @@ public class SparrowSpawner implements CustomSpawner {
     public int tick(ServerLevel world, boolean spawnMonsters, boolean spawnAnimals) {
         if (!spawnAnimals
             || !world.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)
-            || FPConfig.getInstance().sparrowSpawnWeight <= 0
+            || FPConfig.get().sparrowSpawnWeight <= 0
         ) {
             return 0;
         }

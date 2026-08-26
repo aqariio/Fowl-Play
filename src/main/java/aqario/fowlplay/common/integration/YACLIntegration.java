@@ -2,13 +2,9 @@ package aqario.fowlplay.common.integration;
 
 import aqario.fowlplay.common.config.FPConfig;
 import aqario.fowlplay.common.entity.FPMobCategory;
-import aqario.fowlplay.core.FowlPlay;
-import aqario.fowlplay.core.platform.Platform;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
-import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
-import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.MobCategory;
@@ -17,32 +13,20 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class YACLIntegration {
-    public static final ConfigClassHandler<FPConfig> HANDLED_CONFIG = ConfigClassHandler.createBuilder(FPConfig.class)
-        .id(FowlPlay.id("config"))
-        .serializer(config -> GsonConfigSerializerBuilder.create(config)
-            .setPath(Platform.getConfigDirectory().resolve(FowlPlay.ID + ".json5"))
-            .setJson5(true)
-            .build())
-        .build();
-
     public static Screen createScreen(Screen parent) {
-        return YetAnotherConfigLib.create(HANDLED_CONFIG, (defaults, config, builder) -> builder
+        return YetAnotherConfigLib.create(FPConfig.HANDLER, (defaults, config, builder) -> builder
                 .title(Component.translatable("config.title"))
                 .category(ConfigCategory.createBuilder()
                     .name(Component.translatable("config.common"))
-                    .group(createImprovementGroup(
+                    .option(createImprovementOption(
                         "entity.minecraft.chicken",
-                        () -> config.customChickenModel,
-                        val -> config.customChickenModel = val,
-                        () -> config.customChickenBehavior,
-                        val -> config.customChickenBehavior = val
+                        () -> config.replaceChicken,
+                        val -> config.replaceChicken = val
                     ))
-                    .group(createImprovementGroup(
+                    .option(createImprovementOption(
                         "entity.minecraft.parrot",
-                        () -> config.customParrotModel,
-                        val -> config.customParrotModel = val,
-                        () -> config.customParrotBehavior,
-                        val -> config.customParrotBehavior = val
+                        () -> config.replaceParrot,
+                        val -> config.replaceParrot = val
                     ))
                     .build()
                 )
@@ -219,54 +203,22 @@ public class YACLIntegration {
             .generateScreen(parent);
     }
 
-    private static OptionGroup createImprovementGroup(
+    private static Option<Boolean> createImprovementOption(
         String entity,
-        Supplier<Boolean> getModel,
-        Consumer<Boolean> setModel,
-        Supplier<Boolean> getBehavior,
-        Consumer<Boolean> setBehavior
+        Supplier<Boolean> get,
+        Consumer<Boolean> set
     ) {
         Component entityName = Component.translatable(entity);
 
-        Option<Boolean> behaviorOption = Option.<Boolean>createBuilder()
-            .name(Component.translatable("config.common.customBehavior"))
+        return Option.<Boolean>createBuilder()
+            .name(Component.translatable("config.common.customBird", entityName))
             .description(OptionDescription.of(
                 Component.translatable("config.info.restart")
                     .append("\n\n")
-                    .append(Component.translatable("config.common.customBehavior.desc"))
+                    .append(Component.translatable("config.common.customBird.desc"))
             ))
-            .binding(true, getBehavior, setBehavior)
+            .binding(true, get, set)
             .controller(BooleanControllerBuilder::create)
-            .build();
-
-        Option<Boolean> modelOption = Option.<Boolean>createBuilder()
-            .name(Component.translatable("config.common.customModel"))
-            .description(OptionDescription.of(
-                Component.translatable("config.info.restart")
-                    .append("\n\n")
-                    .append(Component.translatable("config.common.customModel.desc"))
-            ))
-            .binding(true, getModel, setModel)
-            .controller(BooleanControllerBuilder::create)
-            .addListener((option, event) -> {
-                if(event == OptionEventListener.Event.INITIAL
-                    || event == OptionEventListener.Event.STATE_CHANGE
-                ) {
-                    boolean modelEnabled = option.pendingValue();
-
-                    behaviorOption.setAvailable(modelEnabled);
-
-                    if(!modelEnabled) {
-                        behaviorOption.requestSet(false);
-                    }
-                }
-            })
-            .build();
-
-        return OptionGroup.createBuilder()
-            .name(entityName)
-            .option(modelOption)
-            .option(behaviorOption)
             .build();
     }
 

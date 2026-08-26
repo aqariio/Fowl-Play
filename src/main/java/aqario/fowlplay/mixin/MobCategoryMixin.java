@@ -52,10 +52,10 @@ public class MobCategoryMixin {
         MobCategory category = (MobCategory) (Object) this;
 
         if(category == FPMobCategory.AMBIENT_BIRDS.mobCategory) {
-            cir.setReturnValue(FPConfig.getInstance().ambientBirdsSpawnCap);
+            cir.setReturnValue(FPConfig.get().ambientBirdsSpawnCap);
         }
         else if(category == FPMobCategory.BIRDS.mobCategory) {
-            cir.setReturnValue(FPConfig.getInstance().birdsSpawnCap);
+            cir.setReturnValue(FPConfig.get().birdsSpawnCap);
         }
     }
 }

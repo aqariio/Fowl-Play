@@ -1,6 +1,5 @@
 package aqario.fowlplay.mixin;
 
-import aqario.fowlplay.common.config.FPConfig;
 import aqario.fowlplay.common.entity.bird.VariantHolder;
 import aqario.fowlplay.common.entity.variant.ChickenVariant;
 import aqario.fowlplay.common.util.ChickenAnimationHolder;
@@ -53,11 +52,9 @@ public abstract class ChickenMixin extends Animal implements VariantHolder<Chick
         cancellable = true
     )
     private void fowlplay$removeGoals(CallbackInfo ci) {
-        if(FPConfig.getInstance().customChickenBehavior) {
-            this.goalSelector.removeAllGoals(goal -> true);
-            this.targetSelector.removeAllGoals(goal -> true);
-            ci.cancel();
-        }
+        this.goalSelector.removeAllGoals(goal -> true);
+        this.targetSelector.removeAllGoals(goal -> true);
+        ci.cancel();
     }
 
     @Inject(

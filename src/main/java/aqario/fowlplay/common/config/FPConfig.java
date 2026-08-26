@@ -1,32 +1,39 @@
 package aqario.fowlplay.common.config;
 
-import aqario.fowlplay.common.integration.YACLIntegration;
+import aqario.fowlplay.core.FowlPlay;
+import aqario.fowlplay.core.platform.Platform;
+import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
+import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 
 public class FPConfig {
-    public static FPConfig getInstance() {
-        return YACLIntegration.HANDLED_CONFIG.instance();
+    public static final ConfigClassHandler<FPConfig> HANDLER = ConfigClassHandler.createBuilder(FPConfig.class)
+        .id(FowlPlay.id("config"))
+        .serializer(config -> GsonConfigSerializerBuilder.create(config)
+            .setPath(Platform.getConfigDirectory().resolve(FowlPlay.ID + ".json5"))
+            .setJson5(true)
+            .build())
+        .build();
+
+    public static FPConfig get() {
+        return HANDLER.instance();
     }
 
     public static void load() {
-        YACLIntegration.HANDLED_CONFIG.load();
+        HANDLER.load();
     }
 
     public static void save() {
-        YACLIntegration.HANDLED_CONFIG.save();
+        HANDLER.save();
     }
 
     // Common
 
     @SerialEntry
-    public boolean customChickenModel = true;
-    @SerialEntry
-    public boolean customChickenBehavior = true;
+    public boolean replaceChicken = true;
 
     @SerialEntry
-    public boolean customParrotModel = true;
-    @SerialEntry
-    public boolean customParrotBehavior = true;
+    public boolean replaceParrot = true;
 
     // Spawning
 

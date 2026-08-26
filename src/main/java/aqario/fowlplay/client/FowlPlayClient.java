@@ -90,12 +90,12 @@ public class FowlPlayClient {
         RenderRegistry.modelLayer(ScarecrowModel.INNER_ARMOR, () -> ScarecrowArmorModel.createBodyLayer(HAT_DILATION));
         RenderRegistry.modelLayer(ScarecrowModel.OUTER_ARMOR, () -> ScarecrowArmorModel.createBodyLayer(ARMOR_DILATION));
 
-        if(FPConfig.getInstance().customChickenModel) {
+        if(FPConfig.get().replaceChicken) {
             RenderRegistry.modelLayer(CustomChickenModel.MODEL_LAYER, CustomChickenModel::createBodyLayer);
             RenderRegistry.modelLayer(CustomBabyChickenModel.MODEL_LAYER, CustomBabyChickenModel::createBodyLayer);
         }
 
-        if(FPConfig.getInstance().customParrotModel) {
+        if(FPConfig.get().replaceParrot) {
             RenderRegistry.modelLayer(CustomParrotModel.MODEL_LAYER, CustomParrotModel::createBodyLayer);
         }
     }
@@ -116,11 +116,11 @@ public class FowlPlayClient {
         RenderRegistry.entityRenderer(FPEntityTypes.SPARROW, SparrowRenderer::new);
         RenderRegistry.entityRenderer(FPEntityTypes.SCARECROW, ScarecrowRenderer::new);
 
-        if(FPConfig.getInstance().customChickenModel) {
+        if(FPConfig.get().replaceChicken) {
             RenderRegistry.entityRenderer(Suppliers.ofInstance(EntityType.CHICKEN), CustomChickenRenderer::new);
         }
 
-        if(FPConfig.getInstance().customParrotModel) {
+        if(FPConfig.get().replaceParrot) {
             RenderRegistry.entityRenderer(Suppliers.ofInstance(EntityType.PARROT), CustomParrotRenderer::new);
         }
     }

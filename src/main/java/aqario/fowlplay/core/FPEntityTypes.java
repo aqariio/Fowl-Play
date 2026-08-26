@@ -45,9 +45,9 @@ public final class FPEntityTypes {
             )
             .spawn(
                 FPBiomeTags.SPAWNS_BLUE_JAYS,
-                FPConfig.getInstance().blueJaySpawnWeight,
-                FPConfig.getInstance().blueJayMinGroupSize,
-                FPConfig.getInstance().blueJayMaxGroupSize
+                FPConfig.get().blueJaySpawnWeight,
+                FPConfig.get().blueJayMinGroupSize,
+                FPConfig.get().blueJayMaxGroupSize
             )
     );
 
@@ -66,9 +66,9 @@ public final class FPEntityTypes {
             )
             .spawn(
                 FPBiomeTags.SPAWNS_CARDINALS,
-                FPConfig.getInstance().cardinalSpawnWeight,
-                FPConfig.getInstance().cardinalMinGroupSize,
-                FPConfig.getInstance().cardinalMaxGroupSize
+                FPConfig.get().cardinalSpawnWeight,
+                FPConfig.get().cardinalMinGroupSize,
+                FPConfig.get().cardinalMaxGroupSize
             )
     );
 
@@ -87,9 +87,9 @@ public final class FPEntityTypes {
             )
             .spawn(
                 FPBiomeTags.SPAWNS_CHICKADEES,
-                FPConfig.getInstance().chickadeeSpawnWeight,
-                FPConfig.getInstance().chickadeeMinGroupSize,
-                FPConfig.getInstance().chickadeeMaxGroupSize
+                FPConfig.get().chickadeeSpawnWeight,
+                FPConfig.get().chickadeeMinGroupSize,
+                FPConfig.get().chickadeeMaxGroupSize
             )
     );
 
@@ -108,9 +108,9 @@ public final class FPEntityTypes {
             )
             .spawn(
                 FPBiomeTags.SPAWNS_CROWS,
-                FPConfig.getInstance().crowSpawnWeight,
-                FPConfig.getInstance().crowMinGroupSize,
-                FPConfig.getInstance().crowMaxGroupSize
+                FPConfig.get().crowSpawnWeight,
+                FPConfig.get().crowMinGroupSize,
+                FPConfig.get().crowMaxGroupSize
             )
     );
 
@@ -129,9 +129,9 @@ public final class FPEntityTypes {
             )
             .spawn(
                 FPBiomeTags.SPAWNS_DUCKS,
-                FPConfig.getInstance().duckSpawnWeight,
-                FPConfig.getInstance().duckMinGroupSize,
-                FPConfig.getInstance().duckMaxGroupSize
+                FPConfig.get().duckSpawnWeight,
+                FPConfig.get().duckMinGroupSize,
+                FPConfig.get().duckMaxGroupSize
             )
             .spawnCost(
                 FPBiomeTags.SPAWNS_DUCKS,
@@ -155,9 +155,9 @@ public final class FPEntityTypes {
             )
             .spawn(
                 FPBiomeTags.SPAWNS_GEESE,
-                FPConfig.getInstance().gooseSpawnWeight,
-                FPConfig.getInstance().gooseMinGroupSize,
-                FPConfig.getInstance().gooseMaxGroupSize
+                FPConfig.get().gooseSpawnWeight,
+                FPConfig.get().gooseMinGroupSize,
+                FPConfig.get().gooseMaxGroupSize
             )
             .spawnCost(
                 FPBiomeTags.SPAWNS_GEESE,
@@ -181,9 +181,9 @@ public final class FPEntityTypes {
             )
             .spawn(
                 FPBiomeTags.SPAWNS_GULLS,
-                FPConfig.getInstance().gullSpawnWeight,
-                FPConfig.getInstance().gullMinGroupSize,
-                FPConfig.getInstance().gullMaxGroupSize
+                FPConfig.get().gullSpawnWeight,
+                FPConfig.get().gullMinGroupSize,
+                FPConfig.get().gullMaxGroupSize
             )
             .spawnCost(
                 FPBiomeTags.SPAWNS_GULLS,
@@ -207,9 +207,9 @@ public final class FPEntityTypes {
             )
             .spawn(
                 FPBiomeTags.SPAWNS_HAWKS,
-                FPConfig.getInstance().hawkSpawnWeight,
-                FPConfig.getInstance().hawkMinGroupSize,
-                FPConfig.getInstance().hawkMaxGroupSize
+                FPConfig.get().hawkSpawnWeight,
+                FPConfig.get().hawkMinGroupSize,
+                FPConfig.get().hawkMaxGroupSize
             )
     );
 
@@ -229,9 +229,9 @@ public final class FPEntityTypes {
             )
             .spawn(
                 FPBiomeTags.SPAWNS_PENGUINS,
-                FPConfig.getInstance().penguinSpawnWeight,
-                FPConfig.getInstance().penguinMinGroupSize,
-                FPConfig.getInstance().penguinMaxGroupSize
+                FPConfig.get().penguinSpawnWeight,
+                FPConfig.get().penguinMinGroupSize,
+                FPConfig.get().penguinMaxGroupSize
             )
     );
 
@@ -250,9 +250,9 @@ public final class FPEntityTypes {
             )
             .spawn(
                 FPBiomeTags.SPAWNS_PIGEONS,
-                FPConfig.getInstance().pigeonSpawnWeight,
-                FPConfig.getInstance().pigeonMinGroupSize,
-                FPConfig.getInstance().pigeonMaxGroupSize
+                FPConfig.get().pigeonSpawnWeight,
+                FPConfig.get().pigeonMinGroupSize,
+                FPConfig.get().pigeonMaxGroupSize
             )
     );
 
@@ -271,9 +271,9 @@ public final class FPEntityTypes {
             )
             .spawn(
                 FPBiomeTags.SPAWNS_RAVENS,
-                FPConfig.getInstance().ravenSpawnWeight,
-                FPConfig.getInstance().ravenMinGroupSize,
-                FPConfig.getInstance().ravenMaxGroupSize
+                FPConfig.get().ravenSpawnWeight,
+                FPConfig.get().ravenMinGroupSize,
+                FPConfig.get().ravenMaxGroupSize
             )
     );
 
@@ -292,9 +292,9 @@ public final class FPEntityTypes {
             )
             .spawn(
                 FPBiomeTags.SPAWNS_ROBINS,
-                FPConfig.getInstance().robinSpawnWeight,
-                FPConfig.getInstance().robinMinGroupSize,
-                FPConfig.getInstance().robinMaxGroupSize
+                FPConfig.get().robinSpawnWeight,
+                FPConfig.get().robinMinGroupSize,
+                FPConfig.get().robinMaxGroupSize
             )
     );
 
@@ -313,9 +313,9 @@ public final class FPEntityTypes {
             )
             .spawn(
                 FPBiomeTags.SPAWNS_SPARROWS,
-                FPConfig.getInstance().sparrowSpawnWeight,
-                FPConfig.getInstance().sparrowMinGroupSize,
-                FPConfig.getInstance().sparrowMaxGroupSize
+                FPConfig.get().sparrowSpawnWeight,
+                FPConfig.get().sparrowMinGroupSize,
+                FPConfig.get().sparrowMaxGroupSize
             )
     );
 

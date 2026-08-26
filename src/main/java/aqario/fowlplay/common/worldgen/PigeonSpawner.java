@@ -26,7 +26,7 @@ public class PigeonSpawner implements CustomSpawner {
     public int tick(ServerLevel world, boolean spawnMonsters, boolean spawnAnimals) {
         if (!spawnAnimals
             || !world.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)
-            || FPConfig.getInstance().pigeonSpawnWeight <= 0
+            || FPConfig.get().pigeonSpawnWeight <= 0
         ) {
             return 0;
         }

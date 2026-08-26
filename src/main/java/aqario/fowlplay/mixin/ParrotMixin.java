@@ -1,6 +1,5 @@
 package aqario.fowlplay.mixin;
 
-import aqario.fowlplay.common.config.FPConfig;
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.bird.VariantHolder;
@@ -45,19 +44,14 @@ public abstract class ParrotMixin extends ShoulderRidingEntity implements Varian
         cancellable = true
     )
     private void fowlplay$removeGoals(CallbackInfo ci) {
-        if(FPConfig.getInstance().customParrotBehavior) {
-            this.goalSelector.removeAllGoals(goal -> true);
-            this.targetSelector.removeAllGoals(goal -> true);
-            ci.cancel();
-        }
+        this.goalSelector.removeAllGoals(goal -> true);
+        this.targetSelector.removeAllGoals(goal -> true);
+        ci.cancel();
     }
 
     @Override
     protected Brain.Provider<ParrotMixin> brainProvider() {
-        if(FPConfig.getInstance().customParrotBehavior) {
-            return new ExtendedBrainProvider<>(this);
-        }
-        return (Brain.Provider<ParrotMixin>) super.brainProvider();
+        return new ExtendedBrainProvider<>(this);
     }
 
     @Override
@@ -97,9 +91,7 @@ public abstract class ParrotMixin extends ShoulderRidingEntity implements Varian
 
     @Override
     protected void customServerAiStep() {
-        if(FPConfig.getInstance().customParrotBehavior) {
-            this.tickBrain(this);
-        }
+        this.tickBrain(this);
         super.customServerAiStep();
     }
 

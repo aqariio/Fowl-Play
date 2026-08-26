@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "aqario.fowlplay.mixin",
   "compatibilityLevel": "JAVA_21",
+  "plugin": "aqario.fowlplay.core.FPMixinPlugin",
   "mixins": [
     "BlockStateBaseMixin",
     "ChickenMixin",

@@ -6,77 +6,40 @@ import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.KeyframeAnimations;
 
 public class ParrotAnimations {
-    public static final AnimationDefinition STANDING = AnimationDefinition.Builder.withLength(0f).looping()
-        .addAnimation(
-            "neck",
-            new AnimationChannel(
-                AnimationChannel.Targets.ROTATION,
-                new Keyframe(0f, KeyframeAnimations.degreeVec(13.5f, 0f, 0f), AnimationChannel.Interpolations.LINEAR)
-            )
-        )
-        .addAnimation(
-            "left_wing",
-            new AnimationChannel(
-                AnimationChannel.Targets.POSITION,
-                new Keyframe(0f, KeyframeAnimations.posVec(-0.2f, -0.2f, 0f), AnimationChannel.Interpolations.LINEAR)
-            )
-        )
-        .addAnimation(
-            "left_wing",
-            new AnimationChannel(
-                AnimationChannel.Targets.ROTATION,
-                new Keyframe(0f, KeyframeAnimations.degreeVec(-2.22f, -4.2f, -4.71f), AnimationChannel.Interpolations.LINEAR)
-            )
-        )
-        .addAnimation(
-            "right_wing",
-            new AnimationChannel(
-                AnimationChannel.Targets.POSITION,
-                new Keyframe(0f, KeyframeAnimations.posVec(0.2f, -0.2f, 0f), AnimationChannel.Interpolations.LINEAR)
-            )
-        )
-        .addAnimation(
-            "right_wing",
-            new AnimationChannel(
-                AnimationChannel.Targets.ROTATION,
-                new Keyframe(0f, KeyframeAnimations.degreeVec(-2.22f, 4.2f, 4.71f), AnimationChannel.Interpolations.LINEAR)
-            )
-        )
-        .addAnimation(
-            "tail",
-            new AnimationChannel(
-                AnimationChannel.Targets.ROTATION,
-                new Keyframe(0f, KeyframeAnimations.degreeVec(5f, 0f, 0f), AnimationChannel.Interpolations.LINEAR)
-            )
-        )
-        .addAnimation(
-            "left_leg",
-            new AnimationChannel(
-                AnimationChannel.Targets.ROTATION,
-                new Keyframe(0f, KeyframeAnimations.degreeVec(0f, -10f, 0f), AnimationChannel.Interpolations.LINEAR)
-            )
-        )
-        .addAnimation(
-            "right_leg",
-            new AnimationChannel(
-                AnimationChannel.Targets.ROTATION,
-                new Keyframe(0f, KeyframeAnimations.degreeVec(0f, 10f, 0f), AnimationChannel.Interpolations.LINEAR)
-            )
-        )
-        .addAnimation(
-            "body",
-            new AnimationChannel(
-                AnimationChannel.Targets.ROTATION,
-                new Keyframe(0f, KeyframeAnimations.degreeVec(-15f, 0f, 0f), AnimationChannel.Interpolations.LINEAR)
-            )
-        )
-        .addAnimation(
-            "throat",
-            new AnimationChannel(
-                AnimationChannel.Targets.POSITION,
-                new Keyframe(0f, KeyframeAnimations.posVec(0f, 0f, 0f), AnimationChannel.Interpolations.LINEAR)
-            )
-        )
+    public static final AnimationDefinition STANDING = AnimationDefinition.Builder.withLength(0.0F).looping()
+        .addAnimation("neck", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(23.5F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("left_wing", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(5.2754F, -4.1998F, -4.7104F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("left_wing", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(-0.2F, -0.2F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("right_wing", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(5.2754F, 4.1998F, 4.7104F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("right_wing", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.2F, -0.2F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("tail", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(4.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("left_leg", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("right_leg", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("body", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(-2.5F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("head", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+            new Keyframe(0.0F, KeyframeAnimations.degreeVec(-12.5F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("head", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 0.0F, -0.2F), AnimationChannel.Interpolations.LINEAR)
+        ))
         .build();
 
     public static final AnimationDefinition PERCHING = AnimationDefinition.Builder.withLength(0.0F).looping()
@@ -100,6 +63,9 @@ public class ParrotAnimations {
         ))
         .addAnimation("tail", new AnimationChannel(AnimationChannel.Targets.ROTATION,
             new Keyframe(0.0F, KeyframeAnimations.degreeVec(-32.5F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+        ))
+        .addAnimation("tail", new AnimationChannel(AnimationChannel.Targets.POSITION,
+            new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 1.25F, -0.5F), AnimationChannel.Interpolations.LINEAR)
         ))
         .addAnimation("left_leg", new AnimationChannel(AnimationChannel.Targets.ROTATION,
             new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, -5.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)

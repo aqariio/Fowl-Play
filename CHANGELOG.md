@@ -1,5 +1,6 @@
 ## 1.3.0
 
+- Add parrot remodel (configurable)
 - Improve performance
 
 ## 1.2.3

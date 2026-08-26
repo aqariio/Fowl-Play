@@ -66,32 +66,30 @@ public class CustomParrotModel extends HierarchicalModel<Parrot> {
 
         PartDefinition right_wing = body.addOrReplaceChild("right_wing", CubeListBuilder.create().texOffs(0, 14).mirror().addBox(-1.0F, -1.0F, -1.0F, 2.0F, 4.0F, 12.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(-1.5F, -4.0F, -3.0F, -0.3491F, 0.0F, 0.0F));
 
-        PartDefinition left_wing_open = body.addOrReplaceChild("left_wing_open", CubeListBuilder.create().texOffs(24, 0).addBox(-1.0F, -0.1F, -1.0F, 9.0F, 1.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.5F, -4.5F, -3.5F, -0.3491F, 0.0F, 0.0F));
+        PartDefinition left_wing_open = body.addOrReplaceChild("left_wing_open", CubeListBuilder.create().texOffs(24, 0).addBox(-1.0F, -0.1F, -1.0F, 10.0F, 1.0F, 9.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.5F, -4.5F, -3.5F, -0.3491F, 0.0F, 0.0F));
 
-        PartDefinition left_wing_outer = left_wing_open.addOrReplaceChild("left_wing_outer", CubeListBuilder.create().texOffs(16, 9).addBox(0.0F, 0.0F, 0.0F, 10.0F, 0.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(8.0F, -0.1F, -1.0F));
+        PartDefinition left_wing_outer = left_wing_open.addOrReplaceChild("left_wing_outer", CubeListBuilder.create().texOffs(15, 10).addBox(0.0F, 0.0F, 0.0F, 11.0F, 0.0F, 9.0F, new CubeDeformation(0.0F)), PartPose.offset(9.0F, -0.1F, -1.0F));
 
-        PartDefinition right_wing_open = body.addOrReplaceChild("right_wing_open", CubeListBuilder.create().texOffs(24, 0).mirror().addBox(-8.0F, -0.1F, -1.0F, 9.0F, 1.0F, 8.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(-1.5F, -4.5F, -3.5F, -0.3491F, 0.0F, 0.0F));
+        PartDefinition right_wing_open = body.addOrReplaceChild("right_wing_open", CubeListBuilder.create().texOffs(24, 0).mirror().addBox(-9.0F, -0.1F, -1.0F, 10.0F, 1.0F, 9.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(-1.5F, -4.5F, -3.5F, -0.3491F, 0.0F, 0.0F));
 
-        PartDefinition right_wing_outer = right_wing_open.addOrReplaceChild("right_wing_outer", CubeListBuilder.create().texOffs(16, 9).mirror().addBox(-10.0F, 0.0F, 0.0F, 10.0F, 0.0F, 8.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-8.0F, -0.1F, -1.0F));
+        PartDefinition right_wing_outer = right_wing_open.addOrReplaceChild("right_wing_outer", CubeListBuilder.create().texOffs(15, 10).mirror().addBox(-11.0F, 0.0F, 0.0F, 11.0F, 0.0F, 9.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-9.0F, -0.1F, -1.0F));
 
         PartDefinition tail = body.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(16, 0).addBox(-1.5F, -1.0F, 1.0F, 3.0F, 1.0F, 3.0F, new CubeDeformation(0.0F))
-            .texOffs(18, 19).addBox(-1.0F, -1.003F, 3.5F, 2.0F, 0.0F, 22.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -1.25F, 1.0F, -0.2618F, 0.0F, 0.0F));
+            .texOffs(31, 32).mirror().addBox(-0.5F, -1.001F, 2.0F, 2.0F, 0.0F, 9.0F, new CubeDeformation(0.0F)).mirror(false)
+            .texOffs(18, 19).addBox(-1.0F, -1.003F, 3.5F, 2.0F, 0.0F, 22.0F, new CubeDeformation(0.0F))
+            .texOffs(31, 32).addBox(-1.5F, -1.001F, 2.0F, 2.0F, 0.0F, 9.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -1.25F, 1.0F, -0.2618F, 0.0F, 0.0F));
 
-        PartDefinition cube_r2 = tail.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(26, 26).addBox(-1.0F, -0.001F, 0.0F, 2.0F, 0.0F, 14.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, -1.0F, 2.0F, 0.0F, -0.0873F, 0.0F));
+        PartDefinition cube_r2 = tail.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(25, 26).addBox(-1.0F, -0.002F, 0.0F, 2.0F, 0.0F, 15.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, -1.0F, 2.5F, 0.0F, 0.0175F, 0.0F));
 
-        PartDefinition cube_r3 = tail.addOrReplaceChild("cube_r3", CubeListBuilder.create().texOffs(20, 21).addBox(-1.0F, -0.002F, 0.0F, 2.0F, 0.0F, 20.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, -1.0F, 2.5F, 0.0F, -0.0436F, 0.0F));
+        PartDefinition cube_r3 = tail.addOrReplaceChild("cube_r3", CubeListBuilder.create().texOffs(25, 26).mirror().addBox(-1.0F, -0.002F, 0.0F, 2.0F, 0.0F, 15.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.5F, -1.0F, 2.5F, 0.0F, -0.0175F, 0.0F));
 
-        PartDefinition cube_r4 = tail.addOrReplaceChild("cube_r4", CubeListBuilder.create().texOffs(20, 21).mirror().addBox(-1.0F, -0.002F, 0.0F, 2.0F, 0.0F, 20.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.5F, -1.0F, 2.5F, 0.0F, 0.0436F, 0.0F));
+        PartDefinition left_leg = root.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(16, 4).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 4.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.5F, 1.0F, 2.5F, -0.1745F, 0.0F, 0.0F));
 
-        PartDefinition cube_r5 = tail.addOrReplaceChild("cube_r5", CubeListBuilder.create().texOffs(26, 26).mirror().addBox(-1.0F, -0.001F, 0.0F, 2.0F, 0.0F, 14.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.5F, -1.0F, 2.0F, 0.0F, 0.0873F, 0.0F));
+        PartDefinition cube_r4 = left_leg.addOrReplaceChild("cube_r4", CubeListBuilder.create().texOffs(15, 5).mirror().addBox(0.5F, 0.0F, -2.0F, 2.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(-1.5F, 4.0F, 0.0F, 0.1745F, 0.0F, 0.0F));
 
-        PartDefinition left_leg = root.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(16, 4).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 4.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.25F, 1.0F, 2.5F, -0.1745F, 0.0F, 0.0F));
+        PartDefinition right_leg = root.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(16, 4).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 4.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.5F, 1.0F, 2.5F, -0.1745F, 0.0F, 0.0F));
 
-        PartDefinition cube_r6 = left_leg.addOrReplaceChild("cube_r6", CubeListBuilder.create().texOffs(15, 5).mirror().addBox(0.5F, 0.0F, -2.0F, 2.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(-1.5F, 4.0F, 0.0F, 0.1745F, 0.0F, 0.0F));
-
-        PartDefinition right_leg = root.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(16, 4).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 4.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.25F, 1.0F, 2.5F, -0.1745F, 0.0F, 0.0F));
-
-        PartDefinition cube_r7 = right_leg.addOrReplaceChild("cube_r7", CubeListBuilder.create().texOffs(15, 5).addBox(-0.5F, 0.0F, -2.0F, 2.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, 4.0F, 0.0F, 0.1745F, 0.0F, 0.0F));
+        PartDefinition cube_r5 = right_leg.addOrReplaceChild("cube_r5", CubeListBuilder.create().texOffs(15, 5).addBox(-0.5F, 0.0F, -2.0F, 2.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, 4.0F, 0.0F, 0.1745F, 0.0F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 64, 64);
     }
@@ -143,7 +141,8 @@ public class CustomParrotModel extends HierarchicalModel<Parrot> {
         else if(!parrot.isInWaterOrBubble()) {
             this.animateWalk(ParrotAnimations.WALKING, limbSwing, limbSwingAmount, 3F, 3F);
         }
-        this.animate(((ParrotAnimationHolder) parrot).fowlplay$getStandingState(), ParrotAnimations.PERCHING, ageInTicks);
+        this.animate(((ParrotAnimationHolder) parrot).fowlplay$getStandingState(), ParrotAnimations.STANDING, ageInTicks);
+        this.animate(((ParrotAnimationHolder) parrot).fowlplay$getPerchingState(), ParrotAnimations.PERCHING, ageInTicks);
         this.animate(((ParrotAnimationHolder) parrot).fowlplay$getGlidingState(), ParrotAnimations.GLIDING, ageInTicks);
         this.animate(((ParrotAnimationHolder) parrot).fowlplay$getSwimmingState(), ParrotAnimations.SWIMMING, ageInTicks);
     }

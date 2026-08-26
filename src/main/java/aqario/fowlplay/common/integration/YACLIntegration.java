@@ -1,6 +1,7 @@
 package aqario.fowlplay.common.integration;
 
 import aqario.fowlplay.common.config.FPConfig;
+import aqario.fowlplay.common.entity.FPMobCategory;
 import aqario.fowlplay.core.FowlPlay;
 import aqario.fowlplay.core.platform.Platform;
 import dev.isxander.yacl3.api.*;
@@ -10,6 +11,7 @@ import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.MobCategory;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -46,6 +48,14 @@ public class YACLIntegration {
                 )
                 .category(ConfigCategory.createBuilder()
                     .name(Component.translatable("config.spawning"))
+                    .group(createSpawnCapGroup(
+                        defaults.ambientBirdsSpawnCap,
+                        () -> config.ambientBirdsSpawnCap,
+                        val -> config.ambientBirdsSpawnCap = val,
+                        defaults.birdsSpawnCap,
+                        () -> config.birdsSpawnCap,
+                        val -> config.birdsSpawnCap = val
+                    ))
                     .group(createSpawningGroup(
                         "entity.fowlplay.blue_jay",
                         defaults.blueJaySpawnWeight,
@@ -257,6 +267,43 @@ public class YACLIntegration {
             .name(entityName)
             .option(modelOption)
             .option(behaviorOption)
+            .build();
+    }
+
+    private static OptionGroup createSpawnCapGroup(
+        int ambientBirds,
+        Supplier<Integer> getAmbientBirds,
+        Consumer<Integer> setAmbientBirds,
+        int birds,
+        Supplier<Integer> getBirds,
+        Consumer<Integer> setBirds
+    ) {
+        return OptionGroup.createBuilder()
+            .name(Component.translatable("config.spawning.spawnCap"))
+            .option(createSpawnCapOption(
+                FPMobCategory.AMBIENT_BIRDS.mobCategory,
+                ambientBirds,
+                getAmbientBirds,
+                setAmbientBirds
+            ))
+            .option(createSpawnCapOption(
+                FPMobCategory.BIRDS.mobCategory,
+                birds,
+                getBirds,
+                setBirds
+            ))
+            .build();
+    }
+
+    private static Option<Integer> createSpawnCapOption(MobCategory category, int defaultValue, Supplier<Integer> get, Consumer<Integer> set) {
+        return Option.<Integer>createBuilder()
+            .name(Component.translatable("text.betterf3.line." + category.getName()))
+            .description(OptionDescription.of(Component.translatable("config.spawning.spawnCap.desc")))
+            .binding(defaultValue, get, set)
+            .controller(option -> IntegerSliderControllerBuilder.create(option)
+                .range(0, 30)
+                .step(1)
+            )
             .build();
     }
 

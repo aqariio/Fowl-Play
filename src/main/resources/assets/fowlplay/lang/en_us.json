@@ -11,6 +11,8 @@
   "config.common.customBehavior": "Custom Behavior",
   "config.common.customBehavior.desc": "Improves the mob's ai, replacing its vanilla behavior.",
   "config.spawning": "Spawning",
+  "config.spawning.spawnCap": "Mob Category Spawn Caps",
+  "config.spawning.spawnCap.desc": "When the number of mobs from this mob category exceeds this number, mobs from this category will no longer try to spawn.",
   "config.spawning.spawnWeight": "Spawn Weight",
   "config.spawning.spawnWeight.desc": "%s spawn chance. (not a percentage!) Set this to 0 to disable spawning.",
   "config.spawning.minGroupSize": "Min Group Size",

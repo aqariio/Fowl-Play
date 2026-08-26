@@ -7,10 +7,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 
-public record PigeonVariant(ResourceLocation texture) {
+public record PigeonVariant(Identifier texture) {
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<PigeonVariant>> PACKET_CODEC = ByteBufCodecs.holderRegistry(
         FPRegistries.PIGEON_VARIANT
     );
@@ -26,7 +26,7 @@ public record PigeonVariant(ResourceLocation texture) {
 
     private static ResourceKey<PigeonVariant> register(String id) {
         ResourceKey<PigeonVariant> key = ResourceKey.create(FPRegistries.PIGEON_VARIANT, FowlPlay.id(id));
-        ResourceLocation texture = FowlPlay.id("textures/entity/pigeon/" + key.location().getPath() + "_pigeon.png");
+        Identifier texture = FowlPlay.id("textures/entity/pigeon/" + key.location().getPath() + "_pigeon.png");
         REGISTRAR.register(id, () -> new PigeonVariant(texture));
         return key;
     }

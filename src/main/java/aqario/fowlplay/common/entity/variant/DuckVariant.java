@@ -8,8 +8,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 
 public record DuckVariant(
@@ -25,7 +25,7 @@ public record DuckVariant(
     public static final ResourceKey<DuckVariant> GREEN_HEADED = register("green_headed");
     public static final ResourceKey<DuckVariant> BROWN = register("brown");
 
-    public ResourceLocation texture(boolean isBaby, boolean isDomestic) {
+    public Identifier texture(boolean isBaby, boolean isDomestic) {
         return FowlPlay.id(new ResourcePathBuilder()
             .add("textures/entity/duck/")
             .addIf("baby_", isBaby)

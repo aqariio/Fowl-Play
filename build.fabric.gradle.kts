@@ -37,7 +37,7 @@ repositories {
     maven("https://maven.terraformersmc.com/releases/")
     maven("https://gitlab.com/api/v4/projects/21830712/packages/maven")
     maven("https://maven.isxander.dev/releases")
-    strictMaven("https://dl.cloudsmith.io/public/tslat/sbl/maven/", "SmartBrainLib", "net.tslat.smartbrainlib")
+    strictMaven("https://dl.cloudsmith.io/public/tslat/sbl/maven/", "SmartBrainLib", "net.tslat")
     maven("https://maven.shedaniel.me/")
     maven("https://repo.lucko.me/")
 }
@@ -80,7 +80,7 @@ dependencies {
     modRuntimeOnly("maven.modrinth:nbt-autocomplete:${property("deps.nbt_autocomplete")}-fabric-26.1")
 
     // Smart Brain Lib
-    modImplementation("net.tslat.smartbrainlib:SmartBrainLib-fabric-${sc.current.version}:${property("deps.sbl")}")
+    modImplementation("net.tslat:smartbrainlib-fabric-${sc.current.version}:${property("deps.sbl")}")
 
     // Spark
     modRuntimeOnly("me.lucko:fabric-permissions-api:${property("deps.fabric_permissions_api")}")

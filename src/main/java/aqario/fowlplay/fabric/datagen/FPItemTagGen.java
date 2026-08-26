@@ -6,14 +6,14 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Items;
 
 import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings("deprecation")
 public class FPItemTagGen extends FabricTagProvider.ItemTagProvider {
-    private static final ResourceLocation WORM = ResourceLocation.fromNamespaceAndPath("angling", "worm");
+    private static final Identifier WORM = Identifier.fromNamespaceAndPath("angling", "worm");
 
     public FPItemTagGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
         super(output, completableFuture);

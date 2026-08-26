@@ -32,7 +32,7 @@ repositories {
     maven("https://maven.terraformersmc.com/releases/")
     maven("https://gitlab.com/api/v4/projects/21830712/packages/maven")
     maven("https://maven.isxander.dev/releases")
-    strictMaven("https://dl.cloudsmith.io/public/tslat/sbl/maven/", "SmartBrainLib", "net.tslat.smartbrainlib")
+    strictMaven("https://dl.cloudsmith.io/public/tslat/sbl/maven/", "SmartBrainLib", "net.tslat")
     maven("https://maven.shedaniel.me/")
     maven("https://repo.lucko.me/")
 }
@@ -54,7 +54,7 @@ dependencies {
     runtimeOnly("maven.modrinth:nbt-autocomplete:${property("deps.nbt_autocomplete")}-neoforge-26.1")
 
     // Smart Brain Lib
-    implementation("net.tslat.smartbrainlib:SmartBrainLib-neoforge-${sc.current.version}:${property("deps.sbl")}")
+    implementation("net.tslat:smartbrainlib-neoforge-${sc.current.version}:${property("deps.sbl")}")
 
     // Spark
 //    runtimeOnly("me.lucko:fabric-permissions-api:${property("deps.fabric_permissions_api")}")

@@ -12,10 +12,10 @@ import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ScarecrowRenderer extends LivingEntityRenderer<ScarecrowEntity, ScarecrowModel> {
-    public static final ResourceLocation TEXTURE = FowlPlay.id("textures/entity/scarecrow/scarecrow.png");
+    public static final Identifier TEXTURE = FowlPlay.id("textures/entity/scarecrow/scarecrow.png");
 
     public ScarecrowRenderer(EntityRendererProvider.Context ctx) {
         super(ctx, new ScarecrowModel(ctx.bakeLayer(ScarecrowModel.MODEL_LAYER)), 0.0F);
@@ -44,7 +44,7 @@ public class ScarecrowRenderer extends LivingEntityRenderer<ScarecrowEntity, Sca
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ScarecrowEntity entity) {
+    public Identifier getTextureLocation(ScarecrowEntity entity) {
         return TEXTURE;
     }
 }

@@ -5,7 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public final class SoundDefinition {
         private static final boolean DEFAULT_STREAM = false;
         private static final int DEFAULT_ATTENUATION_DISTANCE = 16;
         private static final boolean DEFAULT_PRELOAD = false;
-        private final ResourceLocation name;
+        private final Identifier name;
         private final SoundType type;
         private float volume = DEFAULT_VOLUME;
         private float pitch = DEFAULT_PITCH;
@@ -81,12 +81,12 @@ public final class SoundDefinition {
         private int attenuationDistance = DEFAULT_ATTENUATION_DISTANCE;
         private boolean preload = DEFAULT_PRELOAD;
 
-        private Sound(ResourceLocation name, SoundType type) {
+        private Sound(Identifier name, SoundType type) {
             this.name = name;
             this.type = type;
         }
 
-        public static Sound sound(ResourceLocation name, SoundType type) {
+        public static Sound sound(Identifier name, SoundType type) {
             return new Sound(name, type);
         }
 
@@ -145,7 +145,7 @@ public final class SoundDefinition {
             return this;
         }
 
-        ResourceLocation name() {
+        Identifier name() {
             return this.name;
         }
 
@@ -200,7 +200,7 @@ public final class SoundDefinition {
                 && this.preload == DEFAULT_PRELOAD;
         }
 
-        private String stripVanillaNamespace(ResourceLocation name) {
+        private String stripVanillaNamespace(Identifier name) {
             return "minecraft".equals(name.getNamespace()) ? name.getPath() : name.toString();
         }
     }

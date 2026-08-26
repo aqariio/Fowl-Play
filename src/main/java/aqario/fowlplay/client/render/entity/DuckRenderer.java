@@ -7,11 +7,11 @@ import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
 public class DuckRenderer extends MobRenderer<DuckEntity, DuckModel> {
-    private static final ResourceLocation QUACKERS_TEXTURE = FowlPlay.id("textures/entity/duck/quackers.png");
+    private static final Identifier QUACKERS_TEXTURE = FowlPlay.id("textures/entity/duck/quackers.png");
 
     public DuckRenderer(EntityRendererProvider.Context context) {
         super(context, new DuckModel(context.bakeLayer(DuckModel.MODEL_LAYER)), 0.3f);
@@ -23,7 +23,7 @@ public class DuckRenderer extends MobRenderer<DuckEntity, DuckModel> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(DuckEntity duck) {
+    public Identifier getTextureLocation(DuckEntity duck) {
         String customName = ChatFormatting.stripFormatting(duck.getName().getString());
         if(customName.equals("Quackers")) {
             return QUACKERS_TEXTURE;

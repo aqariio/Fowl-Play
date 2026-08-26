@@ -7,7 +7,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
 import java.nio.file.Path;
@@ -44,20 +44,20 @@ public abstract class SoundDefinitionsProvider implements DataProvider {
         return "Sound Definitions";
     }
 
-    protected static SoundDefinition.Sound sound(ResourceLocation name, SoundDefinition.SoundType type) {
+    protected static SoundDefinition.Sound sound(Identifier name, SoundDefinition.SoundType type) {
         return SoundDefinition.Sound.sound(name, type);
     }
 
-    protected static SoundDefinition.Sound sound(ResourceLocation name) {
+    protected static SoundDefinition.Sound sound(Identifier name) {
         return sound(name, SoundDefinition.SoundType.SOUND);
     }
 
     protected static SoundDefinition.Sound sound(String name, SoundDefinition.SoundType type) {
-        return sound(ResourceLocation.tryParse(name), type);
+        return sound(Identifier.tryParse(name), type);
     }
 
     protected static SoundDefinition.Sound sound(String name) {
-        return sound(ResourceLocation.tryParse(name));
+        return sound(Identifier.tryParse(name));
     }
 
     protected void add(Supplier<SoundEvent> soundEvent, SoundDefinition definition) {
@@ -68,15 +68,15 @@ public abstract class SoundDefinitionsProvider implements DataProvider {
         this.add(soundEvent.getLocation(), definition);
     }
 
-    protected void add(ResourceLocation soundEvent, SoundDefinition definition) {
+    protected void add(Identifier soundEvent, SoundDefinition definition) {
         this.addSounds(soundEvent, definition);
     }
 
     protected void add(String soundEvent, SoundDefinition definition) {
-        this.add(ResourceLocation.tryParse(soundEvent), definition);
+        this.add(Identifier.tryParse(soundEvent), definition);
     }
 
-    private void addSounds(ResourceLocation soundEvent, SoundDefinition definition) {
+    private void addSounds(Identifier soundEvent, SoundDefinition definition) {
         if (this.soundDefinitions.put(soundEvent.getPath(), definition) != null) {
             throw new IllegalStateException("Sound event '" + soundEvent + "' already exists");
         }

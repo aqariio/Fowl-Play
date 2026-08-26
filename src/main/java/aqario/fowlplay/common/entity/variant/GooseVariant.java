@@ -8,8 +8,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 
 public record GooseVariant(
@@ -27,7 +27,7 @@ public record GooseVariant(
     public static final ResourceKey<GooseVariant> GREYLAG = register("greylag", true);
     public static final ResourceKey<GooseVariant> SWAN = register("swan", true);
 
-    public ResourceLocation texture(boolean isBaby, boolean isDomestic) {
+    public Identifier texture(boolean isBaby, boolean isDomestic) {
         return FowlPlay.id(new ResourcePathBuilder()
             .add("textures/entity/goose/")
             .addIf("baby_", isBaby)

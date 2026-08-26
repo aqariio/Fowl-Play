@@ -5,7 +5,7 @@ import aqario.fowlplay.client.render.entity.model.GullModel;
 import aqario.fowlplay.common.entity.bird.shorebird.GullEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
 public class GullRenderer extends MobRenderer<GullEntity, GullModel> {
@@ -19,7 +19,7 @@ public class GullRenderer extends MobRenderer<GullEntity, GullModel> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(GullEntity gull) {
+    public Identifier getTextureLocation(GullEntity gull) {
         return gull.getVariant().value().texture();
     }
 }

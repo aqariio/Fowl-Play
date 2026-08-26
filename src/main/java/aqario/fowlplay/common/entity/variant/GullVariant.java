@@ -7,10 +7,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 
-public record GullVariant(ResourceLocation texture) {
+public record GullVariant(Identifier texture) {
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<GullVariant>> PACKET_CODEC = ByteBufCodecs.holderRegistry(
         FPRegistries.GULL_VARIANT
     );
@@ -24,7 +24,7 @@ public record GullVariant(ResourceLocation texture) {
 
     private static ResourceKey<GullVariant> register(String id) {
         ResourceKey<GullVariant> key = ResourceKey.create(FPRegistries.GULL_VARIANT, FowlPlay.id(id));
-        ResourceLocation texture = FowlPlay.id("textures/entity/gull/" + key.location().getPath() + "_gull.png");
+        Identifier texture = FowlPlay.id("textures/entity/gull/" + key.location().getPath() + "_gull.png");
         REGISTRAR.register(id, () -> new GullVariant(texture));
         return key;
     }

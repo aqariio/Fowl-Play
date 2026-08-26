@@ -16,7 +16,7 @@ import aqario.fowlplay.core.FowlPlay;
 import com.google.common.base.Suppliers;
 import io.github.flemmli97.debugutils.api.RegisterDebugRenderers;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 
 @SuppressWarnings("unused")
@@ -28,11 +28,11 @@ public class FowlPlayClient {
 
     public static void init() {
         if(FowlPlay.isDebugUtilsLoaded()) {
-            ResourceLocation debugBirdId = BirdDebugPayload.TYPE.id();
+            Identifier debugBirdId = BirdDebugPayload.TYPE.id();
             FPDebugRenderers.register(BirdDebugRenderer.INSTANCE);
             RegisterDebugRenderers.registerServerToggle(debugBirdId);
             RegisterDebugRenderers.registerClientHandler(debugBirdId, b -> FowlPlayClient.DEBUG_BIRD = b);
-            ResourceLocation debugGenericId = GenericDebugPayload.TYPE.id();
+            Identifier debugGenericId = GenericDebugPayload.TYPE.id();
             FPDebugRenderers.register(GenericDebugRenderer.INSTANCE);
             RegisterDebugRenderers.registerServerToggle(debugGenericId);
             RegisterDebugRenderers.registerClientHandler(debugGenericId, b -> FowlPlayClient.DEBUG_GENERIC = b);

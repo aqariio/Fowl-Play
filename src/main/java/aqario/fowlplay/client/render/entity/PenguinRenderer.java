@@ -11,12 +11,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
 public class PenguinRenderer extends MobRenderer<PenguinEntity, PenguinModel> {
-    private static final ResourceLocation TEXTURE = FowlPlay.id("textures/entity/penguin/penguin.png");
-    private static final ResourceLocation BABY_TEXTURE = FowlPlay.id("textures/entity/penguin/penguin_baby.png");
+    private static final Identifier TEXTURE = FowlPlay.id("textures/entity/penguin/penguin.png");
+    private static final Identifier BABY_TEXTURE = FowlPlay.id("textures/entity/penguin/penguin_baby.png");
     private final AdultBabyModelPair<PenguinModel> modelPair;
 
     public PenguinRenderer(EntityRendererProvider.Context context) {
@@ -46,7 +46,7 @@ public class PenguinRenderer extends MobRenderer<PenguinEntity, PenguinModel> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(PenguinEntity entity) {
+    public Identifier getTextureLocation(PenguinEntity entity) {
         return entity.isBaby() ? BABY_TEXTURE : TEXTURE;
     }
 

@@ -10,7 +10,7 @@ import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.item.Items;
 
@@ -70,10 +70,10 @@ public class FPAdvancementGen extends FabricAdvancementProvider {
     }
 
     private static AdvancementHolder advancement(String id) {
-        return advancement(ResourceLocation.withDefaultNamespace(id));
+        return advancement(Identifier.withDefaultNamespace(id));
     }
 
-    private static AdvancementHolder advancement(ResourceLocation id) {
+    private static AdvancementHolder advancement(Identifier id) {
         return Advancement.Builder.advancement().build(id);
     }
 }

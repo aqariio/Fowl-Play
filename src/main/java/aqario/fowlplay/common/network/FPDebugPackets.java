@@ -17,7 +17,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.protocol.game.DebugEntityNameGenerator;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Nameable;
@@ -102,7 +102,7 @@ public class FPDebugPackets {
         List<String> activities = brain.getActiveActivities().stream().map(Activity::getName).toList();
         List<String> behaviors = brain.getRunningBehaviors().stream().map(BehaviorControl::debugString).toList();
         List<String> memories = getMemoryDescriptions(bird, bird.level().getGameTime());
-        String schedule = Optional.ofNullable(BuiltInRegistries.SCHEDULE.getKey(brain.getSchedule())).map(ResourceLocation::getPath).orElse(null);
+        String schedule = Optional.ofNullable(BuiltInRegistries.SCHEDULE.getKey(brain.getSchedule())).map(Identifier::getPath).orElse(null);
         Set<BlockPos> pois = Set.of();
         Set<BlockPos> potentialPois = Set.of();
 

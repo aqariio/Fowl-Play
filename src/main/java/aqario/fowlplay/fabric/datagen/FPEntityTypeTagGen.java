@@ -6,22 +6,22 @@ import aqario.fowlplay.core.tags.FPEntityTypeTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
 
 import java.util.concurrent.CompletableFuture;
 
 public class FPEntityTypeTagGen extends FabricTagProvider.EntityTypeTagProvider {
-    private static final ResourceLocation ANCIENTSCALE = ResourceLocation.fromNamespaceAndPath("fishofthieves", "ancientscale");
-    private static final ResourceLocation BATTLEGILL = ResourceLocation.fromNamespaceAndPath("fishofthieves", "battlegill");
-    private static final ResourceLocation DEVILFISH = ResourceLocation.fromNamespaceAndPath("fishofthieves", "devilfish");
-    private static final ResourceLocation ISLEHOPPER = ResourceLocation.fromNamespaceAndPath("fishofthieves", "islehopper");
-    private static final ResourceLocation PLENTIFIN = ResourceLocation.fromNamespaceAndPath("fishofthieves", "plentifin");
-    private static final ResourceLocation PONDIE = ResourceLocation.fromNamespaceAndPath("fishofthieves", "pondie");
-    private static final ResourceLocation SPLASHTAIL = ResourceLocation.fromNamespaceAndPath("fishofthieves", "splashtail");
-    private static final ResourceLocation STORMFISH = ResourceLocation.fromNamespaceAndPath("fishofthieves", "stormfish");
-    private static final ResourceLocation WILDSPLASH = ResourceLocation.fromNamespaceAndPath("fishofthieves", "wildsplash");
+    private static final Identifier ANCIENTSCALE = Identifier.fromNamespaceAndPath("fishofthieves", "ancientscale");
+    private static final Identifier BATTLEGILL = Identifier.fromNamespaceAndPath("fishofthieves", "battlegill");
+    private static final Identifier DEVILFISH = Identifier.fromNamespaceAndPath("fishofthieves", "devilfish");
+    private static final Identifier ISLEHOPPER = Identifier.fromNamespaceAndPath("fishofthieves", "islehopper");
+    private static final Identifier PLENTIFIN = Identifier.fromNamespaceAndPath("fishofthieves", "plentifin");
+    private static final Identifier PONDIE = Identifier.fromNamespaceAndPath("fishofthieves", "pondie");
+    private static final Identifier SPLASHTAIL = Identifier.fromNamespaceAndPath("fishofthieves", "splashtail");
+    private static final Identifier STORMFISH = Identifier.fromNamespaceAndPath("fishofthieves", "stormfish");
+    private static final Identifier WILDSPLASH = Identifier.fromNamespaceAndPath("fishofthieves", "wildsplash");
 
     public FPEntityTypeTagGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
         super(output, completableFuture);

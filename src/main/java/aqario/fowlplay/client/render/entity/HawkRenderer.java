@@ -6,11 +6,11 @@ import aqario.fowlplay.common.entity.bird.raptor.HawkEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
 public class HawkRenderer extends MobRenderer<HawkEntity, HawkModel> {
-    private static final ResourceLocation TEXTURE = FowlPlay.id("textures/entity/hawk/red_tailed_hawk.png");
+    private static final Identifier TEXTURE = FowlPlay.id("textures/entity/hawk/red_tailed_hawk.png");
 
     public HawkRenderer(EntityRendererProvider.Context context) {
         super(context, new HawkModel(context.bakeLayer(HawkModel.MODEL_LAYER)), 0.3f);
@@ -22,7 +22,7 @@ public class HawkRenderer extends MobRenderer<HawkEntity, HawkModel> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(HawkEntity hawk) {
+    public Identifier getTextureLocation(HawkEntity hawk) {
         return TEXTURE;
     }
 }

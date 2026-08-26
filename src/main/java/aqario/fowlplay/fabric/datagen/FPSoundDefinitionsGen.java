@@ -7,7 +7,7 @@ import aqario.fowlplay.fabric.datagen.provider.SoundDefinition;
 import aqario.fowlplay.fabric.datagen.provider.SoundDefinitionsProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
 import java.util.concurrent.CompletableFuture;
@@ -98,7 +98,7 @@ public class FPSoundDefinitionsGen extends SoundDefinitionsProvider {
     private void addVariousVanilla(SoundEvent soundEvent, String location, int start, int end) {
         SoundDefinition definition = SoundDefinition.builder();
         for(int i = start; i <= end; i++) {
-            definition.with(sound(ResourceLocation.withDefaultNamespace(location + i)));
+            definition.with(sound(Identifier.withDefaultNamespace(location + i)));
         }
         definition.subtitle("subtitles." + soundEvent.getLocation().getPath());
         this.add(soundEvent, definition);
@@ -110,7 +110,7 @@ public class FPSoundDefinitionsGen extends SoundDefinitionsProvider {
 
     private void addVanilla(SoundEvent soundEvent, String location) {
         SoundDefinition definition = SoundDefinition.builder()
-            .with(sound(ResourceLocation.withDefaultNamespace(location)))
+            .with(sound(Identifier.withDefaultNamespace(location)))
             .subtitle("subtitles." + soundEvent.getLocation().getPath());
         this.add(soundEvent, definition);
     }
@@ -120,7 +120,7 @@ public class FPSoundDefinitionsGen extends SoundDefinitionsProvider {
     }
 
     private void addBird(Supplier<SoundEvent> soundEvent, String name, int rangeStart, int rangeEnd) {
-        ResourceLocation sound = soundEvent.get().getLocation();
+        Identifier sound = soundEvent.get().getLocation();
         String location = sound.getPath()
             .replace("entity", "mob")
             .replace(".", "/");

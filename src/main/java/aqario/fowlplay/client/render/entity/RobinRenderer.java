@@ -6,11 +6,11 @@ import aqario.fowlplay.common.entity.bird.passerine.RobinEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
 public class RobinRenderer extends MobRenderer<RobinEntity, RobinModel> {
-    private static final ResourceLocation TEXTURE = FowlPlay.id("textures/entity/robin/american_robin.png");
+    private static final Identifier TEXTURE = FowlPlay.id("textures/entity/robin/american_robin.png");
 
     public RobinRenderer(EntityRendererProvider.Context context) {
         super(context, new RobinModel(context.bakeLayer(RobinModel.MODEL_LAYER)), 0.15f);
@@ -22,7 +22,7 @@ public class RobinRenderer extends MobRenderer<RobinEntity, RobinModel> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(RobinEntity entity) {
+    public Identifier getTextureLocation(RobinEntity entity) {
         return TEXTURE;
     }
 }

@@ -4,8 +4,8 @@ package aqario.fowlplay.fabric.common.registry;
 import aqario.fowlplay.common.registry.CommonRegister;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Supplier;
 
@@ -33,7 +33,7 @@ public class CommonRegisterImpl<T> extends CommonRegister<T> {
 
     @Override
     public <E extends T> Supplier<E> register(String name, Supplier<E> entry) {
-        E value = Registry.register(this.registry, ResourceLocation.fromNamespaceAndPath(this.namespace, name), entry.get());
+        E value = Registry.register(this.registry, Identifier.fromNamespaceAndPath(this.namespace, name), entry.get());
         return () -> value;
     }
 

@@ -7,32 +7,32 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 
 import java.util.concurrent.CompletableFuture;
 
 public class FPBiomeTagGen extends FabricTagProvider<Biome> {
-    private static final ResourceLocation WHITE_CLIFFS = ResourceLocation.fromNamespaceAndPath("natures_spirit", "white_cliffs");
-    private static final ResourceLocation IS_ALPINE = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_alpine");
-    private static final ResourceLocation IS_AUTUMN = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_autumn");
-    private static final ResourceLocation IS_COAST = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_coast");
-    private static final ResourceLocation IS_COLD = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_cold");
-    private static final ResourceLocation IS_CYPRESS = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_cypress");
-    private static final ResourceLocation IS_FIELD = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_field");
-    private static final ResourceLocation IS_FRONTIER = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_frontier");
-    private static final ResourceLocation IS_FREEZING = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_freezing");
-    private static final ResourceLocation IS_WETLAND = ResourceLocation.fromNamespaceAndPath("natures_spirit", "is_wetland");
-    private static final ResourceLocation BEACH = ResourceLocation.fromNamespaceAndPath("c", "beach");
-    private static final ResourceLocation FOREST = ResourceLocation.fromNamespaceAndPath("c", "forest");
-    private static final ResourceLocation RIVER = ResourceLocation.fromNamespaceAndPath("c", "river");
-    private static final ResourceLocation SWAMP = ResourceLocation.fromNamespaceAndPath("c", "swamp");
-    private static final ResourceLocation TREE_CONIFEROUS = ResourceLocation.fromNamespaceAndPath("c", "tree_coniferous");
-    private static final ResourceLocation TREE_DECIDUOUS = ResourceLocation.fromNamespaceAndPath("c", "tree_deciduous");
-    private static final ResourceLocation VEGETATION_SPARSE = ResourceLocation.fromNamespaceAndPath("c", "vegetation_sparse");
-    private static final ResourceLocation IS_TREE_CONIFEROUS = ResourceLocation.fromNamespaceAndPath("c", "is_tree_coniferous");
-    private static final ResourceLocation IS_TREE_DECIDUOUS = ResourceLocation.fromNamespaceAndPath("c", "is_tree_deciduous");
+    private static final Identifier WHITE_CLIFFS = Identifier.fromNamespaceAndPath("natures_spirit", "white_cliffs");
+    private static final Identifier IS_ALPINE = Identifier.fromNamespaceAndPath("natures_spirit", "is_alpine");
+    private static final Identifier IS_AUTUMN = Identifier.fromNamespaceAndPath("natures_spirit", "is_autumn");
+    private static final Identifier IS_COAST = Identifier.fromNamespaceAndPath("natures_spirit", "is_coast");
+    private static final Identifier IS_COLD = Identifier.fromNamespaceAndPath("natures_spirit", "is_cold");
+    private static final Identifier IS_CYPRESS = Identifier.fromNamespaceAndPath("natures_spirit", "is_cypress");
+    private static final Identifier IS_FIELD = Identifier.fromNamespaceAndPath("natures_spirit", "is_field");
+    private static final Identifier IS_FRONTIER = Identifier.fromNamespaceAndPath("natures_spirit", "is_frontier");
+    private static final Identifier IS_FREEZING = Identifier.fromNamespaceAndPath("natures_spirit", "is_freezing");
+    private static final Identifier IS_WETLAND = Identifier.fromNamespaceAndPath("natures_spirit", "is_wetland");
+    private static final Identifier BEACH = Identifier.fromNamespaceAndPath("c", "beach");
+    private static final Identifier FOREST = Identifier.fromNamespaceAndPath("c", "forest");
+    private static final Identifier RIVER = Identifier.fromNamespaceAndPath("c", "river");
+    private static final Identifier SWAMP = Identifier.fromNamespaceAndPath("c", "swamp");
+    private static final Identifier TREE_CONIFEROUS = Identifier.fromNamespaceAndPath("c", "tree_coniferous");
+    private static final Identifier TREE_DECIDUOUS = Identifier.fromNamespaceAndPath("c", "tree_deciduous");
+    private static final Identifier VEGETATION_SPARSE = Identifier.fromNamespaceAndPath("c", "vegetation_sparse");
+    private static final Identifier IS_TREE_CONIFEROUS = Identifier.fromNamespaceAndPath("c", "is_tree_coniferous");
+    private static final Identifier IS_TREE_DECIDUOUS = Identifier.fromNamespaceAndPath("c", "is_tree_deciduous");
 
     public FPBiomeTagGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, Registries.BIOME, registriesFuture);

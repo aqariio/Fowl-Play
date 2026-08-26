@@ -8,7 +8,8 @@ import aqario.fowlplay.common.worldgen.PigeonSpawner;
 import aqario.fowlplay.common.worldgen.SparrowSpawner;
 import aqario.fowlplay.core.platform.Events;
 import aqario.fowlplay.core.platform.Platform;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.gamerules.GameRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,12 +17,12 @@ public class FowlPlay {
     public static final Logger LOGGER = LoggerFactory.getLogger("Fowl Play");
     public static final String ID = "fowlplay";
 
-    public static ResourceLocation id(ResourcePathBuilder path) {
-        return ResourceLocation.fromNamespaceAndPath(ID, path.build());
+    public static Identifier id(ResourcePathBuilder path) {
+        return Identifier.fromNamespaceAndPath(ID, path.build());
     }
 
-    public static ResourceLocation id(String id) {
-        return ResourceLocation.fromNamespaceAndPath(ID, id);
+    public static Identifier id(String id) {
+        return Identifier.fromNamespaceAndPath(ID, id);
     }
 
     public static boolean isDebugUtilsLoaded() {
@@ -66,8 +67,8 @@ public class FowlPlay {
         Events.serverLevelTickPost(level -> {
             pigeonSpawner.tick(
                 level,
-                level.getServer().isSpawningMonsters(),
-                level.getServer().isSpawningAnimals()
+                level.getServer().spawnEnemies,
+                level.getServer().getGameRules().get(GameRules.SPAWN_MOBS)
             );
             sparrowSpawner.tick(
                 level,

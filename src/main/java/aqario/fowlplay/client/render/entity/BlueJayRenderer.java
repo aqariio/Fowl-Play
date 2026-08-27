@@ -6,10 +6,11 @@ import aqario.fowlplay.common.entity.bird.passerine.BlueJayEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
-public class BlueJayRenderer extends MobRenderer<BlueJayEntity, BlueJayModel> {
+public class BlueJayRenderer extends MobRenderer<BlueJayEntity, LivingEntityRenderState, BlueJayModel> {
     private static final Identifier TEXTURE = FowlPlay.id("textures/entity/blue_jay/blue_jay.png");
 
     public BlueJayRenderer(EntityRendererProvider.Context context) {
@@ -22,7 +23,12 @@ public class BlueJayRenderer extends MobRenderer<BlueJayEntity, BlueJayModel> {
     }
 
     @Override
-    public Identifier getTextureLocation(BlueJayEntity entity) {
+    public LivingEntityRenderState createRenderState() {
+        return new LivingEntityRenderState();
+    }
+
+    @Override
+    public Identifier getTextureLocation(LivingEntityRenderState state) {
         return TEXTURE;
     }
 }

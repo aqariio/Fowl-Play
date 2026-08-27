@@ -6,10 +6,11 @@ import aqario.fowlplay.common.entity.bird.passerine.CardinalEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
-public class CardinalRenderer extends MobRenderer<CardinalEntity, CardinalModel> {
+public class CardinalRenderer extends MobRenderer<CardinalEntity, LivingEntityRenderState, CardinalModel> {
     private static final Identifier TEXTURE = FowlPlay.id("textures/entity/cardinal/cardinal.png");
 
     public CardinalRenderer(EntityRendererProvider.Context context) {
@@ -22,7 +23,12 @@ public class CardinalRenderer extends MobRenderer<CardinalEntity, CardinalModel>
     }
 
     @Override
-    public Identifier getTextureLocation(CardinalEntity entity) {
+    public LivingEntityRenderState createRenderState() {
+        return new LivingEntityRenderState();
+    }
+
+    @Override
+    public Identifier getTextureLocation(LivingEntityRenderState state) {
         return TEXTURE;
     }
 }

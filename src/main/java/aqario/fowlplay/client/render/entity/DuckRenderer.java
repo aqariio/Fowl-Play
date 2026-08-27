@@ -2,6 +2,7 @@ package aqario.fowlplay.client.render.entity;
 
 import aqario.fowlplay.client.render.entity.layer.BirdHeldItemLayer;
 import aqario.fowlplay.client.render.entity.model.DuckModel;
+import aqario.fowlplay.client.render.entity.state.DuckRenderState;
 import aqario.fowlplay.common.entity.bird.waterfowl.DuckEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.ChatFormatting;
@@ -10,7 +11,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
-public class DuckRenderer extends MobRenderer<DuckEntity, DuckModel> {
+public class DuckRenderer extends MobRenderer<DuckEntity, DuckRenderState, DuckModel> {
     private static final Identifier QUACKERS_TEXTURE = FowlPlay.id("textures/entity/duck/quackers.png");
 
     public DuckRenderer(EntityRendererProvider.Context context) {
@@ -23,11 +24,24 @@ public class DuckRenderer extends MobRenderer<DuckEntity, DuckModel> {
     }
 
     @Override
-    public Identifier getTextureLocation(DuckEntity duck) {
-        String customName = ChatFormatting.stripFormatting(duck.getName().getString());
+    public DuckRenderState createRenderState() {
+        return new DuckRenderState();
+    }
+
+    @Override
+    public void extractRenderState(DuckEntity entity, DuckRenderState state, float partialTicks) {
+        super.extractRenderState(entity, state, partialTicks);
+        String customName = ChatFormatting.stripFormatting(entity.getName().getString());
         if(customName.equals("Quackers")) {
-            return QUACKERS_TEXTURE;
+            state.texture = QUACKERS_TEXTURE;
         }
-        return duck.getVariant().value().texture(false, duck.isDomestic());
+        else {
+            state.texture = entity.getVariant().value().texture(false, entity.isDomestic());
+        }
+    }
+
+    @Override
+    public Identifier getTextureLocation(DuckRenderState state) {
+        return state.texture;
     }
 }

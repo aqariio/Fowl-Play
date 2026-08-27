@@ -1,15 +1,22 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.client.render.entity.animation.DuckAnimations;
-import aqario.fowlplay.common.entity.bird.waterfowl.DuckEntity;
+import aqario.fowlplay.client.render.entity.state.DuckRenderState;
 import aqario.fowlplay.core.FowlPlay;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
-public class DuckModel extends FlyingBirdModel<DuckEntity> {
+public class DuckModel extends FlyingBirdModel<DuckRenderState> {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("duck"), "main");
+    private final KeyframeAnimation walkAnimation;
+    private final KeyframeAnimation standAnimation;
+    private final KeyframeAnimation swimAnimation;
+    private final KeyframeAnimation glideAnimation;
+    private final KeyframeAnimation flapAnimation;
+    private final KeyframeAnimation sleepAnimation;
 
     public DuckModel(ModelPart root) {
         super(root);
@@ -61,14 +68,15 @@ public class DuckModel extends FlyingBirdModel<DuckEntity> {
     }
 
     @Override
-    protected void setAnimations(DuckEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
-        if(!entity.isFlying() && !entity.isInWaterOrBubble()) {
-            this.animateWalk(DuckAnimations.WALKING, limbSwing, limbSwingAmount, 4F, 4F);
+    public void setupAnim(DuckRenderState state) {
+        super.setupAnim(state);
+        if(!state.isFlying && !state.isInWater) {
+            this.walkAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 4F, 4F);
         }
-        this.animate(entity.standingState, DuckAnimations.STANDING, ageInTicks);
-        this.animate(entity.swimmingState, DuckAnimations.SWIMMING, ageInTicks);
-        this.animate(entity.glidingState, DuckAnimations.GLIDING, ageInTicks);
-        this.animate(entity.flappingState, DuckAnimations.FLAPPING, ageInTicks);
-        this.animate(entity.sleepingState, entity.isInWaterOrBubble() ? DuckAnimations.SLEEPING_WATER : DuckAnimations.SLEEPING_LAND, ageInTicks);
+        this.standAnimation.apply(state.standingState, DuckAnimations.STANDING, ageInTicks);
+        this.swimAnimation.apply(state.swimmingState, DuckAnimations.SWIMMING, ageInTicks);
+        this.glideAnimation.apply(state.glidingState, DuckAnimations.GLIDING, ageInTicks);
+        this.flapAnimation.apply(state.flappingState, DuckAnimations.FLAPPING, ageInTicks);
+        this.sleepAnimation.apply(state.sleepingState, state.isInWater ? DuckAnimations.SLEEPING_WATER : DuckAnimations.SLEEPING_LAND, ageInTicks);
     }
 }

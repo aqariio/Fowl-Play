@@ -6,10 +6,11 @@ import aqario.fowlplay.common.entity.bird.passerine.CrowEntity;
 import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
-public class CrowRenderer extends MobRenderer<CrowEntity, CrowModel> {
+public class CrowRenderer extends MobRenderer<CrowEntity, LivingEntityRenderState, CrowModel> {
     private static final Identifier TEXTURE = FowlPlay.id("textures/entity/crow/crow.png");
 
     public CrowRenderer(EntityRendererProvider.Context context) {
@@ -22,7 +23,12 @@ public class CrowRenderer extends MobRenderer<CrowEntity, CrowModel> {
     }
 
     @Override
-    public Identifier getTextureLocation(CrowEntity entity) {
+    public LivingEntityRenderState createRenderState() {
+        return new LivingEntityRenderState();
+    }
+
+    @Override
+    public Identifier getTextureLocation(LivingEntityRenderState state) {
         return TEXTURE;
     }
 }

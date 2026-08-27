@@ -1,12 +1,12 @@
 package aqario.fowlplay.client.render.entity.model;
 
-import aqario.fowlplay.common.entity.bird.BirdEntity;
-import net.minecraft.client.model.HierarchicalModel;
+import aqario.fowlplay.client.render.entity.state.BirdRenderState;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.util.Mth;
 
-public abstract class BirdModel<E extends BirdEntity> extends HierarchicalModel<E> {
+public abstract class BirdModel<T extends BirdRenderState> extends EntityModel<T> {
     public final ModelPart root;
     public final ModelPart body;
     public final ModelPart neck;
@@ -19,6 +19,7 @@ public abstract class BirdModel<E extends BirdEntity> extends HierarchicalModel<
     public final ModelPart tail;
 
     public BirdModel(ModelPart root) {
+        super(root);
         this.root = root.getChild("root");
         this.body = this.root.getChild("body");
         this.neck = this.body.getChild("neck");
@@ -32,17 +33,8 @@ public abstract class BirdModel<E extends BirdEntity> extends HierarchicalModel<
     }
 
     @Override
-    public ModelPart root() {
-        return this.root;
-    }
-
-    @Override
-    public final void setupAnim(E entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-    }
-
-    @Override
-    public void prepareMobModel(E entity, float limbSwing, float limbSwingAmount, float partialTick) {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
+    public void prepareMobModel(T entity, float limbSwing, float limbSwingAmount, float partialTick) {
+        this.resetPose();
         float ageInTicks = entity.tickCount + partialTick;
         float bodyYaw = Mth.rotLerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
         float headYaw = Mth.rotLerp(partialTick, entity.yHeadRotO, entity.yHeadRot);
@@ -57,7 +49,7 @@ public abstract class BirdModel<E extends BirdEntity> extends HierarchicalModel<
         this.setAnimations(entity, limbSwing, limbSwingAmount, ageInTicks, relativeHeadYaw, headPitch, partialTick);
     }
 
-    protected void setAnimations(E entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
+    protected void setAnimations(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTick) {
     }
 
     protected void updateHeadRotation(float headYaw, float headPitch) {

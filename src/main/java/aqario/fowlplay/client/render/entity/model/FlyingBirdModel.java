@@ -1,11 +1,11 @@
 package aqario.fowlplay.client.render.entity.model;
 
-import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
+import aqario.fowlplay.client.render.entity.state.FlyingBirdRenderState;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.util.Mth;
 
-public abstract class FlyingBirdModel<E extends FlyingBirdEntity> extends BirdModel<E> {
+public abstract class FlyingBirdModel<T extends FlyingBirdRenderState> extends BirdModel<T> {
     public final ModelPart leftWingOpen;
     public final ModelPart rightWingOpen;
 
@@ -16,7 +16,7 @@ public abstract class FlyingBirdModel<E extends FlyingBirdEntity> extends BirdMo
     }
 
     @Override
-    public void prepareMobModel(E entity, float limbSwing, float limbSwingAmount, float partialTick) {
+    public void prepareMobModel(T entity, float limbSwing, float limbSwingAmount, float partialTick) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
         float ageInTicks = entity.tickCount + partialTick;
         float bodyYaw = Mth.rotLerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
@@ -50,7 +50,7 @@ public abstract class FlyingBirdModel<E extends FlyingBirdEntity> extends BirdMo
         this.setAnimations(entity, limbSwing, limbSwingAmount, ageInTicks, relativeHeadYaw, headPitch, partialTick);
     }
 
-    protected boolean shouldRenderWings(E entity) {
+    protected boolean shouldRenderWings(T entity) {
         return entity.isFlying();
     }
 }

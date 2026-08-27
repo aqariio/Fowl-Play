@@ -12,9 +12,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.StringRepresentable;
 
-public record DuckVariant(
-    String id
-) {
+public record DuckVariant(String id) {
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<DuckVariant>> PACKET_CODEC = ByteBufCodecs.holderRegistry(
         FPRegistries.DUCK_VARIANT
     );

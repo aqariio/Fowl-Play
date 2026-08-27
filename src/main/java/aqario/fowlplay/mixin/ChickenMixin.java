@@ -52,9 +52,9 @@ public abstract class ChickenMixin extends Animal implements VariantHolder<Chick
         cancellable = true
     )
     private void fowlplay$removeGoals(CallbackInfo ci) {
-        this.goalSelector.removeAllGoals(goal -> true);
-        this.targetSelector.removeAllGoals(goal -> true);
-        ci.cancel();
+//        this.goalSelector.removeAllGoals(goal -> true);
+//        this.targetSelector.removeAllGoals(goal -> true);
+//        ci.cancel();
     }
 
     @Inject(

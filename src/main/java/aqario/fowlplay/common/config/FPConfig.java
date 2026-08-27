@@ -116,6 +116,15 @@ public class FPConfig {
     @SerialEntry
     public int hawkMaxGroupSize = 1;
 
+    // Macaw
+
+    @SerialEntry
+    public int macawSpawnWeight = 1;
+    @SerialEntry
+    public int macawMinGroupSize = 1;
+    @SerialEntry
+    public int macawMaxGroupSize = 2;
+
     // Penguin
 
     @SerialEntry

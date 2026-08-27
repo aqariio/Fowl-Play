@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.entity.bird.waterfowl;
 
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
-import aqario.fowlplay.common.entity.ai.brain.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.AttackedSensor;
 import aqario.fowlplay.common.entity.ai.brain.sensor.AvoidTargetSensor;
@@ -31,7 +30,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -281,11 +279,6 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     }
 
     @Override
-    protected Brain.Provider<DuckEntity> brainProvider() {
-        return new ExtendedBrainProvider<>(this);
-    }
-
-    @Override
     public List<? extends ExtendedSensor<? extends DuckEntity>> getSensors() {
         return ObjectArrayList.of(
             new NearbyLivingEntitySensor<DuckEntity>()
@@ -380,11 +373,5 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     @Override
     public SmartBrainSchedule getSchedule() {
         return FPSchedules.WATERFOWL.get();
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        this.tickBrain(this);
-        super.customServerAiStep();
     }
 }

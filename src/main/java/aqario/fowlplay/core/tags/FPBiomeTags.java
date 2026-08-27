@@ -14,6 +14,7 @@ public final class FPBiomeTags {
     public static final TagKey<Biome> SPAWNS_GEESE = create("spawns_geese");
     public static final TagKey<Biome> SPAWNS_GULLS = create("spawns_gulls");
     public static final TagKey<Biome> SPAWNS_HAWKS = create("spawns_hawks");
+    public static final TagKey<Biome> SPAWNS_MACAWS = create("spawns_macaws");
     public static final TagKey<Biome> SPAWNS_PENGUINS = create("spawns_penguins");
     public static final TagKey<Biome> SPAWNS_PIGEONS = create("spawns_pigeons");
     public static final TagKey<Biome> SPAWNS_RAVENS = create("spawns_ravens");

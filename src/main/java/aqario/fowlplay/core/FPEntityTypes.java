@@ -4,6 +4,7 @@ import aqario.fowlplay.common.config.FPConfig;
 import aqario.fowlplay.common.entity.FPMobCategory;
 import aqario.fowlplay.common.entity.ScarecrowEntity;
 import aqario.fowlplay.common.entity.bird.dove.PigeonEntity;
+import aqario.fowlplay.common.entity.bird.parrot.MacawEntity;
 import aqario.fowlplay.common.entity.bird.passerine.*;
 import aqario.fowlplay.common.entity.bird.penguin.PenguinEntity;
 import aqario.fowlplay.common.entity.bird.raptor.HawkEntity;
@@ -210,6 +211,27 @@ public final class FPEntityTypes {
                 FPConfig.get().hawkSpawnWeight,
                 FPConfig.get().hawkMinGroupSize,
                 FPConfig.get().hawkMaxGroupSize
+            )
+    );
+
+    public static final Supplier<EntityType<MacawEntity>> MACAW = register("macaw",
+        EntityTypeBuilder.of(
+                MacawEntity::new,
+                FPMobCategory.BIRDS.mobCategory
+            )
+            .sized(0.6f, 0.8f)
+            .eyeHeight(0.7f)
+            .attributes(MacawEntity::createMacawAttributes)
+            .spawnPlacement(
+                CustomSpawnPlacementTypes.GROUND,
+                Heightmap.Types.MOTION_BLOCKING,
+                SpawnPredicates::canSpawnPasserines
+            )
+            .spawn(
+                FPBiomeTags.SPAWNS_MACAWS,
+                FPConfig.get().macawSpawnWeight,
+                FPConfig.get().macawMinGroupSize,
+                FPConfig.get().macawMaxGroupSize
             )
     );
 

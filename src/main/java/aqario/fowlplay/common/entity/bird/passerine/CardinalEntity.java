@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.entity.bird.passerine;
 
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
-import aqario.fowlplay.common.entity.ai.brain.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.AttackedSensor;
 import aqario.fowlplay.common.entity.ai.brain.sensor.AvoidTargetSensor;
@@ -19,7 +18,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
@@ -100,11 +98,6 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
     }
 
     @Override
-    protected Brain.Provider<CardinalEntity> brainProvider() {
-        return new ExtendedBrainProvider<>(this);
-    }
-
-    @Override
     public List<? extends ExtendedSensor<? extends CardinalEntity>> getSensors() {
         return ObjectArrayList.of(
             new NearbyLivingEntitySensor<CardinalEntity>()
@@ -175,11 +168,5 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
     @Override
     public SmartBrainSchedule getSchedule() {
         return FPSchedules.FORAGER.get();
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        this.tickBrain(this);
-        super.customServerAiStep();
     }
 }

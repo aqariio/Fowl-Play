@@ -2,6 +2,7 @@ package aqario.fowlplay.common.entity.bird;
 
 import aqario.fowlplay.common.entity.FPMobCategory;
 import aqario.fowlplay.common.entity.FPSoundSource;
+import aqario.fowlplay.common.entity.ai.brain.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.control.BirdBodyRotationControl;
 import aqario.fowlplay.common.entity.ai.control.BirdLookControl;
 import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;
@@ -26,6 +27,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.BodyRotationControl;
@@ -65,7 +67,7 @@ public abstract class BirdEntity extends Animal {
     private int eatingTime;
     protected int idleAnimationChance;
 
-    protected BirdEntity(EntityType<? extends BirdEntity> entityType, Level world) {
+    public BirdEntity(EntityType<? extends BirdEntity> entityType, Level world) {
         super(entityType, world);
         this.setCanPickUpLoot(true);
         this.moveControl = this.createMoveControl();
@@ -625,5 +627,27 @@ public abstract class BirdEntity extends Animal {
         if(this instanceof SmartBrainOwner<?> brainHaver) {
             this.setSchedule(brainHaver.getSchedule());
         }
+    }
+
+    @Override
+    protected final Brain.Provider<?> brainProvider() {
+        return this.chooseBrainProvider();
+    }
+
+    @SuppressWarnings("unchecked")
+    private <E extends BirdEntity & SmartBrainOwner<E>> Brain.Provider<?> chooseBrainProvider() {
+        if(this instanceof SmartBrainOwner<?> brainHaver) {
+            return new ExtendedBrainProvider<>((E) brainHaver);
+        }
+        return super.brainProvider();
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    protected void customServerAiStep() {
+        if(this instanceof SmartBrainOwner brainHaver) {
+            brainHaver.tickBrain(this);
+        }
+        super.customServerAiStep();
     }
 }

@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.entity.bird.shorebird;
 
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
-import aqario.fowlplay.common.entity.ai.brain.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.entity.ai.navigation.AmphibiousNavigation;
@@ -30,7 +29,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -237,11 +235,6 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     }
 
     @Override
-    protected Brain.Provider<GullEntity> brainProvider() {
-        return new ExtendedBrainProvider<>(this);
-    }
-
-    @Override
     public List<? extends ExtendedSensor<? extends GullEntity>> getSensors() {
         return ObjectArrayList.of(
             new NearbyLivingEntitySensor<GullEntity>()
@@ -350,11 +343,5 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     @Override
     public SmartBrainSchedule getSchedule() {
         return FPSchedules.SEABIRD.get();
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        this.tickBrain(this);
-        super.customServerAiStep();
     }
 }

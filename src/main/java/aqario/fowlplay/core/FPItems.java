@@ -61,6 +61,12 @@ public final class FPItems {
         0x544135,
         0xE5D8C0
     );
+    public static final Supplier<Item> MACAW_SPAWN_EGG = registerSpawnEgg(
+        "macaw_spawn_egg",
+        FPEntityTypes.MACAW,
+        0x0DA70B,
+        0xFF0000
+    );
     public static final Supplier<Item> PENGUIN_SPAWN_EGG = registerSpawnEgg(
         "penguin_spawn_egg",
         FPEntityTypes.PENGUIN,

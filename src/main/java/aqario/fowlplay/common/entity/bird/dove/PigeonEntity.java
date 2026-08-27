@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.entity.bird.dove;
 
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
-import aqario.fowlplay.common.entity.ai.brain.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.entity.ai.navigation.GroundNavigation;
@@ -32,7 +31,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -358,11 +356,6 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     @Override
-    protected Brain.Provider<PigeonEntity> brainProvider() {
-        return new ExtendedBrainProvider<>(this);
-    }
-
-    @Override
     public List<? extends ExtendedSensor<? extends PigeonEntity>> getSensors() {
         return ObjectArrayList.of(
             new NearbyLivingEntitySensor<PigeonEntity>()
@@ -478,7 +471,6 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
 
     @Override
     protected void customServerAiStep() {
-        this.tickBrain(this);
         super.customServerAiStep();
 
         if(this.isTamed() && this.getServer() != null) {

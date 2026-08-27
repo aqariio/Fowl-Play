@@ -115,6 +115,15 @@ public final class FPSoundEvents {
         90
     );
 
+    public static final Supplier<SoundEvent> MACAW_CALL = register(
+        "entity.macaw.call",
+        70
+    );
+    public static final Supplier<SoundEvent> MACAW_HURT = register(
+        "entity.macaw.hurt",
+        70
+    );
+
     public static final Supplier<SoundEvent> PENGUIN_CALL = register(
         "entity.penguin.call",
         32

@@ -1,7 +1,6 @@
 package aqario.fowlplay.common.entity.bird.raptor;
 
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
-import aqario.fowlplay.common.entity.ai.brain.ExtendedBrainProvider;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
 import aqario.fowlplay.common.entity.ai.brain.sensor.*;
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
@@ -21,7 +20,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -157,11 +155,6 @@ public class VultureEntity extends TrustingBirdEntity implements BirdBrain<Vultu
     }
 
     @Override
-    protected Brain.Provider<VultureEntity> brainProvider() {
-        return new ExtendedBrainProvider<>(this);
-    }
-
-    @Override
     public List<? extends ExtendedSensor<? extends VultureEntity>> getSensors() {
         return ObjectArrayList.of(
             new NearbyLivingEntitySensor<VultureEntity>()
@@ -241,11 +234,5 @@ public class VultureEntity extends TrustingBirdEntity implements BirdBrain<Vultu
     @Override
     public SmartBrainSchedule getSchedule() {
         return FPSchedules.RAPTOR.get();
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        this.tickBrain(this);
-        super.customServerAiStep();
     }
 }

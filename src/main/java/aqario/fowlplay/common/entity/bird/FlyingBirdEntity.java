@@ -50,7 +50,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     private static final double MIN_FLIGHT_VELOCITY = 0.1;
     private static final float MAX_ROLL_CHANGE = 20;
 
-    protected FlyingBirdEntity(EntityType<? extends BirdEntity> entityType, Level world) {
+    public FlyingBirdEntity(EntityType<? extends BirdEntity> entityType, Level world) {
         super(entityType, world);
         this.setNavigation(false);
         this.setPathfindingMalus(PathType.LEAVES, 0.0f);

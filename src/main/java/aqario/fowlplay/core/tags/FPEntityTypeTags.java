@@ -21,6 +21,7 @@ public final class FPEntityTypeTags {
     public static final TagKey<EntityType<?>> HAWK_AVOIDS = create("hawk_avoids");
     public static final TagKey<EntityType<?>> HAWK_BABY_HUNT_TARGETS = create("hawk_baby_hunt_targets");
     public static final TagKey<EntityType<?>> HAWK_HUNT_TARGETS = create("hawk_hunt_targets");
+    public static final TagKey<EntityType<?>> MACAW_AVOIDS = create("macaw_avoids");
     public static final TagKey<EntityType<?>> PASSERINES = create("passerines");
     public static final TagKey<EntityType<?>> PENGUIN_AVOIDS = create("penguin_avoids");
     public static final TagKey<EntityType<?>> PENGUIN_HUNT_TARGETS = create("penguin_hunt_targets");

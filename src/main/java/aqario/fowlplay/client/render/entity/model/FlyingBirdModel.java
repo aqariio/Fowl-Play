@@ -1,61 +1,29 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.common.entity.bird.FlyingBirdEntity;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.cache.object.GeoBone;
 
-public abstract class FlyingBirdModel<E extends FlyingBirdEntity> extends BirdModel<E> {
-    public final ModelPart leftWingOpen;
-    public final ModelPart rightWingOpen;
+import java.util.function.Supplier;
 
-    public FlyingBirdModel(ModelPart root) {
-        super(root);
-        this.leftWingOpen = this.body.getChild("left_wing_open");
-        this.rightWingOpen = this.body.getChild("right_wing_open");
+public class FlyingBirdModel<T extends FlyingBirdEntity & GeoAnimatable> extends BirdModel<T> {
+    public FlyingBirdModel(Supplier<EntityType<T>> entity) {
+        super(entity);
     }
 
     @Override
-    public void prepareMobModel(E entity, float limbSwing, float limbSwingAmount, float partialTick) {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
-        float ageInTicks = entity.tickCount + partialTick;
-        float bodyYaw = Mth.rotLerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
-        float headYaw = Mth.rotLerp(partialTick, entity.yHeadRotO, entity.yHeadRot);
-        float relativeHeadYaw = Mth.wrapDegrees(headYaw - bodyYaw);
+    public void setCustomAnimations(T entity, long instanceId, AnimationState<T> state) {
+        GeoBone root = this.getAnimationProcessor().getBone("root");
 
-        float headPitch = Mth.lerp(partialTick, entity.xRotO, entity.getXRot());
-        if(LivingEntityRenderer.isEntityUpsideDown(entity)) {
-            headPitch *= -1.0F;
-            relativeHeadYaw *= -1.0F;
-        }
-        if(entity.isFlying()) {
-            this.root.xRot = entity.getViewXRot(partialTick) * (float) (Math.PI / 180.0);
-            this.root.zRot = entity.getRoll(partialTick) * (float) (Math.PI / 180.0);
-        }
-        if(this.shouldRenderWings(entity)) {
-            this.leftWingOpen.visible = true;
-            this.rightWingOpen.visible = true;
-            this.leftWing.visible = false;
-            this.rightWing.visible = false;
-        }
-        else {
-            this.leftWingOpen.visible = false;
-            this.rightWingOpen.visible = false;
-            this.leftWing.visible = true;
-            this.rightWing.visible = true;
-        }
-        this.setAnimations(entity, limbSwing, limbSwingAmount, ageInTicks, relativeHeadYaw, headPitch, partialTick);
-        if(this.shouldApplyHeadRotation(entity)) {
-            this.updateHeadRotation(relativeHeadYaw, headPitch);
-        }
-    }
+        if(root != null && entity.isFlying()) {
+            float partialTick = state.getPartialTick();
 
-    @Override
-    protected boolean shouldApplyHeadRotation(E entity) {
-        return !entity.isFlying() && !entity.isSleeping() && !entity.idleAnimStates.containsStarted();
-    }
-
-    protected boolean shouldRenderWings(E entity) {
-        return entity.isFlying();
+            root.setRotX(root.getRotX() + entity.getViewXRot(partialTick) * Mth.DEG_TO_RAD);
+            root.setRotZ(root.getRotZ() + entity.getRoll(partialTick) * Mth.DEG_TO_RAD);
+        }
+        super.setCustomAnimations(entity, instanceId, state);
     }
 }

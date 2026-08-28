@@ -9,7 +9,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
-public class ChickadeeModel extends FlyingBirdModel<ChickadeeEntity> {
+public class ChickadeeModel extends OldFlyingBirdModel<ChickadeeEntity> {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("chickadee"), "main");
 
     public ChickadeeModel(ModelPart root) {

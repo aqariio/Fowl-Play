@@ -8,7 +8,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
-public class RobinModel extends FlyingBirdModel<RobinEntity> {
+public class RobinModel extends OldFlyingBirdModel<RobinEntity> {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("robin"), "main");
 
     public RobinModel(ModelPart root) {

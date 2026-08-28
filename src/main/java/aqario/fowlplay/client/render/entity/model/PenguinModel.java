@@ -8,7 +8,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
-public class PenguinModel extends BirdModel<PenguinEntity> {
+public class PenguinModel extends OldBirdModel<PenguinEntity> {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("penguin"), "main");
 
     public PenguinModel(ModelPart root) {

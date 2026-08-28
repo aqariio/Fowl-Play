@@ -1,6 +1,6 @@
 package aqario.fowlplay.client.render.entity.layer;
 
-import aqario.fowlplay.client.render.entity.model.BirdModel;
+import aqario.fowlplay.client.render.entity.model.OldBirdModel;
 import aqario.fowlplay.common.entity.bird.BirdEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-public class BirdHeldItemLayer<E extends BirdEntity, M extends BirdModel<E>> extends RenderLayer<E, M> {
+public class BirdHeldItemLayer<E extends BirdEntity, M extends OldBirdModel<E>> extends RenderLayer<E, M> {
     private final ItemInHandRenderer itemRenderer;
     // Z should be ((number of pixels offset from head pivot point) / 16 + 0.0225) * -1
     private final Vec3 heldItemOffset;

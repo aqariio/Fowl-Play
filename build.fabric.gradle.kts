@@ -31,13 +31,14 @@ repositories {
     }
     strictMaven("https://www.cursemaven.com", "CurseForge", "curse.maven")
     strictMaven("https://api.modrinth.com/maven", "Modrinth", "maven.modrinth")
+    strictMaven("https://dl.cloudsmith.io/public/tslat/sbl/maven/", "SmartBrainLib", "net.tslat.smartbrainlib")
+    strictMaven("https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/", "GeckoLib", "software.bernie.geckolib")
     maven("https://thedarkcolour.github.io/KotlinForForge/")
     maven("https://maven.quiltmc.org/repository/release/")
     maven("https://api.modrinth.com/maven")
     maven("https://maven.terraformersmc.com/releases/")
     maven("https://gitlab.com/api/v4/projects/21830712/packages/maven")
     maven("https://maven.isxander.dev/releases")
-    maven("https://dl.cloudsmith.io/public/tslat/sbl/maven/")
     maven("https://maven.parchmentmc.org")
     maven("https://maven.shedaniel.me/")
     maven("https://repo.lucko.me/")
@@ -79,6 +80,9 @@ dependencies {
 
     // Fabric Language Kotlin
     modRuntimeOnly("net.fabricmc:fabric-language-kotlin:${property("deps.fabric_language_kotlin")}")
+
+    // Geckolib
+    modImplementation("software.bernie.geckolib:geckolib-fabric-${sc.current.version}:${property("deps.geckolib")}")
 
     // Mod Menu
     modImplementation("com.terraformersmc:modmenu:${property("deps.modmenu")}")

@@ -8,7 +8,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
-public class DuckModel extends FlyingBirdModel<DuckEntity> {
+public class DuckModel extends OldFlyingBirdModel<DuckEntity> {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("duck"), "main");
 
     public DuckModel(ModelPart root) {

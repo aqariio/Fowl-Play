@@ -1,35 +1,23 @@
 package aqario.fowlplay.client.render.entity;
 
-import aqario.fowlplay.client.render.entity.layer.BirdHeldItemLayer;
-import aqario.fowlplay.client.render.entity.layer.PigeonBundleLayer;
-import aqario.fowlplay.client.render.entity.model.PigeonModel;
+import aqario.fowlplay.client.render.entity.layer.BundleItemLayer;
 import aqario.fowlplay.common.entity.bird.dove.PigeonEntity;
-import aqario.fowlplay.core.FowlPlay;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.EntityType;
 
-public class PigeonRenderer extends MobRenderer<PigeonEntity, PigeonModel> {
-    private static final ResourceLocation MARTHA_TEXTURE = FowlPlay.id("textures/entity/pigeon/martha.png");
+import java.util.function.Supplier;
 
-    public PigeonRenderer(EntityRendererProvider.Context context) {
-        super(context, new PigeonModel(context.bakeLayer(PigeonModel.MODEL_LAYER)), 0.2f);
-        this.addLayer(new BirdHeldItemLayer<>(
-            this,
-            context.getItemInHandRenderer(),
-            new Vec3(0.0, -0.0225, -0.1475)
-        ));
-        this.addLayer(new PigeonBundleLayer(this, context.getItemInHandRenderer()));
-    }
-
-    @Override
-    public ResourceLocation getTextureLocation(PigeonEntity pigeon) {
-        String string = ChatFormatting.stripFormatting(pigeon.getName().getString());
-        if ("Martha".equals(string)) {
-            return MARTHA_TEXTURE;
-        }
-        return pigeon.getVariant().value().texture();
+public class PigeonRenderer extends BirdRenderer<PigeonEntity> {
+    public PigeonRenderer(EntityRendererProvider.Context context, Supplier<EntityType<PigeonEntity>> entityType) {
+        super(context, entityType);
+        this.addRenderLayer(new BundleItemLayer<>(this));
+        this.setVariant(pigeon -> {
+            String string = ChatFormatting.stripFormatting(pigeon.getName().getString());
+            if("Martha".equals(string)) {
+                return "martha";
+            }
+            return pigeon.getVariant().value().name();
+        });
     }
 }

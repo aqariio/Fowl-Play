@@ -7,6 +7,7 @@ import aqario.fowlplay.client.render.debug.GenericDebugRenderer;
 import aqario.fowlplay.client.render.entity.*;
 import aqario.fowlplay.client.render.entity.model.*;
 import aqario.fowlplay.common.config.FPConfig;
+import aqario.fowlplay.common.entity.bird.BirdEntity;
 import aqario.fowlplay.common.network.NetworkManager;
 import aqario.fowlplay.common.network.clientbound.BirdDebugPayload;
 import aqario.fowlplay.common.network.clientbound.GenericDebugPayload;
@@ -18,6 +19,9 @@ import io.github.flemmli97.debugutils.api.RegisterDebugRenderers;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import software.bernie.geckolib.animatable.GeoEntity;
+
+import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class FowlPlayClient {
@@ -57,35 +61,6 @@ public class FowlPlayClient {
     }
 
     public static void registerModelLayers() {
-        RenderRegistry.modelLayer(BlueJayModel.MODEL_LAYER, BlueJayModel::createBodyLayer);
-
-        RenderRegistry.modelLayer(CardinalModel.MODEL_LAYER, CardinalModel::createBodyLayer);
-
-        RenderRegistry.modelLayer(ChickadeeModel.MODEL_LAYER, ChickadeeModel::createBodyLayer);
-
-        RenderRegistry.modelLayer(CrowModel.MODEL_LAYER, CrowModel::createBodyLayer);
-
-        RenderRegistry.modelLayer(DuckModel.MODEL_LAYER, DuckModel::createBodyLayer);
-
-        RenderRegistry.modelLayer(GooseModel.MODEL_LAYER, GooseModel::createBodyLayer);
-        RenderRegistry.modelLayer(DomesticGooseModel.MODEL_LAYER, DomesticGooseModel::createBodyLayer);
-        RenderRegistry.modelLayer(BabyGooseModel.MODEL_LAYER, BabyGooseModel::createBodyLayer);
-
-        RenderRegistry.modelLayer(GullModel.MODEL_LAYER, GullModel::createBodyLayer);
-
-        RenderRegistry.modelLayer(HawkModel.MODEL_LAYER, HawkModel::createBodyLayer);
-
-        RenderRegistry.modelLayer(PenguinModel.MODEL_LAYER, PenguinModel::createBodyLayer);
-        RenderRegistry.modelLayer(BabyPenguinModel.MODEL_LAYER, BabyPenguinModel::createBodyLayer);
-
-        RenderRegistry.modelLayer(PigeonModel.MODEL_LAYER, PigeonModel::createBodyLayer);
-
-        RenderRegistry.modelLayer(RavenModel.MODEL_LAYER, RavenModel::createBodyLayer);
-
-        RenderRegistry.modelLayer(RobinModel.MODEL_LAYER, RobinModel::createBodyLayer);
-
-        RenderRegistry.modelLayer(SparrowModel.MODEL_LAYER, SparrowModel::createBodyLayer);
-
         RenderRegistry.modelLayer(ScarecrowModel.MODEL_LAYER, ScarecrowModel::createBodyLayer);
         RenderRegistry.modelLayer(ScarecrowModel.INNER_ARMOR, () -> ScarecrowArmorModel.createBodyLayer(HAT_DILATION));
         RenderRegistry.modelLayer(ScarecrowModel.OUTER_ARMOR, () -> ScarecrowArmorModel.createBodyLayer(ARMOR_DILATION));
@@ -123,6 +98,10 @@ public class FowlPlayClient {
         if(FPConfig.get().replaceParrot) {
             RenderRegistry.entityRenderer(Suppliers.ofInstance(EntityType.PARROT), CustomParrotRenderer::new);
         }
+    }
+
+    private static <T extends BirdEntity & GeoEntity> void registerBird(Supplier<EntityType<T>> entity) {
+        RenderRegistry.entityRenderer(entity, context -> new BirdRenderer<>(context, entity));
     }
 
     public static void registerParticleFactories() {

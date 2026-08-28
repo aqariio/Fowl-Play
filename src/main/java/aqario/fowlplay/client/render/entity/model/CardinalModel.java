@@ -8,7 +8,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
-public class CardinalModel extends FlyingBirdModel<CardinalEntity> {
+public class CardinalModel extends OldFlyingBirdModel<CardinalEntity> {
     public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FowlPlay.id("cardinal"), "main");
     public final ModelPart crest;
 

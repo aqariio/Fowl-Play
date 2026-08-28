@@ -46,15 +46,19 @@ import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.SmartBrain;
 import net.tslat.smartbrainlib.api.core.schedule.SmartBrainSchedule;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public abstract class BirdEntity extends Animal {
+public abstract class BirdEntity extends Animal implements GeoEntity {
     private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(
         BirdEntity.class,
         EntityDataSerializers.BOOLEAN
     );
+    private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     public final AnimationState standingState = new AnimationState();
     public final AnimationState swimmingState = new AnimationState();
     public final AnimationState sleepingState = new AnimationState();
@@ -410,6 +414,11 @@ public abstract class BirdEntity extends Animal {
 
     protected boolean isMoving() {
         return this.walkAnimation.isMoving();
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.geoCache;
     }
 
     protected void updateAnimationStates() {

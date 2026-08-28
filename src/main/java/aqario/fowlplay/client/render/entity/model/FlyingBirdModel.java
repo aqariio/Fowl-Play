@@ -15,15 +15,15 @@ public class FlyingBirdModel<T extends FlyingBirdEntity & GeoAnimatable> extends
     }
 
     @Override
-    public void setCustomAnimations(T entity, long instanceId, AnimationState<T> state) {
+    public void setCustomAnimations(T bird, long instanceId, AnimationState<T> state) {
         GeoBone root = this.getAnimationProcessor().getBone("root");
 
-        if(root != null && entity.isFlying()) {
+        if(root != null && bird.isFlying()) {
             float partialTick = state.getPartialTick();
 
-            root.setRotX(root.getRotX() + entity.getViewXRot(partialTick) * Mth.DEG_TO_RAD);
-            root.setRotZ(root.getRotZ() + entity.getRoll(partialTick) * Mth.DEG_TO_RAD);
+            root.setRotX(root.getRotX() + bird.getViewXRot(partialTick) * Mth.DEG_TO_RAD);
+            root.setRotZ(root.getRotZ() + bird.getRoll(partialTick) * Mth.DEG_TO_RAD);
         }
-        super.setCustomAnimations(entity, instanceId, state);
+        super.setCustomAnimations(bird, instanceId, state);
     }
 }

@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 
 public record DuckVariant(
-    String id
+    String name
 ) {
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<DuckVariant>> PACKET_CODEC = ByteBufCodecs.holderRegistry(
         FPRegistries.DUCK_VARIANT
@@ -30,7 +30,7 @@ public record DuckVariant(
             .add("textures/entity/duck/")
             .addIf("baby_", isBaby)
             .addIf("pekin_", isDomestic)
-            .addIf(this.id, !isDomestic)
+            .addIf(this.name, !isDomestic)
             .add("_duck.png")
         );
     }
@@ -41,9 +41,9 @@ public record DuckVariant(
             : ModelType.WILD;
     }
 
-    private static ResourceKey<DuckVariant> register(String id) {
-        ResourceKey<DuckVariant> key = ResourceKey.create(FPRegistries.DUCK_VARIANT, FowlPlay.id(id));
-        REGISTRAR.register(id, () -> new DuckVariant(id));
+    private static ResourceKey<DuckVariant> register(String name) {
+        ResourceKey<DuckVariant> key = ResourceKey.create(FPRegistries.DUCK_VARIANT, FowlPlay.id(name));
+        REGISTRAR.register(name, () -> new DuckVariant(name));
         return key;
     }
 

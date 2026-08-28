@@ -192,6 +192,11 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     }
 
     @Override
+    public String getVariantName() {
+        return this.getVariant().value().name();
+    }
+
+    @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         this.writeClipped(nbt);

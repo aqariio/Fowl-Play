@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EntityType;
 
 import java.util.function.Supplier;
 
-public class BlueJayRenderer extends BirdRenderer<BlueJayEntity> {
+public class BlueJayRenderer extends FlyingBirdRenderer<BlueJayEntity> {
     public BlueJayRenderer(EntityRendererProvider.Context context, Supplier<EntityType<BlueJayEntity>> entityType) {
         super(context, entityType);
     }

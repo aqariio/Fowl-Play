@@ -133,6 +133,11 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     }
 
     @Override
+    public String getVariantName() {
+        return this.getVariant().value().name();
+    }
+
+    @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         this.writeVariant(nbt);

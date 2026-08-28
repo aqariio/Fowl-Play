@@ -25,6 +25,8 @@ public interface VariantHolder<T> {
 
     void setVariant(Holder<T> variant);
 
+    String getVariantName();
+
     default void defineVariant(SynchedEntityData.Builder builder, EntityDataAccessor<Holder<T>> accessor) {
         builder.define(accessor, this.variantRegistry().getHolderOrThrow(this.defaultVariant()));
     }

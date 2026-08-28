@@ -17,6 +17,14 @@ public class BirdRenderer<T extends BirdEntity & GeoEntity> extends GeoEntityRen
         this(context, new BirdModel<>(entityType));
     }
 
+    public BirdRenderer(
+        EntityRendererProvider.Context context,
+        Supplier<EntityType<T>> entityType,
+        Function<BirdModel<T>, BirdModel<T>> modelBuilder
+    ) {
+        this(context, modelBuilder.apply(new BirdModel<>(entityType)));
+    }
+
     protected BirdRenderer(EntityRendererProvider.Context context, GeoModel<T> model) {
         super(context, model);
         this.addRenderLayer(new BeakItemLayer<>(this));
@@ -27,7 +35,8 @@ public class BirdRenderer<T extends BirdEntity & GeoEntity> extends GeoEntityRen
         return (BirdModel<T>) super.getGeoModel();
     }
 
-    protected void setVariant(Function<T, String> variant) {
-        this.getGeoModel().setVariant(variant.apply(this.getAnimatable()));
+    @Override
+    protected float getShadowRadius(T entity) {
+        return entity.getBbWidth() * 0.5f;
     }
 }

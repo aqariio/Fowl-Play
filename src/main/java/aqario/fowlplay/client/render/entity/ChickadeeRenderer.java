@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EntityType;
 
 import java.util.function.Supplier;
 
-public class ChickadeeRenderer extends BirdRenderer<ChickadeeEntity> {
+public class ChickadeeRenderer extends FlyingBirdRenderer<ChickadeeEntity> {
     public ChickadeeRenderer(EntityRendererProvider.Context context, Supplier<EntityType<ChickadeeEntity>> entityType) {
         super(context, entityType);
     }

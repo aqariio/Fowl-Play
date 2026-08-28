@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 
 public record GooseVariant(
-    String id,
+    String name,
     boolean domesticatable
 ) {
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<GooseVariant>> PACKET_CODEC = ByteBufCodecs.holderRegistry(
@@ -32,7 +32,7 @@ public record GooseVariant(
             .add("textures/entity/goose/")
             .addIf("baby_", isBaby)
             .addIf("domestic_", this.domesticatable && isDomestic)
-            .add(this.id)
+            .add(this.name)
             .add("_goose.png")
         );
     }
@@ -43,9 +43,9 @@ public record GooseVariant(
             : ModelType.WILD;
     }
 
-    private static ResourceKey<GooseVariant> register(String id, boolean domesticatable) {
-        ResourceKey<GooseVariant> key = ResourceKey.create(FPRegistries.GOOSE_VARIANT, FowlPlay.id(id));
-        REGISTRAR.register(id, () -> new GooseVariant(id, domesticatable));
+    private static ResourceKey<GooseVariant> register(String name, boolean domesticatable) {
+        ResourceKey<GooseVariant> key = ResourceKey.create(FPRegistries.GOOSE_VARIANT, FowlPlay.id(name));
+        REGISTRAR.register(name, () -> new GooseVariant(name, domesticatable));
         return key;
     }
 

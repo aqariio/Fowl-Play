@@ -59,6 +59,7 @@ import net.tslat.smartbrainlib.api.core.sensor.vanilla.InWaterSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animation.AnimatableManager;
 
 import java.util.List;
 
@@ -169,13 +170,15 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
 
     @Override
     public boolean isDomestic() {
-        return this.entityData.get(DOMESTIC);
+        return this.getVariant().value().domesticatable() && this.entityData.get(DOMESTIC);
     }
 
     @Override
     public void setDomestic(boolean domestic) {
-        this.entityData.set(DOMESTIC, domestic);
-        this.updateSchedule();
+        if(this.getVariant().value().domesticatable() || !domestic) {
+            this.entityData.set(DOMESTIC, domestic);
+            this.updateSchedule();
+        }
     }
 
     @Override
@@ -219,6 +222,11 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Override
     public void setVariant(Holder<GooseVariant> variant) {
         this.entityData.set(VARIANT, variant);
+    }
+
+    @Override
+    public String getVariantName() {
+        return this.getVariant().value().name();
     }
 
     @Override
@@ -293,6 +301,10 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
             return InteractionResult.sidedSuccess(this.level().isClientSide());
         }
         return super.mobInteract(player, hand);
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
     }
 
     @Override

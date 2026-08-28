@@ -143,6 +143,11 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     }
 
     @Override
+    public String getVariantName() {
+        return this.getVariant().value().name();
+    }
+
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         this.defineVariant(builder, VARIANT);

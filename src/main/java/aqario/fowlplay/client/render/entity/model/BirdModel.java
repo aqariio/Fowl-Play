@@ -1,7 +1,10 @@
 package aqario.fowlplay.client.render.entity.model;
 
 import aqario.fowlplay.common.entity.bird.BirdEntity;
+import aqario.fowlplay.common.entity.bird.Domesticatable;
+import aqario.fowlplay.common.entity.bird.VariantHolder;
 import aqario.fowlplay.common.util.ResourcePathBuilder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
@@ -13,78 +16,125 @@ import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class BirdModel<T extends BirdEntity & GeoAnimatable> extends GeoModel<T> {
     private final ResourceLocation entityId;
     private String headBone = "neck";
     @Nullable
-    private String variant;
+    private List<String> customNames;
+    private BiPredicate<T, AssetType> babyAffixPredicate = (bird, assetType) -> bird.isBaby();
+    private BiPredicate<T, AssetType> domesticAffixPredicate = (bird, assetType) ->
+        assetType == AssetType.TEXTURE || !bird.isBaby();
+    private BiPredicate<T, AssetType> variantAffixPredicate = (bird, assetType) ->
+        assetType == AssetType.TEXTURE;
+    private Predicate<T> dontRotateHeadPredicate = bird -> bird.isSleeping(); // or idle animation
 
     public BirdModel(Supplier<EntityType<T>> entity) {
         this.entityId = EntityType.getKey(entity.get());
     }
 
     @Override
-    public void setCustomAnimations(T entity, long instanceId, AnimationState<T> state) {
-        GeoBone head = getAnimationProcessor().getBone(this.headBone);
+    public void setCustomAnimations(T bird, long instanceId, AnimationState<T> state) {
+        if(!this.dontRotateHeadPredicate.test(bird)) {
+            GeoBone head = this.getAnimationProcessor().getBone(this.headBone);
 
-        if(head != null) {
-            EntityModelData entityData = state.getData(DataTickets.ENTITY_MODEL_DATA);
-            head.setRotX(entityData.headPitch() * Mth.DEG_TO_RAD);
-            head.setRotY(entityData.netHeadYaw() * Mth.DEG_TO_RAD);
+            if(head != null) {
+                EntityModelData entityData = state.getData(DataTickets.ENTITY_MODEL_DATA);
+                head.setRotX(entityData.headPitch() * Mth.DEG_TO_RAD);
+                head.setRotY(entityData.netHeadYaw() * Mth.DEG_TO_RAD);
+            }
         }
     }
 
-    public void setHeadBone(String headBone) {
+    public BirdModel<T> headBone(String headBone) {
         this.headBone = headBone;
+        return this;
     }
 
-    public void setVariant(String variant) {
-        this.variant = variant;
+    protected BirdModel<T> dontRotateHeadWhen(Predicate<T> predicate) {
+        this.dontRotateHeadPredicate = predicate; // don't rotate when flying, idle animation, swimming, sliding, sleeping
+        return this;
     }
 
-    @Override
-    public ResourceLocation getModelResource(T animatable) {
-        String bird = this.entityId.getPath();
-        ResourcePathBuilder path = new ResourcePathBuilder()
-            .add("geo/entity/")
-            .add(bird + "/")
-            .addIf("baby_", animatable.isBaby())
-            .addIf(this.variant + "_", this.variant != null)
-            .add(bird)
-            .add(".geo.json");
-
-        return this.entityId.withPath(path.build());
+    public BirdModel<T> customNames(String... names) {
+        this.customNames = Arrays.stream(names).toList();
+        return this;
     }
 
-    @Override
-    public ResourceLocation getTextureResource(T animatable) {
-        String bird = this.entityId.getPath();
-        ResourcePathBuilder path = new ResourcePathBuilder()
-            .add("textures/entity/")
-            .add(bird)
-            .add("/")
-            .addIf("baby_", animatable.isBaby())
-            .addIf(this.variant + "_", this.variant != null)
-            .add(bird)
-            .add(".png");
+    public BirdModel<T> babyAffixWhen(BiPredicate<T, AssetType> predicate) {
+        this.babyAffixPredicate = predicate;
+        return this;
+    }
 
-        return this.entityId.withPath(path.build());
+    public BirdModel<T> domesticAffixWhen(BiPredicate<T, AssetType> predicate) {
+        this.domesticAffixPredicate = predicate;
+        return this;
+    }
+
+    public BirdModel<T> variantAffixWhen(BiPredicate<T, AssetType> predicate) {
+        this.variantAffixPredicate = predicate;
+        return this;
     }
 
     @Override
-    public ResourceLocation getAnimationResource(T animatable) {
-        String bird = this.entityId.getPath();
-        ResourcePathBuilder path = new ResourcePathBuilder()
-            .add("animations/entity/")
-            .add(bird)
-            .add("/")
-            .addIf("baby_", animatable.isBaby())
-            .addIf(this.variant + "_", this.variant != null)
-            .add(bird)
-            .add(".animation.json");
+    public ResourceLocation getModelResource(T bird) {
+        return this.generateAssetResource(bird, AssetType.MODEL);
+    }
 
-        return this.entityId.withPath(path.build());
+    @Override
+    public ResourceLocation getTextureResource(T bird) {
+        return this.generateAssetResource(bird, AssetType.TEXTURE);
+    }
+
+    @Override
+    public ResourceLocation getAnimationResource(T bird) {
+        return this.generateAssetResource(bird, AssetType.ANIMATION);
+    }
+
+    private ResourceLocation generateAssetResource(T bird, AssetType assetType) {
+        String type = this.entityId.getPath();
+        ResourcePathBuilder path = new ResourcePathBuilder()
+            .add(assetType.directory).add("/entity/").add(type).add("/");
+
+        if(assetType == AssetType.TEXTURE && this.customNames != null) {
+            String customName = ChatFormatting.stripFormatting(bird.getName().getString());
+            for(String name : this.customNames) {
+                if(name.equals(customName)) {
+                    return this.entityId.withPath(path.add(name.toLowerCase(Locale.ROOT)).add(assetType.extension).build());
+                }
+            }
+        }
+
+        if(this.babyAffixPredicate.test(bird, assetType)) {
+            path.add("baby_");
+        }
+        if(this.domesticAffixPredicate.test(bird, assetType) && bird instanceof Domesticatable domesticBird && domesticBird.isDomestic()) {
+            path.add("domestic_");
+        }
+        if(this.variantAffixPredicate.test(bird, assetType) && bird instanceof VariantHolder<?> variantBird) {
+            path.add(variantBird.getVariantName()).add("_");
+        }
+
+        return this.entityId.withPath(path.add(type).add(assetType.extension).build());
+    }
+
+    public enum AssetType {
+        MODEL("geo", ".geo.json"),
+        TEXTURE("textures", ".png"),
+        ANIMATION("animations", ".animation.json");
+
+        private final String directory;
+        private final String extension;
+
+        AssetType(String directory, String extension) {
+            this.directory = directory;
+            this.extension = extension;
+        }
     }
 }

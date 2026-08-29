@@ -59,7 +59,7 @@ public class RobinEntity extends FlyingBirdEntity implements BirdBrain<RobinEnti
             this.sleepingState.start(this.tickCount);
             this.standingState.stop();
             this.swimmingState.stop();
-            this.idleAnimStates.stopAll();
+            this.idleAnims.stopAll();
         }
         else {
             this.sleepingState.stop();

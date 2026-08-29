@@ -54,7 +54,7 @@ public class CardinalEntity extends FlyingBirdEntity implements BirdBrain<Cardin
             this.sleepingState.start(this.tickCount);
             this.standingState.stop();
             this.swimmingState.stop();
-            this.idleAnimStates.stopAll();
+            this.idleAnims.stopAll();
         }
         else {
             this.sleepingState.stop();

@@ -7,7 +7,7 @@ import aqario.fowlplay.common.entity.ai.control.BirdBodyRotationControl;
 import aqario.fowlplay.common.entity.ai.control.BirdLookControl;
 import aqario.fowlplay.common.entity.ai.control.BirdMoveControl;
 import aqario.fowlplay.common.network.FPDebugPackets;
-import aqario.fowlplay.common.util.AnimationStateList;
+import aqario.fowlplay.common.util.AnimationList;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.core.FPMemoryTypes;
 import aqario.fowlplay.core.FPSoundEvents;
@@ -48,6 +48,8 @@ import net.tslat.smartbrainlib.api.core.schedule.SmartBrainSchedule;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Optional;
@@ -59,10 +61,13 @@ public abstract class BirdEntity extends Animal implements GeoEntity {
         EntityDataSerializers.BOOLEAN
     );
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
-    public final AnimationState standingState = new AnimationState();
-    public final AnimationState swimmingState = new AnimationState();
-    public final AnimationState sleepingState = new AnimationState();
-    public final AnimationStateList idleAnimStates = new AnimationStateList();
+    protected static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("walk");
+    protected static final RawAnimation STAND_ANIM = RawAnimation.begin().thenLoop("stand");
+    protected static final RawAnimation SWIM_ANIM = RawAnimation.begin().thenLoop("swim");
+    protected static final RawAnimation SLEEP_ANIM = RawAnimation.begin().thenLoop("sleep");
+    private AnimationList idleAnimations;
+    @Nullable
+    private RawAnimation activeIdleAnimation;
     private static final String AMBIENT_KEY = "ambient";
     private static final String SLEEPING_KEY = "sleeping";
     private static final String HUNTING_COOLDOWN_KEY = "hunting_cooldown";
@@ -70,6 +75,7 @@ public abstract class BirdEntity extends Animal implements GeoEntity {
     private boolean ambient;
     private int eatingTime;
     protected int idleAnimationChance;
+    protected boolean idleAnimationReady;
 
     public BirdEntity(EntityType<? extends BirdEntity> entityType, Level world) {
         super(entityType, world);
@@ -77,7 +83,7 @@ public abstract class BirdEntity extends Animal implements GeoEntity {
         this.moveControl = this.createMoveControl();
         this.lookControl = new BirdLookControl(this, 85);
         this.idleAnimationChance = this.random.nextInt(this.getIdleAnimationDelay()) - this.getIdleAnimationDelay();
-        this.standingState.start(this.tickCount);
+        // TODO: start standing animation immediately
         this.setPathfindingMalus(PathType.DANGER_FIRE, -1.0f);
         this.setPathfindingMalus(PathType.DANGER_POWDER_SNOW, -1.0f);
         this.setPathfindingMalus(PathType.COCOA, -1.0f);
@@ -401,17 +407,6 @@ public abstract class BirdEntity extends Animal implements GeoEntity {
         }
     }
 
-    @Override
-    public void tick() {
-        if(this.level().isClientSide()) {
-            this.updateAnimationStates();
-        }
-        super.tick();
-        if(this.isAmbient() && !this.shouldBeAmbient()) {
-            this.setAmbient(false);
-        }
-    }
-
     protected boolean isMoving() {
         return this.walkAnimation.isMoving();
     }
@@ -421,39 +416,81 @@ public abstract class BirdEntity extends Animal implements GeoEntity {
         return this.geoCache;
     }
 
-    protected void updateAnimationStates() {
-        if(this.isSleeping()) {
-            this.sleepingState.start(this.tickCount);
-            this.standingState.stop();
-            this.swimmingState.stop();
-            this.idleAnimStates.stopAll();
+    protected AnimationList createIdleAnimations() {
+        return new AnimationList();
+    }
+
+    private AnimationList getIdleAnimations() {
+        if(this.idleAnimations == null) {
+            this.idleAnimations = this.createIdleAnimations();
         }
-        else {
-            this.sleepingState.stop();
-            // on land
-            if(!this.isInWaterOrBubble()) {
-                if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {
-                    this.resetIdleAnimationDelay();
-                    this.standingState.stop();
-                    this.idleAnimStates.stopAll();
-                    this.idleAnimStates.startRandom(this.tickCount);
-                }
-                else if(this.isMoving()) {
-                    this.idleAnimStates.stopAll();
-                }
-                if(!this.idleAnimStates.containsStarted()) {
-                    this.standingState.startIfStopped(this.tickCount);
-                }
-                else {
-                    this.standingState.stop();
-                }
+
+        return this.idleAnimations;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "base", 5, this::baseController));
+        controllers.add(new AnimationController<>(this, "walk", 5, this::walkController));
+    }
+
+    protected <E extends BirdEntity> PlayState baseController(final AnimationState<E> state) {
+        if(this.isSleeping()) {
+            this.activeIdleAnimation = null;
+            return state.setAndContinue(SLEEP_ANIM);
+        }
+        if(this.isInWaterOrBubble()) {
+            this.activeIdleAnimation = null;
+            return state.setAndContinue(SWIM_ANIM);
+        }
+        if(this.isMoving() && this.activeIdleAnimation != null) {
+            this.activeIdleAnimation = null;
+        }
+        if(this.activeIdleAnimation != null) {
+            if(state.isCurrentAnimation(this.activeIdleAnimation)
+                && state.getController().hasAnimationFinished()
+            ) {
+                this.activeIdleAnimation = null;
             }
             else {
-                this.standingState.stop();
-                this.idleAnimStates.stopAll();
+                return state.setAndContinue(this.activeIdleAnimation);
             }
-            // in water
-            this.swimmingState.animateWhen(this.isInWaterOrBubble(), this.tickCount);
+        }
+        if(this.idleAnimationReady && !this.isMoving()) {
+            this.idleAnimationReady = false;
+            this.resetIdleAnimationDelay();
+            this.activeIdleAnimation = this.getIdleAnimations().getRandom();
+
+            return state.setAndContinue(this.activeIdleAnimation);
+        }
+        return state.setAndContinue(STAND_ANIM);
+    }
+
+    protected <E extends BirdEntity> PlayState walkController(final AnimationState<E> state) {
+        E bird = state.getAnimatable();
+        if(bird.isInWaterOrBubble() || bird.isSleeping()) {
+            return PlayState.STOP;
+        }
+        return state.setAndContinue(WALK_ANIM);
+    }
+
+    @Override
+    public void tick() {
+        if(this.level().isClientSide()) {
+            this.tickIdleAnimation();
+        }
+        super.tick();
+        if(this.isAmbient() && !this.shouldBeAmbient()) {
+            this.setAmbient(false);
+        }
+    }
+
+    protected void tickIdleAnimation() {
+        if(this.activeIdleAnimation == null
+            && !this.idleAnimationReady
+            && this.random.nextInt(1000) < this.idleAnimationChance++
+        ) {
+            this.idleAnimationReady = true;
         }
     }
 

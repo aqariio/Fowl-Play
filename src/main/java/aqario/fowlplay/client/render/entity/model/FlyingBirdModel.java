@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 public class FlyingBirdModel<T extends FlyingBirdEntity & GeoAnimatable> extends BirdModel<T> {
     public FlyingBirdModel(Supplier<EntityType<T>> entity) {
         super(entity);
+        this.dontRotateHeadWhen(bird -> bird.isSleeping() || bird.isFlying());
     }
 
     @Override

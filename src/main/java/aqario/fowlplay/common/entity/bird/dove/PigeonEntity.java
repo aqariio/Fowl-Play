@@ -277,7 +277,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
             this.standingState.stop();
             this.swimmingState.stop();
             this.sittingState.stop();
-            this.idleAnimStates.stopAll();
+            this.idleAnims.stopAll();
         }
         else {
             this.sleepingState.stop();

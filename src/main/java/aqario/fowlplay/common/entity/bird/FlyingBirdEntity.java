@@ -161,7 +161,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
             this.sleepingState.start(this.tickCount);
             this.standingState.stop();
             this.swimmingState.stop();
-            this.idleAnimStates.stopAll();
+            this.idleAnims.stopAll();
         }
         else {
             this.sleepingState.stop();
@@ -170,13 +170,13 @@ public abstract class FlyingBirdEntity extends BirdEntity {
                 if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {
                     this.resetIdleAnimationDelay();
                     this.standingState.stop();
-                    this.idleAnimStates.stopAll();
-                    this.idleAnimStates.startRandom(this.tickCount);
+                    this.idleAnims.stopAll();
+                    this.idleAnims.getRandom(this.tickCount);
                 }
                 else if(this.isMoving()) {
-                    this.idleAnimStates.stopAll();
+                    this.idleAnims.stopAll();
                 }
-                if(!this.idleAnimStates.containsStarted()) {
+                if(!this.idleAnims.containsStarted()) {
                     this.standingState.startIfStopped(this.tickCount);
                 }
                 else {
@@ -185,7 +185,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
             }
             else {
                 this.standingState.stop();
-                this.idleAnimStates.stopAll();
+                this.idleAnims.stopAll();
             }
             // flying
             this.glidingState.animateWhen(this.isFlying(), this.tickCount);

@@ -7,7 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import java.util.function.Supplier;
 
 public class GooseRenderer extends FlyingBirdRenderer<GooseEntity> {
-    protected GooseRenderer(EntityRendererProvider.Context context, Supplier<EntityType<GooseEntity>> entityType) {
+    public GooseRenderer(EntityRendererProvider.Context context, Supplier<EntityType<GooseEntity>> entityType) {
         super(context, entityType);
     }
 }

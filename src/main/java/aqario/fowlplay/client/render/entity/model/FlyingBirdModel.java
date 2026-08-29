@@ -7,24 +7,51 @@ import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.cache.object.GeoBone;
 
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class FlyingBirdModel<T extends FlyingBirdEntity & GeoAnimatable> extends BirdModel<T> {
+    private Predicate<T> renderWingsPredicate = FlyingBirdEntity::isFlying;
+
     public FlyingBirdModel(Supplier<EntityType<T>> entity) {
         super(entity);
         this.dontRotateHeadWhen(bird -> bird.isSleeping() || bird.isFlying());
     }
 
+    protected GeoBone leftWingOpen() {
+        return this.getPresentBone("left_wing_open");
+    }
+
+    protected GeoBone rightWingOpen() {
+        return this.getPresentBone("right_wing_open");
+    }
+
     @Override
     public void setCustomAnimations(T bird, long instanceId, AnimationState<T> state) {
-        GeoBone root = this.getAnimationProcessor().getBone("root");
-
-        if(root != null && bird.isFlying()) {
+        if(bird.isFlying()) {
             float partialTick = state.getPartialTick();
 
-            root.setRotX(root.getRotX() + bird.getViewXRot(partialTick) * Mth.DEG_TO_RAD);
-            root.setRotZ(root.getRotZ() + bird.getRoll(partialTick) * Mth.DEG_TO_RAD);
+            this.root().setRotX(bird.getViewXRot(partialTick) * Mth.DEG_TO_RAD);
+            this.root().setRotZ(bird.getRoll(partialTick) * Mth.DEG_TO_RAD);
+        }
+
+        if(this.renderWingsPredicate.test(bird)) {
+            this.leftWingOpen().setHidden(false);
+            this.rightWingOpen().setHidden(false);
+            this.leftWing().setHidden(true);
+            this.rightWing().setHidden(true);
+        }
+        else {
+            this.leftWingOpen().setHidden(true);
+            this.rightWingOpen().setHidden(true);
+            this.leftWing().setHidden(false);
+            this.rightWing().setHidden(false);
         }
         super.setCustomAnimations(bird, instanceId, state);
+    }
+
+    public FlyingBirdModel<T> renderWingsWhen(Predicate<T> predicate) {
+        this.renderWingsPredicate = predicate;
+        return this;
     }
 }

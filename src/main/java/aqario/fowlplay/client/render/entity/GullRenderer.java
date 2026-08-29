@@ -7,7 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import java.util.function.Supplier;
 
 public class GullRenderer extends FlyingBirdRenderer<GullEntity> {
-    protected GullRenderer(EntityRendererProvider.Context context, Supplier<EntityType<GullEntity>> entityType) {
+    public GullRenderer(EntityRendererProvider.Context context, Supplier<EntityType<GullEntity>> entityType) {
         super(context, entityType);
     }
 }

@@ -7,7 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import java.util.function.Supplier;
 
 public class RobinRenderer extends FlyingBirdRenderer<RobinEntity> {
-    protected RobinRenderer(EntityRendererProvider.Context context, Supplier<EntityType<RobinEntity>> entityType) {
+    public RobinRenderer(EntityRendererProvider.Context context, Supplier<EntityType<RobinEntity>> entityType) {
         super(context, entityType);
     }
 }

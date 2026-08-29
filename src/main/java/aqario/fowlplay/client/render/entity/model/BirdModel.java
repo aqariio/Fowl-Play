@@ -25,7 +25,6 @@ import java.util.function.Supplier;
 
 public class BirdModel<T extends BirdEntity & GeoAnimatable> extends GeoModel<T> {
     private final ResourceLocation entityId;
-    private String headBone = "neck";
     @Nullable
     private List<String> customNames;
     private BiPredicate<T, AssetType> babyAffixPredicate = (bird, assetType) -> bird.isBaby();
@@ -33,31 +32,66 @@ public class BirdModel<T extends BirdEntity & GeoAnimatable> extends GeoModel<T>
         assetType == AssetType.TEXTURE || !bird.isBaby();
     private BiPredicate<T, AssetType> variantAffixPredicate = (bird, assetType) ->
         assetType == AssetType.TEXTURE;
-    private Predicate<T> dontRotateHeadPredicate = bird -> bird.isSleeping(); // or idle animation
+    private Predicate<T> dontRotateHeadPredicate = bird -> bird.isSleeping() || bird.isIdleAnimationActive();
 
     public BirdModel(Supplier<EntityType<T>> entity) {
         this.entityId = EntityType.getKey(entity.get());
     }
 
+    protected GeoBone root() {
+        return this.getPresentBone("root");
+    }
+
+    protected GeoBone body() {
+        return this.getPresentBone("body");
+    }
+
+    protected GeoBone neck() {
+        return this.getPresentBone("neck");
+    }
+
+    protected GeoBone head() {
+        return this.getPresentBone("head");
+    }
+
+    protected GeoBone torso() {
+        return this.getPresentBone("torso");
+    }
+
+    protected GeoBone leftWing() {
+        return this.getPresentBone("left_wing");
+    }
+
+    protected GeoBone rightWing() {
+        return this.getPresentBone("right_wing");
+    }
+
+    protected GeoBone leftLeg() {
+        return this.getPresentBone("left_leg");
+    }
+
+    protected GeoBone rightLeg() {
+        return this.getPresentBone("right_leg");
+    }
+
+    protected GeoBone tail() {
+        return this.getPresentBone("tail");
+    }
+
+    public GeoBone getPresentBone(String name) {
+        return this.getAnimationProcessor().getBone(name);
+    }
+
     @Override
     public void setCustomAnimations(T bird, long instanceId, AnimationState<T> state) {
         if(!this.dontRotateHeadPredicate.test(bird)) {
-            GeoBone head = this.getAnimationProcessor().getBone(this.headBone);
-
-            if(head != null) {
-                EntityModelData entityData = state.getData(DataTickets.ENTITY_MODEL_DATA);
-                head.setRotX(entityData.headPitch() * Mth.DEG_TO_RAD);
-                head.setRotY(entityData.netHeadYaw() * Mth.DEG_TO_RAD);
-            }
+            EntityModelData entityData = state.getData(DataTickets.ENTITY_MODEL_DATA);
+            this.head().setRotX(entityData.headPitch() * Mth.DEG_TO_RAD);
+            this.head().setRotY(entityData.netHeadYaw() * Mth.DEG_TO_RAD);
         }
     }
 
-    public BirdModel<T> headBone(String headBone) {
-        this.headBone = headBone;
-        return this;
-    }
-
-    protected BirdModel<T> dontRotateHeadWhen(Predicate<T> predicate) {
+    public BirdModel<T> dontRotateHeadWhen(Predicate<T> predicate) {
         this.dontRotateHeadPredicate = predicate; // don't rotate when flying, idle animation, swimming, sliding, sleeping
         return this;
     }

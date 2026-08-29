@@ -7,7 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import java.util.function.Supplier;
 
 public class HawkRenderer extends FlyingBirdRenderer<HawkEntity> {
-    protected HawkRenderer(EntityRendererProvider.Context context, Supplier<EntityType<HawkEntity>> entityType) {
+    public HawkRenderer(EntityRendererProvider.Context context, Supplier<EntityType<HawkEntity>> entityType) {
         super(context, entityType);
     }
 }

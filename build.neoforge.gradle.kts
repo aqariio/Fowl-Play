@@ -160,5 +160,5 @@ platformPublish {
     file.set(tasks.jar.flatMap { it.archiveFile })
     modLoaders.add("neoforge")
     minecraftVersions.add(sc.current.version)
-    requiredDependencies.addAll("smartbrainlib", "yacl")
+    requiredDependencies.addAll("geckolib", "smartbrainlib", "yacl")
 }

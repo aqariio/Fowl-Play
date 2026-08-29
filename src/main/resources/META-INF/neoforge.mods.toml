@@ -28,6 +28,13 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${id}]]
+modId = "geckolib"
+type = "required"
+versionRange = "[${geckolib},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${id}]]
 modId = "smartbrainlib"
 type = "required"
 versionRange = "[${sbl},)"

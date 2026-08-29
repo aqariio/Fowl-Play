@@ -7,7 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import java.util.function.Supplier;
 
 public class SparrowRenderer extends FlyingBirdRenderer<SparrowEntity> {
-    protected SparrowRenderer(EntityRendererProvider.Context context, Supplier<EntityType<SparrowEntity>> entityType) {
+    public SparrowRenderer(EntityRendererProvider.Context context, Supplier<EntityType<SparrowEntity>> entityType) {
         super(context, entityType);
     }
 }

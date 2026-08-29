@@ -494,6 +494,10 @@ public abstract class BirdEntity extends Animal implements GeoEntity {
         }
     }
 
+    public boolean isIdleAnimationActive() {
+        return this.activeIdleAnimation != null;
+    }
+
     protected int getIdleAnimationDelay() {
         return 240;
     }

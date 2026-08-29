@@ -190,5 +190,5 @@ platformPublish {
     file.set(loomx.modJar.flatMap { it.archiveFile })
     modLoaders.addAll("fabric", "quilt")
     minecraftVersions.add(sc.current.version)
-    requiredDependencies.addAll("fabric-api", "smartbrainlib", "yacl")
+    requiredDependencies.addAll("fabric-api", "geckolib", "smartbrainlib", "yacl")
 }

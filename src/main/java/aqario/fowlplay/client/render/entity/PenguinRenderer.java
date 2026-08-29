@@ -13,6 +13,12 @@ public class PenguinRenderer extends BirdRenderer<PenguinEntity> {
     public PenguinRenderer(EntityRendererProvider.Context context, Supplier<EntityType<PenguinEntity>> entityType) {
         super(context, entityType, modelBuilder -> modelBuilder
             .customNames("Pingu")
+            .dontRotateHeadWhen(penguin ->
+                penguin.isSleeping()
+                    || penguin.isIdleAnimationActive()
+                    || penguin.isSliding()
+                    || penguin.isSwimming()
+            )
         );
     }
 

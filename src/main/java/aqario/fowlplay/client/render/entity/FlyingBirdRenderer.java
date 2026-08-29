@@ -11,7 +11,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class FlyingBirdRenderer<T extends FlyingBirdEntity & GeoEntity> extends BirdRenderer<T> {
-    protected FlyingBirdRenderer(EntityRendererProvider.Context context, Supplier<EntityType<T>> entityType) {
+    public FlyingBirdRenderer(EntityRendererProvider.Context context, Supplier<EntityType<T>> entityType) {
         super(context, new FlyingBirdModel<>(entityType));
     }
 

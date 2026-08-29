@@ -8,7 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import java.util.function.Supplier;
 
 public class DuckRenderer extends FlyingBirdRenderer<DuckEntity> {
-    protected DuckRenderer(EntityRendererProvider.Context context, Supplier<EntityType<DuckEntity>> entityType) {
+    public DuckRenderer(EntityRendererProvider.Context context, Supplier<EntityType<DuckEntity>> entityType) {
         super(context, entityType, modelBuilder -> modelBuilder
             .customNames("Quackers")
             .variantAffixWhen((bird, assetType) ->

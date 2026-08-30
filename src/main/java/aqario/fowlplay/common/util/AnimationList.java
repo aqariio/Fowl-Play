@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectIterators;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.Comparator;
@@ -31,10 +32,10 @@ public class AnimationList implements Iterable<RawAnimation> {
         this.entries.sort(Comparator.comparingDouble(Entry::getRandomizedWeight));
     }
 
-    @NotNull
+    @Nullable
     public RawAnimation getRandom() {
         if(this.entries.isEmpty()) {
-            throw new IllegalStateException("No animations in animation list");
+            return null;
         }
         this.randomize();
         return this.entries.getFirst().getAnimation();
@@ -51,6 +52,10 @@ public class AnimationList implements Iterable<RawAnimation> {
                 action.accept(entry.getAnimation());
             }
         });
+    }
+
+    public boolean isEmpty() {
+        return this.entries.isEmpty();
     }
 
     @NotNull

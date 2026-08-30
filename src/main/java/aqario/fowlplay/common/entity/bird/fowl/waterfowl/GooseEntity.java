@@ -154,7 +154,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    protected boolean canSwim() {
+    public boolean canSwim() {
         return true;
     }
 

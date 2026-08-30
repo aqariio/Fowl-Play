@@ -38,7 +38,7 @@ public class SetOwnerWalkOrTpTarget extends SpeedModifiableBehaviour<PigeonEntit
         if(owner.isSpectator()) {
             return false;
         }
-        if(pigeon.isSitting()) {
+        if(pigeon.isOrderedToSit()) {
             return false;
         }
         if(pigeon.getRecipientUuid() != null) {
@@ -53,7 +53,7 @@ public class SetOwnerWalkOrTpTarget extends SpeedModifiableBehaviour<PigeonEntit
         if(pigeon.getRecipientUuid() != null) {
             return false;
         }
-        return !pigeon.isSitting();
+        return !pigeon.isOrderedToSit();
     }
 
     @Override

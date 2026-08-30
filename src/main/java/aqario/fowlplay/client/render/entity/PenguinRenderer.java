@@ -1,5 +1,6 @@
 package aqario.fowlplay.client.render.entity;
 
+import aqario.fowlplay.client.render.entity.model.PenguinModel;
 import aqario.fowlplay.common.entity.bird.penguin.PenguinEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
@@ -11,15 +12,7 @@ import java.util.function.Supplier;
 
 public class PenguinRenderer extends BirdRenderer<PenguinEntity> {
     public PenguinRenderer(EntityRendererProvider.Context context, Supplier<EntityType<PenguinEntity>> entityType) {
-        super(context, entityType, modelBuilder -> modelBuilder
-            .customNames("Pingu")
-            .dontRotateHeadWhen(penguin ->
-                penguin.isSleeping()
-                    || penguin.isIdleAnimationActive()
-                    || penguin.isSliding()
-                    || penguin.isSwimming()
-            )
-        );
+        super(context, new PenguinModel(entityType));
     }
 
     @Override

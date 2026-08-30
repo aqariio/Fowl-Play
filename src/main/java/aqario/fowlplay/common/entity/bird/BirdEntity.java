@@ -65,7 +65,8 @@ public abstract class BirdEntity extends Animal implements GeoEntity {
     protected static final RawAnimation STAND_ANIM = RawAnimation.begin().thenLoop("stand");
     protected static final RawAnimation SIT_ANIM = RawAnimation.begin().thenLoop("sit");
     protected static final RawAnimation SWIM_ANIM = RawAnimation.begin().thenLoop("swim");
-    protected static final RawAnimation SLEEP_ANIM = RawAnimation.begin().thenLoop("sleep");
+    protected static final RawAnimation SLEEP_LAND_ANIM = RawAnimation.begin().thenLoop("sleep.land");
+    protected static final RawAnimation SLEEP_WATER_ANIM = RawAnimation.begin().thenLoop("sleep.water");
     private AnimationList idleAnimations;
     @Nullable
     private RawAnimation activeIdleAnimation;
@@ -438,7 +439,7 @@ public abstract class BirdEntity extends Animal implements GeoEntity {
     protected <E extends BirdEntity> PlayState baseController(final AnimationState<E> state) {
         if(this.isSleeping()) {
             this.activeIdleAnimation = null;
-            return state.setAndContinue(SLEEP_ANIM);
+            return state.setAndContinue(this.isInWaterOrBubble() ? SLEEP_WATER_ANIM : SLEEP_LAND_ANIM);
         }
         if(this.isSitting()) {
             this.activeIdleAnimation = null;
@@ -465,21 +466,22 @@ public abstract class BirdEntity extends Animal implements GeoEntity {
             this.idleAnimationReady = false;
             this.resetIdleAnimationDelay();
             this.activeIdleAnimation = this.getIdleAnimations().getRandom();
-
-            return state.setAndContinue(this.activeIdleAnimation);
+            if(this.activeIdleAnimation != null) {
+                return state.setAndContinue(this.activeIdleAnimation);
+            }
         }
         return state.setAndContinue(STAND_ANIM);
     }
 
-    protected boolean isSitting() {
-        return false;
-    }
-
     protected <E extends BirdEntity> PlayState movementController(final AnimationState<E> state) {
-        if(this.isInWaterOrBubble() || this.isSleeping()) {
+        if(this.isInWaterOrBubble() || this.isSleeping() || this.isSitting()) {
             return PlayState.STOP;
         }
         return state.setAndContinue(WALK_ANIM);
+    }
+
+    protected boolean isSitting() {
+        return false;
     }
 
     @Override
@@ -494,7 +496,8 @@ public abstract class BirdEntity extends Animal implements GeoEntity {
     }
 
     protected void tickIdleAnimation() {
-        if(this.activeIdleAnimation == null
+        if(!this.getIdleAnimations().isEmpty()
+            && this.activeIdleAnimation == null
             && !this.idleAnimationReady
             && this.random.nextInt(1000) < this.idleAnimationChance++
         ) {

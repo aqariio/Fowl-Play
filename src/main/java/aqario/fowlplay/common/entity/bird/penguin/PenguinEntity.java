@@ -28,7 +28,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -47,7 +46,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -76,21 +74,28 @@ import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
 import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.List;
 import java.util.function.Predicate;
 
 public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity> {
-    private static final int SLIDING_TRANSITION_TICKS = (int) (0.75F * 20);
-    private static final int STANDING_TRANSITION_TICKS = (int) (1.0F * 20);
-    private static final long LAST_POSE_CHANGE_TICKS = 0L;
-    public static final EntityDataAccessor<Long> LAST_POSE_TICK = SynchedEntityData.defineId(PenguinEntity.class, EntityDataSerializers.LONG);
+    private static final EntityDataAccessor<Boolean> SLIDING = SynchedEntityData.defineId(
+        PenguinEntity.class,
+        EntityDataSerializers.BOOLEAN
+    );
+    private static final String SLIDING_KEY = "sliding";
     private static final int SWIM_PARTICLE_COUNT = 15;
-    public final AnimationState slidingState = new AnimationState();
-    public final AnimationState slidingTransitionState = new AnimationState();
-    public final AnimationState standingTransitionState = new AnimationState();
-    public final AnimationState flappingState = new AnimationState();
-    public final AnimationState dancingState = new AnimationState();
+    private static final RawAnimation START_SLIDE_ANIM = RawAnimation.begin()
+        .thenPlay("slide.transition")
+        .thenLoop("slide");
+    private static final RawAnimation SLIDE_ANIM = RawAnimation.begin().thenLoop("slide");
+    private static final RawAnimation START_STAND_ANIM = RawAnimation.begin()
+        .thenPlay("stand.transition")
+        .thenLoop("stand");
+    private static final RawAnimation DANCE_ANIM = RawAnimation.begin().thenLoop("dance");
     private boolean songPlaying;
     @Nullable
     private BlockPos songSource;
@@ -111,7 +116,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @Override
     public float getSpeed() {
-        return this.getPose() == Pose.SLIDING ? super.getSpeed() * 1.5F : super.getSpeed();
+        return this.isSliding() ? super.getSpeed() * 1.5F : super.getSpeed();
     }
 
     @Override
@@ -132,12 +137,6 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     @Override
     protected PathNavigation createNavigation(Level world) {
         return new AmphibiousNavigation(this, this.level());
-    }
-
-    @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
-        this.initLastPoseTick(level.getLevel().getGameTime());
-        return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
     }
 
     @Nullable
@@ -199,24 +198,19 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(LAST_POSE_TICK, LAST_POSE_CHANGE_TICKS);
+        builder.define(SLIDING, false);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putLong("lastPoseTick", this.entityData.get(LAST_POSE_TICK));
+        nbt.putBoolean(SLIDING_KEY, this.isSliding());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        long l = nbt.getLong("lastPoseTick");
-        if(l < LAST_POSE_CHANGE_TICKS) {
-            this.setPose(Pose.SLIDING);
-        }
-
-        this.setLastPoseTick(l);
+        this.setSliding(nbt.getBoolean(SLIDING_KEY));
     }
 
     @Override
@@ -231,7 +225,10 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
             this.getControllingPassenger().stopRiding();
         }
         if(this.isInWaterOrBubble() && !this.isSliding()) {
-            this.setSliding();
+            this.startSliding();
+        }
+        if(this.isSongPlaying() && this.onGround() && this.isSliding()) {
+            this.stopSliding();
         }
 
         super.tick();
@@ -239,16 +236,35 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
         if(this.level().isClientSide() && this.isInWaterOrBubble() && this.getDeltaMovement().lengthSqr() > 0.02) {
             this.addSwimParticles();
         }
+    }
 
-        if(this.isSwimming()) {
-            this.setPose(Pose.SWIMMING);
+    @Override
+    protected <E extends BirdEntity> PlayState baseController(AnimationState<E> state) {
+        // TODO: fix penguin animation transition logic
+        if(this.isSongPlaying() && this.onGround()) {
+            return state.setAndContinue(DANCE_ANIM);
         }
-        else if(this.isSliding()) {
-            this.setPose(Pose.SLIDING);
+        if(this.isSleeping() || this.isInWaterOrBubble()) {
+            return super.baseController(state);
         }
-        else {
-            this.setPose(Pose.STANDING);
+        if(this.isSliding()) {
+            return state.setAndContinue(SLIDE_ANIM);
         }
+        if(state.isCurrentAnimation(START_SLIDE_ANIM)
+            || state.isCurrentAnimation(SLIDE_ANIM)
+            || state.isCurrentAnimation(START_STAND_ANIM)
+        ) {
+            return state.setAndContinue(START_STAND_ANIM);
+        }
+        return super.baseController(state);
+    }
+
+    @Override
+    protected <E extends BirdEntity> PlayState movementController(AnimationState<E> state) {
+        if(this.isSliding()) {
+            return PlayState.STOP;
+        }
+        return super.movementController(state);
     }
 
     private void addSwimParticles() {
@@ -275,60 +291,26 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     }
 
     public boolean isSliding() {
-        return this.entityData.get(LAST_POSE_TICK) < LAST_POSE_CHANGE_TICKS;
-    }
-
-    public boolean shouldUpdateSlidingAnimations() {
-        return this.getLastPoseTickDelta() < LAST_POSE_CHANGE_TICKS != this.isSliding();
-    }
-
-    public boolean isChangingPose() {
-        long l = this.getLastPoseTickDelta();
-        return l < (long) (this.isSliding() ? SLIDING_TRANSITION_TICKS : STANDING_TRANSITION_TICKS);
-    }
-
-    private boolean shouldPlaySlidingTransition() {
-        return this.isSliding() && this.getLastPoseTickDelta() < SLIDING_TRANSITION_TICKS && this.getLastPoseTickDelta() >= LAST_POSE_CHANGE_TICKS;
+        return this.entityData.get(SLIDING);
     }
 
     public void startSliding() {
         if(!this.isSliding()) {
-            this.setPose(Pose.SLIDING);
+            this.setSliding(true);
             this.gameEvent(GameEvent.ENTITY_ACTION);
-            this.setLastPoseTick(-this.level().getGameTime());
         }
     }
 
     public void stopSliding() {
         if(this.isSliding()) {
-            this.setPose(Pose.STANDING);
+            this.setSliding(false);
             this.gameEvent(GameEvent.ENTITY_ACTION);
-            this.setLastPoseTick(this.level().getGameTime());
         }
     }
 
-    public void setStanding() {
-        this.setPose(Pose.STANDING);
-        this.gameEvent(GameEvent.ENTITY_ACTION);
-        this.initLastPoseTick(this.level().getGameTime());
-    }
-
-    public void setSliding() {
-        this.setPose(Pose.SLIDING);
-        this.gameEvent(GameEvent.ENTITY_ACTION);
-        this.setLastPoseTick(-Math.max(LAST_POSE_CHANGE_TICKS, this.level().getGameTime() - SLIDING_TRANSITION_TICKS - 1L));
-    }
-
-    private void setLastPoseTick(long lastPoseTick) {
-        this.entityData.set(LAST_POSE_TICK, lastPoseTick);
-    }
-
-    private void initLastPoseTick(long time) {
-        this.setLastPoseTick(Math.max(LAST_POSE_CHANGE_TICKS, time - STANDING_TRANSITION_TICKS - 1L));
-    }
-
-    public long getLastPoseTickDelta() {
-        return this.level().getGameTime() - Math.abs(this.entityData.get(LAST_POSE_TICK));
+    private void setSliding(boolean sliding) {
+        this.entityData.set(SLIDING, sliding);
+        this.refreshDimensions();
     }
 
     @Override
@@ -384,7 +366,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @Override
     public float maxUpStep() {
-        return this.getPose() == Pose.SLIDING ? 1.1F : super.maxUpStep();
+        return this.isSliding() ? 1.1F : super.maxUpStep();
     }
 
     @Override
@@ -395,7 +377,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     @Override
     public EntityDimensions getDefaultDimensions(Pose pose) {
         EntityDimensions dimensions = super.getDefaultDimensions(pose);
-        return pose == Pose.SLIDING || pose == Pose.SWIMMING ? dimensions.scale(1.0F, 0.35F) : dimensions;
+        return this.isSliding() || this.isInWaterOrBubble() ? dimensions.scale(1.0F, 0.35F) : dimensions;
     }
 
     @Override
@@ -455,7 +437,6 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
         boolean touchingWater = this.isInWater();
         boolean bl = super.updateInWaterStateAndDoFluidPushing();
         if(touchingWater != this.isInWater()) {
-            this.setPose(this.isInWater() ? Pose.SWIMMING : Pose.STANDING);
             this.refreshDimensions();
         }
         return bl;
@@ -470,7 +451,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
     protected void tickRidden(Player player, Vec3 input) {
         super.tickRidden(player, input);
         if(!this.isSliding()) {
-            this.setSliding();
+            this.startSliding();
         }
         float sidewaysMovement = player.xxa;
 
@@ -522,7 +503,7 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
 
     @Override
     protected int calculateFallDamage(float fallDistance, float damageMultiplier) {
-        if(this.getPose() == Pose.SLIDING) {
+        if(this.isSliding()) {
             return (super.calculateFallDamage(fallDistance, damageMultiplier) - 3) / 2;
         }
         return super.calculateFallDamage(fallDistance, damageMultiplier);

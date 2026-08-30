@@ -39,8 +39,7 @@ public class SlideBehaviours {
                 return true;
             }
         )
-            .startCondition(bird ->
-                (!bird.canStartSliding() && !bird.isSliding()) || bird.getLastPoseTickDelta() < (long) seconds * 20
-            );
+            .startCondition(bird -> bird.isSliding() || bird.canStartSliding())
+            .cooldownFor(bird -> seconds * 20);
     }
 }

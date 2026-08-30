@@ -229,7 +229,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
         // Sitting
         if(this.onGround() && this.isTamed() && this.isOwnedBy(player)) {
             if(!this.level().isClientSide()) {
-                this.setSitting(!this.isSitting());
+                this.setOrderedToSit(!this.isOrderedToSit());
                 this.jumping = false;
                 this.navigation.stop();
                 this.setTarget(null);
@@ -428,7 +428,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
     public BrainActivityGroup<? extends PigeonEntity> pickUpActivity() {
         return BirdBrain.pickUp(
             CompositeBehaviours.<PigeonEntity>tryPickUpFood()
-                .startCondition(pigeon -> !pigeon.isSitting())
+                .startCondition(pigeon -> !pigeon.isOrderedToSit())
         );
     }
 

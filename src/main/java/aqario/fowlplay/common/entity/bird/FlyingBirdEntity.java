@@ -209,7 +209,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         return this.isFlying() ? 10 : super.getHeadRotSpeed();
     }
 
-    protected boolean canSwim() {
+    public boolean canSwim() {
         return false;
     }
 

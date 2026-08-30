@@ -104,7 +104,7 @@ public class GullEntity extends TrustingBirdEntity implements BirdBrain<GullEnti
     }
 
     @Override
-    protected boolean canSwim() {
+    public boolean canSwim() {
         return true;
     }
 

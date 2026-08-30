@@ -11,11 +11,12 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class FlyingBirdModel<T extends FlyingBirdEntity & GeoAnimatable> extends BirdModel<T> {
-    private Predicate<T> renderWingsPredicate = FlyingBirdEntity::isFlying;
+    private Predicate<T> renderWingsPredicate = bird ->
+        bird.isFlying() || (!bird.canSwim() && bird.isInWaterOrBubble());
 
     public FlyingBirdModel(Supplier<EntityType<T>> entity) {
         super(entity);
-        this.dontRotateHeadWhen(bird -> bird.isSleeping() || bird.isFlying());
+        this.dontRotateHeadWhen(bird -> bird.isSleeping() || bird.isIdleAnimationActive() || bird.isFlying());
     }
 
     protected GeoBone leftWingOpen() {
@@ -31,8 +32,8 @@ public class FlyingBirdModel<T extends FlyingBirdEntity & GeoAnimatable> extends
         if(bird.isFlying()) {
             float partialTick = state.getPartialTick();
 
-            this.root().setRotX(bird.getViewXRot(partialTick) * Mth.DEG_TO_RAD);
-            this.root().setRotZ(bird.getRoll(partialTick) * Mth.DEG_TO_RAD);
+            this.root().setRotX(this.root().getRotX() + bird.getViewXRot(partialTick) * Mth.DEG_TO_RAD);
+            this.root().setRotZ(this.root().getRotZ() + bird.getRoll(partialTick) * Mth.DEG_TO_RAD);
         }
 
         boolean renderOpenWings = this.renderWingsPredicate.test(bird);

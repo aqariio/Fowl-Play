@@ -30,7 +30,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
     );
     private static final String OWNER_KEY = "owner";
     private static final String SITTING_KEY = "sitting";
-    private boolean sitting;
+    private boolean orderedToSit;
 
     protected TameableBirdEntity(EntityType<? extends BirdEntity> entityType, Level world) {
         super(entityType, world);
@@ -50,7 +50,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
             nbt.putUUID(OWNER_KEY, this.getOwnerUUID());
         }
 
-        nbt.putBoolean(SITTING_KEY, this.sitting);
+        nbt.putBoolean(SITTING_KEY, this.orderedToSit);
     }
 
     @Override
@@ -62,8 +62,8 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
             this.setTamed(true);
         }
 
-        this.sitting = nbt.getBoolean(SITTING_KEY);
-        this.setInSittingPose(this.sitting);
+        this.orderedToSit = nbt.getBoolean(SITTING_KEY);
+        this.setSitting(this.orderedToSit);
     }
 
     @Override
@@ -73,7 +73,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
 
     @Override
     public boolean handleLeashAtDistance(Entity leashHolder, float distance) {
-        if(this.isInSittingPose()) {
+        if(this.isSitting()) {
             if(distance > 10.0F) {
                 this.dropLeash(true, true);
             }
@@ -123,13 +123,14 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
         }
     }
 
-    public boolean isInSittingPose() {
+    @Override
+    public boolean isSitting() {
         return (this.entityData.get(TAMEABLE_FLAGS) & 1) != 0;
     }
 
-    public void setInSittingPose(boolean inSittingPose) {
+    public void setSitting(boolean sitting) {
         byte b = this.entityData.get(TAMEABLE_FLAGS);
-        if(inSittingPose) {
+        if(sitting) {
             this.entityData.set(TAMEABLE_FLAGS, (byte) (b | 1));
         }
         else {
@@ -141,7 +142,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
     public boolean hurt(DamageSource source, float amount) {
         boolean bl = super.hurt(source, amount);
         if(!this.level().isClientSide() && bl) {
-            this.setSitting(false);
+            this.setOrderedToSit(false);
         }
         return bl;
     }
@@ -157,18 +158,23 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
                 this.setPersistenceRequired();
             }
         }
-        if(this.isFlying()) {
-            this.setSitting(false);
-        }
         if(!this.level().isClientSide()) {
-            if(this.isSitting()) {
+            if(this.isOrderedToSit() && !this.isFlying()) {
                 this.getNavigation().stop();
-                this.setInSittingPose(true);
+                this.setSitting(true);
             }
             else {
-                this.setInSittingPose(false);
+                this.setSitting(false);
             }
         }
+    }
+
+    public boolean isOrderedToSit() {
+        return this.orderedToSit;
+    }
+
+    public void setOrderedToSit(boolean orderedToSit) {
+        this.orderedToSit = orderedToSit;
     }
 
     @Nullable
@@ -244,14 +250,5 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
         }
 
         super.die(source);
-    }
-
-    @Override
-    public boolean isSitting() {
-        return this.sitting;
-    }
-
-    public void setSitting(boolean sitting) {
-        this.sitting = sitting;
     }
 }

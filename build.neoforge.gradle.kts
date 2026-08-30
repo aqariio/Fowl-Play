@@ -130,6 +130,7 @@ tasks {
             register("version", "mod.version")
             register("minecraft", "mod.mc_compat")
             register("neoforge", "deps.neo_loader")
+            register("geckolib", "deps.geckolib")
             register("sbl", "deps.sbl")
             register("yacl", "deps.yacl")
         }

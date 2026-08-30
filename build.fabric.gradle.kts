@@ -163,6 +163,7 @@ tasks {
             register("minecraft", "mod.mc_compat")
             register("loader", "deps.fabric_loader")
             register("fapi", "deps.fabric_api")
+            register("geckolib", "deps.geckolib")
             register("sbl", "deps.sbl")
             register("yacl", "deps.yacl")
         }

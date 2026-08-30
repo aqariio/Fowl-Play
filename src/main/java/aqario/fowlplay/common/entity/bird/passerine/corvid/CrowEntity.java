@@ -1,4 +1,4 @@
-package aqario.fowlplay.common.entity.bird.passerine;
+package aqario.fowlplay.common.entity.bird.passerine.corvid;
 
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
@@ -107,22 +107,6 @@ public class CrowEntity extends TrustingBirdEntity implements BirdBrain<CrowEnti
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
         return entity.getType().is(FPEntityTypeTags.CROW_AVOIDS);
-    }
-
-    @Override
-    public void updateAnimationStates() {
-        if(this.isSleeping()) {
-            this.sleepingState.start(this.tickCount);
-            this.standingState.stop();
-            this.swimmingState.stop();
-            this.idleAnims.stopAll();
-        }
-        else {
-            this.sleepingState.stop();
-            this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
-            this.flappingState.animateWhen(this.isFlying(), this.tickCount);
-            this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
-        }
     }
 
     @Override

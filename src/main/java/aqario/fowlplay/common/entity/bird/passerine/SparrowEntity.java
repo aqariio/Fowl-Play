@@ -17,7 +17,6 @@ import aqario.fowlplay.core.tags.FPItemTags;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -39,12 +38,6 @@ import java.util.List;
 public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<SparrowEntity>, Flocking {
     protected static final RawAnimation SCRATCHING_ANIM = RawAnimation.begin().thenPlay("idle.scratching");
     protected static final RawAnimation PREENING_ANIM = RawAnimation.begin().thenPlay("idle.preening");
-    public final AnimationState scratchingState = new AnimationState();
-    public final AnimationState preeningState = new AnimationState();
-    private static final int FLAP_FREQUENCY = 1;
-    private static final int FLAP_DURATION = 8;
-    private int timeSinceLastFlap = FLAP_FREQUENCY;
-    private int flapTime = 0;
 
     public SparrowEntity(EntityType<? extends SparrowEntity> entityType, Level world) {
         super(entityType, world);
@@ -75,76 +68,6 @@ public class SparrowEntity extends FlyingBirdEntity implements BirdBrain<Sparrow
         return super.createIdleAnimations()
             .with(SCRATCHING_ANIM, 1)
             .with(PREENING_ANIM, 3);
-    }
-
-    @Override
-    protected void updateAnimationStates() {
-        if(this.isSleeping()) {
-            this.sleepingState.start(this.tickCount);
-            this.standingState.stop();
-            this.swimmingState.stop();
-            this.idleAnims.stopAll();
-        }
-        else {
-            this.sleepingState.stop();
-        }
-        // on land
-        if(!this.isFlying() && !this.isInWaterOrBubble() && !this.isSleeping()) {
-            if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {
-                this.resetIdleAnimationDelay();
-                this.standingState.stop();
-                this.idleAnims.stopAll();
-                this.idleAnims.getRandom(this.tickCount);
-            }
-            else if(this.isMoving()) {
-                this.idleAnims.stopAll();
-            }
-            if(!this.idleAnims.containsStarted()) {
-                this.standingState.startIfStopped(this.tickCount);
-            }
-            else {
-                this.standingState.stop();
-            }
-        }
-        else {
-            this.standingState.stop();
-            this.idleAnims.stopAll();
-        }
-        // flying
-        if(this.isFlying()) {
-            if(this.timeSinceLastFlap >= FLAP_FREQUENCY) {
-                this.timeSinceLastFlap = 0;
-                this.flapTime++;
-            }
-            else if(this.isAnimatingFlapping()) {
-                this.flapTime++;
-                this.glidingState.stop();
-                this.flappingState.startIfStopped(this.tickCount);
-            }
-            else {
-                this.timeSinceLastFlap++;
-                this.flapTime = 0;
-                this.flappingState.stop();
-                this.glidingState.startIfStopped(this.tickCount);
-            }
-        }
-        else {
-            this.timeSinceLastFlap = FLAP_FREQUENCY;
-            this.flapTime = 0;
-            this.flappingState.stop();
-            this.glidingState.stop();
-        }
-        // in water
-        this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
-    }
-
-    private boolean isAnimatingFlapping() {
-        return this.flapTime >= 0 && this.flapTime < FLAP_DURATION;
-    }
-
-    @Override
-    protected boolean isFlapping() {
-        return this.isFlying() && this.isAnimatingFlapping();
     }
 
     @Override

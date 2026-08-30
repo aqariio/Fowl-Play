@@ -63,6 +63,7 @@ public abstract class BirdEntity extends Animal implements GeoEntity {
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     protected static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("walk");
     protected static final RawAnimation STAND_ANIM = RawAnimation.begin().thenLoop("stand");
+    protected static final RawAnimation SIT_ANIM = RawAnimation.begin().thenLoop("sit");
     protected static final RawAnimation SWIM_ANIM = RawAnimation.begin().thenLoop("swim");
     protected static final RawAnimation SLEEP_ANIM = RawAnimation.begin().thenLoop("sleep");
     private AnimationList idleAnimations;
@@ -77,8 +78,8 @@ public abstract class BirdEntity extends Animal implements GeoEntity {
     protected int idleAnimationChance;
     protected boolean idleAnimationReady;
 
-    public BirdEntity(EntityType<? extends BirdEntity> entityType, Level world) {
-        super(entityType, world);
+    public BirdEntity(EntityType<? extends BirdEntity> entityType, Level level) {
+        super(entityType, level);
         this.setCanPickUpLoot(true);
         this.moveControl = this.createMoveControl();
         this.lookControl = new BirdLookControl(this, 85);
@@ -431,13 +432,17 @@ public abstract class BirdEntity extends Animal implements GeoEntity {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "base", 5, this::baseController));
-        controllers.add(new AnimationController<>(this, "walk", 5, this::walkController));
+        controllers.add(new AnimationController<>(this, "movement", 5, this::movementController));
     }
 
     protected <E extends BirdEntity> PlayState baseController(final AnimationState<E> state) {
         if(this.isSleeping()) {
             this.activeIdleAnimation = null;
             return state.setAndContinue(SLEEP_ANIM);
+        }
+        if(this.isSitting()) {
+            this.activeIdleAnimation = null;
+            return state.setAndContinue(SIT_ANIM);
         }
         if(this.isInWaterOrBubble()) {
             this.activeIdleAnimation = null;
@@ -466,9 +471,12 @@ public abstract class BirdEntity extends Animal implements GeoEntity {
         return state.setAndContinue(STAND_ANIM);
     }
 
-    protected <E extends BirdEntity> PlayState walkController(final AnimationState<E> state) {
-        E bird = state.getAnimatable();
-        if(bird.isInWaterOrBubble() || bird.isSleeping()) {
+    protected boolean isSitting() {
+        return false;
+    }
+
+    protected <E extends BirdEntity> PlayState movementController(final AnimationState<E> state) {
+        if(this.isInWaterOrBubble() || this.isSleeping()) {
             return PlayState.STOP;
         }
         return state.setAndContinue(WALK_ANIM);

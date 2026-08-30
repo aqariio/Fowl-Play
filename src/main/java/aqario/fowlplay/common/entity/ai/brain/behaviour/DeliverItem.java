@@ -9,7 +9,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
 import net.minecraft.world.entity.player.Player;
 
-public class DeliverBundle {
+public class DeliverItem {
     public static <E extends PigeonEntity> AnonymousBehaviour<E> run() {
         return new AnonymousBehaviour<>(
             MemoryList.create(4)

@@ -246,6 +246,7 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
         super.die(source);
     }
 
+    @Override
     public boolean isSitting() {
         return this.sitting;
     }

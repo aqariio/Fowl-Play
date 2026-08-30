@@ -14,7 +14,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
@@ -28,14 +27,17 @@ import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public abstract class FlyingBirdEntity extends BirdEntity {
     private static final EntityDataAccessor<Boolean> FLYING = SynchedEntityData.defineId(
         FlyingBirdEntity.class,
         EntityDataSerializers.BOOLEAN
     );
-    public final AnimationState glidingState = new AnimationState();
-    public final AnimationState flappingState = new AnimationState();
+    protected static final RawAnimation GLIDE_ANIM = RawAnimation.begin().thenLoop("glide");
+    protected static final RawAnimation FLAP_ANIM = RawAnimation.begin().thenLoop("flap");
     private boolean isFlightNavigation;
     private PathNavigation landNavigation;
     private FlightNavigation flightNavigation;
@@ -50,8 +52,8 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     private static final double MIN_FLIGHT_VELOCITY = 0.1;
     private static final float MAX_ROLL_CHANGE = 20;
 
-    public FlyingBirdEntity(EntityType<? extends BirdEntity> entityType, Level world) {
-        super(entityType, world);
+    public FlyingBirdEntity(EntityType<? extends BirdEntity> entityType, Level level) {
+        super(entityType, level);
         this.setNavigation(false);
         this.setPathfindingMalus(PathType.LEAVES, 0.0f);
         this.setPathfindingMalus(PathType.WATER_BORDER, 16.0f);
@@ -89,9 +91,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         this.setFlying(nbt.getBoolean(FLYING_KEY));
     }
 
-    @Override
-    protected void onFlap() {
-        // TODO: make this synced with the animation
+    public void playFlapSound() {
         this.playSound(FPSoundEvents.BIRD_FLAP.get(), this.getFlapVolume(), this.getFlapPitch());
     }
 
@@ -156,42 +156,21 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     @Override
-    protected void updateAnimationStates() {
-        if(this.isSleeping()) {
-            this.sleepingState.start(this.tickCount);
-            this.standingState.stop();
-            this.swimmingState.stop();
-            this.idleAnims.stopAll();
+    protected <E extends BirdEntity> PlayState baseController(AnimationState<E> state) {
+        if(this.isFlying()) {
+            return state.setAndContinue(GLIDE_ANIM);
         }
-        else {
-            this.sleepingState.stop();
-            // on land
-            if(!this.isFlying() && !this.isInWaterOrBubble()) {
-                if(this.random.nextInt(1000) < this.idleAnimationChance++ && !this.isMoving()) {
-                    this.resetIdleAnimationDelay();
-                    this.standingState.stop();
-                    this.idleAnims.stopAll();
-                    this.idleAnims.getRandom(this.tickCount);
-                }
-                else if(this.isMoving()) {
-                    this.idleAnims.stopAll();
-                }
-                if(!this.idleAnims.containsStarted()) {
-                    this.standingState.startIfStopped(this.tickCount);
-                }
-                else {
-                    this.standingState.stop();
-                }
-            }
-            else {
-                this.standingState.stop();
-                this.idleAnims.stopAll();
-            }
-            // flying
-            this.glidingState.animateWhen(this.isFlying(), this.tickCount);
-            // in water
-            this.swimmingState.animateWhen(this.isInWaterOrBubble() && !this.isFlying(), this.tickCount);
+        return super.baseController(state);
+    }
+
+    @Override
+    protected <E extends BirdEntity> PlayState movementController(AnimationState<E> state) {
+        // TODO: sync flap sound with animation
+        // TODO: add support for different flight patterns (ie. bounding, flapping, flap and glide, soaring)
+        if(this.isFlying()) {
+            return state.setAndContinue(FLAP_ANIM);
         }
+        return super.movementController(state);
     }
 
     @Override
@@ -382,9 +361,9 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     @Override
-    public void calculateEntityAnimation(boolean flutter) {
+    public void calculateEntityAnimation(boolean includeHeight) {
         if(!this.isFlying()) {
-            super.calculateEntityAnimation(flutter);
+            super.calculateEntityAnimation(includeHeight);
             return;
         }
         float verticalVelocity = (float) this.getDeltaMovement().y;

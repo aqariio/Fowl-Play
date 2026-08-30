@@ -92,7 +92,7 @@ public class BirdModel<T extends BirdEntity & GeoAnimatable> extends GeoModel<T>
     }
 
     public BirdModel<T> dontRotateHeadWhen(Predicate<T> predicate) {
-        this.dontRotateHeadPredicate = predicate; // don't rotate when flying, idle animation, swimming, sliding, sleeping
+        this.dontRotateHeadPredicate = predicate;
         return this;
     }
 

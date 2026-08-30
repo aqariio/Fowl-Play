@@ -1,6 +1,6 @@
 package aqario.fowlplay.client.render.entity;
 
-import aqario.fowlplay.common.entity.bird.passerine.RavenEntity;
+import aqario.fowlplay.common.entity.bird.passerine.corvid.RavenEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.EntityType;
 

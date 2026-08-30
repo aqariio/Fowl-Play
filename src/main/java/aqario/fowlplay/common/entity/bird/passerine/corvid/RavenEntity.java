@@ -1,4 +1,4 @@
-package aqario.fowlplay.common.entity.bird.passerine;
+package aqario.fowlplay.common.entity.bird.passerine.corvid;
 
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;

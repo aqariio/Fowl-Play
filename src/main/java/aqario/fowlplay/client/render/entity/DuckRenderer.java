@@ -1,7 +1,7 @@
 package aqario.fowlplay.client.render.entity;
 
 import aqario.fowlplay.client.render.entity.model.BirdModel;
-import aqario.fowlplay.common.entity.bird.waterfowl.DuckEntity;
+import aqario.fowlplay.common.entity.bird.fowl.waterfowl.DuckEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.EntityType;
 

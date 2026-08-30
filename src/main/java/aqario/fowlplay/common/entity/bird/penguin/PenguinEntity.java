@@ -266,45 +266,6 @@ public class PenguinEntity extends BirdEntity implements BirdBrain<PenguinEntity
         }
     }
 
-    @Override
-    protected void updateAnimationStates() {
-        this.standingState.animateWhen(this.onGround() && !this.isInWaterOrBubble() && !this.isSliding(), this.tickCount);
-
-        if(this.isInWaterOrBubble()) {
-            this.standingState.stop();
-            this.swimmingState.startIfStopped(this.tickCount);
-        }
-        else {
-            this.swimmingState.stop();
-        }
-
-        if(this.shouldUpdateSlidingAnimations() && !this.isInWaterOrBubble()) {
-            this.standingState.stop();
-            if(this.shouldPlaySlidingTransition()) {
-                this.slidingTransitionState.startIfStopped(this.tickCount);
-                this.slidingState.stop();
-            }
-            else {
-                this.slidingTransitionState.stop();
-                this.slidingState.startIfStopped(this.tickCount);
-            }
-        }
-        else {
-            this.slidingTransitionState.stop();
-            this.slidingState.stop();
-            this.standingTransitionState.animateWhen(this.isChangingPose() && this.getLastPoseTickDelta() >= LAST_POSE_CHANGE_TICKS, this.tickCount);
-        }
-
-        if(this.isSongPlaying() && this.onGround()) {
-            this.dancingState.startIfStopped(this.tickCount);
-            this.setStanding();
-            this.standingState.stop();
-        }
-        else {
-            this.dancingState.stop();
-        }
-    }
-
     public boolean canStartSliding() {
         return !this.isInWaterOrBubble()
             && !this.isVehicle()

@@ -1,12 +1,15 @@
-package aqario.fowlplay.common.entity.bird.waterfowl;
+package aqario.fowlplay.common.entity.bird.fowl.waterfowl;
 
 import aqario.fowlplay.common.entity.ai.brain.BirdBrain;
 import aqario.fowlplay.common.entity.ai.brain.behaviour.*;
-import aqario.fowlplay.common.entity.ai.brain.sensor.*;
+import aqario.fowlplay.common.entity.ai.brain.sensor.AttackedSensor;
+import aqario.fowlplay.common.entity.ai.brain.sensor.AvoidTargetSensor;
+import aqario.fowlplay.common.entity.ai.brain.sensor.NearbyAdultsSensor;
+import aqario.fowlplay.common.entity.ai.brain.sensor.NearbyFoodSensor;
 import aqario.fowlplay.common.entity.ai.navigation.AmphibiousNavigation;
 import aqario.fowlplay.common.entity.bird.*;
 import aqario.fowlplay.common.entity.bird.VariantHolder;
-import aqario.fowlplay.common.entity.variant.GooseVariant;
+import aqario.fowlplay.common.entity.variant.DuckVariant;
 import aqario.fowlplay.common.util.BirdUtils;
 import aqario.fowlplay.common.util.CylindricalRadius;
 import aqario.fowlplay.common.util.Utils;
@@ -18,27 +21,18 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -62,23 +56,21 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEntity>, VariantHolder<GooseVariant>, Domesticatable, Flocking {
-    private static final EntityDataAccessor<Holder<GooseVariant>> VARIANT = SynchedEntityData.defineId(
-        GooseEntity.class,
-        FPEntityDataSerializers.GOOSE_VARIANT
+public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEntity>, VariantHolder<DuckVariant>, Domesticatable, Flocking {
+    private static final EntityDataAccessor<Holder<DuckVariant>> VARIANT = SynchedEntityData.defineId(
+        DuckEntity.class,
+        FPEntityDataSerializers.DUCK_VARIANT
     );
     private static final EntityDataAccessor<Boolean> CLIPPED = SynchedEntityData.defineId(
-        GooseEntity.class,
+        DuckEntity.class,
         EntityDataSerializers.BOOLEAN
     );
     private static final EntityDataAccessor<Boolean> DOMESTIC = SynchedEntityData.defineId(
-        GooseEntity.class,
+        DuckEntity.class,
         EntityDataSerializers.BOOLEAN
     );
-    private static final String AGGRESSIVE_KEY = "aggressive";
-    private boolean aggressive;
 
-    public GooseEntity(EntityType<? extends GooseEntity> entityType, Level world) {
+    public DuckEntity(EntityType<? extends DuckEntity> entityType, Level world) {
         super(entityType, world);
         this.setPathfindingMalus(PathType.WATER_BORDER, 0.0f);
         this.setPathfindingMalus(PathType.WATER, 0.0f);
@@ -121,36 +113,15 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
         return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
     }
 
-    @Nullable
     @Override
-    public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
-        GooseEntity child = FPEntityTypes.GOOSE.get().create(level);
-        if(child != null && otherParent instanceof GooseEntity parent2) {
-            Holder<GooseVariant> variant = Utils.getRandomOf(child.getRandom(), this, parent2).getVariant();
+    public @Nullable AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
+        DuckEntity child = FPEntityTypes.DUCK.get().create(level);
+        if(child != null && otherParent instanceof DuckEntity parent2) {
+            Holder<DuckVariant> variant = Utils.getRandomOf(child.getRandom(), this, parent2).getVariant();
             child.setVariant(variant);
-            child.setDomestic(variant.value().domesticatable());
+            child.setDomestic(true);
         }
         return child;
-    }
-
-    @Override
-    public boolean isFood(ItemStack stack) {
-        return this.getFood().test(stack);
-    }
-
-    @Override
-    public float getAgeScale() {
-        return this.isBaby() ? 0.45F : 1.0F;
-    }
-
-    @Override
-    public boolean canStartFlying() {
-        return !this.isBaby() && !this.hasClippedWings() && super.canStartFlying();
-    }
-
-    @Override
-    public boolean shouldStopFlying() {
-        return this.isBaby() || this.hasClippedWings() || super.shouldStopFlying();
     }
 
     @Override
@@ -158,26 +129,23 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
         return true;
     }
 
-    public static AttributeSupplier.Builder createGooseAttributes() {
+    public static AttributeSupplier.Builder createDuckAttributes() {
         return FlyingBirdEntity.createFlyingBirdAttributes()
             .add(Attributes.MAX_HEALTH, 10.0f)
-            .add(Attributes.ATTACK_DAMAGE, 1.5f)
-            .add(Attributes.MOVEMENT_SPEED, 0.23f)
+            .add(Attributes.ATTACK_DAMAGE, 1.0f)
+            .add(Attributes.MOVEMENT_SPEED, 0.225f)
             .add(Attributes.FLYING_SPEED, 0.22f)
             .add(Attributes.WATER_MOVEMENT_EFFICIENCY, 0.5f);
     }
 
     @Override
     public boolean isDomestic() {
-        return this.getVariant().value().domesticatable() && this.entityData.get(DOMESTIC);
+        return this.entityData.get(DOMESTIC);
     }
 
     @Override
     public void setDomestic(boolean domestic) {
-        if(this.getVariant().value().domesticatable() || !domestic) {
-            this.entityData.set(DOMESTIC, domestic);
-            this.updateSchedule();
-        }
+        this.entityData.set(DOMESTIC, domestic);
     }
 
     @Override
@@ -199,27 +167,27 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public Registry<GooseVariant> variantRegistry() {
-        return FPBuiltInRegistries.GOOSE_VARIANT;
+    public Registry<DuckVariant> variantRegistry() {
+        return FPBuiltInRegistries.DUCK_VARIANT;
     }
 
     @Override
-    public ResourceKey<Registry<GooseVariant>> variantRegistryKey() {
-        return FPRegistries.GOOSE_VARIANT;
+    public ResourceKey<Registry<DuckVariant>> variantRegistryKey() {
+        return FPRegistries.DUCK_VARIANT;
     }
 
     @Override
-    public ResourceKey<GooseVariant> defaultVariant() {
-        return GooseVariant.CANADA;
+    public ResourceKey<DuckVariant> defaultVariant() {
+        return DuckVariant.GREEN_HEADED;
     }
 
     @Override
-    public Holder<GooseVariant> getVariant() {
+    public Holder<DuckVariant> getVariant() {
         return this.entityData.get(VARIANT);
     }
 
     @Override
-    public void setVariant(Holder<GooseVariant> variant) {
+    public void setVariant(Holder<DuckVariant> variant) {
         this.entityData.set(VARIANT, variant);
     }
 
@@ -234,9 +202,6 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
         this.writeClipped(nbt);
         this.writeDomestic(nbt);
         this.writeVariant(nbt);
-        if(this.aggressive) {
-            nbt.putBoolean(AGGRESSIVE_KEY, true);
-        }
     }
 
     @Override
@@ -245,85 +210,20 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
         this.readClipped(nbt);
         this.readDomestic(nbt);
         this.readVariant(nbt);
-        if(nbt.contains(AGGRESSIVE_KEY, Tag.TAG_ANY_NUMERIC)) {
-            this.aggressive = nbt.getBoolean(AGGRESSIVE_KEY);
-        }
     }
 
     @Override
-    public boolean isAggressive() {
-        return this.aggressive && !this.isBaby();
-    }
-
-    @Override
-    public boolean canHoldItem(ItemStack stack) {
-        return super.canHoldItem(stack) || (this.isAggressive() && stack.getItem() instanceof SwordItem);
-    }
-
-    @Override
-    public boolean shouldDropBeakItem(ItemStack stack) {
-        return super.shouldDropBeakItem(stack) && !(this.isAggressive() && stack.getItem() instanceof SwordItem);
+    public boolean isBaby() {
+        return false;
     }
 
     public Ingredient getFood() {
-        return Ingredient.of(FPItemTags.GOOSE_FOOD);
-    }
-
-    @Override
-    public boolean shouldAttack(LivingEntity target) {
-        if(this.isAggressive()) {
-            return target instanceof Player;
-        }
-        if(this.isDomestic()) {
-            return false;
-        }
-        if(this.hasLowHealth()) {
-            return false;
-        }
-        return BirdUtils.wasHurtBy(this, target);
+        return Ingredient.of(FPItemTags.DUCK_FOOD);
     }
 
     @Override
     public boolean shouldAvoid(LivingEntity entity) {
-        return entity.getType().is(FPEntityTypeTags.GOOSE_AVOIDS) && !this.isAggressive();
-    }
-
-    @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        ItemStack item = player.getItemInHand(hand);
-        if(item.is(Items.SHEARS) && this.isDomestic() && !this.isBaby() && !this.hasClippedWings()) {
-            if(!this.level().isClientSide()) {
-                this.setClippedWings(true);
-                this.level().playSound(null, this, SoundEvents.SHEEP_SHEAR, this.getSoundSource(), 1.0f, 1.0f);
-                item.hurtAndBreak(1, player, getSlotForHand(hand));
-            }
-            return InteractionResult.sidedSuccess(this.level().isClientSide());
-        }
-        return super.mobInteract(player, hand);
-    }
-
-    @Override
-    public void updateAnimationStates() {
-        if(this.isSleeping()) {
-            this.sleepingState.start(this.tickCount);
-            this.standingState.stop();
-            this.swimmingState.stop();
-            this.idleAnims.stopAll();
-        }
-        else {
-            this.sleepingState.stop();
-            this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble(), this.tickCount);
-            this.flappingState.animateWhen(this.isFlying(), this.tickCount);
-            this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
-        }
-    }
-
-    @Override
-    public void setCustomName(@Nullable Component name) {
-        super.setCustomName(name);
-        if(!this.aggressive && name != null && name.getString().equalsIgnoreCase("untitled")) {
-            this.aggressive = true;
-        }
+        return entity.getType().is(FPEntityTypeTags.DUCK_AVOIDS);
     }
 
     @Override
@@ -344,32 +244,18 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Nullable
     @Override
     protected SoundEvent getCallSound() {
-        if(this.getVariant().is(GooseVariant.GREYLAG)) {
-            return FPSoundEvents.GREYLAG_GOOSE_CALL.get();
-        }
-        if(this.getVariant().is(GooseVariant.SWAN)) {
-            return FPSoundEvents.SWAN_GOOSE_CALL.get();
-        }
-        return FPSoundEvents.CANADA_GOOSE_CALL.get();
+        return FPSoundEvents.DUCK_CALL.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        if(this.getVariant().is(GooseVariant.GREYLAG)) {
-            return FPSoundEvents.GREYLAG_GOOSE_HURT.get();
-        }
-        if(this.getVariant().is(GooseVariant.SWAN)) {
-            return FPSoundEvents.SWAN_GOOSE_HURT.get();
-        }
-        return FPSoundEvents.CANADA_GOOSE_HURT.get();
+        return FPSoundEvents.DUCK_HURT.get();
     }
 
     @Override
     public CylindricalRadius getWalkRange() {
-        return this.isDomestic()
-            ? new CylindricalRadius(64, 24)
-            : new CylindricalRadius(32, 8);
+        return new CylindricalRadius(32, 8);
     }
 
     @Override
@@ -382,23 +268,22 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public List<? extends ExtendedSensor<? extends GooseEntity>> getSensors() {
+    public List<? extends ExtendedSensor<? extends DuckEntity>> getSensors() {
         return ObjectArrayList.of(
-            new NearbyLivingEntitySensor<GooseEntity>()
+            new NearbyLivingEntitySensor<DuckEntity>()
                 .setRadius(24),
-            new NearbyPlayersSensor<GooseEntity>()
+            new NearbyPlayersSensor<DuckEntity>()
                 .setRadius(24),
             new NearbyFoodSensor<>(),
             new NearbyAdultsSensor<>(),
             new InWaterSensor<>(),
             new AttackedSensor<>(),
-            new AvoidTargetSensor<>(),
-            new AttackTargetSensor<>()
+            new AvoidTargetSensor<>()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> coreActivity() {
+    public BrainActivityGroup<? extends DuckEntity> coreActivity() {
         return BirdBrain.core(
             new WakeUp<>(),
             FlightBehaviours.stopFalling(),
@@ -410,33 +295,24 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> avoidActivity() {
+    public BrainActivityGroup<? extends DuckEntity> avoidActivity() {
         return BirdBrain.avoid(
             CustomBehaviours.setAvoidEntityWalkTarget()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> fightActivity() {
+    public BrainActivityGroup<? extends DuckEntity> fightActivity() {
         return BirdBrain.fight(
             new InvalidateAttackTarget<>(),
-            new SetWalkTargetToAttackTarget<>()
-                .speedMod((entity, target) -> BirdUtils.FAST_SPEED),
+            new SetWalkTargetToAttackTarget<>(),
             new AnimatableMeleeAttack<>(0)
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> forageActivity() {
+    public BrainActivityGroup<? extends DuckEntity> forageActivity() {
         return BirdBrain.forage(
-            new BreedWithPartner<>(),
-            new LeaderlessFlocking(
-                5,
-                0.04f,
-                0.6f,
-                0.06f,
-                3f
-            ),
             new OneRandomBehaviour<>(
                 Pair.of(
                     CompositeBehaviours.trySetWaterWalkTarget(),
@@ -452,7 +328,7 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> idleActivity() {
+    public BrainActivityGroup<? extends DuckEntity> idleActivity() {
         return BirdBrain.idle(
             new BreedWithPartner<>(),
             new FollowParent<>(),
@@ -468,14 +344,14 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> pickUpActivity() {
+    public BrainActivityGroup<? extends DuckEntity> pickUpActivity() {
         return BirdBrain.pickUp(
             CompositeBehaviours.tryPickUpFood()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends GooseEntity> restActivity() {
+    public BrainActivityGroup<? extends DuckEntity> restActivity() {
         return BirdBrain.rest(
             CompositeBehaviours.trySetWaterRestTarget(),
             CustomBehaviours.sleepIfInWater()
@@ -485,8 +361,6 @@ public class GooseEntity extends TrustingBirdEntity implements BirdBrain<GooseEn
     @Nullable
     @Override
     public SmartBrainSchedule getSchedule() {
-        return this.isDomestic()
-            ? FPSchedules.DOMESTIC.get()
-            : FPSchedules.WATERFOWL.get();
+        return FPSchedules.WATERFOWL.get();
     }
 }

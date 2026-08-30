@@ -35,18 +35,12 @@ public class FlyingBirdModel<T extends FlyingBirdEntity & GeoAnimatable> extends
             this.root().setRotZ(bird.getRoll(partialTick) * Mth.DEG_TO_RAD);
         }
 
-        if(this.renderWingsPredicate.test(bird)) {
-            this.leftWingOpen().setHidden(false);
-            this.rightWingOpen().setHidden(false);
-            this.leftWing().setHidden(true);
-            this.rightWing().setHidden(true);
-        }
-        else {
-            this.leftWingOpen().setHidden(true);
-            this.rightWingOpen().setHidden(true);
-            this.leftWing().setHidden(false);
-            this.rightWing().setHidden(false);
-        }
+        boolean renderOpenWings = this.renderWingsPredicate.test(bird);
+        this.leftWingOpen().setHidden(!renderOpenWings);
+        this.rightWingOpen().setHidden(!renderOpenWings);
+        this.leftWing().setHidden(renderOpenWings);
+        this.rightWing().setHidden(renderOpenWings);
+
         super.setCustomAnimations(bird, instanceId, state);
     }
 

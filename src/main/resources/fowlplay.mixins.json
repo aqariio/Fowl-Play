@@ -3,17 +3,14 @@
   "minVersion": "0.8",
   "package": "aqario.fowlplay.mixin",
   "compatibilityLevel": "JAVA_21",
-  "plugin": "aqario.fowlplay.core.FPMixinPlugin",
   "mixins": [
     "BlockStateBaseMixin",
-    "ChickenMixin",
     "CrossCollisionBlockMixin",
     "ExtendedSensorAccessor",
     "FenceGateBlockMixin",
     "LivingEntityMixin",
     "MobCategoryMixin",
     "NaturalSpawnerMixin",
-    "ParrotMixin",
     "PowderSnowBlockMixin",
     "SoundSourceMixin",
     "WallBlockMixin"

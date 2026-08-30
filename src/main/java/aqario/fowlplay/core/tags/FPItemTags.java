@@ -18,6 +18,7 @@ public final class FPItemTags {
     public static final TagKey<Item> MACAW_FOOD = create("macaw_food");
     public static final TagKey<Item> PENGUIN_FOOD = create("penguin_food");
     public static final TagKey<Item> PIGEON_FOOD = create("pigeon_food");
+    public static final TagKey<Item> PIGEON_DELIVERABLE = create("pigeon_deliverable");
     public static final TagKey<Item> RAVEN_FOOD = create("raven_food");
     public static final TagKey<Item> ROBIN_FOOD = create("robin_food");
     public static final TagKey<Item> SPARROW_FOOD = create("sparrow_food");

@@ -35,7 +35,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
@@ -65,7 +64,6 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
         PigeonEntity.class,
         FPEntityDataSerializers.PIGEON_VARIANT
     );
-    public final AnimationState sittingState = new AnimationState();
     private ItemStack cachedRecipientStack = ItemStack.EMPTY;
     private static final String RECIPIENT_KEY = "recipient";
 
@@ -187,31 +185,35 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        ItemStack playerStack = player.getItemInHand(hand);
-        ItemStack bundleStack = this.getItemInHand(InteractionHand.OFF_HAND);
+        ItemStack playerItem = player.getItemInHand(hand);
+        ItemStack deliverable = this.getOffhandItem();
 
-        // Equip bundle
-        if(bundleStack.isEmpty() && playerStack.getItem() instanceof BundleItem && playerStack.getComponents().has(DataComponents.CUSTOM_NAME) && this.isTamed()) {
+        // Equip deliverable
+        if(deliverable.isEmpty()
+            && playerItem.is(FPItemTags.PIGEON_DELIVERABLE)
+            && playerItem.getComponents().has(DataComponents.CUSTOM_NAME)
+            && this.isTamed()
+        ) {
             if(!this.level().isClientSide()) {
-                this.setItemInHand(InteractionHand.OFF_HAND, playerStack);
+                this.setItemInHand(InteractionHand.OFF_HAND, playerItem);
                 player.setItemInHand(hand, ItemStack.EMPTY);
             }
             return InteractionResult.sidedSuccess(this.level().isClientSide());
         }
 
-        // Unequip bundle
-        if(playerStack.isEmpty() && bundleStack.getItem() instanceof BundleItem) {
+        // Unequip deliverable
+        if(playerItem.isEmpty() && deliverable.is(FPItemTags.PIGEON_DELIVERABLE)) {
             if(!this.level().isClientSide()) {
-                player.setItemInHand(hand, bundleStack);
+                player.setItemInHand(hand, deliverable);
                 this.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
             }
             return InteractionResult.sidedSuccess(this.level().isClientSide());
         }
 
         // Taming
-        if(this.isFood(playerStack) && !this.isTamed()) {
+        if(this.isFood(playerItem) && !this.isTamed()) {
             if(!this.level().isClientSide()) {
-                this.usePlayerItem(player, hand, playerStack);
+                this.usePlayerItem(player, hand, playerItem);
                 if(this.random.nextInt(4) == 0) {
                     this.setOwner(player);
                     this.navigation.stop();
@@ -268,24 +270,6 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
         super.dropEquipment();
         this.spawnAtLocation(this.getItemBySlot(EquipmentSlot.OFFHAND));
         this.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
-    }
-
-    @Override
-    public void updateAnimationStates() {
-        if(this.isSleeping()) {
-            this.sleepingState.start(this.tickCount);
-            this.standingState.stop();
-            this.swimmingState.stop();
-            this.sittingState.stop();
-            this.idleAnims.stopAll();
-        }
-        else {
-            this.sleepingState.stop();
-            this.standingState.animateWhen(!this.isFlying() && !this.isInWaterOrBubble() && !this.isInSittingPose(), this.tickCount);
-            this.flappingState.animateWhen(this.isFlying(), this.tickCount);
-            this.swimmingState.animateWhen(!this.isFlying() && this.isInWaterOrBubble(), this.tickCount);
-            this.sittingState.animateWhen(this.isInSittingPose(), this.tickCount);
-        }
     }
 
     @Override
@@ -405,7 +389,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
         return BirdBrain.deliver(
             FlightBehaviours.<PigeonEntity>stopFlying()
                 .startCondition(PigeonEntity::shouldStopFlyingToRecipient),
-            DeliverBundle.run()
+            DeliverItem.run()
         );
     }
 
@@ -489,7 +473,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
             }
             ServerPlayer recipient;
 
-            if(stack.getItem() instanceof BundleItem
+            if(stack.is(FPItemTags.PIGEON_DELIVERABLE)
                 && stack.getComponents().has(DataComponents.CUSTOM_NAME)
                 && (recipient = this.getServer().getPlayerList().getPlayerByName(stack.getHoverName().getString())) != null
             ) {

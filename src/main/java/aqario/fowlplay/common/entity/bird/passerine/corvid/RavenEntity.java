@@ -60,11 +60,6 @@ public class RavenEntity extends TrustingBirdEntity implements BirdBrain<RavenEn
     }
 
     @Override
-    public int getMaxYawChange() {
-        return 18;
-    }
-
-    @Override
     public Pair<Integer, Integer> getFlyHeightRange() {
         return Pair.of(24, 32);
     }

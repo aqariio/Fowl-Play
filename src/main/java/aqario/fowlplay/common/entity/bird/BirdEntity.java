@@ -430,10 +430,22 @@ public abstract class BirdEntity extends Animal implements GeoEntity {
         return this.idleAnimations;
     }
 
+    protected <E extends BirdEntity> AnimationController<E> configureBaseController(AnimationController<E> controller) {
+        return controller;
+    }
+
+    protected <E extends BirdEntity> AnimationController<E> configureMovementController(AnimationController<E> controller) {
+        return controller;
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "base", 5, this::baseController));
-        controllers.add(new AnimationController<>(this, "movement", 5, this::movementController));
+        controllers.add(this.configureBaseController(
+            new AnimationController<>(this, "base", 5, this::baseController)
+        ));
+        controllers.add(this.configureMovementController(
+            new AnimationController<>(this, "movement", 5, this::movementController)
+        ));
     }
 
     protected <E extends BirdEntity> PlayState baseController(final AnimationState<E> state) {

@@ -57,16 +57,6 @@ public class VultureEntity extends TrustingBirdEntity implements BirdBrain<Vultu
     }
 
     @Override
-    public int getMaxPitchChange() {
-        return 18;
-    }
-
-    @Override
-    public int getMaxYawChange() {
-        return 18;
-    }
-
-    @Override
     public Pair<Integer, Integer> getFlyHeightRange() {
         return Pair.of(56, 64);
     }

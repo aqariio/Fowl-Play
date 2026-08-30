@@ -27,9 +27,11 @@ import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.keyframe.event.SoundKeyframeEvent;
 
 public abstract class FlyingBirdEntity extends BirdEntity {
     private static final EntityDataAccessor<Boolean> FLYING = SynchedEntityData.defineId(
@@ -38,6 +40,7 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     );
     protected static final RawAnimation GLIDE_ANIM = RawAnimation.begin().thenLoop("glide");
     protected static final RawAnimation FLAP_ANIM = RawAnimation.begin().thenLoop("flap");
+    private static final String FLAP_SOUND_KEYFRAME = "flap";
     private boolean isFlightNavigation;
     private PathNavigation landNavigation;
     private FlightNavigation flightNavigation;
@@ -91,8 +94,10 @@ public abstract class FlyingBirdEntity extends BirdEntity {
         this.setFlying(nbt.getBoolean(FLYING_KEY));
     }
 
-    public void playFlapSound() {
-        this.playSound(FPSoundEvents.BIRD_FLAP.get(), this.getFlapVolume(), this.getFlapPitch());
+    public void playFlapSound(float volume, float pitch) {
+        if(volume > 0.0F) {
+            this.playSound(FPSoundEvents.BIRD_FLAP.get(), volume, pitch);
+        }
     }
 
     public abstract float getFlapVolume();
@@ -156,6 +161,12 @@ public abstract class FlyingBirdEntity extends BirdEntity {
     }
 
     @Override
+    protected <E extends BirdEntity> AnimationController<E> configureMovementController(AnimationController<E> controller) {
+        return super.configureMovementController(controller)
+            .setSoundKeyframeHandler(this::handleFlapSoundKeyframe);
+    }
+
+    @Override
     protected <E extends BirdEntity> PlayState baseController(AnimationState<E> state) {
         if(this.isFlying()) {
             return state.setAndContinue(GLIDE_ANIM);
@@ -165,12 +176,18 @@ public abstract class FlyingBirdEntity extends BirdEntity {
 
     @Override
     protected <E extends BirdEntity> PlayState movementController(AnimationState<E> state) {
-        // TODO: sync flap sound with animation
         // TODO: add support for different flight patterns (ie. bounding, flapping, flap and glide, soaring)
         if(this.isFlying()) {
             return state.setAndContinue(FLAP_ANIM);
         }
         return super.movementController(state);
+    }
+
+    private <E extends BirdEntity> void handleFlapSoundKeyframe(SoundKeyframeEvent<E> event) {
+        if(FLAP_SOUND_KEYFRAME.equals(event.getKeyframeData().getSound())) {
+            // TODO: vary volume and pitch based on flap speed
+            this.playFlapSound(this.getFlapVolume(), this.getFlapPitch());
+        }
     }
 
     @Override
@@ -193,15 +210,6 @@ public abstract class FlyingBirdEntity extends BirdEntity {
             this.flightNavigation.setCanFloat(this.canSwim());
         }
         return this.flightNavigation;
-    }
-
-    // TODO: instead of affecting the pitch and yaw change directly, it should affect the steepness of its path
-    public int getMaxPitchChange() {
-        return 20;
-    }
-
-    public int getMaxYawChange() {
-        return 20;
     }
 
     @Override

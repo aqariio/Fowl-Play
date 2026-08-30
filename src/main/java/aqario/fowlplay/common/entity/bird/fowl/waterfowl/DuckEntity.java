@@ -82,16 +82,6 @@ public class DuckEntity extends TrustingBirdEntity implements BirdBrain<DuckEnti
     }
 
     @Override
-    public int getMaxPitchChange() {
-        return 18;
-    }
-
-    @Override
-    public int getMaxYawChange() {
-        return 18;
-    }
-
-    @Override
     public Pair<Integer, Integer> getFlyHeightRange() {
         return Pair.of(18, 24);
     }

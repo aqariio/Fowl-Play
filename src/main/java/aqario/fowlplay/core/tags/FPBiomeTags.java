@@ -20,6 +20,7 @@ public final class FPBiomeTags {
     public static final TagKey<Biome> SPAWNS_RAVENS = create("spawns_ravens");
     public static final TagKey<Biome> SPAWNS_ROBINS = create("spawns_robins");
     public static final TagKey<Biome> SPAWNS_SPARROWS = create("spawns_sparrows");
+    public static final TagKey<Biome> SPAWNS_VULTURES = create("spawns_vultures");
 
     private static TagKey<Biome> create(String id) {
         return TagKey.create(Registries.BIOME, FowlPlay.id(id));

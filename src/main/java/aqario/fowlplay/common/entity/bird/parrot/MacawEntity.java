@@ -89,7 +89,7 @@ public class MacawEntity extends FlyingBirdEntity implements BirdBrain<MacawEnti
 
     @Override
     public int getCallDelay() {
-        return 1200;
+        return 800;
     }
 
     @Nullable

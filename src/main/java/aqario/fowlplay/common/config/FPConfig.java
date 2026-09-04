@@ -169,4 +169,13 @@ public class FPConfig {
     public int sparrowMinGroupSize = 2;
     @SerialEntry
     public int sparrowMaxGroupSize = 6;
+
+    // Vulture
+
+    @SerialEntry
+    public int vultureSpawnWeight = 1;
+    @SerialEntry
+    public int vultureMinGroupSize = 1;
+    @SerialEntry
+    public int vultureMaxGroupSize = 1;
 }

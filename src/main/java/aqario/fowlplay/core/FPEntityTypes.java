@@ -16,6 +16,7 @@ import aqario.fowlplay.common.entity.bird.passerine.corvid.CrowEntity;
 import aqario.fowlplay.common.entity.bird.passerine.corvid.RavenEntity;
 import aqario.fowlplay.common.entity.bird.penguin.PenguinEntity;
 import aqario.fowlplay.common.entity.bird.raptor.HawkEntity;
+import aqario.fowlplay.common.entity.bird.raptor.VultureEntity;
 import aqario.fowlplay.common.entity.bird.shorebird.GullEntity;
 import aqario.fowlplay.common.registry.CommonRegister;
 import aqario.fowlplay.common.util.EntityTypeBuilder;
@@ -344,6 +345,27 @@ public final class FPEntityTypes {
                 FPConfig.get().sparrowSpawnWeight,
                 FPConfig.get().sparrowMinGroupSize,
                 FPConfig.get().sparrowMaxGroupSize
+            )
+    );
+
+    public static final Supplier<EntityType<VultureEntity>> VULTURE = register("vulture",
+        EntityTypeBuilder.of(
+                VultureEntity::new,
+                FPMobCategory.BIRDS.mobCategory
+            )
+            .sized(0.6f, 0.8f)
+            .eyeHeight(0.7f)
+            .attributes(VultureEntity::createVultureAttributes)
+            .spawnPlacement(
+                CustomSpawnPlacementTypes.GROUND,
+                Heightmap.Types.MOTION_BLOCKING,
+                SpawnPredicates::canSpawnPasserines
+            )
+            .spawn(
+                FPBiomeTags.SPAWNS_VULTURES,
+                FPConfig.get().vultureSpawnWeight,
+                FPConfig.get().vultureMinGroupSize,
+                FPConfig.get().vultureMaxGroupSize
             )
     );
 

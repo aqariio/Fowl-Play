@@ -86,31 +86,61 @@ public class GuidedFlocking extends ExtendedBehaviour<FlyingBirdEntity> {
     }
 
     private Vec3 getHeading(FlyingBirdEntity bird) {
-        Vec3 separation = Vec3.ZERO;
-        Vec3 alignment = Vec3.ZERO;
-        Vec3 cohesion = Vec3.ZERO;
+        Vec3 birdPos = bird.position();
+        double separationX = 0;
+        double separationY = 0;
+        double separationZ = 0;
+        double alignmentX = 0;
+        double alignmentY = 0;
+        double alignmentZ = 0;
+        double cohesionX = 0;
+        double cohesionY = 0;
+        double cohesionZ = 0;
 
         for(AgeableMob entity : this.nearbyBirds) {
-            if(entity.position().subtract(bird.position()).length() < this.separationRange) {
-                separation = separation.subtract(entity.position().subtract(bird.position()));
+            Vec3 entityPos = entity.position();
+            double offsetX = entityPos.x - birdPos.x;
+            double offsetY = entityPos.y - birdPos.y;
+            double offsetZ = entityPos.z - birdPos.z;
+            if(Math.sqrt(offsetX * offsetX + offsetY * offsetY + offsetZ * offsetZ) < this.separationRange) {
+                separationX -= offsetX;
+                separationY -= offsetY;
+                separationZ -= offsetZ;
             }
-            alignment = alignment.add(entity.getDeltaMovement());
-            cohesion = cohesion.add(entity.position());
+            Vec3 velocity = entity.getDeltaMovement();
+            alignmentX += velocity.x;
+            alignmentY += velocity.y;
+            alignmentZ += velocity.z;
+            cohesionX += entityPos.x;
+            cohesionY += entityPos.y;
+            cohesionZ += entityPos.z;
         }
 
-        alignment = alignment.scale(1f / this.nearbyBirds.size());
-        cohesion = cohesion.scale(1f / this.nearbyBirds.size());
-        cohesion = cohesion.subtract(bird.position());
+        float scale = 1f / this.nearbyBirds.size();
+        alignmentX *= scale;
+        alignmentY *= scale;
+        alignmentZ *= scale;
+        cohesionX = cohesionX * scale - birdPos.x;
+        cohesionY = cohesionY * scale - birdPos.y;
+        cohesionZ = cohesionZ * scale - birdPos.z;
 
-        cohesion = cohesion.scale(this.coherence);
-        alignment = alignment.scale(this.alignment);
-        separation = separation.scale(this.separation);
-        Vec3 randomness = new Vec3(
-            bird.getRandom().nextFloat() - bird.getRandom().nextFloat(),
-            bird.getRandom().nextFloat() - bird.getRandom().nextFloat(),
-            bird.getRandom().nextFloat() - bird.getRandom().nextFloat())
-            .scale(0.5);
+        cohesionX *= this.coherence;
+        cohesionY *= this.coherence;
+        cohesionZ *= this.coherence;
+        alignmentX *= this.alignment;
+        alignmentY *= this.alignment;
+        alignmentZ *= this.alignment;
+        separationX *= this.separation;
+        separationY *= this.separation;
+        separationZ *= this.separation;
+        double randomX = (bird.getRandom().nextFloat() - bird.getRandom().nextFloat()) * 0.5;
+        double randomY = (bird.getRandom().nextFloat() - bird.getRandom().nextFloat()) * 0.5;
+        double randomZ = (bird.getRandom().nextFloat() - bird.getRandom().nextFloat()) * 0.5;
 
-        return cohesion.add(separation).add(alignment).add(randomness);
+        return new Vec3(
+            cohesionX + separationX + alignmentX + randomX,
+            cohesionY + separationY + alignmentY + randomY,
+            cohesionZ + separationZ + alignmentZ + randomZ
+        );
     }
 }

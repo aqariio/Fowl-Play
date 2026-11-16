@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = LivingEntity.class, priority = 1001)
 public abstract class LivingEntityMixin extends Entity {
@@ -27,18 +28,25 @@ public abstract class LivingEntityMixin extends Entity {
         BlockState state = this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement());
         if(entity instanceof PenguinEntity penguin && penguin.isSliding()) {
             return state.is(FPBlockTags.PENGUINS_SLIDE_ON) || this.getInBlockState().is(FPBlockTags.PENGUINS_SLIDE_ON)
-                ? 1.075F
+                ? 1.025F
                 : slipperiness;
         }
         return slipperiness;
+    }
+
+    @Inject(method = "getFlyingSpeed", at = @At("RETURN"), cancellable = true)
+    private void fowlplay$increaseAirSpeed(CallbackInfoReturnable<Float> cir) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+        if(entity instanceof PenguinEntity penguin && penguin.getControllingPassenger() instanceof Player) {
+            cir.setReturnValue(entity.getSpeed() * 0.216f);
+        }
     }
 
     @Inject(method = "travelRidden", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;travel(Lnet/minecraft/world/phys/Vec3;)V"))
     private void fowlplay$stepDownwards(Player player, Vec3 input, CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
         if(entity instanceof PenguinEntity penguin && penguin.getControllingPassenger() instanceof Player && penguin.shouldStepDown()) {
-            penguin.addDeltaMovement(new Vec3(0, -1, 0));
-            penguin.onDownStep();
+            entity.addDeltaMovement(new Vec3(0, -0.5, 0));
         }
     }
 }

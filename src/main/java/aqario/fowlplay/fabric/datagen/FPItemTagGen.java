@@ -27,6 +27,12 @@ public class FPItemTagGen extends FabricTagProvider.ItemTagProvider {
             .add(Items.PUMPKIN_SEEDS)
             .add(Items.TORCHFLOWER_SEEDS)
             .add(Items.WHEAT_SEEDS);
+
+        this.getOrCreateTagBuilder(FPItemTags.PIGEON_DELIVERABLE)
+            .add(Items.BUNDLE);
+
+        // Food
+
         this.getOrCreateTagBuilder(FPItemTags.BLUE_JAY_FOOD)
             .add(Items.BEETROOT_SEEDS)
             .add(Items.GLOW_BERRIES)

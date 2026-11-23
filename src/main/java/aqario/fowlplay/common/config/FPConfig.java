@@ -73,6 +73,13 @@ public class FPConfig {
 
     // Spawning
 
+    // Spawn Caps
+
+    @SerialEntry
+    public int ambientBirdsSpawnCap = 15;
+    @SerialEntry
+    public int birdsSpawnCap = 20;
+
     // Blue Jay
 
     @SerialEntry

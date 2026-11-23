@@ -20,8 +20,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 public abstract class TameableBirdEntity extends TrustingBirdEntity implements OwnableEntity {
-    protected static final EntityDataAccessor<Byte> TAMEABLE_FLAGS = SynchedEntityData.defineId(TameableBirdEntity.class, EntityDataSerializers.BYTE);
-    protected static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(TameableBirdEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    protected static final EntityDataAccessor<Byte> TAMEABLE_FLAGS = SynchedEntityData.defineId(
+        TameableBirdEntity.class,
+        EntityDataSerializers.BYTE
+    );
+    protected static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(
+        TameableBirdEntity.class,
+        EntityDataSerializers.OPTIONAL_UUID
+    );
+    private static final String OWNER_KEY = "owner";
+    private static final String SITTING_KEY = "sitting";
     private boolean sitting;
 
     protected TameableBirdEntity(EntityType<? extends BirdEntity> entityType, Level world) {
@@ -39,26 +47,42 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         if(this.getOwnerUUID() != null) {
-            nbt.putUUID("owner", this.getOwnerUUID());
+            nbt.putUUID(OWNER_KEY, this.getOwnerUUID());
         }
 
-        nbt.putBoolean("sitting", this.sitting);
+        nbt.putBoolean(SITTING_KEY, this.sitting);
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        if(nbt.hasUUID("owner")) {
-            UUID uuid = nbt.getUUID("owner");
+        if(nbt.hasUUID(OWNER_KEY)) {
+            UUID uuid = nbt.getUUID(OWNER_KEY);
             this.setOwnerUuid(uuid);
             this.setTamed(true);
         }
 
-        this.sitting = nbt.getBoolean("sitting");
+        this.sitting = nbt.getBoolean(SITTING_KEY);
         this.setInSittingPose(this.sitting);
     }
 
-    protected void showEmoteParticle(boolean positive) {
+    @Override
+    public boolean canBeLeashed() {
+        return true;
+    }
+
+    @Override
+    public boolean handleLeashAtDistance(Entity leashHolder, float distance) {
+        if(this.isInSittingPose()) {
+            if(distance > 10.0F) {
+                this.dropLeash(true, true);
+            }
+            return false;
+        }
+        return super.handleLeashAtDistance(leashHolder, distance);
+    }
+
+    protected void spawnTamingParticles(boolean positive) {
         ParticleOptions particleEffect = ParticleTypes.HEART;
         if(!positive) {
             particleEffect = ParticleTypes.SMOKE;
@@ -75,10 +99,10 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
     @Override
     public void handleEntityEvent(byte status) {
         if(status == EntityEvent.TAMING_SUCCEEDED) {
-            this.showEmoteParticle(true);
+            this.spawnTamingParticles(true);
         }
         else if(status == EntityEvent.TAMING_FAILED) {
-            this.showEmoteParticle(false);
+            this.spawnTamingParticles(false);
         }
         else {
             super.handleEntityEvent(status);
@@ -97,11 +121,6 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
         else {
             this.entityData.set(TAMEABLE_FLAGS, (byte) (b & -5));
         }
-
-        this.onTamedChanged();
-    }
-
-    protected void onTamedChanged() {
     }
 
     public boolean isInSittingPose() {
@@ -183,19 +202,19 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
 
     @Override
     public boolean canAttack(LivingEntity target) {
-        return !this.isOwner(target) && super.canAttack(target);
+        return !this.isOwnedBy(target) && super.canAttack(target);
     }
 
-    public boolean isOwner(LivingEntity entity) {
+    public boolean isOwnedBy(LivingEntity entity) {
         return entity == this.getOwner();
     }
 
     @Override
     public PlayerTeam getTeam() {
         if(this.isTamed()) {
-            LivingEntity livingEntity = this.getOwner();
-            if(livingEntity != null) {
-                return livingEntity.getTeam();
+            LivingEntity owner = this.getOwner();
+            if(owner != null) {
+                return owner.getTeam();
             }
         }
 
@@ -205,13 +224,13 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
     @Override
     public boolean isAlliedTo(Entity other) {
         if(this.isTamed()) {
-            LivingEntity livingEntity = this.getOwner();
-            if(other == livingEntity) {
+            LivingEntity owner = this.getOwner();
+            if(other == owner) {
                 return true;
             }
 
-            if(livingEntity != null) {
-                return livingEntity.isAlliedTo(other);
+            if(owner != null) {
+                return owner.isAlliedTo(other);
             }
         }
 

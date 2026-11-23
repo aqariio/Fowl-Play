@@ -1,7 +1,7 @@
 plugins {
     id("net.neoforged.moddev") version "2.0.140"
     id("neoforge-mutex")
-    id("me.modmuss50.mod-publish-plugin") version "2.2.0"
+    id("common-publish")
 }
 
 version = "${property("mod.version")}+${sc.current.version}-neoforge"
@@ -150,39 +150,9 @@ tasks {
     }
 }
 
-publishMods {
-    maxRetries.set(5)
-    displayName = "${property("mod.name")} ${property("mod.version")}"
-    file = tasks.jar.flatMap { it.archiveFile }
-    changelog = providers.fileContents(
-        rootProject.layout.projectDirectory.file(
-            "RELEASE_CHANGELOG.md"
-        )
-    ).asText
-    type = STABLE
+platformPublish {
+    file.set(tasks.jar.flatMap { it.archiveFile })
     modLoaders.add("neoforge")
-
-    curseforge {
-        projectId = providers.environmentVariable("CURSEFORGE_ID")
-            .orElse("0")
-        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
-        minecraftVersions.add(sc.current.version)
-        client = true
-        server = true
-        requires(
-            "smartbrainlib",
-            "yacl"
-        )
-    }
-    modrinth {
-        projectId = providers.environmentVariable("MODRINTH_ID")
-            .orElse("0")
-        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-        minecraftVersions.add(sc.current.version)
-        environment = CLIENT_AND_SERVER
-        requires(
-            "smartbrainlib",
-            "yacl"
-        )
-    }
+    minecraftVersions.add(sc.current.version)
+    requiredDependencies.addAll("smartbrainlib", "yacl")
 }

@@ -1,11 +1,13 @@
 package aqario.fowlplay.mixin;
 
+import aqario.fowlplay.common.config.FPConfig;
 import aqario.fowlplay.common.entity.FPMobCategory;
 import net.minecraft.world.entity.MobCategory;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Arrays;
 
@@ -38,6 +40,22 @@ public class MobCategoryMixin {
             int pos = vanillaMobCategoriesLength + i;
             FPMobCategory mobCategory = categories[i];
             mobCategory.mobCategory = $VALUES[pos] = fowlplay$createMobCategory(mobCategory.name(), pos, mobCategory);
+        }
+    }
+
+    @Inject(
+        method = "getMaxInstancesPerChunk",
+        at = @At("HEAD"),
+        cancellable = true
+    )
+    private void fowlplay$getConfiguredSpawnCap(CallbackInfoReturnable<Integer> cir) {
+        MobCategory category = (MobCategory) (Object) this;
+
+        if(category == FPMobCategory.AMBIENT_BIRDS.mobCategory) {
+            cir.setReturnValue(FPConfig.getInstance().ambientBirdsSpawnCap);
+        }
+        else if(category == FPMobCategory.BIRDS.mobCategory) {
+            cir.setReturnValue(FPConfig.getInstance().birdsSpawnCap);
         }
     }
 }

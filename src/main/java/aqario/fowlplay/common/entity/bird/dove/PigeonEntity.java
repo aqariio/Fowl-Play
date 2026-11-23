@@ -183,31 +183,35 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        ItemStack playerStack = player.getItemInHand(hand);
-        ItemStack bundleStack = this.getItemInHand(InteractionHand.OFF_HAND);
+        ItemStack playerItem = player.getItemInHand(hand);
+        ItemStack deliverable = this.getOffhandItem();
 
-        // Equip bundle
-        if(bundleStack.isEmpty() && playerStack.getItem() instanceof BundleItem && playerStack.getComponents().has(DataComponents.CUSTOM_NAME) && this.isTamed()) {
+        // Equip deliverable
+        if(deliverable.isEmpty()
+            && playerItem.is(FPItemTags.PIGEON_DELIVERABLE)
+            && playerItem.getComponents().has(DataComponents.CUSTOM_NAME)
+            && this.isTamed()
+        ) {
             if(!this.level().isClientSide) {
-                this.setItemInHand(InteractionHand.OFF_HAND, playerStack);
+                this.setItemInHand(InteractionHand.OFF_HAND, playerItem);
                 player.setItemInHand(hand, ItemStack.EMPTY);
             }
             return InteractionResult.sidedSuccess(this.level().isClientSide);
         }
 
-        // Unequip bundle
-        if(playerStack.isEmpty() && bundleStack.getItem() instanceof BundleItem) {
+        // Unequip deliverable
+        if(playerItem.isEmpty() && deliverable.is(FPItemTags.PIGEON_DELIVERABLE)) {
             if(!this.level().isClientSide) {
-                player.setItemInHand(hand, bundleStack);
+                player.setItemInHand(hand, deliverable);
                 this.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
             }
             return InteractionResult.sidedSuccess(this.level().isClientSide);
         }
 
         // Taming
-        if(this.isFood(playerStack) && !this.isTamed()) {
+        if(this.isFood(playerItem) && !this.isTamed()) {
             if(!this.level().isClientSide) {
-                this.usePlayerItem(player, hand, playerStack);
+                this.usePlayerItem(player, hand, playerItem);
                 if(this.random.nextInt(4) == 0) {
                     this.setOwner(player);
                     this.navigation.stop();
@@ -221,7 +225,7 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
         }
 
         // Sitting
-        if(this.onGround() && this.isTamed() && this.isOwner(player)) {
+        if(this.onGround() && this.isTamed() && this.isOwnedBy(player)) {
             if(!this.level().isClientSide) {
                 this.setSitting(!this.isSitting());
                 this.jumping = false;
@@ -491,13 +495,16 @@ public class PigeonEntity extends TameableBirdEntity implements BirdBrain<Pigeon
 
         if(this.isTamed() && this.getServer() != null) {
             ItemStack stack = this.getItemBySlot(EquipmentSlot.OFFHAND);
-            ServerPlayer recipient = this.getServer().getPlayerList().getPlayerByName(stack.getHoverName().getString());
+            ServerPlayer recipient;
 
-            if(!(stack.getItem() instanceof BundleItem) || !stack.getComponents().has(DataComponents.CUSTOM_NAME) || recipient == null) {
-                this.setRecipientUuid(null);
+            if(stack.getItem() instanceof BundleItem
+                && stack.getComponents().has(DataComponents.CUSTOM_NAME)
+                && (recipient = this.getServer().getPlayerList().getPlayerByName(stack.getHoverName().getString())) != null
+            ) {
+                this.setRecipientUuid(recipient.getUUID());
             }
             else {
-                this.setRecipientUuid(recipient.getUUID());
+                this.setRecipientUuid(null);
             }
         }
     }

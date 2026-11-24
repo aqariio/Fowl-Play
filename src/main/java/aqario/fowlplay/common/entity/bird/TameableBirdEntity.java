@@ -67,19 +67,20 @@ public abstract class TameableBirdEntity extends TrustingBirdEntity implements O
     }
 
     @Override
-    public boolean canBeLeashed() {
-        return true;
+    public boolean canBeLeashed(Player player) {
+        return !this.isLeashed();
     }
 
     @Override
-    public boolean handleLeashAtDistance(Entity leashHolder, float distance) {
-        if(this.isInSittingPose()) {
-            if(distance > 10.0F) {
+    protected void tickLeash() {
+        Entity entity = this.getLeashHolder();
+        if(entity != null && entity.level() == this.level()) {
+            float dist = this.distanceTo(entity);
+            if(this.isInSittingPose() && dist > 10.0F) {
                 this.dropLeash(true, true);
             }
-            return false;
         }
-        return super.handleLeashAtDistance(leashHolder, distance);
+        super.tickLeash();
     }
 
     protected void spawnTamingParticles(boolean positive) {

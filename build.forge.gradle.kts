@@ -140,6 +140,7 @@ java {
 tasks {
     processResources {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        from(rootProject.layout.projectDirectory.dir("src/main/resources/forge"))
 
         fun MutableMap<String, String>.register(key: String, property: String) {
             val value: String = sc.properties[property]
@@ -164,7 +165,7 @@ tasks {
         val mixinJava = "JAVA_${requiredJava.majorVersion}"
         filesMatching("*.mixins.json") { expand("java" to mixinJava) }
 
-        exclude("fabric.mod.json", "*.ct", "*.accesswidener")
+        exclude("fabric.mod.json", "*.ct", "*.accesswidener", "forge/**")
     }
 
     named("createMinecraftArtifacts") {

@@ -170,7 +170,7 @@ tasks {
         val mixinJava = "JAVA_${requiredJava.majorVersion}"
         filesMatching("*.mixins.json") { expand("java" to mixinJava) }
 
-        exclude("META-INF/mods.toml")
+        exclude("META-INF/mods.toml", "forge/**")
     }
 
     register<Copy>("buildAndCollect") {

@@ -21,7 +21,7 @@ deps.observable = "4.4.2"
 deps.sbl = "1.15"
 deps.spark = "1.10.53"
 deps.suggestion_tweaker = "1.20-1.5.2"
-deps.yacl = "3.6.4+1.20.1"
+deps.yacl = "3.6.6+1.20.1"
 
 ["1.20.1"]
 # List of releases to be marked compatible on Modrinth/Curseforge

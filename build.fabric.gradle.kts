@@ -31,7 +31,7 @@ repositories {
     }
     strictMaven("https://www.cursemaven.com", "CurseForge", "curse.maven")
     strictMaven("https://api.modrinth.com/maven", "Modrinth", "maven.modrinth")
-    maven("https://thedarkcolour.github.io/KotlinForForge/")
+    strictMaven("https://maven.shedaniel.me/", "Shedaniel", "me.shedaniel.cloth", "dev.architectury")
     maven("https://maven.quiltmc.org/repository/release/")
     maven("https://api.modrinth.com/maven")
     maven("https://maven.terraformersmc.com/releases/")
@@ -39,7 +39,6 @@ repositories {
     maven("https://maven.isxander.dev/releases")
     maven("https://dl.cloudsmith.io/public/tslat/sbl/maven/")
     maven("https://maven.parchmentmc.org")
-    maven("https://maven.shedaniel.me/")
     maven("https://repo.lucko.me/")
 }
 

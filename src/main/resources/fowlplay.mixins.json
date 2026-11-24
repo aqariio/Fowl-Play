@@ -10,6 +10,7 @@
     "CrossCollisionBlockMixin",
     "EnchantmentHelperMixin",
     "FenceGateBlockMixin",
+    "MobCategoryMixin",
     "NaturalSpawnerMixin",
     "PowderSnowBlockMixin",
     "SoundSourceMixin",

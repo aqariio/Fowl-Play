@@ -42,12 +42,12 @@ jobs:
                 run: ./.github/scripts/parse-mod-properties.sh
 
             -   name: "Parse changelog"
-                run: ./.github/scripts/parse-changelog.sh ${{ steps.gradle-properties.outputs.MOD_VERSION }}
+                run: ./.github/scripts/parse-changelog.sh ${{ steps.mod-properties.outputs.MOD_VERSION }}
 
             -   name: "Publish"
                 run: ./gradlew publishMods
                 env:
                     CURSEFORGE_ID: ${{ vars.CURSEFORGE_ID }}
-                    CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_TOKEN }}
+                    CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
                     MODRINTH_ID: ${{ vars.MODRINTH_ID }}
                     MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}

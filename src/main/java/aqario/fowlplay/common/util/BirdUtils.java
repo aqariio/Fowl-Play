@@ -48,7 +48,6 @@ public final class BirdUtils {
 
     // TODO: birds like ducks and geese should prefer to walk, only flying when absolutely necessary
     public static void tryFlyingAlongPath(FlyingBirdEntity bird, Path path) {
-        // noinspection ConstantConditions
         if(bird.canStartFlying()
             && (shouldFlyToDestination(bird, path, path.getTarget().getCenter())
 //            && !(bird.getType().is(FowlPlayEntityTypeTags.WATERBIRDS)
@@ -81,7 +80,6 @@ public final class BirdUtils {
             return false;
         }
         LivingEntity target = bird.getPresentMemory(MemoryModuleType.AVOID_TARGET);
-        // noinspection ConstantConditions
         if((target.isSprinting() && !target.isSpectator()) || target.isPassenger()) {
             return true;
         }

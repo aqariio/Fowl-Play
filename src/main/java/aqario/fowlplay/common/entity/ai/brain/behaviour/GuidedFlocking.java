@@ -7,12 +7,10 @@ import aqario.fowlplay.core.FPMemoryTypes;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
-import net.tslat.smartbrainlib.util.BrainUtils;
 
 import java.util.List;
 
@@ -48,12 +46,10 @@ public class GuidedFlocking extends ExtendedBehaviour<FlyingBirdEntity> {
         if(!bird.isFlying()) {
             return false;
         }
-        Brain<?> brain = bird.getBrain();
-        if(!BrainUtils.hasMemory(brain, FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get())) {
+        if(!bird.isMemoryPresent(FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get())) {
             return false;
         }
-        this.nearbyBirds = BrainUtils.getMemory(brain, FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
-        assert this.nearbyBirds != null;
+        this.nearbyBirds = bird.getPresentMemory(FPMemoryTypes.NEAREST_VISIBLE_ADULTS.get());
         this.nearbyBirds.removeIf(entity -> entity.distanceToSqr(bird) > VIEW_RADIUS * VIEW_RADIUS);
         if(this.nearbyBirds.isEmpty()) {
             return false;

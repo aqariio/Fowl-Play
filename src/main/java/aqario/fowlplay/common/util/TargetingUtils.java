@@ -5,6 +5,8 @@ import aqario.fowlplay.core.tags.FPBlockTags;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.PathfinderMob;
@@ -23,6 +25,10 @@ public class TargetingUtils {
         BlockPos adjustedPos = RandomPos.generateRandomPosTowardDirection(
             entity, range.horizontal(), entity.getRandom(), pos
         );
+        // the height map and block checks below would otherwise load or generate the target's chunk
+        if(!isChunkLoaded(entity, adjustedPos)) {
+            return null;
+        }
         adjustedPos = shiftPosTowardsFlyHeightRange(entity, adjustedPos);
         int surfaceY = entity.level().getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, adjustedPos.getX(), adjustedPos.getZ());
         if(adjustedPos.getY() < surfaceY && entity.getY() >= surfaceY) {
@@ -185,6 +191,13 @@ public class TargetingUtils {
 
     public static boolean isFullBlockAt(PathfinderMob entity, BlockPos pos) {
         return entity.level().getBlockState(pos).isSolidRender(entity.level(), pos);
+    }
+
+    public static boolean isChunkLoaded(PathfinderMob entity, BlockPos pos) {
+        if(!(entity.level() instanceof ServerLevel level)) {
+            return true;
+        }
+        return level.getChunkSource().getChunkNow(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ())) != null;
     }
 
     // angle is in radians
